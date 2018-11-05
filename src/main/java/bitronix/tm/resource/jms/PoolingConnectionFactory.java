@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jms.*;
+import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.transaction.xa.XAResource;
@@ -172,9 +173,9 @@ public class PoolingConnectionFactory
 		}
 		pool = new XAPool<DualSessionWrapper, JmsPooledConnection>(this, this, xaConnectionFactory);
 		boolean builtXaFactory = false;
-		if (xaConnectionFactory == null)
+		if (this.xaConnectionFactory == null)
 		{
-			xaConnectionFactory = (XAConnectionFactory) pool.getXAFactory();
+			this.xaConnectionFactory = (XAConnectionFactory) pool.getXAFactory();
 			builtXaFactory = true;
 		}
 		try
@@ -249,7 +250,7 @@ public class PoolingConnectionFactory
 	 * @return a reference to this {@link PoolingConnectionFactory}.
 	 */
 	@Override
-	public Reference getReference()
+	public Reference getReference() throws NamingException
 	{
 		if (log.isDebugEnabled())
 		{
@@ -260,6 +261,23 @@ public class PoolingConnectionFactory
 				new StringRefAddr("uniqueName", getUniqueName()),
 				ResourceObjectFactory.class.getName(),
 				null);
+	}	@Override
+	public Connection createConnection() throws JMSException
+	{
+		if (isDisabled())
+		{
+			throw new JMSException("JMS connection pool '" + getUniqueName() + "' is disabled, cannot get a connection from it");
+		}
+
+		try
+		{
+			init();
+			return (Connection) pool.getConnectionHandle();
+		}
+		catch (Exception ex)
+		{
+			throw (JMSException) new JMSException("unable to get a connection from pool of " + this).initCause(ex);
+		}
 	}
 
 	@Override
@@ -278,6 +296,14 @@ public class PoolingConnectionFactory
 	public boolean isFailed()
 	{
 		return pool.isFailed();
+	}	@Override
+	public Connection createConnection(String userName, String password) throws JMSException
+	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("JMS connections are pooled, username and password ignored");
+		}
+		return createConnection();
 	}
 
 	@Override
@@ -301,24 +327,10 @@ public class PoolingConnectionFactory
 			}
 			return null;
 		}
-	}	@Override
-	public Connection createConnection() throws JMSException
-	{
-		if (isDisabled())
-		{
-			throw new JMSException("JMS connection pool '" + getUniqueName() + "' is disabled, cannot get a connection from it");
-		}
-
-		try
-		{
-			init();
-			return (Connection) pool.getConnectionHandle();
-		}
-		catch (Exception ex)
-		{
-			throw (JMSException) new JMSException("unable to get a connection from pool of " + this).initCause(ex);
-		}
 	}
+
+
+	/* XAResourceProducer implementation */
 
 	/**
 	 * Initialize the pool by creating the initial amount of connections.
@@ -334,7 +346,7 @@ public class PoolingConnectionFactory
 			}
 
 			buildXAPool();
-			jmxName = "bitronix.tm:type=JMS,UniqueName=" + ManagementRegistrar.makeValidName(getUniqueName());
+			this.jmxName = "bitronix.tm:type=JMS,UniqueName=" + ManagementRegistrar.makeValidName(getUniqueName());
 			ManagementRegistrar.register(jmxName, this);
 		}
 		catch (Exception ex)
@@ -406,34 +418,6 @@ public class PoolingConnectionFactory
 
 
 
-	@Override
-	public Connection createConnection(String userName, String password) throws JMSException
-	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("JMS connections are pooled, username and password ignored");
-		}
-		return createConnection();
-	}
-
-
-
-
-
-
-	/* XAResourceProducer implementation */
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -442,6 +426,11 @@ public class PoolingConnectionFactory
 
 
 	/* management */
+
+
+
+
+
 
 
 }

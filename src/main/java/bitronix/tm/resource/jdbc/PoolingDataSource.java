@@ -28,6 +28,7 @@ import bitronix.tm.utils.ManagementRegistrar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.sql.DataSource;
@@ -434,7 +435,7 @@ public class PoolingDataSource
 	 * @return a reference to this {@link PoolingDataSource}.
 	 */
 	@Override
-	public Reference getReference()
+	public Reference getReference() throws NamingException
 	{
 		if (log.isDebugEnabled())
 		{
@@ -456,39 +457,6 @@ public class PoolingDataSource
 			return (T) xaDataSource;
 		}
 		throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
-	}
-
-	@Override
-	public boolean isWrapperFor(Class<?> iface)
-	{
-		return iface.isAssignableFrom(xaDataSource.getClass());
-	}
-
-	@Override
-	public int getInPoolSize()
-	{
-		return pool.inPoolSize();
-	}
-
-	@Override
-	public int getTotalPoolSize()
-	{
-		return pool.totalPoolSize();
-	}
-
-	@Override
-	public boolean isFailed()
-	{
-		return (pool != null && pool.isFailed());
-	}
-
-	@Override
-	public void setFailed(boolean failed)
-	{
-		if (pool != null)
-		{
-			pool.setFailed(failed);
-		}
 	}	@Override
 	public Connection getConnection() throws SQLException
 	{
@@ -527,6 +495,47 @@ public class PoolingDataSource
 	}
 
 	@Override
+	public boolean isWrapperFor(Class<?> iface) throws SQLException
+	{
+		return iface.isAssignableFrom(xaDataSource.getClass());
+	}
+
+	@Override
+	public int getInPoolSize()
+	{
+		return pool.inPoolSize();
+	}
+
+	@Override
+	public int getTotalPoolSize()
+	{
+		return pool.totalPoolSize();
+	}	@Override
+	public Connection getConnection(String username, String password) throws SQLException
+	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("JDBC connections are pooled, username and password ignored");
+		}
+		return getConnection();
+	}
+
+	@Override
+	public boolean isFailed()
+	{
+		return (pool != null ? pool.isFailed() : false);
+	}
+
+	@Override
+	public void setFailed(boolean failed)
+	{
+		if (pool != null)
+		{
+			pool.setFailed(failed);
+		}
+	}
+
+	@Override
 	public JdbcPooledConnection findXAResourceHolder(XAResource xaResource)
 	{
 		return xaResourceHolderMap.get(xaResource);
@@ -538,7 +547,7 @@ public class PoolingDataSource
 	@Override
 	public synchronized void init()
 	{
-		if (pool != null)
+		if (this.pool != null)
 		{
 			return;
 		}
@@ -546,7 +555,7 @@ public class PoolingDataSource
 		try
 		{
 			buildXAPool();
-			jmxName = "bitronix.tm:type=JDBC,UniqueName=" + ManagementRegistrar.makeValidName(getUniqueName());
+			this.jmxName = "bitronix.tm:type=JDBC,UniqueName=" + ManagementRegistrar.makeValidName(getUniqueName());
 			ManagementRegistrar.register(jmxName, this);
 		}
 		catch (Exception ex)
@@ -610,41 +619,15 @@ public class PoolingDataSource
 
 	}
 
-	@Override
 	public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException
 	{
 		throw new SQLFeatureNotSupportedException();
 	}
 
-	@Override
-	public Connection getConnection(String username, String password) throws SQLException
-	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("JDBC connections are pooled, username and password ignored");
-		}
-		return getConnection();
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	/* DataSource implementation */
+
+
+
 
 
 	@Override
@@ -653,13 +636,11 @@ public class PoolingDataSource
 		return xaDataSource.getLoginTimeout();
 	}
 
-
 	@Override
 	public void setLoginTimeout(int seconds) throws SQLException
 	{
 		xaDataSource.setLoginTimeout(seconds);
 	}
-
 
 	@Override
 	public PrintWriter getLogWriter() throws SQLException
@@ -667,20 +648,26 @@ public class PoolingDataSource
 		return xaDataSource.getLogWriter();
 	}
 
-
 	@Override
-	public void setLogWriter(PrintWriter out) throws SQLException
-	{
-		xaDataSource.setLogWriter(out);
-	}
+	public void setLogWriter(PrintWriter out) throws SQLException {
+        xaDataSource.setLogWriter(out);
+    }
 
-	/* java.sql.Wrapper implementation */
+    /* java.sql.Wrapper implementation */
 
 
 
 
 
 	/* management */
+
+
+
+
+
+
+
+
 
 
 }

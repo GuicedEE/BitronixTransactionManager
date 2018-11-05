@@ -8,13 +8,12 @@ module tm.bitronix.btm {
 	requires java.naming;
 	requires java.transaction;
 
+	requires java.management;
 	requires java.management.rmi;
 
 	requires jms;
 	requires org.slf4j;
 
 	requires java.sql;
-	requires java.management;
 
-	//requires javassist;
 }

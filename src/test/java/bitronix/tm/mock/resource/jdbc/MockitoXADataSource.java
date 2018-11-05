@@ -84,10 +84,6 @@ public class MockitoXADataSource
 	public void setPassword(String password)
 	{
 		this.password = password;
-	}	@Override
-	public int getLoginTimeout()
-	{
-		return 0;
 	}
 
 	public String getDatabase()
@@ -132,9 +128,6 @@ public class MockitoXADataSource
 	public Xid[] getInDoubtXids()
 	{
 		return inDoubtXids.toArray(new Xid[inDoubtXids.size()]);
-	}	@Override
-	public void setLoginTimeout(int seconds)
-	{
 	}
 
 	public void setGetXAConnectionException(SQLException ex)
@@ -158,8 +151,17 @@ public class MockitoXADataSource
 		throw new SQLFeatureNotSupportedException();
 	}
 
+	@Override
+	public int getLoginTimeout()
+	{
+		return 0;
+	}
 
 
+	@Override
+	public void setLoginTimeout(int seconds)
+	{
+	}
 
 
 	@Override
