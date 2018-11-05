@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.codehaus.btm</groupId>
         <artifactId>btm-parent</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>btm-spring</artifactId>
     <name>Bitronix Transaction Manager :: Spring Integration</name>
@@ -35,7 +35,7 @@
             <artifactId>spring-tx</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.codehaus.btm</groupId>
             <artifactId>btm</artifactId>

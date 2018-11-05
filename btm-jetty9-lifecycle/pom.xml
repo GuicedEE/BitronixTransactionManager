@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.codehaus.btm</groupId>
         <artifactId>btm-parent</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>btm-jetty9-lifecycle</artifactId>
     <name>Bitronix Transaction Manager :: Jetty 9 lifecycle</name>

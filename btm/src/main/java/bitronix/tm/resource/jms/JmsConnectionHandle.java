@@ -15,16 +15,7 @@
  */
 package bitronix.tm.resource.jms;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionConsumer;
-import javax.jms.ConnectionMetaData;
-import javax.jms.Destination;
-import javax.jms.ExceptionListener;
-import javax.jms.JMSException;
-import javax.jms.ServerSessionPool;
-import javax.jms.Session;
-import javax.jms.Topic;
-import javax.jms.XAConnection;
+import javax.jms.*;
 
 /**
  * Disposable Connection handle.
@@ -57,7 +48,7 @@ public class JmsConnectionHandle implements Connection {
         return pooledConnection.createSession(transacted, acknowledgeMode);
     }
 
-    @Override
+	@Override
     public void close() throws JMSException {
         if (closed)
             return;

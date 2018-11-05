@@ -19,11 +19,7 @@ import bitronix.tm.BitronixTransactionManager;
 import bitronix.tm.TransactionManagerServices;
 import bitronix.tm.internal.BitronixXAException;
 import bitronix.tm.journal.Journal;
-import bitronix.tm.mock.events.EventRecorder;
-import bitronix.tm.mock.events.JournalLogEvent;
-import bitronix.tm.mock.events.XAResourceEndEvent;
-import bitronix.tm.mock.events.XAResourceRollbackEvent;
-import bitronix.tm.mock.events.XAResourceStartEvent;
+import bitronix.tm.mock.events.*;
 import bitronix.tm.mock.resource.MockJournal;
 import bitronix.tm.mock.resource.MockXAResource;
 import bitronix.tm.mock.resource.jdbc.MockitoXADataSource;
@@ -44,7 +40,6 @@ import java.sql.Connection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-
 
 public class DelistmentTest extends TestCase {
     private final static Logger log = LoggerFactory.getLogger(DelistmentTest.class);

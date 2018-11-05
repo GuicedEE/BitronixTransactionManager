@@ -15,32 +15,17 @@
  */
 package bitronix.tm.resource.jdbc.proxy;
 
-import java.lang.reflect.Constructor;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.HashSet;
-import java.util.Set;
-
-import javassist.CannotCompileException;
-import javassist.ClassClassPath;
-import javassist.ClassMap;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtConstructor;
-import javassist.CtMethod;
-import javassist.CtNewConstructor;
-import javassist.CtNewMethod;
-import javassist.NotFoundException;
-
-import javax.sql.XAConnection;
-
 import bitronix.tm.resource.jdbc.JdbcPooledConnection;
 import bitronix.tm.resource.jdbc.LruStatementCache.CacheKey;
 import bitronix.tm.resource.jdbc.lrc.LrcXAResource;
 import bitronix.tm.utils.ClassLoaderUtils;
+import javassist.*;
+
+import javax.sql.XAConnection;
+import java.lang.reflect.Constructor;
+import java.sql.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class generates JDBC proxy classes using Javassist bytecode generated
@@ -262,6 +247,6 @@ public class JdbcJavassistProxyFactory implements JdbcProxyFactory {
             }
         }
 
-        return targetCt.toClass(ClassLoaderUtils.getClassLoader(), null);
+	    return (Class<T>) targetCt.toClass(ClassLoaderUtils.getClassLoader(), null);
     }
 }

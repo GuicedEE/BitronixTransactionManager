@@ -28,11 +28,7 @@ import bitronix.tm.utils.ManagementRegistrar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
-import javax.jms.XAConnection;
-import javax.jms.XAConnectionFactory;
+import javax.jms.*;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
@@ -46,7 +42,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Ludovic Orban
  */
 @SuppressWarnings("serial")
-public class PoolingConnectionFactory extends ResourceBean implements ConnectionFactory, XAResourceProducer<DualSessionWrapper, JmsPooledConnection>, PoolingConnectionFactoryMBean {
+public class PoolingConnectionFactory
+		extends ResourceBean
+		implements ConnectionFactory, XAResourceProducer<DualSessionWrapper, JmsPooledConnection>,
+				           PoolingConnectionFactoryMBean
+{
 
     private final static Logger log = LoggerFactory.getLogger(PoolingConnectionFactory.class);
 

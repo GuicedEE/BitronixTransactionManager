@@ -25,37 +25,13 @@ import bitronix.tm.resource.common.TransactionContextHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jms.BytesMessage;
-import javax.jms.Destination;
+import javax.jms.*;
 import javax.jms.IllegalStateException;
-import javax.jms.JMSException;
-import javax.jms.MapMessage;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
-import javax.jms.MessageProducer;
-import javax.jms.ObjectMessage;
-import javax.jms.QueueBrowser;
-import javax.jms.Session;
-import javax.jms.StreamMessage;
-import javax.jms.TemporaryQueue;
-import javax.jms.TemporaryTopic;
-import javax.jms.TextMessage;
-import javax.jms.Topic;
-import javax.jms.TopicSubscriber;
-import javax.jms.TransactionInProgressException;
-import javax.jms.TransactionRolledBackException;
-import javax.jms.XASession;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.xa.XAResource;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 /**
@@ -64,7 +40,10 @@ import java.util.Map.Entry;
  *
  * @author Ludovic Orban
  */
-public class DualSessionWrapper extends AbstractXAResourceHolder<DualSessionWrapper> implements Session, StateChangeListener<DualSessionWrapper> {
+public class DualSessionWrapper
+		extends AbstractXAResourceHolder<DualSessionWrapper>
+		implements Session, StateChangeListener<DualSessionWrapper>
+{
 
     private final static Logger log = LoggerFactory.getLogger(DualSessionWrapper.class);
 

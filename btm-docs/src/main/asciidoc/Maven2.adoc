@@ -58,7 +58,7 @@ You just have to add a dependency to your own project's POM to use it:
     <dependency>
       <groupId>org.codehaus.btm</groupId>
       <artifactId>btm</artifactId>
-      <version>3.0.0-SNAPSHOT</version>
+      <version>3.0.1-SNAPSHOT</version>
     </dependency>
 
 You will have to configure a remote repository entry to be able to download artifacts from this location:
