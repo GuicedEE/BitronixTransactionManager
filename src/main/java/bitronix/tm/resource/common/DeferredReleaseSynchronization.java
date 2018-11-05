@@ -26,49 +26,36 @@ import javax.transaction.Synchronization;
  *
  * @author Ludovic Orban
  */
-public class DeferredReleaseSynchronization
-		implements Synchronization
-{
+public class DeferredReleaseSynchronization implements Synchronization {
 
-	private final static Logger log = LoggerFactory.getLogger(DeferredReleaseSynchronization.class);
+    private final static Logger log = LoggerFactory.getLogger(DeferredReleaseSynchronization.class);
 
-	private final XAStatefulHolder xaStatefulHolder;
+    private final XAStatefulHolder xaStatefulHolder;
 
-	public DeferredReleaseSynchronization(XAStatefulHolder xaStatefulHolder)
-	{
-		this.xaStatefulHolder = xaStatefulHolder;
-	}
+    public DeferredReleaseSynchronization(XAStatefulHolder xaStatefulHolder) {
+        this.xaStatefulHolder = xaStatefulHolder;
+    }
 
-	public XAStatefulHolder getXAStatefulHolder()
-	{
-		return xaStatefulHolder;
-	}
+    public XAStatefulHolder getXAStatefulHolder() {
+        return xaStatefulHolder;
+    }
 
-	@Override
-	public void beforeCompletion()
-	{
-	}
+    @Override
+    public void afterCompletion(int status) {
+        if (log.isDebugEnabled()) { log.debug("DeferredReleaseSynchronization requeuing " + xaStatefulHolder); }
 
-	@Override
-	public void afterCompletion(int status)
-	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("DeferredReleaseSynchronization requeuing " + xaStatefulHolder);
-		}
+        // set this connection's state back to IN_POOL
+        xaStatefulHolder.setState(State.IN_POOL);
 
-		// set this connection's state back to IN_POOL
-		xaStatefulHolder.setState(State.IN_POOL);
+        if (log.isDebugEnabled()) { log.debug("DeferredReleaseSynchronization requeued " + xaStatefulHolder); }
+    }
 
-		if (log.isDebugEnabled())
-		{
-			log.debug("DeferredReleaseSynchronization requeued " + xaStatefulHolder);
-		}
-	}
+    @Override
+    public void beforeCompletion() {
+    }
 
-	@Override
-	public String toString()
-	{
-		return "a DeferredReleaseSynchronization of " + xaStatefulHolder;
-	}
+    @Override
+    public String toString() {
+        return "a DeferredReleaseSynchronization of " + xaStatefulHolder;
+    }
 }

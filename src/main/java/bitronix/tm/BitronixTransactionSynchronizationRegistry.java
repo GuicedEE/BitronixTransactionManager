@@ -36,221 +36,154 @@ import java.util.Map;
  *
  * @author Ludovic Orban
  */
-public class BitronixTransactionSynchronizationRegistry
-		implements TransactionSynchronizationRegistry, Referenceable
-{
+public class BitronixTransactionSynchronizationRegistry implements TransactionSynchronizationRegistry, Referenceable {
 
-	private final static Logger log = LoggerFactory.getLogger(BitronixTransactionSynchronizationRegistry.class);
-	private final static ThreadLocal<Map<Object, Object>> resourcesTl = new ThreadLocal<Map<Object, Object>>()
-	{
-		@Override
-		protected Map<Object, Object> initialValue()
-		{
-			return new HashMap<Object, Object>();
-		}
-	};
-	private final BitronixTransactionManager transactionManager;
+    private final static Logger log = LoggerFactory.getLogger(BitronixTransactionSynchronizationRegistry.class);
+
+    private final BitronixTransactionManager transactionManager;
+
+    private final static ThreadLocal<Map<Object, Object>> resourcesTl = new ThreadLocal<Map<Object, Object>>() {
+        @Override
+        protected Map<Object, Object> initialValue() {
+            return new HashMap<Object, Object>();
+        }
+    };
 
 
-	public BitronixTransactionSynchronizationRegistry()
-	{
-		transactionManager = TransactionManagerServices.getTransactionManager();
-	}
+    public BitronixTransactionSynchronizationRegistry() {
+        transactionManager = TransactionManagerServices.getTransactionManager();
+    }
 
-	@Override
-	public Object getTransactionKey()
-	{
-		try
-		{
-			if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
-			{
-				return null;
-			}
+    @Override
+    public Object getResource(Object key) {
+        try {
+            if (key == null)
+                throw new NullPointerException("key cannot be null");
+            if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
+                throw new IllegalStateException("no transaction started on current thread");
 
-			return currentTransaction().getGtrid();
-		}
-		catch (SystemException ex)
-		{
-			throw new BitronixRuntimeException("cannot get current transaction status", ex);
-		}
-	}
+            return getResources().get(key);
+        } catch (SystemException ex) {
+            throw new BitronixRuntimeException("cannot get current transaction status", ex);
+        }
+    }
 
-	@Override
-	public void putResource(Object key, Object value)
-	{
-		try
-		{
-			if (key == null)
-			{
-				throw new NullPointerException("key cannot be null");
-			}
-			if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
-			{
-				throw new IllegalStateException("no transaction started on current thread");
-			}
+    @Override
+    public boolean getRollbackOnly() {
+        try {
+            if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
+                throw new IllegalStateException("no transaction started on current thread");
 
-			Object oldValue = getResources().put(key, value);
+            return currentTransaction().getStatus() == Status.STATUS_MARKED_ROLLBACK;
+        } catch (SystemException e) {
+            throw new BitronixRuntimeException("cannot get current transaction status");
+        }
+    }
 
-			if (oldValue == null && getResources().size() == 1)
-			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("first resource put in synchronization registry, registering a ClearRegistryResourcesSynchronization");
-				}
-				Synchronization synchronization = new ClearRegistryResourcesSynchronization();
-				currentTransaction().getSynchronizationScheduler()
-				                    .add(synchronization, Scheduler.ALWAYS_LAST_POSITION);
-			}
-		}
-		catch (SystemException ex)
-		{
-			throw new BitronixRuntimeException("cannot get current transaction status", ex);
-		}
-	}
+    @Override
+    public Object getTransactionKey() {
+        try {
+            if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
+                return null;
 
-	@Override
-	public Object getResource(Object key)
-	{
-		try
-		{
-			if (key == null)
-			{
-				throw new NullPointerException("key cannot be null");
-			}
-			if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
-			{
-				throw new IllegalStateException("no transaction started on current thread");
-			}
+            return currentTransaction().getGtrid();
+        } catch (SystemException ex) {
+            throw new BitronixRuntimeException("cannot get current transaction status", ex);
+        }
+    }
 
-			return getResources().get(key);
-		}
-		catch (SystemException ex)
-		{
-			throw new BitronixRuntimeException("cannot get current transaction status", ex);
-		}
-	}
+    @Override
+    public int getTransactionStatus() {
+        try {
+            if (currentTransaction() == null)
+                return Status.STATUS_NO_TRANSACTION;
 
-	@Override
-	public void registerInterposedSynchronization(Synchronization synchronization)
-	{
-		try
-		{
-			if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
-			{
-				throw new IllegalStateException("no transaction started on current thread");
-			}
-			if (currentTransaction().getStatus() == Status.STATUS_PREPARING ||
-			    currentTransaction().getStatus() == Status.STATUS_PREPARED ||
-			    currentTransaction().getStatus() == Status.STATUS_COMMITTING ||
-			    currentTransaction().getStatus() == Status.STATUS_COMMITTED ||
-			    currentTransaction().getStatus() == Status.STATUS_ROLLING_BACK ||
-			    currentTransaction().getStatus() == Status.STATUS_ROLLEDBACK
-			)
-			{
-				throw new IllegalStateException("transaction is done, cannot register an interposed synchronization");
-			}
+            return currentTransaction().getStatus();
+        } catch (SystemException ex) {
+            throw new BitronixRuntimeException("cannot get current transaction status", ex);
+        }
+    }
 
-			currentTransaction().getSynchronizationScheduler()
-			                    .add(synchronization, Scheduler.DEFAULT_POSITION - 1);
-		}
-		catch (SystemException ex)
-		{
-			throw new BitronixRuntimeException("cannot get current transaction status", ex);
-		}
-	}
+    @Override
+    public void putResource(Object key, Object value) {
+        try {
+            if (key == null)
+                throw new NullPointerException("key cannot be null");
+            if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
+                throw new IllegalStateException("no transaction started on current thread");
 
-	@Override
-	public int getTransactionStatus()
-	{
-		try
-		{
-			if (currentTransaction() == null)
-			{
-				return Status.STATUS_NO_TRANSACTION;
-			}
+            Object oldValue = getResources().put(key, value);
 
-			return currentTransaction().getStatus();
-		}
-		catch (SystemException ex)
-		{
-			throw new BitronixRuntimeException("cannot get current transaction status", ex);
-		}
-	}
+            if (oldValue == null && getResources().size() == 1) {
+                if (log.isDebugEnabled()) { log.debug("first resource put in synchronization registry, registering a ClearRegistryResourcesSynchronization"); }
+                Synchronization synchronization = new ClearRegistryResourcesSynchronization();
+                currentTransaction().getSynchronizationScheduler().add(synchronization, Scheduler.ALWAYS_LAST_POSITION);
+            }
+        } catch (SystemException ex) {
+            throw new BitronixRuntimeException("cannot get current transaction status", ex);
+        }
+    }
 
-	@Override
-	public void setRollbackOnly()
-	{
-		try
-		{
-			if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
-			{
-				throw new IllegalStateException("no transaction started on current thread");
-			}
+    @Override
+    public void registerInterposedSynchronization(Synchronization synchronization) {
+        try {
+            if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
+                throw new IllegalStateException("no transaction started on current thread");
+            if (    currentTransaction().getStatus() == Status.STATUS_PREPARING ||
+                    currentTransaction().getStatus() == Status.STATUS_PREPARED ||
+                    currentTransaction().getStatus() == Status.STATUS_COMMITTING ||
+                    currentTransaction().getStatus() == Status.STATUS_COMMITTED ||
+                    currentTransaction().getStatus() == Status.STATUS_ROLLING_BACK ||
+                    currentTransaction().getStatus() == Status.STATUS_ROLLEDBACK
+                    )
+                throw new IllegalStateException("transaction is done, cannot register an interposed synchronization");
 
-			currentTransaction().setStatus(Status.STATUS_MARKED_ROLLBACK);
-		}
-		catch (SystemException ex)
-		{
-			throw new BitronixRuntimeException("cannot get or set current transaction status", ex);
-		}
-	}
+            currentTransaction().getSynchronizationScheduler().add(synchronization, Scheduler.DEFAULT_POSITION -1);
+        } catch (SystemException ex) {
+            throw new BitronixRuntimeException("cannot get current transaction status", ex);
+        }
+    }
 
-	@Override
-	public boolean getRollbackOnly()
-	{
-		try
-		{
-			if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
-			{
-				throw new IllegalStateException("no transaction started on current thread");
-			}
+    @Override
+    public void setRollbackOnly() {
+        try {
+            if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
+                throw new IllegalStateException("no transaction started on current thread");
 
-			return currentTransaction().getStatus() == Status.STATUS_MARKED_ROLLBACK;
-		}
-		catch (SystemException e)
-		{
-			throw new BitronixRuntimeException("cannot get current transaction status");
-		}
-	}
+            currentTransaction().setStatus(Status.STATUS_MARKED_ROLLBACK);
+        } catch (SystemException ex) {
+            throw new BitronixRuntimeException("cannot get or set current transaction status", ex);
+        }
+    }
 
-	private Map<Object, Object> getResources()
-	{
-		return resourcesTl.get();
-	}
+    private Map<Object, Object> getResources() {
+        return resourcesTl.get();
+    }
 
-	private BitronixTransaction currentTransaction()
-	{
-		return transactionManager.getCurrentTransaction();
-	}
+    private BitronixTransaction currentTransaction() {
+        return transactionManager.getCurrentTransaction();
+    }
 
-	@Override
-	public Reference getReference() throws NamingException
-	{
-		return new Reference(
-				BitronixTransactionManager.class.getName(),
-				new StringRefAddr("TransactionSynchronizationRegistry", "BitronixTransactionSynchronizationRegistry"),
-				BitronixTransactionSynchronizationRegistryObjectFactory.class.getName(),
-				null
-		);
-	}
+    @Override
+    public Reference getReference() throws NamingException {
+        return new Reference(
+                BitronixTransactionManager.class.getName(),
+                new StringRefAddr("TransactionSynchronizationRegistry", "BitronixTransactionSynchronizationRegistry"),
+                BitronixTransactionSynchronizationRegistryObjectFactory.class.getName(),
+                null
+        );
+    }
 
-	private final class ClearRegistryResourcesSynchronization
-			implements Synchronization
-	{
-		@Override
-		public void beforeCompletion()
-		{
-		}
+    private final class ClearRegistryResourcesSynchronization implements Synchronization {
+        @Override
+        public void beforeCompletion() {
+        }
 
-		@Override
-		public void afterCompletion(int status)
-		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("clearing resources");
-			}
-			getResources().clear();
-		}
-	}
+        @Override
+        public void afterCompletion(int status) {
+            if (log.isDebugEnabled()) { log.debug("clearing resources"); }
+            getResources().clear();
+        }
+    }
 
 }

@@ -28,83 +28,67 @@ import java.util.List;
  *
  * @author Ludovic Orban
  */
-public class PhaseException
-		extends Exception
-{
+public class PhaseException extends Exception {
 
-	private final List<Exception> exceptions;
-	private final List<XAResourceHolderState> resourceStates;
+    private final List<Exception> exceptions;
+    private final List<XAResourceHolderState> resourceStates;
 
-	public PhaseException(List<Exception> exceptions, List<XAResourceHolderState> resourceStates)
-	{
-		this.exceptions = Collections.unmodifiableList(exceptions);
-		this.resourceStates = Collections.unmodifiableList(resourceStates);
-	}
+    public PhaseException(List<Exception> exceptions, List<XAResourceHolderState> resourceStates) {
+        this.exceptions = Collections.unmodifiableList(exceptions);
+        this.resourceStates = Collections.unmodifiableList(resourceStates);
+    }
 
-	@Override
-	public String getMessage()
-	{
-		StringBuilder errorMessage = new StringBuilder();
-		errorMessage.append("collected ");
-		errorMessage.append(exceptions.size());
-		errorMessage.append(" exception(s):");
-		for (int i = 0; i < exceptions.size(); i++)
-		{
-			errorMessage.append(System.getProperty("line.separator"));
-			Throwable throwable = exceptions.get(i);
-			String message = throwable.getMessage();
-			XAResourceHolderState holderState = resourceStates.get(i);
+    @Override
+    public String getMessage() {
+        StringBuilder errorMessage = new StringBuilder();
+        errorMessage.append("collected ");
+        errorMessage.append(exceptions.size());
+        errorMessage.append(" exception(s):");
+        for (int i = 0; i < exceptions.size(); i++) {
+            errorMessage.append(System.getProperty("line.separator"));
+            Throwable throwable = exceptions.get(i);
+            String message = throwable.getMessage();
+            XAResourceHolderState holderState = resourceStates.get(i);
 
-			if (holderState != null)
-			{
-				errorMessage.append(" [");
-				errorMessage.append(holderState.getUniqueName());
-				errorMessage.append(" - ");
-			}
-			errorMessage.append(throwable.getClass()
-			                             .getName());
-			if (throwable instanceof XAException)
-			{
-				XAException xaEx = (XAException) throwable;
-				errorMessage.append("(");
-				errorMessage.append(Decoder.decodeXAExceptionErrorCode(xaEx));
-				String extraErrorDetails = TransactionManagerServices.getExceptionAnalyzer()
-				                                                     .extractExtraXAExceptionDetails(xaEx);
-				if (extraErrorDetails != null && extraErrorDetails.trim()
-				                                                  .length() > 0)
-				{
-					errorMessage.append(" - ")
-					            .append(extraErrorDetails);
-				}
-				errorMessage.append(")");
-			}
-			errorMessage.append(" - ");
-			errorMessage.append(message);
-			errorMessage.append("]");
-		}
+            if (holderState != null) {
+                errorMessage.append(" [");
+                errorMessage.append(holderState.getUniqueName());
+                errorMessage.append(" - ");
+            }
+            errorMessage.append(throwable.getClass().getName());
+            if (throwable instanceof XAException) {
+                XAException xaEx = (XAException) throwable;
+                errorMessage.append("(");
+                errorMessage.append(Decoder.decodeXAExceptionErrorCode(xaEx));
+                String extraErrorDetails = TransactionManagerServices.getExceptionAnalyzer().extractExtraXAExceptionDetails(xaEx);
+                if (extraErrorDetails != null && extraErrorDetails.trim().length() > 0) {
+                    errorMessage.append(" - ").append(extraErrorDetails);
+                }
+                errorMessage.append(")");
+            }
+            errorMessage.append(" - ");
+            errorMessage.append(message);
+            errorMessage.append("]");
+        }
 
-		return errorMessage.toString();
-	}
+        return errorMessage.toString();
+    }
 
-	/**
-	 * Get the list of exceptions that have been thrown during a phase execution.
-	 *
-	 * @return the list of exceptions that have been thrown during a phase execution.
-	 */
-	public List<Exception> getExceptions()
-	{
-		return exceptions;
-	}
+    /**
+     * Get the list of exceptions that have been thrown during a phase execution.
+     * @return the list of exceptions that have been thrown during a phase execution.
+     */
+    public List<Exception> getExceptions() {
+        return exceptions;
+    }
 
-	/**
-	 * Get the list of resource which threw an exception during a phase execution.
-	 * This list always contains exactly one resource per exception present in {@link #getExceptions} list.
-	 * Indices of both list always match a resource against the exception it threw.
-	 *
-	 * @return the list of resource which threw an exception during a phase execution.
-	 */
-	public List<XAResourceHolderState> getResourceStates()
-	{
-		return resourceStates;
-	}
+    /**
+     * Get the list of resource which threw an exception during a phase execution.
+     * This list always contains exactly one resource per exception present in {@link #getExceptions} list.
+     * Indices of both list always match a resource against the exception it threw.
+     * @return the list of resource which threw an exception during a phase execution.
+     */
+    public List<XAResourceHolderState> getResourceStates() {
+        return resourceStates;
+    }
 }

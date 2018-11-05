@@ -20,18 +20,14 @@ package bitronix.tm.utils;
  *
  * @author Ludovic Orban
  */
-public class PropertyException
-		extends RuntimeException
-{
+public class PropertyException extends RuntimeException {
 
-	public PropertyException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
+    public PropertyException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public PropertyException(String message)
-	{
-		super(message);
-	}
+    public PropertyException(String message) {
+        super(message);
+    }
 
 }

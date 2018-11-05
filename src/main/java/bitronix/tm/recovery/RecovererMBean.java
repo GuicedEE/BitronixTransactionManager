@@ -20,19 +20,18 @@ package bitronix.tm.recovery;
  *
  * @author Ludovic Orban
  */
-public interface RecovererMBean
-{
+public interface RecovererMBean {
 
-	public void run();
+    public void run();
 
-	public int getCommittedCount();
+    public int getCommittedCount();
 
-	public int getRolledbackCount();
+    public int getRolledbackCount();
 
-	public Exception getCompletionException();
+    public Exception getCompletionException();
 
-	public int getExecutionsCount();
+    public int getExecutionsCount();
 
-	public boolean isRunning();
+    public boolean isRunning();
 
 }

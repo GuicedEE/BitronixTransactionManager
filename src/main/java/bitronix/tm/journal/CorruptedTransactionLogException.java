@@ -22,11 +22,8 @@ import java.io.IOException;
  *
  * @author Ludovic Orban
  */
-public class CorruptedTransactionLogException
-		extends IOException
-{
-	public CorruptedTransactionLogException(String s)
-	{
-		super(s);
-	}
+public class CorruptedTransactionLogException extends IOException {
+	public CorruptedTransactionLogException(String s) {
+        super(s);
+    }
 }

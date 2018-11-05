@@ -26,92 +26,77 @@ import java.util.List;
 /**
  * Ehcache implementation of BTM's XAResourceHolder.
  * <p>
- * Copyright 2003-2010 Terracotta, Inc.
+ *   Copyright 2003-2010 Terracotta, Inc.
  * </p>
- *
  * @author Ludovic Orban
  */
-public class EhCacheXAResourceHolder
-		extends AbstractXAResourceHolder<EhCacheXAResourceHolder>
-{
+public class EhCacheXAResourceHolder extends AbstractXAResourceHolder<EhCacheXAResourceHolder> {
 
-	private final XAResource resource;
-	private final ResourceBean bean;
+    private final XAResource resource;
+    private final ResourceBean bean;
 
-	/**
-	 * Create a new EhCacheXAResourceHolder for a particular XAResource
-	 *
-	 * @param resource
-	 * 		the required XAResource
-	 * @param bean
-	 * 		the required ResourceBean
-	 */
-	public EhCacheXAResourceHolder(XAResource resource, ResourceBean bean)
-	{
-		this.resource = resource;
-		this.bean = bean;
-	}
+    /**
+     * Create a new EhCacheXAResourceHolder for a particular XAResource
+     * @param resource the required XAResource
+     * @param bean the required ResourceBean
+     */
+    public EhCacheXAResourceHolder(XAResource resource, ResourceBean bean) {
+        this.resource = resource;
+        this.bean = bean;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public XAResource getXAResource()
-	{
-		return resource;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public XAResource getXAResource() {
+        return resource;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ResourceBean getResourceBean()
-	{
-		return bean;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResourceBean getResourceBean() {
+        return bean;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<EhCacheXAResourceHolder> getXAResourceHolders()
-	{
-		return Collections.singletonList(this);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() throws Exception {
+        throw new UnsupportedOperationException("EhCacheXAResourceHolder cannot be used with an XAPool");
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Object getConnectionHandle() throws Exception
-	{
-		throw new UnsupportedOperationException("EhCacheXAResourceHolder cannot be used with an XAPool");
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object getConnectionHandle() throws Exception {
+        throw new UnsupportedOperationException("EhCacheXAResourceHolder cannot be used with an XAPool");
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void close() throws Exception
-	{
-		throw new UnsupportedOperationException("EhCacheXAResourceHolder cannot be used with an XAPool");
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Date getLastReleaseDate() {
+        throw new UnsupportedOperationException("EhCacheXAResourceHolder cannot be used with an XAPool");
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Date getLastReleaseDate()
-	{
-		throw new UnsupportedOperationException("EhCacheXAResourceHolder cannot be used with an XAPool");
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<EhCacheXAResourceHolder> getXAResourceHolders() {
+        return Collections.singletonList(this);
+    }
 
-	public EhCacheXAResourceHolder getXAResourceHolderForXaResource(XAResource xaResource)
-	{
-		if (xaResource == resource)
-		{
-			return this;
-		}
-		return null;
-	}
+    public EhCacheXAResourceHolder getXAResourceHolderForXaResource(XAResource xaResource) {
+        if (xaResource == resource) {
+            return this;
+        }
+        return null;
+    }
 }

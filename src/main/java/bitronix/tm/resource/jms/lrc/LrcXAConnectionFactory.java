@@ -30,76 +30,58 @@ import java.util.Map;
  *
  * @author Ludovic Orban
  */
-public class LrcXAConnectionFactory
-		implements XAConnectionFactory
-{
+public class LrcXAConnectionFactory implements XAConnectionFactory {
 
-	private volatile String connectionFactoryClassName;
-	private volatile Map<String, Object> properties = new HashMap<String, Object>();
+    private volatile String connectionFactoryClassName;
+    private volatile Map<String, Object> properties = new HashMap<String, Object>();
 
-	public LrcXAConnectionFactory()
-	{
-	}
+    public LrcXAConnectionFactory() {
+    }
 
-	public String getConnectionFactoryClassName()
-	{
-		return connectionFactoryClassName;
-	}
+    public String getConnectionFactoryClassName() {
+        return connectionFactoryClassName;
+    }
 
-	public void setConnectionFactoryClassName(String connectionFactoryClassName)
-	{
-		this.connectionFactoryClassName = connectionFactoryClassName;
-	}
+    public void setConnectionFactoryClassName(String connectionFactoryClassName) {
+        this.connectionFactoryClassName = connectionFactoryClassName;
+    }
 
-	public Map<String, Object> getProperties()
-	{
-		return properties;
-	}
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
 
-	public void setProperties(Map<String, Object> properties)
-	{
-		this.properties = properties;
-	}
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
+    }
 
-	@Override
-	public XAConnection createXAConnection() throws JMSException
-	{
-		try
-		{
-			Class<?> clazz = ClassLoaderUtils.loadClass(connectionFactoryClassName);
-			ConnectionFactory nonXaConnectionFactory = (ConnectionFactory) clazz.getDeclaredConstructor()
-			                                                                    .newInstance();
-			PropertyUtils.setProperties(nonXaConnectionFactory, properties);
+    @Override
+    public XAConnection createXAConnection() throws JMSException {
+        try {
+            Class<?> clazz = ClassLoaderUtils.loadClass(connectionFactoryClassName);
+            ConnectionFactory nonXaConnectionFactory = (ConnectionFactory) clazz.getDeclaredConstructor().newInstance();
+            PropertyUtils.setProperties(nonXaConnectionFactory, properties);
 
-			return new LrcXAConnection(nonXaConnectionFactory.createConnection());
-		}
-		catch (Exception ex)
-		{
-			throw (JMSException) new JMSException("unable to connect to non-XA resource " + connectionFactoryClassName).initCause(ex);
-		}
-	}
+            return new LrcXAConnection(nonXaConnectionFactory.createConnection());
+        } catch (Exception ex) {
+            throw (JMSException) new JMSException("unable to connect to non-XA resource " + connectionFactoryClassName).initCause(ex);
+        }
+    }
 
-	@Override
-	public XAConnection createXAConnection(String user, String password) throws JMSException
-	{
-		try
-		{
-			Class<?> clazz = ClassLoaderUtils.loadClass(connectionFactoryClassName);
-			ConnectionFactory nonXaConnectionFactory = (ConnectionFactory) clazz.getDeclaredConstructor()
-			                                                                    .newInstance();
-			PropertyUtils.setProperties(nonXaConnectionFactory, properties);
+    @Override
+    public XAConnection createXAConnection(String user, String password) throws JMSException {
+        try {
+            Class<?> clazz = ClassLoaderUtils.loadClass(connectionFactoryClassName);
+            ConnectionFactory nonXaConnectionFactory = (ConnectionFactory) clazz.getDeclaredConstructor().newInstance();
+            PropertyUtils.setProperties(nonXaConnectionFactory, properties);
 
-			return new LrcXAConnection(nonXaConnectionFactory.createConnection(user, password));
-		}
-		catch (Exception ex)
-		{
-			throw (JMSException) new JMSException("unable to connect to non-XA resource " + connectionFactoryClassName).initCause(ex);
-		}
-	}
+            return new LrcXAConnection(nonXaConnectionFactory.createConnection(user, password));
+        } catch (Exception ex) {
+            throw (JMSException) new JMSException("unable to connect to non-XA resource " + connectionFactoryClassName).initCause(ex);
+        }
+    }
 
-	@Override
-	public String toString()
-	{
-		return "a JMS LrcXAConnectionFactory on " + connectionFactoryClassName + " with properties " + properties;
-	}
+    @Override
+    public String toString() {
+        return "a JMS LrcXAConnectionFactory on " + connectionFactoryClassName + " with properties " + properties;
+    }
 }

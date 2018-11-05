@@ -33,142 +33,106 @@ import java.util.Properties;
  * @author Ludovic Orban
  * @author Brett Wooldridge
  */
-public class LrcXADataSource
-		implements XADataSource
-{
+public class LrcXADataSource implements XADataSource {
 
-	private volatile int loginTimeout;
-	private volatile String driverClassName;
-	private volatile String url;
-	private volatile String user;
-	private volatile String password;
+    private volatile int loginTimeout;
+    private volatile String driverClassName;
+    private volatile String url;
+    private volatile String user;
+    private volatile String password;
 
-	public LrcXADataSource()
-	{
-	}
+    public LrcXADataSource() {
+    }
 
-	public String getDriverClassName()
-	{
-		return driverClassName;
-	}
+    @Override
+    public int getLoginTimeout() throws SQLException {
+        return loginTimeout;
+    }
 
-	public void setDriverClassName(String driverClassName)
-	{
-		this.driverClassName = driverClassName;
-	}
+    @Override
+    public void setLoginTimeout(int seconds) throws SQLException {
+        this.loginTimeout = seconds;
+    }
 
-	public String getUrl()
-	{
-		return url;
-	}
+    public String getDriverClassName() {
+        return driverClassName;
+    }
 
-	public void setUrl(String url)
-	{
-		this.url = url;
-	}
+    public void setDriverClassName(String driverClassName) {
+        this.driverClassName = driverClassName;
+    }
 
-	public String getUser()
-	{
-		return user;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setUser(String user)
-	{
-		this.user = user;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public String getPassword()
-	{
-		return password;
-	}	@Override
-	public int getLoginTimeout() throws SQLException
-	{
-		return loginTimeout;
-	}
+    public String getUser() {
+        return user;
+    }
 
-	public void setPassword(String password)
-	{
-		this.password = password;
-	}
+    public void setUser(String user) {
+        this.user = user;
+    }
 
-	@Override
-	public XAConnection getXAConnection() throws SQLException
-	{
-		try
-		{
-			Class<?> driverClazz = ClassLoaderUtils.loadClass(driverClassName);
-			Driver driver = (Driver) driverClazz.getDeclaredConstructor()
-			                                    .newInstance();
-			Properties props = new Properties();
-			if (user != null)
-			{
-				props.setProperty("user", user);
-			}
-			if (password != null)
-			{
-				props.setProperty("password", password);
-			}
-			Connection connection = driver.connect(url, props);
-			XAConnection xaConnection = JdbcProxyFactory.INSTANCE.getProxyXaConnection(connection);
-			return xaConnection;
-		}
-		catch (Exception ex)
-		{
-			throw new SQLException("unable to connect to non-XA resource " + driverClassName, ex);
-		}
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	@Override
-	public XAConnection getXAConnection(String user, String password) throws SQLException
-	{
-		try
-		{
-			Class<?> driverClazz = ClassLoaderUtils.loadClass(driverClassName);
-			Driver driver = (Driver) driverClazz.getDeclaredConstructor()
-			                                    .newInstance();
-			Properties props = new Properties();
-			props.setProperty("user", user);
-			props.setProperty("password", password);
-			Connection connection = driver.connect(url, props);
-			XAConnection xaConnection = JdbcProxyFactory.INSTANCE.getProxyXaConnection(connection);
-			return xaConnection;
-		}
-		catch (Exception ex)
-		{
-			throw new SQLException("unable to connect to non-XA resource " + driverClassName, ex);
-		}
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	@Override
-	public PrintWriter getLogWriter() throws SQLException
-	{
-		return null;
-	}
+    @Override
+    public PrintWriter getLogWriter() throws SQLException {
+        return null;
+    }
 
-	@Override
-	public void setLogWriter(PrintWriter out) throws SQLException
-	{
-	}
+    @Override
+    public void setLogWriter(PrintWriter out) throws SQLException {
+    }
 
-	@Override
-	public String toString()
-	{
-		return "a JDBC LrcXADataSource on " + driverClassName + " with URL " + url;
-	}
+    @Override
+    public XAConnection getXAConnection() throws SQLException {
+        try {
+            Class<?> driverClazz = ClassLoaderUtils.loadClass(driverClassName);
+            Driver driver = (Driver) driverClazz.getDeclaredConstructor().newInstance();
+            Properties props = new Properties();
+            if (user != null) props.setProperty("user", user);
+            if (password != null) props.setProperty("password", password);
+            Connection connection = driver.connect(url, props);
+            XAConnection xaConnection = JdbcProxyFactory.INSTANCE.getProxyXaConnection(connection);
+            return xaConnection;
+        } catch (Exception ex) {
+            throw new SQLException("unable to connect to non-XA resource " + driverClassName, ex);
+        }
+    }
 
-	@Override
-	public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException
-	{
+    @Override
+    public XAConnection getXAConnection(String user, String password) throws SQLException {
+        try {
+            Class<?> driverClazz = ClassLoaderUtils.loadClass(driverClassName);
+            Driver driver = (Driver) driverClazz.getDeclaredConstructor().newInstance();
+            Properties props = new Properties();
+            props.setProperty("user", user);
+            props.setProperty("password", password);
+            Connection connection = driver.connect(url, props);
+            XAConnection xaConnection = JdbcProxyFactory.INSTANCE.getProxyXaConnection(connection);
+            return xaConnection;
+        } catch (Exception ex) {
+            throw new SQLException("unable to connect to non-XA resource " + driverClassName, ex);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "a JDBC LrcXADataSource on " + driverClassName + " with URL " + url;
+    }
+
+	public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
 		throw new SQLFeatureNotSupportedException();
-	}	@Override
-	public void setLoginTimeout(int seconds) throws SQLException
-	{
-		loginTimeout = seconds;
 	}
-
-
-
-
-
-
 }

@@ -22,29 +22,24 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author Ludovic Orban
  */
-public final class MonotonicClock
-{
+public final class MonotonicClock {
 
-	private static final AtomicLong lastTime = new AtomicLong(Long.MIN_VALUE);
+    private static final AtomicLong lastTime = new AtomicLong(Long.MIN_VALUE);
 
-	private MonotonicClock()
-	{
-	}
+    private MonotonicClock() {
+    }
 
-	/**
-	 * Return the current time in milliseconds, guaranteeing monotonic time increment.
-	 *
-	 * @return the current time in milliseconds.
-	 */
-	public static long currentTimeMillis()
-	{
-		long now = System.currentTimeMillis();
-		long time = lastTime.get();
-		if (now > time)
-		{
-			lastTime.compareAndSet(time, now);
-			return lastTime.get();
-		}
-		return time;
-	}
+    /**
+     * Return the current time in milliseconds, guaranteeing monotonic time increment.
+     * @return the current time in milliseconds.
+     */
+    public static long currentTimeMillis() {
+        long now = System.currentTimeMillis();
+        long time = lastTime.get();
+        if (now > time) {
+            lastTime.compareAndSet(time, now);
+            return lastTime.get();
+        }
+        return time;
+    }
 }

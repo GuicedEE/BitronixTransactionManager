@@ -15,6 +15,14 @@
  */
 package bitronix.tm.resource.jdbc.proxy;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import javax.sql.XAConnection;
+
 import bitronix.tm.TransactionManagerServices;
 import bitronix.tm.internal.BitronixRuntimeException;
 import bitronix.tm.resource.jdbc.JdbcPooledConnection;
@@ -22,73 +30,57 @@ import bitronix.tm.resource.jdbc.LruStatementCache.CacheKey;
 import bitronix.tm.resource.jdbc.lrc.LrcXAResource;
 import bitronix.tm.utils.ClassLoaderUtils;
 
-import javax.sql.XAConnection;
-import java.sql.*;
-
 /**
  *
  */
-public interface JdbcProxyFactory
-{
+public interface JdbcProxyFactory {
 
-	/* Classes should use JdbcProxyFactory.INSTANCE to access the factory */
-	final JdbcProxyFactory INSTANCE = Initializer.initialize();
+    /* Classes should use JdbcProxyFactory.INSTANCE to access the factory */
+    final JdbcProxyFactory INSTANCE = Initializer.initialize();
 
-	/* Methods used to create the proxies around various JDBC classes */
+    /* Methods used to create the proxies around various JDBC classes */
 
-	Connection getProxyConnection(JdbcPooledConnection jdbcPooledConnection, Connection connection);
+    Connection getProxyConnection(JdbcPooledConnection jdbcPooledConnection, Connection connection);
 
-	Statement getProxyStatement(JdbcPooledConnection jdbcPooledConnection, Statement statement);
+    Statement getProxyStatement(JdbcPooledConnection jdbcPooledConnection, Statement statement);
 
-	CallableStatement getProxyCallableStatement(JdbcPooledConnection jdbcPooledConnection, CallableStatement statement);
+    CallableStatement getProxyCallableStatement(JdbcPooledConnection jdbcPooledConnection, CallableStatement statement);
 
-	PreparedStatement getProxyPreparedStatement(JdbcPooledConnection jdbcPooledConnection, PreparedStatement statement, CacheKey cacheKey);
+    PreparedStatement getProxyPreparedStatement(JdbcPooledConnection jdbcPooledConnection, PreparedStatement statement, CacheKey cacheKey);
 
-	ResultSet getProxyResultSet(Statement statement, ResultSet resultSet);
+    ResultSet getProxyResultSet(Statement statement, ResultSet resultSet);
 
-	XAConnection getProxyXaConnection(Connection connection);
+    XAConnection getProxyXaConnection(Connection connection);
 
-	Connection getProxyConnection(LrcXAResource xaResource, Connection connection);
+    Connection getProxyConnection(LrcXAResource xaResource, Connection connection);
 
-	/**
-	 * Initializer class used to initialize the proxy factory.
-	 */
-	class Initializer
-	{
-		private static JdbcProxyFactory initialize()
-		{
-			try
-			{
-				String jdbcProxyFactoryClass = TransactionManagerServices.getConfiguration()
-				                                                         .getJdbcProxyFactoryClass();
-				if ("auto".equals(jdbcProxyFactoryClass))
-				{
-					try
-					{
-						ClassLoaderUtils.loadClass("javassist.CtClass");
-						jdbcProxyFactoryClass = "bitronix.tm.resource.jdbc.proxy.JdbcJavassistProxyFactory";
-					}
-					catch (ClassNotFoundException cnfe)
-					{
-						try
-						{
-							ClassLoaderUtils.loadClass("net.sf.cglib.proxy.Enhancer");
-							jdbcProxyFactoryClass = "bitronix.tm.resource.jdbc.proxy.JdbcCglibProxyFactory";
-						}
-						catch (ClassNotFoundException cnfe2)
-						{
-							jdbcProxyFactoryClass = "bitronix.tm.resource.jdbc.proxy.JdbcJavaProxyFactory";
-						}
-					}
-				}
-				Class<?> proxyFactoryClass = ClassLoaderUtils.loadClass(jdbcProxyFactoryClass);
-				return (JdbcProxyFactory) proxyFactoryClass.getDeclaredConstructor()
-				                                           .newInstance();
-			}
-			catch (Exception ex)
-			{
-				throw new BitronixRuntimeException("error initializing JdbcProxyFactory", ex);
-			}
-		}
-	}
+    /**
+     * Initializer class used to initialize the proxy factory.
+     */
+    class Initializer {
+        private static JdbcProxyFactory initialize() {
+            try {
+                String jdbcProxyFactoryClass = TransactionManagerServices.getConfiguration().getJdbcProxyFactoryClass();
+                if ("auto".equals(jdbcProxyFactoryClass)) {
+                    try {
+                        ClassLoaderUtils.loadClass("javassist.CtClass");
+                        jdbcProxyFactoryClass = "bitronix.tm.resource.jdbc.proxy.JdbcJavassistProxyFactory";
+                    }
+                    catch (ClassNotFoundException cnfe) {
+                        try {
+                            ClassLoaderUtils.loadClass("net.sf.cglib.proxy.Enhancer");
+                            jdbcProxyFactoryClass = "bitronix.tm.resource.jdbc.proxy.JdbcCglibProxyFactory";
+                        }
+                        catch (ClassNotFoundException cnfe2) {
+                            jdbcProxyFactoryClass = "bitronix.tm.resource.jdbc.proxy.JdbcJavaProxyFactory";
+                        }
+                    }
+                }
+                Class<?> proxyFactoryClass = ClassLoaderUtils.loadClass(jdbcProxyFactoryClass);
+                return (JdbcProxyFactory) proxyFactoryClass.getDeclaredConstructor().newInstance();
+            } catch (Exception ex) {
+                throw new BitronixRuntimeException("error initializing JdbcProxyFactory", ex);
+            }
+        }
+    }
 }

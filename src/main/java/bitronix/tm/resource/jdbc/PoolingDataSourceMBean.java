@@ -16,25 +16,18 @@
 package bitronix.tm.resource.jdbc;
 
 /**
+ *
  * @author Ludovic Orban
  */
-public interface PoolingDataSourceMBean
-{
+public interface PoolingDataSourceMBean {
 
-	public int getMinPoolSize();
-
-	public int getMaxPoolSize();
-
-	public int getInPoolSize();
-
-	public int getTotalPoolSize();
-
-	public boolean isFailed();
-
-	public void reset() throws Exception;
-
-	public boolean isDisabled();
-
-	public void setDisabled(boolean disabled);
+    public int getMinPoolSize();
+    public int getMaxPoolSize();
+    public int getInPoolSize();
+    public int getTotalPoolSize();
+    public boolean isFailed();
+    public void reset() throws Exception;
+    public boolean isDisabled();
+    public void setDisabled(boolean disabled);
 
 }

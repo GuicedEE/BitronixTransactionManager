@@ -23,16 +23,11 @@ import java.util.Date;
  *
  * @author Ludovic Orban
  */
-public interface BitronixTransactionMBean
-{
+public interface BitronixTransactionMBean {
 
-	String getGtrid();
-
-	String getStatusDescription();
-
-	String getThreadName();
-
-	Date getStartDate();
-
-	Collection<String> getEnlistedResourcesUniqueNames();
+    String getGtrid();
+    String getStatusDescription();
+    String getThreadName();
+    Date getStartDate();
+    Collection<String> getEnlistedResourcesUniqueNames();
 }

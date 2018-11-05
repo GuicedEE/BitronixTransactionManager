@@ -22,26 +22,21 @@ import javax.transaction.xa.XAException;
  *
  * @author Ludovic Orban
  */
-public class BitronixXAException
-		extends XAException
-{
+public class BitronixXAException extends XAException {
 
-	public BitronixXAException(String message, int errorCode)
-	{
-		super(message);
-		this.errorCode = errorCode;
-	}
+    public BitronixXAException(String message, int errorCode) {
+        super(message);
+        this.errorCode = errorCode;
+    }
 
-	public BitronixXAException(String message, int errorCode, Throwable t)
-	{
-		super(message);
-		this.errorCode = errorCode;
-		initCause(t);
-	}
+    public BitronixXAException(String message, int errorCode, Throwable t) {
+        super(message);
+        this.errorCode = errorCode;
+        initCause(t);
+    }
 
-	public static boolean isUnilateralRollback(XAException ex)
-	{
-		return (ex.errorCode >= XAException.XA_RBBASE && ex.errorCode <= XAException.XA_RBEND) || ex.errorCode == XAException.XAER_NOTA;
-	}
-
+    public static boolean isUnilateralRollback(XAException ex) {
+        return (ex.errorCode >= XAException.XA_RBBASE && ex.errorCode <= XAException.XA_RBEND) || ex.errorCode == XAException.XAER_NOTA;
+    }
+    
 }

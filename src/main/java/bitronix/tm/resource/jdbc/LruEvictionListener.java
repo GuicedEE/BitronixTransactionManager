@@ -18,14 +18,11 @@ package bitronix.tm.resource.jdbc;
 /**
  * Eviction listener interface for {@link LruStatementCache}.
  *
- * @param <T>
- * 		the type handled by the eviction listener
- *
  * @author Ludovic Orban
+ * @param <T> the type handled by the eviction listener
  */
-public interface LruEvictionListener<T>
-{
+public interface LruEvictionListener<T> {
 
-	public void onEviction(T value);
+    public void onEviction(T value);
 
 }

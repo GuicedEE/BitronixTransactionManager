@@ -22,18 +22,13 @@ import javax.transaction.xa.XAException;
  *
  * @author Ludovic Orban
  */
-public interface ExceptionAnalyzer
-		extends Service
-{
+public interface ExceptionAnalyzer extends Service {
 
-	/**
-	 * Extract information from a vendor's XAException that isn't available through standard APIs.
-	 *
-	 * @param ex
-	 * 		the {@link XAException} to analyze.
-	 *
-	 * @return extra error details as a human-readable string, or null if nothing extra was found.
-	 */
-	public String extractExtraXAExceptionDetails(XAException ex);
+    /**
+     * Extract information from a vendor's XAException that isn't available through standard APIs.
+     * @param ex the {@link XAException} to analyze.
+     * @return extra error details as a human-readable string, or null if nothing extra was found.
+     */
+    public String extractExtraXAExceptionDetails(XAException ex);
 
 }

@@ -15,9 +15,6 @@
  */
 package bitronix.tm.resource.jdbc.proxy;
 
-import bitronix.tm.resource.jdbc.JdbcPooledConnection;
-import bitronix.tm.resource.jdbc.LruStatementCache.CacheKey;
-
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,151 +22,127 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Map;
 
+import bitronix.tm.resource.jdbc.JdbcPooledConnection;
+import bitronix.tm.resource.jdbc.LruStatementCache.CacheKey;
+
 /**
  * @author Brett Wooldridge
  */
-public class PreparedStatementJavaProxy
-		extends JavaProxyBase<PreparedStatement>
-{
+public class PreparedStatementJavaProxy extends JavaProxyBase<PreparedStatement> {
 
-	private final static Map<String, Method> selfMethodMap = createMethodMap(PreparedStatementJavaProxy.class);
+    private final static Map<String, Method> selfMethodMap = createMethodMap(PreparedStatementJavaProxy.class);
 
-	private JdbcPooledConnection jdbcPooledConnection;
-	private CacheKey cacheKey;
-	private boolean pretendClosed;
+    private JdbcPooledConnection jdbcPooledConnection;
+    private CacheKey cacheKey;
+    private boolean pretendClosed;
 
-	public PreparedStatementJavaProxy(JdbcPooledConnection jdbcPooledConnection, PreparedStatement statement, CacheKey cacheKey)
-	{
-		initialize(jdbcPooledConnection, statement, cacheKey);
-	}
+    public PreparedStatementJavaProxy(JdbcPooledConnection jdbcPooledConnection, PreparedStatement statement, CacheKey cacheKey) {
+        initialize(jdbcPooledConnection, statement, cacheKey);
+    }
 
-	void initialize(JdbcPooledConnection jdbcPooledConnection, PreparedStatement statement, CacheKey cacheKey)
-	{
-		proxy = this;
-		this.jdbcPooledConnection = jdbcPooledConnection;
-		delegate = statement;
-		this.cacheKey = cacheKey;
-		pretendClosed = false;
-	}
+    public PreparedStatementJavaProxy() {
+        // Default constructor
+    }
 
-	public PreparedStatementJavaProxy()
-	{
-		// Default constructor
-	}
+    void initialize(JdbcPooledConnection jdbcPooledConnection, PreparedStatement statement, CacheKey cacheKey) {
+    	this.proxy = this;
+        this.jdbcPooledConnection = jdbcPooledConnection;
+        this.delegate = statement;
+        this.cacheKey = cacheKey;
+        this.pretendClosed = false;
+    }
 
-	@Override
-	public String toString()
-	{
-		return "a PreparedStatementJavaProxy wrapping [" + delegate + "]";
-	}
+    @Override
+    public String toString() {
+        return "a PreparedStatementJavaProxy wrapping [" + delegate + "]";
+    }
 
-	/* Overridden methods of java.sql.PreparedStatement */
+    /* Overridden methods of java.sql.PreparedStatement */
 
-	public void close() throws SQLException
-	{
-		if (pretendClosed || delegate == null)
-		{
-			return;
-		}
+    public void close() throws SQLException {
+        if (pretendClosed || delegate == null) {
+            return;
+        }
 
-		pretendClosed = true;
+        pretendClosed = true;
 
-		if (cacheKey == null)
-		{
-			jdbcPooledConnection.unregisterUncachedStatement(delegate);
-			delegate.close();
-		}
-		else
-		{
-			// Clear the parameters so the next use of this cached statement
-			// doesn't pick up unexpected values.
-			delegate.clearParameters();
-			delegate.clearWarnings();
-			try
-			{
-				delegate.clearBatch();
-			}
-			catch (SQLFeatureNotSupportedException e)
-			{
-				// Driver doesn't support batch updates.
-			}
+        if (cacheKey == null) {
+            jdbcPooledConnection.unregisterUncachedStatement(delegate);
+            delegate.close();
+        }
+        else {
+	        // Clear the parameters so the next use of this cached statement
+	        // doesn't pick up unexpected values.
+            delegate.clearParameters();
+            delegate.clearWarnings();
+            try {
+                delegate.clearBatch();
+            } catch (SQLFeatureNotSupportedException e) {
+                // Driver doesn't support batch updates.
+            }
 
-			// Return to cache so the usage count can be updated
-			jdbcPooledConnection.putCachedStatement(cacheKey, delegate);
-		}
-	}
+            // Return to cache so the usage count can be updated
+            jdbcPooledConnection.putCachedStatement(cacheKey, delegate);
+        }
+    }
 
-	public boolean isClosed() throws SQLException
-	{
-		return pretendClosed;
-	}
+    public boolean isClosed() throws SQLException {
+        return pretendClosed;
+    }
 
-	public ResultSet getResultSet() throws SQLException
-	{
-		ResultSet resultSet = delegate.getResultSet();
-		if (resultSet == null)
-		{
-			return null;
-		}
-		return JdbcProxyFactory.INSTANCE.getProxyResultSet(getProxy(), resultSet);
-	}
+    public ResultSet getResultSet() throws SQLException {
+    	ResultSet resultSet = delegate.getResultSet();
+    	if (resultSet == null) {
+    		return null;
+    	}
+    	return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), resultSet);
+    }
 
-	public ResultSet executeQuery() throws SQLException
-	{
-		ResultSet resultSet = delegate.executeQuery();
-		if (resultSet == null)
-		{
-			return null;
-		}
-		return JdbcProxyFactory.INSTANCE.getProxyResultSet(getProxy(), resultSet);
-	}
+    public ResultSet executeQuery() throws SQLException {
+    	ResultSet resultSet = delegate.executeQuery();
+    	if (resultSet == null) {
+    		return null;
+    	}
+    	return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), resultSet);
+    }
 
-	public ResultSet executeQuery(String sql) throws SQLException
-	{
-		ResultSet resultSet = delegate.executeQuery(sql);
-		if (resultSet == null)
-		{
-			return null;
-		}
-		return JdbcProxyFactory.INSTANCE.getProxyResultSet(getProxy(), resultSet);
-	}
+    public ResultSet executeQuery(String sql) throws SQLException {
+    	ResultSet resultSet = delegate.executeQuery(sql);
+    	if (resultSet == null) {
+    		return null;
+    	}
+    	return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), resultSet);
+    }
 
-	public ResultSet getGeneratedKeys() throws SQLException
-	{
-		ResultSet generatedKeys = delegate.getGeneratedKeys();
-		if (generatedKeys == null)
-		{
-			return null;
-		}
-		return JdbcProxyFactory.INSTANCE.getProxyResultSet(getProxy(), generatedKeys);
-	}
+    public ResultSet getGeneratedKeys() throws SQLException {
+    	ResultSet generatedKeys = delegate.getGeneratedKeys();
+    	if (generatedKeys == null) {
+    		return null;
+    	}
+    	return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), generatedKeys);
+    }
 
-	/* java.sql.Wrapper implementation */
+    /* java.sql.Wrapper implementation */
 
-	@SuppressWarnings("unchecked")
-	public <T> T unwrap(Class<T> iface) throws SQLException
-	{
-		if (iface.isAssignableFrom(delegate.getClass()))
-		{
-			return (T) delegate;
-		}
-		if (isWrapperFor(iface))
-		{
-			return unwrap(delegate, iface);
-		}
-		throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
-	}
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
+    }
 
-	public boolean isWrapperFor(Class<?> iface) throws SQLException
-	{
-		return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
-	}
+    @SuppressWarnings("unchecked")
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        if (iface.isAssignableFrom(delegate.getClass())) {
+            return (T) delegate;
+        }
+        if (isWrapperFor(iface)) {
+            return unwrap(delegate, iface);
+        }
+        throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
+    }
 
-	/* Overridden methods of JavaProxyBase */
+    /* Overridden methods of JavaProxyBase */
 
-	@Override
-	protected Map<String, Method> getMethodMap()
-	{
-		return selfMethodMap;
-	}
+    @Override
+    protected Map<String, Method> getMethodMap() {
+        return selfMethodMap;
+    }
 }

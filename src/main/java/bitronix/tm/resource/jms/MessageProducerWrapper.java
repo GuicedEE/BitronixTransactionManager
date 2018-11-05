@@ -29,163 +29,131 @@ import javax.transaction.SystemException;
  *
  * @author Ludovic Orban
  */
-public class MessageProducerWrapper
-		implements MessageProducer
-{
+public class MessageProducerWrapper implements MessageProducer {
 
-	protected final DualSessionWrapper session;
-	private final MessageProducer messageProducer;
-	private final PoolingConnectionFactory poolingConnectionFactory;
+    private final MessageProducer messageProducer;
+    protected final DualSessionWrapper session;
+    private final PoolingConnectionFactory poolingConnectionFactory;
 
-	public MessageProducerWrapper(MessageProducer messageProducer, DualSessionWrapper session, PoolingConnectionFactory poolingConnectionFactory)
-	{
-		this.messageProducer = messageProducer;
-		this.session = session;
-		this.poolingConnectionFactory = poolingConnectionFactory;
-	}
+    public MessageProducerWrapper(MessageProducer messageProducer, DualSessionWrapper session, PoolingConnectionFactory poolingConnectionFactory) {
+        this.messageProducer = messageProducer;
+        this.session = session;
+        this.poolingConnectionFactory = poolingConnectionFactory;
+    }
 
-	@Override
-	public String toString()
-	{
-		return "a MessageProducerWrapper of " + session;
-	}
+    public MessageProducer getMessageProducer() {
+        return messageProducer;
+    }
 
-	public MessageProducer getMessageProducer()
-	{
-		return messageProducer;
-	}
+    /**
+     * Enlist this session into the current transaction if automaticEnlistingEnabled = true for this resource.
+     * If no transaction is running then this method does nothing.
+     * @throws JMSException if an exception occurs
+     */
+    protected void enlistResource() throws JMSException {
+        if (poolingConnectionFactory.getAutomaticEnlistingEnabled()) {
+            session.getSession(); // make sure the session is created before enlisting it
+            try {
+                TransactionContextHelper.enlistInCurrentTransaction(session);
+            } catch (SystemException ex) {
+                throw (JMSException) new JMSException("error enlisting " + this).initCause(ex);
+            } catch (RollbackException ex) {
+                throw (JMSException) new JMSException("error enlisting " + this).initCause(ex);
+            }
+        } // if getAutomaticEnlistingEnabled
+    }
 
-	/**
-	 * Enlist this session into the current transaction if automaticEnlistingEnabled = true for this resource.
-	 * If no transaction is running then this method does nothing.
-	 *
-	 * @throws JMSException
-	 * 		if an exception occurs
-	 */
-	protected void enlistResource() throws JMSException
-	{
-		if (poolingConnectionFactory.getAutomaticEnlistingEnabled())
-		{
-			session.getSession(); // make sure the session is created before enlisting it
-			try
-			{
-				TransactionContextHelper.enlistInCurrentTransaction(session);
-			}
-			catch (SystemException ex)
-			{
-				throw (JMSException) new JMSException("error enlisting " + this).initCause(ex);
-			}
-			catch (RollbackException ex)
-			{
-				throw (JMSException) new JMSException("error enlisting " + this).initCause(ex);
-			}
-		} // if getAutomaticEnlistingEnabled
-	}
+    @Override
+    public String toString() {
+        return "a MessageProducerWrapper of " + session;
+    }
 
+    /* MessageProducer with special XA semantics implementation */
 
+    @Override
+    public void send(Message message) throws JMSException {
+        enlistResource();
+        getMessageProducer().send(message);
+    }
 
-	/* MessageProducer with special XA semantics implementation */
+    @Override
+    public void send(Message message, int deliveryMode, int priority, long timeToLive) throws JMSException {
+        enlistResource();
+        getMessageProducer().send(message, deliveryMode, priority, timeToLive);
+    }
 
-	@Override
-	public void send(Message message) throws JMSException
-	{
-		enlistResource();
-		getMessageProducer().send(message);
-	}
+    @Override
+    public void send(Destination destination, Message message) throws JMSException {
+        enlistResource();
+        getMessageProducer().send(destination, message);
+    }
 
-	@Override
-	public void send(Message message, int deliveryMode, int priority, long timeToLive) throws JMSException
-	{
-		enlistResource();
-		getMessageProducer().send(message, deliveryMode, priority, timeToLive);
-	}
+    @Override
+    public void send(Destination destination, Message message, int deliveryMode, int priority, long timeToLive) throws JMSException {
+        enlistResource();
+        getMessageProducer().send(destination, message, deliveryMode, priority, timeToLive);
+    }
 
-	@Override
-	public void send(Destination destination, Message message) throws JMSException
-	{
-		enlistResource();
-		getMessageProducer().send(destination, message);
-	}
+    @Override
+    public void close() throws JMSException {
+        // do nothing as the close is handled by the session handle
+    }
 
-	@Override
-	public void send(Destination destination, Message message, int deliveryMode, int priority, long timeToLive) throws JMSException
-	{
-		enlistResource();
-		getMessageProducer().send(destination, message, deliveryMode, priority, timeToLive);
-	}
+    /* dumb wrapping of MessageProducer methods */
 
-	@Override
-	public void close() throws JMSException
-	{
-		// do nothing as the close is handled by the session handle
-	}
+    @Override
+    public void setDisableMessageID(boolean value) throws JMSException {
+        getMessageProducer().setDisableMessageID(value);
+    }
 
-	/* dumb wrapping of MessageProducer methods */
+    @Override
+    public boolean getDisableMessageID() throws JMSException {
+        return getMessageProducer().getDisableMessageID();
+    }
 
-	@Override
-	public void setDisableMessageID(boolean value) throws JMSException
-	{
-		getMessageProducer().setDisableMessageID(value);
-	}
+    @Override
+    public void setDisableMessageTimestamp(boolean value) throws JMSException {
+        getMessageProducer().setDisableMessageTimestamp(value);
+    }
 
-	@Override
-	public boolean getDisableMessageID() throws JMSException
-	{
-		return getMessageProducer().getDisableMessageID();
-	}
+    @Override
+    public boolean getDisableMessageTimestamp() throws JMSException {
+        return getMessageProducer().getDisableMessageTimestamp();
+    }
 
-	@Override
-	public void setDisableMessageTimestamp(boolean value) throws JMSException
-	{
-		getMessageProducer().setDisableMessageTimestamp(value);
-	}
+    @Override
+    public void setDeliveryMode(int deliveryMode) throws JMSException {
+        getMessageProducer().setDeliveryMode(deliveryMode);
+    }
 
-	@Override
-	public boolean getDisableMessageTimestamp() throws JMSException
-	{
-		return getMessageProducer().getDisableMessageTimestamp();
-	}
+    @Override
+    public int getDeliveryMode() throws JMSException {
+        return getMessageProducer().getDeliveryMode();
+    }
 
-	@Override
-	public void setDeliveryMode(int deliveryMode) throws JMSException
-	{
-		getMessageProducer().setDeliveryMode(deliveryMode);
-	}
+    @Override
+    public void setPriority(int defaultPriority) throws JMSException {
+        getMessageProducer().setPriority(defaultPriority);
+    }
 
-	@Override
-	public int getDeliveryMode() throws JMSException
-	{
-		return getMessageProducer().getDeliveryMode();
-	}
+    @Override
+    public int getPriority() throws JMSException {
+        return getMessageProducer().getPriority();
+    }
 
-	@Override
-	public void setPriority(int defaultPriority) throws JMSException
-	{
-		getMessageProducer().setPriority(defaultPriority);
-	}
+    @Override
+    public void setTimeToLive(long timeToLive) throws JMSException {
+        getMessageProducer().setTimeToLive(timeToLive);
+    }
 
-	@Override
-	public int getPriority() throws JMSException
-	{
-		return getMessageProducer().getPriority();
-	}
+    @Override
+    public long getTimeToLive() throws JMSException {
+        return getMessageProducer().getTimeToLive();
+    }
 
-	@Override
-	public void setTimeToLive(long timeToLive) throws JMSException
-	{
-		getMessageProducer().setTimeToLive(timeToLive);
-	}
-
-	@Override
-	public long getTimeToLive() throws JMSException
-	{
-		return getMessageProducer().getTimeToLive();
-	}
-
-	@Override
-	public Destination getDestination() throws JMSException
-	{
-		return getMessageProducer().getDestination();
-	}
+    @Override
+    public Destination getDestination() throws JMSException {
+        return getMessageProducer().getDestination();
+    }
 
 }

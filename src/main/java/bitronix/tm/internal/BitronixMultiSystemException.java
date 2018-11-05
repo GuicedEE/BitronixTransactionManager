@@ -27,96 +27,75 @@ import java.util.List;
  *
  * @author Ludovic Orban
  */
-public class BitronixMultiSystemException
-		extends BitronixSystemException
-{
+public class BitronixMultiSystemException extends BitronixSystemException {
 
-	private List<? extends Exception> exceptions = new ArrayList<Exception>();
-	private List<XAResourceHolderState> resourceStates = new ArrayList<XAResourceHolderState>();
+    private List<? extends Exception> exceptions = new ArrayList<Exception>();
+    private List<XAResourceHolderState> resourceStates = new ArrayList<XAResourceHolderState>();
 
-	public BitronixMultiSystemException(String string, List<? extends Exception> exceptions, List<XAResourceHolderState> resourceStates)
-	{
-		super(string);
-		this.exceptions = exceptions;
-		this.resourceStates = resourceStates;
-	}
+    public BitronixMultiSystemException(String string, List<? extends Exception> exceptions, List<XAResourceHolderState> resourceStates) {
+        super(string);
+        this.exceptions = exceptions;
+        this.resourceStates = resourceStates;
+    }
 
-	@Override
-	public String getMessage()
-	{
-		StringBuilder errorMessage = new StringBuilder();
-		errorMessage.append("collected ");
-		errorMessage.append(exceptions.size());
-		errorMessage.append(" exception(s):");
-		for (int i = 0; i < exceptions.size(); i++)
-		{
-			errorMessage.append(System.getProperty("line.separator"));
-			Throwable throwable = exceptions.get(i);
-			String message = throwable.getMessage();
-			XAResourceHolderState holderState = resourceStates.get(i);
+    @Override
+    public String getMessage() {
+        StringBuilder errorMessage = new StringBuilder();
+        errorMessage.append("collected ");
+        errorMessage.append(exceptions.size());
+        errorMessage.append(" exception(s):");
+        for (int i = 0; i < exceptions.size(); i++) {
+            errorMessage.append(System.getProperty("line.separator"));
+            Throwable throwable = exceptions.get(i);
+            String message = throwable.getMessage();
+            XAResourceHolderState holderState = resourceStates.get(i);
 
-			if (holderState != null)
-			{
-				errorMessage.append(" [");
-				errorMessage.append(holderState.getUniqueName());
-				errorMessage.append(" - ");
-			}
-			errorMessage.append(throwable.getClass()
-			                             .getName());
-			if (throwable instanceof XAException)
-			{
-				XAException xaEx = (XAException) throwable;
-				errorMessage.append("(");
-				errorMessage.append(Decoder.decodeXAExceptionErrorCode(xaEx));
-				String extraErrorDetails = TransactionManagerServices.getExceptionAnalyzer()
-				                                                     .extractExtraXAExceptionDetails(xaEx);
-				if (extraErrorDetails != null)
-				{
-					errorMessage.append(" - ")
-					            .append(extraErrorDetails);
-				}
-				errorMessage.append(")");
-			}
-			errorMessage.append(" - ");
-			errorMessage.append(message);
-			errorMessage.append("]");
-		}
+            if (holderState != null) {
+                errorMessage.append(" [");
+                errorMessage.append(holderState.getUniqueName());
+                errorMessage.append(" - ");
+            }
+            errorMessage.append(throwable.getClass().getName());
+            if (throwable instanceof XAException) {
+                XAException xaEx = (XAException) throwable;
+                errorMessage.append("(");
+                errorMessage.append(Decoder.decodeXAExceptionErrorCode(xaEx));
+                String extraErrorDetails = TransactionManagerServices.getExceptionAnalyzer().extractExtraXAExceptionDetails(xaEx);
+                if (extraErrorDetails != null) errorMessage.append(" - ").append(extraErrorDetails);
+                errorMessage.append(")");
+            }
+            errorMessage.append(" - ");
+            errorMessage.append(message);
+            errorMessage.append("]");
+        }
 
-		return errorMessage.toString();
-	}
+        return errorMessage.toString();
+    }
 
-	public boolean isUnilateralRollback()
-	{
-		for (Throwable throwable : exceptions)
-		{
-			if (!(throwable instanceof BitronixRollbackSystemException))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+    public boolean isUnilateralRollback() {
+        for (Throwable throwable : exceptions) {
+            if (!(throwable instanceof BitronixRollbackSystemException))
+                return false;
+        }
+        return true;
+    }
 
-	/**
-	 * Get the list of exceptions that have been thrown during execution.
-	 *
-	 * @return the list of exceptions that have been thrown during execution.
-	 */
-	public List<? extends Exception> getExceptions()
-	{
-		return exceptions;
-	}
+    /**
+     * Get the list of exceptions that have been thrown during execution.
+     * @return the list of exceptions that have been thrown during execution.
+     */
+    public List<? extends Exception> getExceptions() {
+        return exceptions;
+    }
 
-	/**
-	 * Get the list of XAResourceHolderStates which threw an exception during execution.
-	 * This list always contains exactly one resource per exception present in {@link #getExceptions} list.
-	 * Indices of both list always match a resource against the exception it threw.
-	 *
-	 * @return the list of resource which threw an exception during execution.
-	 */
-	public List<XAResourceHolderState> getResourceStates()
-	{
-		return resourceStates;
-	}
+    /**
+     * Get the list of XAResourceHolderStates which threw an exception during execution.
+     * This list always contains exactly one resource per exception present in {@link #getExceptions} list.
+     * Indices of both list always match a resource against the exception it threw.
+     * @return the list of resource which threw an exception during execution.
+     */
+    public List<XAResourceHolderState> getResourceStates() {
+        return resourceStates;
+    }
 
 }

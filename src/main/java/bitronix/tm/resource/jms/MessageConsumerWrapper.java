@@ -29,106 +29,85 @@ import javax.transaction.SystemException;
  *
  * @author Ludovic Orban
  */
-public class MessageConsumerWrapper
-		implements MessageConsumer
-{
+public class MessageConsumerWrapper implements MessageConsumer {
 
-	protected final DualSessionWrapper session;
-	private final MessageConsumer messageConsumer;
-	private final PoolingConnectionFactory poolingConnectionFactory;
+    private final MessageConsumer messageConsumer;
+    protected final DualSessionWrapper session;
+    private final PoolingConnectionFactory poolingConnectionFactory;
 
-	public MessageConsumerWrapper(MessageConsumer messageConsumer, DualSessionWrapper session, PoolingConnectionFactory poolingConnectionFactory)
-	{
-		this.messageConsumer = messageConsumer;
-		this.session = session;
-		this.poolingConnectionFactory = poolingConnectionFactory;
-	}
+    public MessageConsumerWrapper(MessageConsumer messageConsumer, DualSessionWrapper session, PoolingConnectionFactory poolingConnectionFactory) {
+        this.messageConsumer = messageConsumer;
+        this.session = session;
+        this.poolingConnectionFactory = poolingConnectionFactory;
+    }
 
-	@Override
-	public String toString()
-	{
-		return "a MessageConsumerWrapper of " + session;
-	}
+    public MessageConsumer getMessageConsumer() {
+        return messageConsumer;
+    }
 
-	@Override
-	public String getMessageSelector() throws JMSException
-	{
-		return getMessageConsumer().getMessageSelector();
-	}
+    /**
+     * Enlist this session into the current transaction if automaticEnlistingEnabled = true for this resource.
+     * If no transaction is running then this method does nothing.
+     * @throws javax.jms.JMSException if an exception occurs
+     */
+    protected void enlistResource() throws JMSException {
+        if (poolingConnectionFactory.getAutomaticEnlistingEnabled()) {
+            session.getSession(); // make sure the session is created before enlisting it
+            try {
+                TransactionContextHelper.enlistInCurrentTransaction(session);
+            } catch (SystemException ex) {
+                throw (JMSException) new JMSException("error enlisting " + this).initCause(ex);
+            } catch (RollbackException ex) {
+                throw (JMSException) new JMSException("error enlisting " + this).initCause(ex);
+            }
+        } // if getAutomaticEnlistingEnabled
+    }
 
-	@Override
-	public MessageListener getMessageListener() throws JMSException
-	{
-		return getMessageConsumer().getMessageListener();
-	}
+    @Override
+    public String toString() {
+        return "a MessageConsumerWrapper of " + session;
+    }
 
-	/* MessageProducer with special XA semantics implementation */
+    /* MessageProducer with special XA semantics implementation */
 
-	@Override
-	public void setMessageListener(MessageListener listener) throws JMSException
-	{
-		getMessageConsumer().setMessageListener(listener);
-	}
+    @Override
+    public Message receive() throws JMSException {
+        enlistResource();
+        return getMessageConsumer().receive();
+    }
 
-	@Override
-	public Message receive() throws JMSException
-	{
-		enlistResource();
-		return getMessageConsumer().receive();
-	}
+    @Override
+    public Message receive(long timeout) throws JMSException {
+        enlistResource();
+        return getMessageConsumer().receive(timeout);
+    }
 
-	/**
-	 * Enlist this session into the current transaction if automaticEnlistingEnabled = true for this resource.
-	 * If no transaction is running then this method does nothing.
-	 *
-	 * @throws javax.jms.JMSException
-	 * 		if an exception occurs
-	 */
-	protected void enlistResource() throws JMSException
-	{
-		if (poolingConnectionFactory.getAutomaticEnlistingEnabled())
-		{
-			session.getSession(); // make sure the session is created before enlisting it
-			try
-			{
-				TransactionContextHelper.enlistInCurrentTransaction(session);
-			}
-			catch (SystemException ex)
-			{
-				throw (JMSException) new JMSException("error enlisting " + this).initCause(ex);
-			}
-			catch (RollbackException ex)
-			{
-				throw (JMSException) new JMSException("error enlisting " + this).initCause(ex);
-			}
-		} // if getAutomaticEnlistingEnabled
-	}
+    @Override
+    public Message receiveNoWait() throws JMSException {
+        enlistResource();
+        return getMessageConsumer().receiveNoWait();
+    }
 
-	@Override
-	public Message receive(long timeout) throws JMSException
-	{
-		enlistResource();
-		return getMessageConsumer().receive(timeout);
-	}
+    @Override
+    public void close() throws JMSException {
+        // do nothing as the close is handled by the session handle
+    }
 
-	/* dumb wrapping of MessageProducer methods */
+    /* dumb wrapping of MessageProducer methods */
 
-	@Override
-	public Message receiveNoWait() throws JMSException
-	{
-		enlistResource();
-		return getMessageConsumer().receiveNoWait();
-	}
+    @Override
+    public String getMessageSelector() throws JMSException {
+        return getMessageConsumer().getMessageSelector();
+    }
 
-	@Override
-	public void close() throws JMSException
-	{
-		// do nothing as the close is handled by the session handle
-	}
+    @Override
+    public MessageListener getMessageListener() throws JMSException {
+        return getMessageConsumer().getMessageListener();
+    }
 
-	public MessageConsumer getMessageConsumer()
-	{
-		return messageConsumer;
-	}
+    @Override
+    public void setMessageListener(MessageListener listener) throws JMSException {
+        getMessageConsumer().setMessageListener(listener);
+    }
 
 }

@@ -36,154 +36,123 @@ import javax.transaction.xa.Xid;
  * @see bitronix.tm.internal.XAResourceManager
  * @see <a href="http://jroller.com/page/pyrasun?entry=xa_exposed_part_iii_the">XA Exposed, Part III: The Implementor's Notebook</a>
  */
-public class BitronixXid
-		implements Xid
-{
+public class BitronixXid implements Xid {
 
-	/**
-	 * int-encoded "Btnx" string. This is used as the globally unique ID to discriminate BTM XIDs.
-	 */
-	public static final int FORMAT_ID = 0x42746e78;
+    /**
+     * int-encoded "Btnx" string. This is used as the globally unique ID to discriminate BTM XIDs.
+     */
+    public static final int FORMAT_ID = 0x42746e78;
 
-	private final Uid globalTransactionId;
-	private final Uid branchQualifier;
-	private final int hashCodeValue;
-	private final String toStringValue;
+    private final Uid globalTransactionId;
+    private final Uid branchQualifier;
+    private final int hashCodeValue;
+    private final String toStringValue;
 
-	/**
-	 * Create a new XID using the specified GTRID and BQUAL.
-	 *
-	 * @param globalTransactionId
-	 * 		the GTRID.
-	 * @param branchQualifier
-	 * 		the BQUAL.
-	 */
-	public BitronixXid(Uid globalTransactionId, Uid branchQualifier)
-	{
-		this.globalTransactionId = globalTransactionId;
-		this.branchQualifier = branchQualifier;
-		this.toStringValue = precalculateToString();
-		this.hashCodeValue = precalculateHashCode();
-	}
+    /**
+     * Create a new XID using the specified GTRID and BQUAL.
+     * @param globalTransactionId the GTRID.
+     * @param branchQualifier the BQUAL.
+     */
+    public BitronixXid(Uid globalTransactionId, Uid branchQualifier) {
+        this.globalTransactionId = globalTransactionId;
+        this.branchQualifier = branchQualifier;
+        this.toStringValue = precalculateToString();
+        this.hashCodeValue = precalculateHashCode();
+    }
 
-	private String precalculateToString()
-	{
-		StringBuilder sb = new StringBuilder(288);
-		sb.append("a Bitronix XID [");
-		sb.append(globalTransactionId.toString());
-		sb.append(" : ");
-		sb.append(branchQualifier.toString());
-		sb.append("]");
-		return sb.toString();
-	}
+    public BitronixXid(Xid xid) {
+        this.globalTransactionId = new Uid(xid.getGlobalTransactionId());
+        this.branchQualifier = new Uid(xid.getBranchQualifier());
+        this.toStringValue = precalculateToString();
+        this.hashCodeValue = precalculateHashCode();
+    }
 
-	private int precalculateHashCode()
-	{
-		int hashCode = FORMAT_ID;
-		if (globalTransactionId != null)
-		{
-			hashCode += globalTransactionId.hashCode();
-		}
-		if (branchQualifier != null)
-		{
-			hashCode += branchQualifier.hashCode();
-		}
-		return hashCode;
-	}
+    /**
+     * Get Bitronix XID format ID. Defined by {@link BitronixXid#FORMAT_ID}.
+     * @return the Bitronix XID format ID.
+     */
+    @Override
+    public int getFormatId() {
+        return FORMAT_ID;
+    }
 
-	public BitronixXid(Xid xid)
-	{
-		this.globalTransactionId = new Uid(xid.getGlobalTransactionId());
-		this.branchQualifier = new Uid(xid.getBranchQualifier());
-		this.toStringValue = precalculateToString();
-		this.hashCodeValue = precalculateHashCode();
-	}
+    /**
+     * Get the BQUAL of the XID.
+     * @return the XID branch qualifier.
+     */
+    @Override
+    public byte[] getBranchQualifier() {
+        return branchQualifier.getArray();
+    }
 
-	/**
-	 * Get an integer hash for the XID.
-	 *
-	 * @return a constant hash value.
-	 */
-	@Override
-	public int hashCode()
-	{
-		return hashCodeValue;
-	}
+    public Uid getBranchQualifierUid() {
+        return branchQualifier;
+    }
 
-	/**
-	 * Compare two XIDs for equality.
-	 *
-	 * @param obj
-	 * 		the XID to compare to.
-	 *
-	 * @return true if both XIDs have the same format ID and contain exactly the same GTRID and BQUAL.
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (!(obj instanceof BitronixXid))
-		{
-			return false;
-		}
+    /**
+     * Get the GTRID of the XID.
+     * @return the XID global transaction ID.
+     */
+    @Override
+    public byte[] getGlobalTransactionId() {
+        return globalTransactionId.getArray();
+    }
 
-		BitronixXid otherXid = (BitronixXid) obj;
-		return FORMAT_ID == otherXid.getFormatId() &&
-		       globalTransactionId.equals(otherXid.getGlobalTransactionIdUid()) &&
-		       branchQualifier.equals(otherXid.getBranchQualifierUid());
-	}
+    public Uid getGlobalTransactionIdUid() {
+        return globalTransactionId;
+    }
 
-	/**
-	 * Get Bitronix XID format ID. Defined by {@link BitronixXid#FORMAT_ID}.
-	 *
-	 * @return the Bitronix XID format ID.
-	 */
-	@Override
-	public int getFormatId()
-	{
-		return FORMAT_ID;
-	}
+    /**
+     * Get a human-readable string representation of the XID.
+     * @return a human-readable string representation.
+     */
+    @Override
+    public String toString() {
+        return toStringValue;
+    }
 
-	/**
-	 * Get the GTRID of the XID.
-	 *
-	 * @return the XID global transaction ID.
-	 */
-	@Override
-	public byte[] getGlobalTransactionId()
-	{
-		return globalTransactionId.getArray();
-	}
+    private String precalculateToString() {
+        StringBuilder sb = new StringBuilder(288);
+        sb.append("a Bitronix XID [");
+        sb.append(globalTransactionId.toString());
+        sb.append(" : ");
+        sb.append(branchQualifier.toString());
+        sb.append("]");
+        return sb.toString();
+    }
 
-	/**
-	 * Get the BQUAL of the XID.
-	 *
-	 * @return the XID branch qualifier.
-	 */
-	@Override
-	public byte[] getBranchQualifier()
-	{
-		return branchQualifier.getArray();
-	}
+    /**
+     * Compare two XIDs for equality.
+     * @param obj the XID to compare to.
+     * @return true if both XIDs have the same format ID and contain exactly the same GTRID and BQUAL.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof BitronixXid))
+            return false;
 
-	public Uid getGlobalTransactionIdUid()
-	{
-		return globalTransactionId;
-	}
+        BitronixXid otherXid = (BitronixXid) obj;
+        return FORMAT_ID == otherXid.getFormatId() &&
+                globalTransactionId.equals(otherXid.getGlobalTransactionIdUid()) &&
+                branchQualifier.equals(otherXid.getBranchQualifierUid());
+    }
 
-	public Uid getBranchQualifierUid()
-	{
-		return branchQualifier;
-	}
+    /**
+     * Get an integer hash for the XID.
+     * @return a constant hash value.
+     */
+    @Override
+    public int hashCode() {
+        return hashCodeValue;
+    }
 
-	/**
-	 * Get a human-readable string representation of the XID.
-	 *
-	 * @return a human-readable string representation.
-	 */
-	@Override
-	public String toString()
-	{
-		return toStringValue;
-	}
+    private int precalculateHashCode() {
+        int hashCode = FORMAT_ID;
+        if (globalTransactionId != null)
+            hashCode += globalTransactionId.hashCode();
+        if (branchQualifier != null)
+            hashCode += branchQualifier.hashCode();
+        return hashCode;
+    }
 
 }

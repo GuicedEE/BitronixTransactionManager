@@ -24,32 +24,25 @@ import javax.jms.TopicSubscriber;
  *
  * @author Ludovic Orban
  */
-public class TopicSubscriberWrapper
-		extends MessageConsumerWrapper
-		implements TopicSubscriber
-{
+public class TopicSubscriberWrapper extends MessageConsumerWrapper implements TopicSubscriber {
 
-	public TopicSubscriberWrapper(TopicSubscriber topicSubscriber, DualSessionWrapper session, PoolingConnectionFactory poolingConnectionFactory)
-	{
-		super(topicSubscriber, session, poolingConnectionFactory);
-	}
+    public TopicSubscriberWrapper(TopicSubscriber topicSubscriber, DualSessionWrapper session, PoolingConnectionFactory poolingConnectionFactory) {
+        super(topicSubscriber, session, poolingConnectionFactory);
+    }
 
-	@Override
-	public Topic getTopic() throws JMSException
-	{
-		return ((TopicSubscriber) getMessageConsumer()).getTopic();
-	}
+    @Override
+    public Topic getTopic() throws JMSException {
+        return ((TopicSubscriber) getMessageConsumer()).getTopic();
+    }
 
-	@Override
-	public boolean getNoLocal() throws JMSException
-	{
-		return ((TopicSubscriber) getMessageConsumer()).getNoLocal();
-	}
+    @Override
+    public boolean getNoLocal() throws JMSException {
+        return ((TopicSubscriber) getMessageConsumer()).getNoLocal();
+    }
 
-	@Override
-	public String toString()
-	{
-		return "a TopicSubscriberWrapper of " + session;
-	}
+    @Override
+    public String toString() {
+        return "a TopicSubscriberWrapper of " + session;
+    }
 
 }

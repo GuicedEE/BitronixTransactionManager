@@ -25,66 +25,51 @@ import javax.transaction.xa.XAException;
  *
  * @author Ludovic Orban
  */
-public abstract class Job
-		implements Runnable
-{
-	private final XAResourceHolderState resourceHolder;
-	protected volatile XAException xaException;
-	protected volatile RuntimeException runtimeException;
-	private volatile Object future;
+public abstract class Job implements Runnable {
+    private final XAResourceHolderState resourceHolder;
 
-	public Job(XAResourceHolderState resourceHolder)
-	{
-		this.resourceHolder = resourceHolder;
-	}
+    private volatile Object future;
+    protected volatile XAException xaException;
+    protected volatile RuntimeException runtimeException;
 
-	public XAResourceHolderState getResource()
-	{
-		return resourceHolder;
-	}
+    public Job(XAResourceHolderState resourceHolder) {
+        this.resourceHolder = resourceHolder;
+    }
 
-	public XAException getXAException()
-	{
-		return xaException;
-	}
+    public XAResourceHolderState getResource() {
+        return resourceHolder;
+    }
 
-	public RuntimeException getRuntimeException()
-	{
-		return runtimeException;
-	}
+    public XAException getXAException() {
+        return xaException;
+    }
 
-	public Object getFuture()
-	{
-		return future;
-	}
+    public RuntimeException getRuntimeException() {
+        return runtimeException;
+    }
 
-	public void setFuture(Object future)
-	{
-		this.future = future;
-	}
+    public void setFuture(Object future) {
+        this.future = future;
+    }
 
-	@Override
-	public final void run()
-	{
-		String oldThreadName = null;
-		if (TransactionManagerServices.getConfiguration()
-		                              .isAsynchronous2Pc())
-		{
-			oldThreadName = Thread.currentThread()
-			                      .getName();
-			Thread.currentThread()
-			      .setName("bitronix-2pc [ " +
-			               resourceHolder.getXid()
-			                             .toString() +
-			               " ]");
-		}
-		execute();
-		if (oldThreadName != null)
-		{
-			Thread.currentThread()
-			      .setName(oldThreadName);
-		}
-	}
+    public Object getFuture() {
+        return future;
+    }
 
-	protected abstract void execute();
+    @Override
+    public final void run() {
+        String oldThreadName = null;
+        if (TransactionManagerServices.getConfiguration().isAsynchronous2Pc()) {
+            oldThreadName = Thread.currentThread().getName();
+            Thread.currentThread().setName("bitronix-2pc [ " +
+                    resourceHolder.getXid().toString() +
+                    " ]");
+        }
+        execute();
+        if (oldThreadName != null) {
+            Thread.currentThread().setName(oldThreadName);
+        }
+    }
+
+    protected abstract void execute();
 }

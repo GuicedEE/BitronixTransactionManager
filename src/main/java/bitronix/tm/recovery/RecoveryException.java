@@ -20,16 +20,12 @@ package bitronix.tm.recovery;
  *
  * @author Ludovic Orban
  */
-public class RecoveryException
-		extends Exception
-{
-	public RecoveryException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
+public class RecoveryException extends Exception {
+    public RecoveryException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public RecoveryException(String message)
-	{
-		super(message);
-	}
+    public RecoveryException(String message) {
+        super(message);
+    }
 }

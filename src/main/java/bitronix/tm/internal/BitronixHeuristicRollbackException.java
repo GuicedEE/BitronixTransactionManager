@@ -22,19 +22,15 @@ import javax.transaction.HeuristicRollbackException;
  *
  * @author Ludovic Orban
  */
-public class BitronixHeuristicRollbackException
-		extends HeuristicRollbackException
-{
+public class BitronixHeuristicRollbackException extends HeuristicRollbackException {
+    
+    public BitronixHeuristicRollbackException(String string) {
+        super(string);
+    }
 
-	public BitronixHeuristicRollbackException(String string)
-	{
-		super(string);
-	}
-
-	public BitronixHeuristicRollbackException(String string, Throwable t)
-	{
-		super(string);
-		initCause(t);
-	}
+    public BitronixHeuristicRollbackException(String string, Throwable t) {
+        super(string);
+        initCause(t);
+    }
 
 }

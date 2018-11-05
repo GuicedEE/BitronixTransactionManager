@@ -22,19 +22,14 @@ import java.io.IOException;
  *
  * @author Juergen Kellerer
  */
-public interface MigratableJournal
-{
-	/**
-	 * Can be called at any point in time to migrate all unfinished transactions into the given
-	 * journal.
-	 *
-	 * @param other
-	 * 		the journal to migrate all unfinished transactions to.
-	 *
-	 * @throws IOException
-	 * 		In case of not all entries could be written into the other journal.
-	 * @throws IllegalArgumentException
-	 * 		If other is the same instance as 'this'.
-	 */
-	void migrateTo(Journal other) throws IOException, IllegalArgumentException;
+public interface MigratableJournal {
+    /**
+     * Can be called at any point in time to migrate all unfinished transactions into the given
+     * journal.
+     *
+     * @param other the journal to migrate all unfinished transactions to.
+     * @throws IOException              In case of not all entries could be written into the other journal.
+     * @throws IllegalArgumentException If other is the same instance as 'this'.
+     */
+    void migrateTo(Journal other) throws IOException, IllegalArgumentException;
 }

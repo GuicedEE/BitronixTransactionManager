@@ -25,50 +25,41 @@ import java.util.List;
  *
  * @author Ludovic Orban
  */
-public class RecoveryXAResourceHolder
-		extends AbstractXAResourceHolder<RecoveryXAResourceHolder>
-{
+public class RecoveryXAResourceHolder extends AbstractXAResourceHolder<RecoveryXAResourceHolder> {
 
-	private final XAResourceHolder<? extends XAResourceHolder> xaResourceHolder;
+    private final XAResourceHolder<? extends XAResourceHolder> xaResourceHolder;
 
-	public RecoveryXAResourceHolder(XAResourceHolder<? extends XAResourceHolder> xaResourceHolder)
-	{
-		this.xaResourceHolder = xaResourceHolder;
-	}
+    public RecoveryXAResourceHolder(XAResourceHolder<? extends XAResourceHolder> xaResourceHolder) {
+        this.xaResourceHolder = xaResourceHolder;
+    }
 
-	@Override
-	public XAResource getXAResource()
-	{
-		return xaResourceHolder.getXAResource();
-	}
+    @Override
+    public void close() throws Exception {
+        xaResourceHolder.setState(State.IN_POOL);
+    }
 
-	@Override
-	public ResourceBean getResourceBean()
-	{
-		return null;
-	}
+    @Override
+    public Date getLastReleaseDate() {
+        return null;
+    }
 
-	@Override
-	public List<RecoveryXAResourceHolder> getXAResourceHolders()
-	{
-		return null;
-	}
+    @Override
+    public XAResource getXAResource() {
+        return xaResourceHolder.getXAResource();
+    }
 
-	@Override
-	public Object getConnectionHandle() throws Exception
-	{
-		throw new UnsupportedOperationException("illegal connection creation attempt out of " + this);
-	}
+    @Override
+    public ResourceBean getResourceBean() {
+        return null;
+    }
 
-	@Override
-	public void close() throws Exception
-	{
-		xaResourceHolder.setState(State.IN_POOL);
-	}
+    @Override
+    public List<RecoveryXAResourceHolder> getXAResourceHolders() {
+        return null;
+    }
 
-	@Override
-	public Date getLastReleaseDate()
-	{
-		return null;
-	}
+    @Override
+    public Object getConnectionHandle() throws Exception {
+        throw new UnsupportedOperationException("illegal connection creation attempt out of " + this);
+    }
 }

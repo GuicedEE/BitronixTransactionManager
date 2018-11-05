@@ -18,54 +18,44 @@ package bitronix.tm.resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.naming.*;
+import javax.naming.Context;
+import javax.naming.Name;
+import javax.naming.NamingException;
+import javax.naming.RefAddr;
+import javax.naming.Reference;
+import javax.naming.Referenceable;
 import javax.naming.spi.ObjectFactory;
 import java.util.Hashtable;
 
 /**
  * {@link bitronix.tm.resource.common.XAResourceProducer} object factory for JNDI references.
  *
- * @author Ludovic Orban
  * @see bitronix.tm.resource.common.ResourceBean
+ * @author Ludovic Orban
  */
-public class ResourceObjectFactory
-		implements ObjectFactory
-{
+public class ResourceObjectFactory implements ObjectFactory {
 
-	private final static Logger log = LoggerFactory.getLogger(ResourceObjectFactory.class);
+    private final static Logger log = LoggerFactory.getLogger(ResourceObjectFactory.class);
 
-	@Override
-	public Object getObjectInstance(Object obj, Name jndiNameObject, Context nameCtx, Hashtable<?, ?> environment) throws Exception
-	{
-		Reference ref = (Reference) obj;
-		if (log.isDebugEnabled())
-		{
-			log.debug("referencing resource with reference of type " + ref.getClass());
-		}
+    @Override
+    public Object getObjectInstance(Object obj, Name jndiNameObject, Context nameCtx, Hashtable<?,?> environment) throws Exception {
+        Reference ref = (Reference) obj;
+        if (log.isDebugEnabled()) { log.debug("referencing resource with reference of type " + ref.getClass()); }
 
-		RefAddr refAddr = ref.get("uniqueName");
-		if (refAddr == null)
-		{
-			throw new NamingException("no 'uniqueName' RefAddr found");
-		}
-		Object content = refAddr.getContent();
-		if (!(content instanceof String))
-		{
-			throw new NamingException("'uniqueName' RefAddr content is not of type java.lang.String");
-		}
-		String uniqueName = (String) content;
+        RefAddr refAddr = ref.get("uniqueName");
+        if (refAddr == null)
+            throw new NamingException("no 'uniqueName' RefAddr found");
+        Object content = refAddr.getContent();
+        if (!(content instanceof String))
+            throw new NamingException("'uniqueName' RefAddr content is not of type java.lang.String");
+        String uniqueName = (String) content;
 
-		if (log.isDebugEnabled())
-		{
-			log.debug("getting registered resource with uniqueName '" + uniqueName + "'");
-		}
-		Referenceable resource = ResourceRegistrar.get(uniqueName);
-		if (resource == null)
-		{
-			throw new NamingException("no resource registered with uniqueName '" + uniqueName + "', available resources: " + ResourceRegistrar.getResourcesUniqueNames());
-		}
+        if (log.isDebugEnabled()) { log.debug("getting registered resource with uniqueName '" + uniqueName + "'"); }
+        Referenceable resource = ResourceRegistrar.get(uniqueName);
+        if (resource == null)
+            throw new NamingException("no resource registered with uniqueName '" + uniqueName + "', available resources: " + ResourceRegistrar.getResourcesUniqueNames());
 
-		return resource;
-	}
+        return resource;
+    }
 
 }

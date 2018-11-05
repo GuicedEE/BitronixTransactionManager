@@ -22,19 +22,15 @@ import javax.transaction.HeuristicMixedException;
  *
  * @author Ludovic Orban
  */
-public class BitronixHeuristicMixedException
-		extends HeuristicMixedException
-{
+public class BitronixHeuristicMixedException extends HeuristicMixedException  {
+    
+    public BitronixHeuristicMixedException(String string) {
+        super(string);
+    }
 
-	public BitronixHeuristicMixedException(String string)
-	{
-		super(string);
-	}
-
-	public BitronixHeuristicMixedException(String string, Throwable t)
-	{
-		super(string);
-		initCause(t);
-	}
+    public BitronixHeuristicMixedException(String string, Throwable t) {
+        super(string);
+        initCause(t);
+    }
 
 }

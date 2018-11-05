@@ -22,30 +22,21 @@ import java.util.Collection;
  *
  * @author Ludovic Orban
  */
-public class CollectionUtils
-{
+public class CollectionUtils {
 
-	/**
-	 * Check if a collection contains a specific object by searching for it by identity
-	 * instead of by using equals/hashcode.
-	 *
-	 * @param collection
-	 * 		the collection to search in.
-	 * @param toBeFound
-	 * 		the object to search for.
-	 *
-	 * @return true if the collection contains the object, false otherwise.
-	 */
-	public static boolean containsByIdentity(Collection<?> collection, Object toBeFound)
-	{
-		for (Object o : collection)
-		{
-			if (o == toBeFound)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+    /**
+     * Check if a collection contains a specific object by searching for it by identity
+     * instead of by using equals/hashcode.
+     * @param collection the collection to search in.
+     * @param toBeFound the object to search for.
+     * @return true if the collection contains the object, false otherwise.
+     */
+    public static boolean containsByIdentity(Collection<?> collection, Object toBeFound) {
+        for (Object o : collection) {
+            if (o == toBeFound)
+                return true;
+        }
+        return false;
+    }
 
 }

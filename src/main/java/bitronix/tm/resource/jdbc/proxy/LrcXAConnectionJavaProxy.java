@@ -33,90 +33,71 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * @author Brett Wooldridge
  */
-public class LrcXAConnectionJavaProxy
-		extends JavaProxyBase<Connection>
-{
+public class LrcXAConnectionJavaProxy extends JavaProxyBase<Connection> {
 
-	private final static Logger log = LoggerFactory.getLogger(LrcXAConnectionJavaProxy.class);
+    private final static Logger log = LoggerFactory.getLogger(LrcXAConnectionJavaProxy.class);
 
-	private final static Map<String, Method> selfMethodMap = createMethodMap(LrcXAConnectionJavaProxy.class);
+    private final static Map<String, Method> selfMethodMap = createMethodMap(LrcXAConnectionJavaProxy.class);
 
-	private final LrcXAResource xaResource;
-	private final List<ConnectionEventListener> connectionEventListeners = new CopyOnWriteArrayList<ConnectionEventListener>();
+    private final LrcXAResource xaResource;
+    private final List<ConnectionEventListener> connectionEventListeners = new CopyOnWriteArrayList<ConnectionEventListener>();
 
-	public LrcXAConnectionJavaProxy(Connection connection)
-	{
-		xaResource = new LrcXAResource(connection);
-		delegate = new JdbcJavaProxyFactory().getProxyConnection(xaResource, connection);
-	}
+    public LrcXAConnectionJavaProxy(Connection connection) {
+        this.xaResource = new LrcXAResource(connection);
+        this.delegate = new JdbcJavaProxyFactory().getProxyConnection(xaResource, connection);
+    }
 
-	public XAResource getXAResource() throws SQLException
-	{
-		return xaResource;
-	}
+    @Override
+    public String toString() {
+        return "a JDBC LrcXAConnection on " + delegate;
+    }
 
-	public void close() throws SQLException
-	{
-		delegate.close();
-		fireCloseEvent();
-	}
+    public XAResource getXAResource() throws SQLException {
+        return xaResource;
+    }
 
-	private void fireCloseEvent()
-	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("notifying " + connectionEventListeners.size() + " connectionEventListeners(s) about closing of " + this);
-		}
-		for (ConnectionEventListener connectionEventListener : connectionEventListeners)
-		{
-			connectionEventListener.connectionClosed(new ConnectionEvent((PooledConnection) delegate));
-		}
-	}
+    public void close() throws SQLException {
+        delegate.close();
+        fireCloseEvent();
+    }
 
-	public Connection getConnection() throws SQLException
-	{
-		return delegate;
-	}
+    public Connection getConnection() throws SQLException {
+        return delegate;
+    }
 
-	public void addConnectionEventListener(ConnectionEventListener listener)
-	{
-		connectionEventListeners.add(listener);
-	}
+    public void addConnectionEventListener(ConnectionEventListener listener) {
+        connectionEventListeners.add(listener);
+    }
 
-	public void removeConnectionEventListener(ConnectionEventListener listener)
-	{
-		connectionEventListeners.remove(listener);
-	}
+    public void removeConnectionEventListener(ConnectionEventListener listener) {
+        connectionEventListeners.remove(listener);
+    }
 
-	@Override
-	public int hashCode()
-	{
-		return delegate.hashCode();
-	}
+    private void fireCloseEvent() {
+        if (log.isDebugEnabled()) { log.debug("notifying " + connectionEventListeners.size() + " connectionEventListeners(s) about closing of " + this); }
+        for (ConnectionEventListener connectionEventListener : connectionEventListeners) {
+            connectionEventListener.connectionClosed(new ConnectionEvent((PooledConnection) delegate));
+        }
+    }
 
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (!(obj instanceof LrcXAConnectionJavaProxy))
-		{
-			return false;
-		}
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof LrcXAConnectionJavaProxy))
+            return false;
 
-		LrcXAConnectionJavaProxy other = (LrcXAConnectionJavaProxy) obj;
-		return delegate.equals(other.delegate);
-	}
+        LrcXAConnectionJavaProxy other = (LrcXAConnectionJavaProxy) obj;
+        return this.delegate.equals(other.delegate);
+    }
 
-	@Override
-	public String toString()
-	{
-		return "a JDBC LrcXAConnection on " + delegate;
-	}
+    @Override
+    public int hashCode() {
+        return this.delegate.hashCode();
+    }
 
-	/* Overridden methods of JavaProxyBase */
+    /* Overridden methods of JavaProxyBase */
 
-	@Override
-	protected Map<String, Method> getMethodMap()
-	{
-		return selfMethodMap;
-	}
+    @Override
+    protected Map<String, Method> getMethodMap() {
+        return selfMethodMap;
+    }
 }

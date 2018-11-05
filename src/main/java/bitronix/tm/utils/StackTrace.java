@@ -20,7 +20,5 @@ package bitronix.tm.utils;
  *
  * @author Ludovic Orban
  */
-public class StackTrace
-		extends Throwable
-{
+public class StackTrace extends Throwable {
 }

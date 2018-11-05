@@ -23,16 +23,12 @@ import bitronix.tm.internal.XAResourceHolderState;
  *
  * @author brettw
  */
-public interface XAResourceHolderStateVisitor
-{
+public interface XAResourceHolderStateVisitor {
 
-	/**
-	 * Called when visiting all {@link XAResourceHolderState}s.
-	 *
-	 * @param xaResourceHolderState
-	 * 		the currently visited {@link XAResourceHolderState}
-	 *
-	 * @return return <code>true</code> to continue visitation, <code>false</code> to stop visitation
-	 */
-	boolean visit(XAResourceHolderState xaResourceHolderState);
+    /**
+     * Called when visiting all {@link XAResourceHolderState}s.
+     * @param xaResourceHolderState the currently visited {@link XAResourceHolderState}
+     * @return return <code>true</code> to continue visitation, <code>false</code> to stop visitation
+     */
+    boolean visit(XAResourceHolderState xaResourceHolderState);
 }

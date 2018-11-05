@@ -23,57 +23,48 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author Ludovic Orban
  */
-public abstract class Task
-		implements Comparable<Task>
-{
+public abstract class Task implements Comparable<Task> {
 
-	private static final AtomicInteger UNIQUE_ID_SOURCE = new AtomicInteger();
+    private static final AtomicInteger UNIQUE_ID_SOURCE = new AtomicInteger();
 
-	private final Date executionTime;
-	private final TaskScheduler taskScheduler;
-	private final int uniqueId;
+    private final Date executionTime;
+    private final TaskScheduler taskScheduler;
+    private final int uniqueId;
 
-	protected Task(Date executionTime, TaskScheduler scheduler)
-	{
-		this.executionTime = executionTime;
-		taskScheduler = scheduler;
-		uniqueId = UNIQUE_ID_SOURCE.getAndIncrement();
-	}
+    protected Task(Date executionTime, TaskScheduler scheduler) {
+        this.executionTime = executionTime;
+        this.taskScheduler = scheduler;
+        this.uniqueId = UNIQUE_ID_SOURCE.getAndIncrement();
+    }
 
-	public Date getExecutionTime()
-	{
-		return executionTime;
-	}
+    public Date getExecutionTime() {
+        return executionTime;
+    }
 
-	protected TaskScheduler getTaskScheduler()
-	{
-		return taskScheduler;
-	}
+    protected TaskScheduler getTaskScheduler() {
+        return taskScheduler;
+    }
 
-	/*
-	 * Compare by timestamp.  In the event of a duplicate timestamp, objects uniqueIds are compared so that
-	 * one task (it doesn't matter which - they both have identical schedule times) will be deemed greater than the
-	 * other
-	 */
-	@Override
-	public int compareTo(Task otherTask)
-	{
-		int compareResult = executionTime.compareTo(otherTask.executionTime);
+    /*
+     * Compare by timestamp.  In the event of a duplicate timestamp, objects uniqueIds are compared so that
+     * one task (it doesn't matter which - they both have identical schedule times) will be deemed greater than the
+     * other
+     */
+    @Override
+    public int compareTo(Task otherTask) {
+        int compareResult = this.executionTime.compareTo(otherTask.executionTime);
 
-		if (compareResult == 0)
-		{
-			compareResult = Integer.valueOf(uniqueId)
-			                       .compareTo(otherTask.getUniqueId());
-		}
-		return compareResult;
-	}
+        if (compareResult == 0) {
+            compareResult = Integer.valueOf(uniqueId).compareTo(otherTask.getUniqueId());
+        }
+        return compareResult;
+    }
 
-	int getUniqueId()
-	{
-		return uniqueId;
-	}
+    public abstract Object getObject();
 
-	public abstract Object getObject();
+    public abstract void execute() throws TaskException;
 
-	public abstract void execute() throws TaskException;
+    int getUniqueId() {
+        return uniqueId;
+    }
 }

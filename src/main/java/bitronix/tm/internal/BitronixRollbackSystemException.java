@@ -21,13 +21,10 @@ package bitronix.tm.internal;
  *
  * @author Ludovic Orban
  */
-public class BitronixRollbackSystemException
-		extends BitronixSystemException
-{
+public class BitronixRollbackSystemException extends BitronixSystemException {
 
-	public BitronixRollbackSystemException(String string, Throwable t)
-	{
-		super(string, t);
-	}
+    public BitronixRollbackSystemException(String string, Throwable t) {
+        super(string, t);
+    }
 
 }

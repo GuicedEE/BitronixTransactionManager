@@ -24,45 +24,34 @@ import java.util.Date;
  *
  * @author Ludovic Orban
  */
-public class PoolShrinkingTask
-		extends Task
-{
+public class PoolShrinkingTask extends Task {
 
-	private final XAPool xaPool;
+    private final XAPool xaPool;
 
-	public PoolShrinkingTask(XAPool xaPool, Date executionTime, TaskScheduler scheduler)
-	{
-		super(executionTime, scheduler);
-		this.xaPool = xaPool;
-	}
+    public PoolShrinkingTask(XAPool xaPool, Date executionTime, TaskScheduler scheduler) {
+        super(executionTime, scheduler);
+        this.xaPool = xaPool;
+    }
 
-	@Override
-	public Object getObject()
-	{
-		return xaPool;
-	}
+    @Override
+    public Object getObject() {
+        return xaPool;
+    }
 
-	@Override
-	public void execute() throws TaskException
-	{
-		try
-		{
-			xaPool.shrink();
-		}
-		catch (Exception ex)
-		{
-			throw new TaskException("error while trying to shrink " + xaPool, ex);
-		}
-		finally
-		{
-			getTaskScheduler().schedulePoolShrinking(xaPool);
-		}
-	}
+    @Override
+    public void execute() throws TaskException {
+        try {
+            xaPool.shrink();
+        } catch (Exception ex) {
+            throw new TaskException("error while trying to shrink " + xaPool, ex);
+        } finally {
+            getTaskScheduler().schedulePoolShrinking(xaPool);
+        }
+    }
 
-	@Override
-	public String toString()
-	{
-		return "a PoolShrinkingTask scheduled for " + getExecutionTime() + " on " + xaPool;
-	}
+    @Override
+    public String toString() {
+        return "a PoolShrinkingTask scheduled for " + getExecutionTime() + " on " + xaPool;
+    }
 
 }

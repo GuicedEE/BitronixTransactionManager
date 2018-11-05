@@ -18,15 +18,14 @@ package bitronix.tm.utils;
 /**
  * All internal services implement this interface.
  *
- * @author Ludovic Orban
  * @see bitronix.tm.TransactionManagerServices
+ * @author Ludovic Orban
  */
-public interface Service
-{
+public interface Service {
 
-	/**
-	 * Shutdown the service and free all held resources.
-	 */
-	public void shutdown();
+    /**
+     * Shutdown the service and free all held resources.
+     */
+    public void shutdown();
 
 }

@@ -26,83 +26,68 @@ import java.util.Map;
 /**
  * @author Brett Wooldridge
  */
-public class CallableStatementJavaProxy
-		extends JavaProxyBase<CallableStatement>
-{
+public class CallableStatementJavaProxy extends JavaProxyBase<CallableStatement> {
 
-	private final static Map<String, Method> selfMethodMap = createMethodMap(CallableStatementJavaProxy.class);
+    private final static Map<String, Method> selfMethodMap = createMethodMap(CallableStatementJavaProxy.class);
 
-	private JdbcPooledConnection jdbcPooledConnection;
+    private JdbcPooledConnection jdbcPooledConnection;
+    
+    public CallableStatementJavaProxy() {
+        // Default constructor
+    }
 
-	public CallableStatementJavaProxy()
-	{
-		// Default constructor
-	}
+    public CallableStatementJavaProxy(JdbcPooledConnection jdbcPooledConnection, CallableStatement statement) {
+        initialize(jdbcPooledConnection, statement);
+    }
 
-	public CallableStatementJavaProxy(JdbcPooledConnection jdbcPooledConnection, CallableStatement statement)
-	{
-		initialize(jdbcPooledConnection, statement);
-	}
+    void initialize(JdbcPooledConnection jdbcPooledConnection, CallableStatement statement) {
+    	this.proxy = this;
+        this.jdbcPooledConnection = jdbcPooledConnection;
+        this.delegate = statement;
+    }
 
-	void initialize(JdbcPooledConnection jdbcPooledConnection, CallableStatement statement)
-	{
-		proxy = this;
-		this.jdbcPooledConnection = jdbcPooledConnection;
-		delegate = statement;
-	}
+    /* Overridden methods of java.sql.CallableStatement */
 
-	/* Overridden methods of java.sql.CallableStatement */
+    public void close() throws SQLException {
+        if (delegate == null) {
+            return;
+        }
 
-	public void close() throws SQLException
-	{
-		if (delegate == null)
-		{
-			return;
-		}
+        jdbcPooledConnection.unregisterUncachedStatement(delegate);
+        delegate.close();
+    }
 
-		jdbcPooledConnection.unregisterUncachedStatement(delegate);
-		delegate.close();
-	}
+    public ResultSet executeQuery() throws SQLException {
+    	return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), delegate.executeQuery());
+    }
 
-	public ResultSet executeQuery() throws SQLException
-	{
-		return JdbcProxyFactory.INSTANCE.getProxyResultSet(getProxy(), delegate.executeQuery());
-	}
+    public ResultSet executeQuery(String sql) throws SQLException {
+    	return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), delegate.executeQuery(sql));
+    }
 
-	public ResultSet executeQuery(String sql) throws SQLException
-	{
-		return JdbcProxyFactory.INSTANCE.getProxyResultSet(getProxy(), delegate.executeQuery(sql));
-	}
+    public ResultSet getGeneratedKeys() throws SQLException {
+    	return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), delegate.getGeneratedKeys());
+    }
 
-	public ResultSet getGeneratedKeys() throws SQLException
-	{
-		return JdbcProxyFactory.INSTANCE.getProxyResultSet(getProxy(), delegate.getGeneratedKeys());
-	}
+    /* java.sql.Wrapper implementation */
 
-	/* java.sql.Wrapper implementation */
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
+    }
 
-	@SuppressWarnings("unchecked")
-	public <T> T unwrap(Class<T> iface) throws SQLException
-	{
-		if (iface.isAssignableFrom(delegate.getClass()))
-		{
-			return (T) delegate;
-		}
-		if (isWrapperFor(iface))
-		{
-			return unwrap(delegate, iface);
-		}
-		throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
-	}
+    @SuppressWarnings("unchecked")
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        if (iface.isAssignableFrom(delegate.getClass())) {
+            return (T) delegate;
+        }
+        if (isWrapperFor(iface)) {
+            return unwrap(delegate, iface);
+        }
+        throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
+    }
 
-	public boolean isWrapperFor(Class<?> iface) throws SQLException
-	{
-		return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
-	}
-
-	@Override
-	protected Map<String, Method> getMethodMap()
-	{
-		return selfMethodMap;
-	}
+    @Override
+    protected Map<String, Method> getMethodMap() {
+        return selfMethodMap;
+    }
 }

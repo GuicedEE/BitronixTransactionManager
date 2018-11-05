@@ -41,273 +41,195 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author Ludovic Orban
  * @author Juergen Kellerer
  */
-public final class ResourceRegistrar
-{
+public final class ResourceRegistrar {
 
-	/**
-	 * Specifies the charset that unique names of resources must be encodable with to be storeable in a TX journal.
-	 */
-	public final static Charset UNIQUE_NAME_CHARSET = Charset.forName("US-ASCII");
-	private final static Logger log = LoggerFactory.getLogger(ResourceRegistrar.class);
-	private final static Set<ProducerHolder> resources = new CopyOnWriteArraySet<ProducerHolder>();
+    private final static Logger log = LoggerFactory.getLogger(ResourceRegistrar.class);
 
-	private ResourceRegistrar()
-	{
-	}
+    /**
+     * Specifies the charset that unique names of resources must be encodable with to be storeable in a TX journal.
+     */
+    public final static Charset UNIQUE_NAME_CHARSET = Charset.forName("US-ASCII");
 
-	/**
-	 * Get a registered {@link XAResourceProducer}.
-	 *
-	 * @param uniqueName
-	 * 		the name of the recoverable resource producer.
-	 *
-	 * @return the {@link XAResourceProducer} or null if there was none registered under that name.
-	 */
-	public static XAResourceProducer get(String uniqueName)
-	{
-		if (uniqueName != null)
-		{
-			for (ProducerHolder holder : resources)
-			{
-				if (!holder.isInitialized())
-				{
-					continue;
-				}
-				if (uniqueName.equals(holder.getUniqueName()))
-				{
-					return holder.producer;
-				}
-			}
-		}
-		return null;
-	}
+    private final static Set<ProducerHolder> resources = new CopyOnWriteArraySet<ProducerHolder>();
 
-	/**
-	 * Get all {@link XAResourceProducer}s unique names.
-	 *
-	 * @return a Set containing all {@link bitronix.tm.resource.common.XAResourceProducer}s unique names.
-	 */
-	public static Set<String> getResourcesUniqueNames()
-	{
-		Set<String> names = new HashSet<String>(resources.size());
-		for (ProducerHolder holder : resources)
-		{
-			if (!holder.isInitialized())
-			{
-				continue;
-			}
-			names.add(holder.getUniqueName());
-		}
+    /**
+     * Get a registered {@link XAResourceProducer}.
+     *
+     * @param uniqueName the name of the recoverable resource producer.
+     * @return the {@link XAResourceProducer} or null if there was none registered under that name.
+     */
+    public static XAResourceProducer get(final String uniqueName) {
+        if (uniqueName != null) {
+            for (ProducerHolder holder : resources) {
+                if (!holder.isInitialized())
+                    continue;
+                if (uniqueName.equals(holder.getUniqueName()))
+                    return holder.producer;
+            }
+        }
+        return null;
+    }
 
-		return Collections.unmodifiableSet(names);
-	}
+    /**
+     * Get all {@link XAResourceProducer}s unique names.
+     * @return a Set containing all {@link bitronix.tm.resource.common.XAResourceProducer}s unique names.
+     */
+    public static Set<String> getResourcesUniqueNames() {
+        final Set<String> names = new HashSet<String>(resources.size());
+        for (ProducerHolder holder : resources) {
+            if (!holder.isInitialized())
+                continue;
+            names.add(holder.getUniqueName());
+        }
 
-	/**
-	 * Register a {@link XAResourceProducer}. If registration happens after the transaction manager started, incremental
-	 * recovery is run on that resource.
-	 *
-	 * @param producer
-	 * 		the {@link XAResourceProducer}.
-	 *
-	 * @throws RecoveryException
-	 * 		When an error happens during recovery.
-	 */
-	public static void register(XAResourceProducer producer) throws RecoveryException
-	{
-		try
-		{
-			boolean alreadyRunning = TransactionManagerServices.isTransactionManagerRunning();
-			ProducerHolder holder = alreadyRunning ? new InitializableProducerHolder(producer) : new ProducerHolder(producer);
+        return Collections.unmodifiableSet(names);
+    }
 
-			if (resources.add(holder))
-			{
-				if (holder instanceof InitializableProducerHolder)
-				{
-					boolean recovered = false;
-					try
-					{
-						if (log.isDebugEnabled())
-						{
-							log.debug("Transaction manager is running, recovering resource '" + holder.getUniqueName() + "'.");
-						}
-						IncrementalRecoverer.recover(producer);
-						((InitializableProducerHolder) holder).initialize();
-						recovered = true;
-					}
-					finally
-					{
-						if (!recovered)
-						{
-							resources.remove(holder);
-						}
-					}
-				}
-			}
-			else
-			{
-				throw new IllegalStateException("A resource with uniqueName '" + holder.getUniqueName() + "' has already been registered. " +
-				                                "Cannot register XAResourceProducer '" + producer + "'.");
-			}
-		}
-		catch (IllegalArgumentException e)
-		{
-			throw new IllegalArgumentException("Cannot register the XAResourceProducer '" + producer + "' caused by invalid input.", e);
-		}
-	}
+    /**
+     * Register a {@link XAResourceProducer}. If registration happens after the transaction manager started, incremental
+     * recovery is run on that resource.
+     * @param producer the {@link XAResourceProducer}.
+     * @throws RecoveryException When an error happens during recovery.
+     */
+    public static void register(XAResourceProducer producer) throws RecoveryException {
+        try {
+            final boolean alreadyRunning = TransactionManagerServices.isTransactionManagerRunning();
+            final ProducerHolder holder = alreadyRunning ? new InitializableProducerHolder(producer) : new ProducerHolder(producer);
 
-	/**
-	 * Unregister a previously registered {@link XAResourceProducer}.
-	 *
-	 * @param producer
-	 * 		the {@link XAResourceProducer}.
-	 */
-	public static void unregister(XAResourceProducer producer)
-	{
-		ProducerHolder holder = new ProducerHolder(producer);
+            if (resources.add(holder)) {
+                if (holder instanceof InitializableProducerHolder) {
+                    boolean recovered = false;
+                    try {
+                        if (log.isDebugEnabled()) { log.debug("Transaction manager is running, recovering resource '" + holder.getUniqueName() + "'."); }
+                        IncrementalRecoverer.recover(producer);
+                        ((InitializableProducerHolder) holder).initialize();
+                        recovered = true;
+                    } finally {
+                        if (!recovered) { resources.remove(holder); }
+                    }
+                }
+            } else {
+                throw new IllegalStateException("A resource with uniqueName '" + holder.getUniqueName() + "' has already been registered. " +
+                        "Cannot register XAResourceProducer '" + producer + "'.");
+            }
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Cannot register the XAResourceProducer '" + producer + "' caused by invalid input.", e);
+        }
+    }
 
-		if (!resources.remove(holder))
-		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("resource with uniqueName '{}' has not been registered", holder.getUniqueName());
-			}
-		}
-	}
+    /**
+     * Unregister a previously registered {@link XAResourceProducer}.
+     * @param producer the {@link XAResourceProducer}.
+     */
+    public static void unregister(XAResourceProducer producer) {
+        final ProducerHolder holder = new ProducerHolder(producer);
 
-	/**
-	 * Find in the registered {@link XAResourceProducer}s the {@link XAResourceHolder} from which the specified {@link XAResource} comes from.
-	 *
-	 * @param xaResource
-	 * 		the {@link XAResource} to look for
-	 *
-	 * @return the associated {@link XAResourceHolder} or null if it cannot be found.
-	 */
-	public static XAResourceHolder findXAResourceHolder(XAResource xaResource)
-	{
-		boolean debug = log.isDebugEnabled();
+        if (!resources.remove(holder)) {
+            if (log.isDebugEnabled()) { log.debug("resource with uniqueName '{}' has not been registered", holder.getUniqueName()); }
+        }
+    }
 
-		for (ProducerHolder holder : resources)
-		{
-			if (!holder.isInitialized())
-			{
-				continue;
-			}
+    /**
+     * Find in the registered {@link XAResourceProducer}s the {@link XAResourceHolder} from which the specified {@link XAResource} comes from.
+     *
+     * @param xaResource the {@link XAResource} to look for
+     * @return the associated {@link XAResourceHolder} or null if it cannot be found.
+     */
+    public static XAResourceHolder findXAResourceHolder(XAResource xaResource) {
+        final boolean debug = log.isDebugEnabled();
 
-			XAResourceProducer producer = holder.producer;
-			XAResourceHolder resourceHolder = producer.findXAResourceHolder(xaResource);
-			if (resourceHolder != null)
-			{
-				if (debug)
-				{
-					log.debug("XAResource " + xaResource + " belongs to " + resourceHolder + " that itself belongs to " + producer);
-				}
-				return resourceHolder;
-			}
-			if (debug)
-			{
-				log.debug("XAResource " + xaResource + " does not belong to any resource of " + producer);
-			}
-		}
+        for (ProducerHolder holder : resources) {
+            if (!holder.isInitialized())
+                continue;
 
-		return null;
-	}
+            final XAResourceProducer producer = holder.producer;
+            final XAResourceHolder resourceHolder = producer.findXAResourceHolder(xaResource);
+            if (resourceHolder != null) {
+                if (debug) { log.debug("XAResource " + xaResource + " belongs to " + resourceHolder + " that itself belongs to " + producer); }
+                return resourceHolder;
+            }
+            if (debug) { log.debug("XAResource " + xaResource + " does not belong to any resource of " + producer); }
+        }
 
-	/**
-	 * Implements a holder that maintains XAResourceProducers in a set only differentiating them by their unique names.
-	 */
-	private static class ProducerHolder
-	{
+        return null;
+    }
 
-		private final XAResourceProducer producer;
+    private ResourceRegistrar() {
+    }
 
-		private ProducerHolder(XAResourceProducer producer)
-		{
-			if (producer == null)
-			{
-				throw new IllegalArgumentException("XAResourceProducer may not be 'null'. Verify your call to ResourceRegistrar.[un]register(...).");
-			}
+    /**
+     * Implements a holder that maintains XAResourceProducers in a set only differentiating them by their unique names.
+     */
+    private static class ProducerHolder {
 
-			String uniqueName = producer.getUniqueName();
-			if (uniqueName == null || uniqueName.length() == 0)
-			{
-				throw new IllegalArgumentException("The given XAResourceProducer '" + producer + "' does not specify a uniqueName.");
-			}
+        private final XAResourceProducer producer;
 
-			String transcodedUniqueName = new String(uniqueName.getBytes(UNIQUE_NAME_CHARSET), UNIQUE_NAME_CHARSET);
-			if (!transcodedUniqueName.equals(uniqueName))
-			{
-				throw new IllegalArgumentException("The given XAResourceProducer's uniqueName '" + uniqueName + "' is not compatible with the charset " +
-				                                   "'US-ASCII' (transcoding results in '" + transcodedUniqueName + "'). " + System.getProperty("line.separator") +
-				                                   "BTM requires unique names to be compatible with US-ASCII when used with a transaction journal.");
-			}
+        private ProducerHolder(XAResourceProducer producer) {
+            if (producer == null)
+                throw new IllegalArgumentException("XAResourceProducer may not be 'null'. Verify your call to ResourceRegistrar.[un]register(...).");
 
-			this.producer = producer;
-		}
+            final String uniqueName = producer.getUniqueName();
+            if (uniqueName == null || uniqueName.length() == 0)
+                throw new IllegalArgumentException("The given XAResourceProducer '" + producer + "' does not specify a uniqueName.");
 
-		@Override
-		public int hashCode()
-		{
-			return getUniqueName().hashCode();
-		}
+            final String transcodedUniqueName = new String(uniqueName.getBytes(UNIQUE_NAME_CHARSET), UNIQUE_NAME_CHARSET);
+            if (!transcodedUniqueName.equals(uniqueName)) {
+                throw new IllegalArgumentException("The given XAResourceProducer's uniqueName '" + uniqueName + "' is not compatible with the charset " +
+                        "'US-ASCII' (transcoding results in '" + transcodedUniqueName + "'). " + System.getProperty("line.separator") +
+                        "BTM requires unique names to be compatible with US-ASCII when used with a transaction journal.");
+            }
 
-		@Override
-		public boolean equals(Object o)
-		{
-			if (this == o)
-			{
-				return true;
-			}
-			if (!(o instanceof ProducerHolder))
-			{
-				return false;
-			}
-			ProducerHolder that = (ProducerHolder) o;
-			return getUniqueName().equals(that.getUniqueName());
-		}
+            this.producer = producer;
+        }
 
-		@Override
-		public String toString()
-		{
-			return "ProducerHolder{" +
-			       "producer=" + producer +
-			       ", initialized=" + isInitialized() +
-			       '}';
-		}
+        boolean isInitialized() {
+            return true;
+        }
 
-		boolean isInitialized()
-		{
-			return true;
-		}
+        String getUniqueName() {
+            return producer.getUniqueName();
+        }
 
-		String getUniqueName()
-		{
-			return producer.getUniqueName();
-		}
-	}
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof ProducerHolder)) return false;
+            ProducerHolder that = (ProducerHolder) o;
+            return getUniqueName().equals(that.getUniqueName());
+        }
 
-	/**
-	 * Extends the default holder with thread safe initialization to put uninitialized holders in the set.
-	 */
-	private static class InitializableProducerHolder
-			extends ProducerHolder
-	{
+        @Override
+        public int hashCode() {
+            return getUniqueName().hashCode();
+        }
 
-		private volatile boolean initialized;
+        @Override
+        public String toString() {
+            return "ProducerHolder{" +
+                    "producer=" + producer +
+                    ", initialized=" + isInitialized() +
+                    '}';
+        }
+    }
 
-		private InitializableProducerHolder(XAResourceProducer producer)
-		{
-			super(producer);
-		}
+    /**
+     * Extends the default holder with thread safe initialization to put uninitialized holders in the set.
+     */
+    private static class InitializableProducerHolder extends ProducerHolder {
 
-		@Override
-		boolean isInitialized()
-		{
-			return initialized;
-		}
+        private volatile boolean initialized;
 
-		void initialize()
-		{
-			initialized = true;
-		}
-	}
+        private InitializableProducerHolder(XAResourceProducer producer) {
+            super(producer);
+        }
+
+        @Override
+        boolean isInitialized() {
+            return initialized;
+        }
+
+        void initialize() {
+            initialized = true;
+        }
+    }
 }

@@ -22,133 +22,108 @@ import java.util.Arrays;
  *
  * @author Ludovic Orban
  */
-public final class Uid
-{
+public final class Uid {
 
-	private static final char[] HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-	private final byte[] array;
-	private final int hashCodeValue;
-	private final String toStringValue;
+    private final byte[] array;
+    private final int hashCodeValue;
+    private final String toStringValue;
 
-	public Uid(byte[] array)
-	{
-		this.array = new byte[array.length];
-		System.arraycopy(array, 0, this.array, 0, array.length);
-		hashCodeValue = arrayHashCode(array);
-		toStringValue = arrayToString(array);
-	}
+    public Uid(byte[] array) {
+        this.array = new byte[array.length];
+        System.arraycopy(array, 0, this.array, 0, array.length);
+        this.hashCodeValue = arrayHashCode(array);
+        this.toStringValue = arrayToString(array);
+    }
 
-	/**
-	 * Compute a UID byte array hashcode value.
-	 *
-	 * @param uid
-	 * 		the byte array used for hashcode computation.
-	 *
-	 * @return a constant hash value for the specified uid.
-	 */
-	private static int arrayHashCode(byte[] uid)
-	{
-		int hash = 0;
-		// Common fast but good hash with wide dispersion
-		for (int i = uid.length - 1; i > 0; i--)
-		{
-			// rotate left and xor
-			// (very fast in assembler, a bit clumsy in Java)
-			hash <<= 1;
+    public byte[] getArray() {
+        return array;
+    }
 
-			if (hash < 0)
-			{
-				hash |= 1;
-			}
+    public byte[] extractServerId() {
+        int serverIdLength = array.length - 4 - 8; // - sequence - timestamp
+        if (serverIdLength < 1)
+            return null;
 
-			hash ^= uid[i];
-		}
-		return hash;
-	}
+        byte[] result = new byte[serverIdLength];
+        System.arraycopy(array, 0, result, 0, serverIdLength);
+        return result;
+    }
 
-	/**
-	 * Decode a UID byte array into a (somewhat) human-readable hex string.
-	 *
-	 * @param uid
-	 * 		the uid to decode.
-	 *
-	 * @return the resulting printable string.
-	 */
-	private static String arrayToString(byte[] uid)
-	{
-		char[] hexChars = new char[uid.length * 2];
-		int c = 0;
-		int v;
-		for (int i = 0; i < uid.length; i++)
-		{
-			v = uid[i] & 0xFF;
-			hexChars[c++] = HEX[v >> 4];
-			hexChars[c++] = HEX[v & 0xF];
-		}
-		return new String(hexChars);
-	}
+    public long extractTimestamp() {
+        return Encoder.bytesToLong(array, array.length - 4 - 8); // - sequence - timestamp
+    }
 
-	public byte[] getArray()
-	{
-		return array;
-	}
+    public int extractSequence() {
+        return Encoder.bytesToInt(array, array.length - 4); // - sequence
+    }
 
-	public byte[] extractServerId()
-	{
-		int serverIdLength = array.length - 4 - 8; // - sequence - timestamp
-		if (serverIdLength < 1)
-		{
-			return null;
-		}
+    public int length() {
+    	return array.length;
+    }
 
-		byte[] result = new byte[serverIdLength];
-		System.arraycopy(array, 0, result, 0, serverIdLength);
-		return result;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Uid) {
+            Uid otherUid = (Uid) obj;
 
-	public long extractTimestamp()
-	{
-		return Encoder.bytesToLong(array, array.length - 4 - 8); // - sequence - timestamp
-	}
+            // optimizes performance a bit
+            if (hashCodeValue != otherUid.hashCodeValue)
+                return false;
 
-	public int extractSequence()
-	{
-		return Encoder.bytesToInt(array, array.length - 4); // - sequence
-	}
+            return Arrays.equals(array, otherUid.array);
+        }
+        return false;
+    }
 
-	public int length()
-	{
-		return array.length;
-	}
+    @Override
+    public int hashCode() {
+        return hashCodeValue;
+    }
 
-	@Override
-	public int hashCode()
-	{
-		return hashCodeValue;
-	}
+    @Override
+    public String toString() {
+        return toStringValue;
+    }
 
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof Uid)
-		{
-			Uid otherUid = (Uid) obj;
+    /**
+     * Compute a UID byte array hashcode value.
+     * @param uid the byte array used for hashcode computation.
+     * @return a constant hash value for the specified uid.
+     */
+    private static int arrayHashCode(byte[] uid) {
+        int hash = 0;
+        // Common fast but good hash with wide dispersion
+        for (int i = uid.length - 1; i > 0; i--) {
+            // rotate left and xor
+            // (very fast in assembler, a bit clumsy in Java)
+            hash <<= 1;
 
-			// optimizes performance a bit
-			if (hashCodeValue != otherUid.hashCodeValue)
-			{
-				return false;
-			}
+            if (hash < 0) {
+                hash |= 1;
+            }
 
-			return Arrays.equals(array, otherUid.array);
-		}
-		return false;
-	}
+            hash ^= uid[i];
+        }
+        return hash;
+    }
 
-	@Override
-	public String toString()
-	{
-		return toStringValue;
-	}
+    /**
+     * Decode a UID byte array into a (somewhat) human-readable hex string.
+     * @param uid the uid to decode.
+     * @return the resulting printable string.
+     */
+    private static String arrayToString(byte[] uid) {
+        char[] hexChars = new char[uid.length * 2];
+        int c = 0;
+        int v;
+        for (int i = 0; i < uid.length; i++) {
+            v = uid[i] & 0xFF;
+            hexChars[c++] = HEX[v >> 4];
+            hexChars[c++] = HEX[v & 0xF];
+        }
+        return new String(hexChars);
+    }
+
+    private static final char[] HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 }
 

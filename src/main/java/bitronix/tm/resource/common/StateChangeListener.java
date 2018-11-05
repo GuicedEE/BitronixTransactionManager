@@ -22,31 +22,22 @@ import bitronix.tm.resource.common.XAStatefulHolder.State;
  *
  * @author Ludovic Orban
  */
-public interface StateChangeListener<T extends XAStatefulHolder<T>>
-{
+public interface StateChangeListener<T extends XAStatefulHolder<T>> {
 
-	/**
-	 * Fired when the internal state of a {@link XAStatefulHolder} has changed.
-	 *
-	 * @param source
-	 * 		the {@link XAStatefulHolder} changing state.
-	 * @param oldState
-	 * 		the old state of the {@link XAStatefulHolder}.
-	 * @param newState
-	 * 		the new state of the {@link XAStatefulHolder}.
-	 */
-	public void stateChanged(T source, State oldState, State newState);
+    /**
+     * Fired when the internal state of a {@link XAStatefulHolder} has changed.
+     * @param source the {@link XAStatefulHolder} changing state.
+     * @param oldState the old state of the {@link XAStatefulHolder}.
+     * @param newState the new state of the {@link XAStatefulHolder}.
+     */
+    public void stateChanged(T source, State oldState, State newState);
 
-	/**
-	 * Fired before the internal state of a {@link XAStatefulHolder} has changed.
-	 *
-	 * @param source
-	 * 		the {@link XAStatefulHolder} changing state.
-	 * @param currentState
-	 * 		the current state of the {@link XAStatefulHolder}.
-	 * @param futureState
-	 * 		the future state of the {@link XAStatefulHolder}.
-	 */
-	public void stateChanging(T source, State currentState, State futureState);
+    /**
+     * Fired before the internal state of a {@link XAStatefulHolder} has changed.
+     * @param source the {@link XAStatefulHolder} changing state.
+     * @param currentState the current state of the {@link XAStatefulHolder}.
+     * @param futureState the future state of the {@link XAStatefulHolder}.
+     */
+    public void stateChanging(T source, State currentState, State futureState);
 
 }

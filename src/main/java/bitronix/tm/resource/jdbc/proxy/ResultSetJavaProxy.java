@@ -24,43 +24,36 @@ import java.util.Map;
 /**
  * @author Brett Wooldridge
  */
-public class ResultSetJavaProxy
-		extends JavaProxyBase<ResultSet>
-{
+public class ResultSetJavaProxy extends JavaProxyBase<ResultSet> {
 
-	private final static Map<String, Method> selfMethodMap = createMethodMap(ResultSetJavaProxy.class);
+    private final static Map<String, Method> selfMethodMap = createMethodMap(ResultSetJavaProxy.class);
 
-	private Statement statement;
+    private Statement statement;
 
-	public ResultSetJavaProxy(Statement statement, ResultSet resultSet)
-	{
+    public ResultSetJavaProxy(Statement statement, ResultSet resultSet) {
 		initialize(statement, resultSet);
 	}
 
-	void initialize(Statement statement, ResultSet resultSet)
-	{
-		proxy = this;
-		this.statement = statement;
-		delegate = resultSet;
-	}
+    public ResultSetJavaProxy() {
+    	// Default constructor
+    }
 
-	public ResultSetJavaProxy()
-	{
-		// Default constructor
-	}
+    void initialize(Statement statement, ResultSet resultSet) {
+    	this.proxy = this;
+        this.statement = statement;
+        this.delegate = resultSet;
+    }
 
-	/* Overridden methods of java.sql.ResultSet */
+    /* Overridden methods of java.sql.ResultSet */
 
-	public Statement getStatement() throws SQLException
-	{
-		return statement;
-	}
+    public Statement getStatement() throws SQLException {
+    	return statement;
+    }
 
-	/* Overridden methods of JavaProxyBase */
+    /* Overridden methods of JavaProxyBase */
 
 	@Override
-	protected Map<String, Method> getMethodMap()
-	{
+	protected Map<String, Method> getMethodMap() {
 		return selfMethodMap;
 	}
 }

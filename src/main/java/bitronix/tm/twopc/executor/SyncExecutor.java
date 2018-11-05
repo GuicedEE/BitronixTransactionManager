@@ -20,30 +20,24 @@ package bitronix.tm.twopc.executor;
  *
  * @author Ludovic Orban
  */
-public class SyncExecutor
-		implements Executor
-{
+public class SyncExecutor implements Executor {
 
-	@Override
-	public Object submit(Job job)
-	{
-		job.run();
-		return new Object();
-	}
+    @Override
+    public Object submit(Job job) {
+        job.run();
+        return new Object();
+    }
 
-	@Override
-	public void waitFor(Object future, long timeout)
-	{
-	}
+    @Override
+    public void waitFor(Object future, long timeout) {
+    }
 
-	@Override
-	public boolean isDone(Object future)
-	{
-		return true;
-	}
+    @Override
+    public boolean isDone(Object future) {
+        return true;
+    }
 
-	@Override
-	public void shutdown()
-	{
-	}
+    @Override
+    public void shutdown() {
+    }
 }

@@ -27,47 +27,46 @@ import java.util.Set;
  * @author Ludovic Orban
  * @author Juergen Kellerer
  */
-public interface JournalRecord
-{
-	/**
-	 * Returns the current status of the transaction that this record belongs to.
-	 *
-	 * @return the current status of the transaction that this record belongs to.
-	 */
-	int getStatus();
+public interface JournalRecord {
+    /**
+     * Returns the current status of the transaction that this record belongs to.
+     *
+     * @return the current status of the transaction that this record belongs to.
+     */
+    int getStatus();
 
-	/**
-	 * Returns the global transaction id, identifying the transaction this record belongs to.
-	 *
-	 * @return the global transaction id, identifying the transaction this record belongs to.
-	 */
-	Uid getGtrid();
+    /**
+     * Returns the global transaction id, identifying the transaction this record belongs to.
+     *
+     * @return the global transaction id, identifying the transaction this record belongs to.
+     */
+    Uid getGtrid();
 
-	/**
-	 * Returns an unmodifiable set of the unique names identifying the components that are part of this transaction.
-	 *
-	 * @return an unmodifiable set of the unique names identifying the components that are part of this transaction.
-	 */
-	Set<String> getUniqueNames();
+    /**
+     * Returns an unmodifiable set of the unique names identifying the components that are part of this transaction.
+     *
+     * @return an unmodifiable set of the unique names identifying the components that are part of this transaction.
+     */
+    Set<String> getUniqueNames();
 
-	/**
-	 * Returns the time when this record was created.
-	 *
-	 * @return the time when this record was created.
-	 */
-	long getTime();
+    /**
+     * Returns the time when this record was created.
+     *
+     * @return the time when this record was created.
+     */
+    long getTime();
 
-	/**
-	 * Returns true if the record could not only be loaded but does also pass internal checksum verifications.
-	 *
-	 * @return true if the record could not only be loaded but does also pass internal checksum verifications.
-	 */
-	boolean isValid();
+    /**
+     * Returns true if the record could not only be loaded but does also pass internal checksum verifications.
+     *
+     * @return true if the record could not only be loaded but does also pass internal checksum verifications.
+     */
+    boolean isValid();
 
-	/**
-	 * Returns a map of additional properties that provide access to implementation specific record details.
-	 *
-	 * @return a map of additional properties that provide access to implementation specific record details.
-	 */
-	Map<String, ?> getRecordProperties();
+    /**
+     * Returns a map of additional properties that provide access to implementation specific record details.
+     *
+     * @return a map of additional properties that provide access to implementation specific record details.
+     */
+    Map<String, ?> getRecordProperties();
 }

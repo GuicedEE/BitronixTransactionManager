@@ -21,7 +21,5 @@ package bitronix.tm;
  *
  * @author Ludovic Orban
  */
-public class BitronixUserTransactionObjectFactory
-		extends BitronixTransactionManagerObjectFactory
-{
+public class BitronixUserTransactionObjectFactory extends BitronixTransactionManagerObjectFactory {
 }

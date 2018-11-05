@@ -26,63 +26,45 @@ import java.util.Map;
 /**
  * @author Brett Wooldridge
  */
-final class XAFactoryHelper
-{
-	private final static Logger log = LoggerFactory.getLogger(XAFactoryHelper.class);
+final class XAFactoryHelper {
+    private final static Logger log = LoggerFactory.getLogger(XAFactoryHelper.class);
 
-	private final static String PASSWORD_PROPERTY_NAME = "password";
+    private final static String PASSWORD_PROPERTY_NAME = "password";
 
-	private XAFactoryHelper()
-	{
-		// This class is not instantiable.
-	}
+    private XAFactoryHelper() {
+        // This class is not instantiable.
+    }
 
-	static Object createXAFactory(ResourceBean bean) throws Exception
-	{
-		String className = bean.getClassName();
-		if (className == null)
-		{
-			throw new IllegalArgumentException("className cannot be null");
-		}
-		Class<?> xaFactoryClass = ClassLoaderUtils.loadClass(className);
-		Object xaFactory = xaFactoryClass.getDeclaredConstructor()
-		                                 .newInstance();
+    static Object createXAFactory(ResourceBean bean) throws Exception {
+        String className = bean.getClassName();
+        if (className == null)
+            throw new IllegalArgumentException("className cannot be null");
+        Class<?> xaFactoryClass = ClassLoaderUtils.loadClass(className);
+        Object xaFactory = xaFactoryClass.getDeclaredConstructor().newInstance();
 
-		for (Map.Entry<Object, Object> entry : bean.getDriverProperties()
-		                                           .entrySet())
-		{
-			String name = (String) entry.getKey();
-			Object value = entry.getValue();
+        for (Map.Entry<Object, Object> entry : bean.getDriverProperties().entrySet()) {
+            String name = (String) entry.getKey();
+            Object value = entry.getValue();
 
-			if (name.endsWith(PASSWORD_PROPERTY_NAME))
-			{
-				value = decrypt(value.toString());
-			}
+            if (name.endsWith(PASSWORD_PROPERTY_NAME)) {
+                value = decrypt(value.toString());
+            }
 
-			if (log.isDebugEnabled())
-			{
-				log.debug("setting vendor property '" + name + "' to '" + value + "'");
-			}
-			PropertyUtils.setProperty(xaFactory, name, value);
-		}
-		return xaFactory;
-	}
+            if (log.isDebugEnabled()) { log.debug("setting vendor property '" + name + "' to '" + value + "'"); }
+            PropertyUtils.setProperty(xaFactory, name, value);
+        }
+        return xaFactory;
+    }
 
-	private static String decrypt(String resourcePassword) throws Exception
-	{
-		int startIdx = resourcePassword.indexOf("{");
-		int endIdx = resourcePassword.indexOf("}");
+    private static String decrypt(String resourcePassword) throws Exception {
+        int startIdx = resourcePassword.indexOf("{");
+        int endIdx = resourcePassword.indexOf("}");
 
-		if (startIdx != 0 || endIdx == -1)
-		{
-			return resourcePassword;
-		}
+        if (startIdx != 0 || endIdx == -1)
+            return resourcePassword;
 
-		String cipher = resourcePassword.substring(1, endIdx);
-		if (log.isDebugEnabled())
-		{
-			log.debug("resource password is encrypted, decrypting " + resourcePassword);
-		}
-		return CryptoEngine.decrypt(cipher, resourcePassword.substring(endIdx + 1));
-	}
+        String cipher = resourcePassword.substring(1, endIdx);
+        if (log.isDebugEnabled()) { log.debug("resource password is encrypted, decrypting " + resourcePassword); }
+        return CryptoEngine.decrypt(cipher, resourcePassword.substring(endIdx + 1));
+    }
 }

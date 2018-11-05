@@ -23,27 +23,21 @@ import java.io.StringWriter;
  *
  * @author Stephane Nicoll
  */
-public final class ExceptionUtils
-{
+public final class ExceptionUtils {
 
-	private ExceptionUtils()
-	{
-	}
+    private ExceptionUtils() {
+    }
 
-	/**
-	 * Returns the stack trace of the specified {@link Throwable}.
-	 *
-	 * @param t
-	 * 		the throwable
-	 *
-	 * @return the string representation of the stack trace
-	 */
-	public static String getStackTrace(Throwable t)
-	{
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw, true);
-		t.printStackTrace(pw);
-		return sw.getBuffer()
-		         .toString();
-	}
+    /**
+     * Returns the stack trace of the specified {@link Throwable}.
+     *
+     * @param t the throwable
+     * @return the string representation of the stack trace
+     */
+    public static String getStackTrace(Throwable t) {
+        final StringWriter sw = new StringWriter();
+        final PrintWriter pw = new PrintWriter(sw, true);
+        t.printStackTrace(pw);
+        return sw.getBuffer().toString();
+    }
 }

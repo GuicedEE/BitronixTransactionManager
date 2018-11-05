@@ -25,107 +25,90 @@ import java.util.List;
  *
  * @author Ludovic Orban
  */
-public interface XAStatefulHolder<T extends XAStatefulHolder<T>>
-{
+public interface XAStatefulHolder<T extends XAStatefulHolder<T>> {
 
-	/**
-	 * Get the current resource state.
-	 * <p>This method is thread-safe.</p>
-	 *
-	 * @return the current resource state.
-	 */
-	public State getState();
+    enum State {
+        /**
+         * The state in which the resource is when it is closed and unusable.
+         */
+        CLOSED,
 
-	/**
-	 * Set the current resource state.
-	 * <p>This method is thread-safe.</p>
-	 *
-	 * @param state
-	 * 		the current resource state.
-	 */
-	public void setState(State state);
+        /**
+         * The state in which the resource is when it is available in the pool.
+         */
+        IN_POOL,
 
-	/**
-	 * Register an implementation of {@link StateChangeListener}.
-	 *
-	 * @param listener
-	 * 		the {@link StateChangeListener} implementation to register.
-	 */
-	public void addStateChangeEventListener(StateChangeListener<T> listener);
+        /**
+         * The state in which the resource is when it out of the pool but accessible by the application.
+         */
+        ACCESSIBLE,
 
-	/**
-	 * Unregister an implementation of {@link StateChangeListener}.
-	 *
-	 * @param listener
-	 * 		the {@link StateChangeListener} implementation to unregister.
-	 */
-	public void removeStateChangeEventListener(StateChangeListener<T> listener);
+        /**
+         * The state in which the resource is when it out of the pool but not accessible by the application.
+         */
+        NOT_ACCESSIBLE
+    };
 
-	/**
-	 * Get the list of {@link bitronix.tm.resource.common.XAResourceHolder}s created by this
-	 * {@link bitronix.tm.resource.common.XAStatefulHolder} that are still open.
-	 * <p>This method is thread-safe.</p>
-	 *
-	 * @return the list of {@link XAResourceHolder}s created by this
-	 * 		{@link bitronix.tm.resource.common.XAStatefulHolder} that are still open.
-	 */
-	public List<? extends XAResourceHolder<? extends XAResourceHolder>> getXAResourceHolders();
+    /**
+     * Get the current resource state.
+     * <p>This method is thread-safe.</p>
+     * @return the current resource state.
+     */
+    public State getState();
 
-	/**
-	 * Create a disposable handler used to drive a pooled instance of
-	 * {@link bitronix.tm.resource.common.XAStatefulHolder}.
-	 * <p>This method is thread-safe.</p>
-	 *
-	 * @return a resource-specific disposable connection object.
-	 *
-	 * @throws Exception
-	 * 		a resource-specific exception thrown when the disposable connection cannot be created.
-	 */
-	public Object getConnectionHandle() throws Exception;
+    /**
+     * Set the current resource state.
+     * <p>This method is thread-safe.</p>
+     * @param state the current resource state.
+     */
+    public void setState(State state);
 
-	/**
-	 * Close the physical connection that this {@link bitronix.tm.resource.common.XAStatefulHolder} represents.
-	 *
-	 * @throws Exception
-	 * 		a resource-specific exception thrown when there is an error closing the physical connection.
-	 */
-	public void close() throws Exception;
+    /**
+     * Register an implementation of {@link StateChangeListener}.
+     * @param listener the {@link StateChangeListener} implementation to register.
+     */
+    public void addStateChangeEventListener(StateChangeListener<T> listener);
 
-	/**
-	 * Get the date at which this object was last released to the pool. This is required to check if it is eligible
-	 * for discard when the containing pool needs to shrink.
-	 *
-	 * @return the date at which this object was last released to the pool or null if it never left the pool.
-	 */
-	public Date getLastReleaseDate();
+    /**
+     * Unregister an implementation of {@link StateChangeListener}.
+     * @param listener the {@link StateChangeListener} implementation to unregister.
+     */
+    public void removeStateChangeEventListener(StateChangeListener<T> listener);
 
-	/**
-	 * Get the date at which this object was created in the pool.
-	 *
-	 * @return the date at which this object was created in the pool.
-	 */
-	public Date getCreationDate();
+    /**
+     * Get the list of {@link bitronix.tm.resource.common.XAResourceHolder}s created by this
+     * {@link bitronix.tm.resource.common.XAStatefulHolder} that are still open.
+     * <p>This method is thread-safe.</p>
+     * @return the list of {@link XAResourceHolder}s created by this
+     *         {@link bitronix.tm.resource.common.XAStatefulHolder} that are still open.
+     */
+    public List<? extends XAResourceHolder<? extends XAResourceHolder>> getXAResourceHolders();
 
-	enum State
-	{
-		/**
-		 * The state in which the resource is when it is closed and unusable.
-		 */
-		CLOSED,
+    /**
+     * Create a disposable handler used to drive a pooled instance of
+     * {@link bitronix.tm.resource.common.XAStatefulHolder}.
+     * <p>This method is thread-safe.</p>
+     * @return a resource-specific disposable connection object.
+     * @throws Exception a resource-specific exception thrown when the disposable connection cannot be created.
+     */
+    public Object getConnectionHandle() throws Exception;
 
-		/**
-		 * The state in which the resource is when it is available in the pool.
-		 */
-		IN_POOL,
+    /**
+     * Close the physical connection that this {@link bitronix.tm.resource.common.XAStatefulHolder} represents.
+     * @throws Exception a resource-specific exception thrown when there is an error closing the physical connection.
+     */
+    public void close() throws Exception;
 
-		/**
-		 * The state in which the resource is when it out of the pool but accessible by the application.
-		 */
-		ACCESSIBLE,
+    /**
+     * Get the date at which this object was last released to the pool. This is required to check if it is eligible
+     * for discard when the containing pool needs to shrink.
+     * @return the date at which this object was last released to the pool or null if it never left the pool.
+     */
+    public Date getLastReleaseDate();
 
-		/**
-		 * The state in which the resource is when it out of the pool but not accessible by the application.
-		 */
-		NOT_ACCESSIBLE
-	}
+    /**
+     * Get the date at which this object was created in the pool.
+     * @return the date at which this object was created in the pool.
+     */
+    public Date getCreationDate();
 }

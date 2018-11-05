@@ -26,105 +26,81 @@ import java.util.Map;
 /**
  * @author Brett Wooldridge
  */
-public class LrcConnectionJavaProxy
-		extends JavaProxyBase<Connection>
-{
+public class LrcConnectionJavaProxy extends JavaProxyBase<Connection> {
 
-	private final static Map<String, Method> selfMethodMap = createMethodMap(LrcConnectionJavaProxy.class);
+    private final static Map<String, Method> selfMethodMap = createMethodMap(LrcConnectionJavaProxy.class);
 
-	private final LrcXAResource xaResource;
+    private final LrcXAResource xaResource;
 
-	public LrcConnectionJavaProxy(LrcXAResource xaResource, Connection connection)
-	{
-		delegate = connection;
-		this.xaResource = xaResource;
-	}
+    public LrcConnectionJavaProxy(LrcXAResource xaResource, Connection connection) {
+        this.delegate = connection;
+        this.xaResource = xaResource;
+    }
 
-	@Override
-	public String toString()
-	{
-		return "a JDBC LrcConnectionJavaProxy on " + delegate;
-	}
+    @Override
+    public String toString() {
+        return "a JDBC LrcConnectionJavaProxy on " + delegate;
+    }
 
-	/* wrapped Connection methods that have special XA semantics */
+    /* wrapped Connection methods that have special XA semantics */
 
-	public void close() throws SQLException
-	{
-		if (delegate != null)
-		{
-			delegate.close();
-		}
+    public void close() throws SQLException {
+        if (delegate != null) {
+            delegate.close();
+        }
 
-		delegate = null;
-	}
+        delegate = null;
+    }
 
-	public boolean isClosed() throws SQLException
-	{
-		return delegate == null;
-	}
+    public boolean isClosed() throws SQLException {
+        return delegate == null;
+    }
 
-	public void setAutoCommit(boolean autoCommit) throws SQLException
-	{
-		if (xaResource.getState() != LrcXAResource.NO_TX && autoCommit)
-		{
-			throw new SQLException("XA transaction started, cannot enable autocommit mode");
-		}
-		delegate.setAutoCommit(autoCommit);
-	}
+    public void setAutoCommit(boolean autoCommit) throws SQLException {
+        if (xaResource.getState() != LrcXAResource.NO_TX && autoCommit)
+            throw new SQLException("XA transaction started, cannot enable autocommit mode");
+        delegate.setAutoCommit(autoCommit);
+    }
 
-	public void commit() throws SQLException
-	{
-		if (xaResource.getState() != LrcXAResource.NO_TX)
-		{
-			throw new SQLException("XA transaction started, cannot call commit directly on connection");
-		}
-		delegate.commit();
-	}
+    public void commit() throws SQLException {
+        if (xaResource.getState() != LrcXAResource.NO_TX)
+            throw new SQLException("XA transaction started, cannot call commit directly on connection");
+        delegate.commit();
+    }
 
-	public void rollback() throws SQLException
-	{
-		if (xaResource.getState() != LrcXAResource.NO_TX)
-		{
-			throw new SQLException("XA transaction started, cannot call rollback directly on connection");
-		}
-		delegate.rollback();
-	}
+    public void rollback() throws SQLException {
+        if (xaResource.getState() != LrcXAResource.NO_TX)
+            throw new SQLException("XA transaction started, cannot call rollback directly on connection");
+        delegate.rollback();
+    }
 
-	public void rollback(Savepoint savepoint) throws SQLException
-	{
-		if (xaResource.getState() != LrcXAResource.NO_TX)
-		{
-			throw new SQLException("XA transaction started, cannot call rollback directly on connection");
-		}
-		delegate.rollback(savepoint);
-	}
+    public void rollback(Savepoint savepoint) throws SQLException {
+        if (xaResource.getState() != LrcXAResource.NO_TX)
+            throw new SQLException("XA transaction started, cannot call rollback directly on connection");
+        delegate.rollback(savepoint);
+    }
 
-	/* java.sql.Wrapper implementation */
+    /* java.sql.Wrapper implementation */
 
-	@SuppressWarnings("unchecked")
-	public <T> T unwrap(Class<T> iface) throws SQLException
-	{
-		if (iface.isAssignableFrom(delegate.getClass()))
-		{
-			return (T) delegate;
-		}
-		if (isWrapperFor(iface))
-		{
-			return unwrap(delegate, iface);
-		}
-		throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
-	}
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
+    }
 
-	public boolean isWrapperFor(Class<?> iface) throws SQLException
-	{
-		return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
-	}
+    @SuppressWarnings("unchecked")
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        if (iface.isAssignableFrom(delegate.getClass())) {
+            return (T) delegate;
+        }
+        if (isWrapperFor(iface)) {
+            return unwrap(delegate, iface);
+        }
+        throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
+    }
 
-	/* Overridden methods of JavaProxyBase */
+    /* Overridden methods of JavaProxyBase */
 
-	@Override
-	protected Map<String, Method> getMethodMap()
-	{
-		return selfMethodMap;
-	}
+    @Override
+    protected Map<String, Method> getMethodMap() {
+        return selfMethodMap;
+    }
 }

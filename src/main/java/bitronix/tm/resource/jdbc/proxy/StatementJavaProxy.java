@@ -15,101 +15,85 @@
  */
 package bitronix.tm.resource.jdbc.proxy;
 
-import bitronix.tm.resource.jdbc.JdbcPooledConnection;
-
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 
+import bitronix.tm.resource.jdbc.JdbcPooledConnection;
+
 /**
  * @author Brett Wooldridge
  */
-public class StatementJavaProxy
-		extends JavaProxyBase<Statement>
-{
+public class StatementJavaProxy extends JavaProxyBase<Statement> {
 
-	private final static Map<String, Method> selfMethodMap = createMethodMap(StatementJavaProxy.class);
+    private final static Map<String, Method> selfMethodMap = createMethodMap(StatementJavaProxy.class);
 
-	private JdbcPooledConnection jdbcPooledConnection;
+    private JdbcPooledConnection jdbcPooledConnection;
 
-	public StatementJavaProxy(JdbcPooledConnection jdbcPooledConnection, Statement statement)
-	{
-		initialize(jdbcPooledConnection, statement);
-	}
+    public StatementJavaProxy(JdbcPooledConnection jdbcPooledConnection, Statement statement) {
+        initialize(jdbcPooledConnection, statement);
+    }
 
-	void initialize(JdbcPooledConnection jdbcPooledConnection, Statement statement)
-	{
-		proxy = this;
-		this.jdbcPooledConnection = jdbcPooledConnection;
-		delegate = statement;
-	}
+    public StatementJavaProxy() {
+        // Default constructor
+    }
 
-	public StatementJavaProxy()
-	{
-		// Default constructor
-	}
+    void initialize(JdbcPooledConnection jdbcPooledConnection, Statement statement) {
+    	this.proxy = this;
+        this.jdbcPooledConnection = jdbcPooledConnection;
+        this.delegate = statement;
+    }
 
-	/* Overridden methods of java.sql.Statement */
+    /* Overridden methods of java.sql.Statement */
 
-	public void close() throws SQLException
-	{
-		if (delegate == null)
-		{
-			return;
-		}
+    public void close() throws SQLException {
+        if (delegate == null) {
+            return;
+        }
 
-		jdbcPooledConnection.unregisterUncachedStatement(delegate);
-		delegate.close();
-	}
+        jdbcPooledConnection.unregisterUncachedStatement(delegate);
+        delegate.close();
+    }
 
-	public ResultSet executeQuery(String sql) throws SQLException
-	{
-		ResultSet resultSet = delegate.executeQuery(sql);
-		if (resultSet == null)
-		{
-			return null;
-		}
-		return JdbcProxyFactory.INSTANCE.getProxyResultSet(getProxy(), resultSet);
-	}
+    public ResultSet executeQuery(String sql) throws SQLException {
+    	ResultSet resultSet = delegate.executeQuery(sql);
+    	if (resultSet == null) {
+    		return null;
+    	}
+    	return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), resultSet);
+    }
 
-	public ResultSet getGeneratedKeys() throws SQLException
-	{
-		ResultSet generatedKeys = delegate.getGeneratedKeys();
-		if (generatedKeys == null)
-		{
-			return null;
-		}
-		return JdbcProxyFactory.INSTANCE.getProxyResultSet(getProxy(), generatedKeys);
-	}
+    public ResultSet getGeneratedKeys() throws SQLException {
+    	ResultSet generatedKeys = delegate.getGeneratedKeys();
+    	if (generatedKeys == null) {
+    		return null;
+    	}
+    	return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), generatedKeys);
+    }
 
-	/* java.sql.Wrapper implementation */
+    /* java.sql.Wrapper implementation */
 
-	@SuppressWarnings("unchecked")
-	public <T> T unwrap(Class<T> iface) throws SQLException
-	{
-		if (iface.isAssignableFrom(delegate.getClass()))
-		{
-			return (T) delegate;
-		}
-		if (isWrapperFor(iface))
-		{
-			return unwrap(delegate, iface);
-		}
-		throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
-	}
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
+    }
 
-	public boolean isWrapperFor(Class<?> iface) throws SQLException
-	{
-		return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
-	}
+    @SuppressWarnings("unchecked")
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        if (iface.isAssignableFrom(delegate.getClass())) {
+            return (T) delegate;
+        }
+        if (isWrapperFor(iface)) {
+            return unwrap(delegate, iface);
+        }
+        throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
+    }
 
-	/* Overridden methods of JavaProxyBase */
+    /* Overridden methods of JavaProxyBase */
 
-	@Override
-	protected Map<String, Method> getMethodMap()
-	{
-		return selfMethodMap;
-	}
+    @Override
+    protected Map<String, Method> getMethodMap() {
+        return selfMethodMap;
+    }
 }

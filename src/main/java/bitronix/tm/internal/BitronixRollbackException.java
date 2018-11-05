@@ -22,19 +22,15 @@ import javax.transaction.RollbackException;
  *
  * @author Ludovic Orban
  */
-public class BitronixRollbackException
-		extends RollbackException
-{
+public class BitronixRollbackException extends RollbackException {
 
-	public BitronixRollbackException(String string)
-	{
-		super(string);
-	}
+    public BitronixRollbackException(String string) {
+        super(string);
+    }
 
-	public BitronixRollbackException(String string, Throwable t)
-	{
-		super(string);
-		initCause(t);
-	}
+    public BitronixRollbackException(String string, Throwable t) {
+        super(string);
+        initCause(t);
+    }
 
 }

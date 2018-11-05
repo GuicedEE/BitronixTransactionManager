@@ -42,20 +42,16 @@ import java.util.Hashtable;
  * @author Ludovic Orban
  * @see bitronix.tm.jndi.BitronixContext
  */
-public class BitronixInitialContextFactory
-		implements InitialContextFactory
-{
+public class BitronixInitialContextFactory implements InitialContextFactory {
 
-	@Override
-	public Context getInitialContext(Hashtable<?, ?> hashtable) throws NamingException
-	{
-		return new BitronixContext();
-	}
+    @Override
+    public Context getInitialContext(Hashtable<?,?> hashtable) throws NamingException {
+        return new BitronixContext();
+    }
 
-	@Override
-	public String toString()
-	{
-		return "a BitronixInitialContextFactory";
-	}
+    @Override
+    public String toString() {
+        return "a BitronixInitialContextFactory";
+    }
 
 }

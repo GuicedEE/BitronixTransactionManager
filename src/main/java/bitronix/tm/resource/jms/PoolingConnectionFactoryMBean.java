@@ -16,25 +16,18 @@
 package bitronix.tm.resource.jms;
 
 /**
+ *
  * @author Ludovic Orban
  */
-public interface PoolingConnectionFactoryMBean
-{
+public interface PoolingConnectionFactoryMBean {
 
-	public int getMinPoolSize();
-
-	public int getMaxPoolSize();
-
-	public long getInPoolSize();
-
-	public long getTotalPoolSize();
-
-	public boolean isFailed();
-
-	public void reset() throws Exception;
-
-	public boolean isDisabled();
-
-	public void setDisabled(boolean disabled);
-
+    public int getMinPoolSize();
+    public int getMaxPoolSize();
+    public long getInPoolSize();
+    public long getTotalPoolSize();
+    public boolean isFailed();
+    public void reset() throws Exception;
+    public boolean isDisabled();
+    public void setDisabled(boolean disabled);
+    
 }

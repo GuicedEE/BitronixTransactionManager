@@ -17,65 +17,56 @@ package bitronix.tm.twopc.executor;
 
 import bitronix.tm.internal.BitronixRuntimeException;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * This implementation executes submitted jobs using a <code>java.util.concurrent</code> cached thread pool.
  *
  * @author Ludovic Orban
  */
-public class AsyncExecutor
-		implements Executor
-{
+public class AsyncExecutor implements Executor {
 
-	private final ExecutorService executorService;
+    private final ExecutorService executorService;
 
 
-	public AsyncExecutor()
-	{
-		executorService = Executors.newCachedThreadPool();
-	}
+    public AsyncExecutor() {
+        executorService = Executors.newCachedThreadPool();
+    }
 
-	@Override
-	public Object submit(Job job)
-	{
-		return executorService.submit(job);
-	}
+    @Override
+    public Object submit(Job job) {
+        return executorService.submit(job);
+    }
 
-	@Override
-	public void waitFor(Object future, long timeout)
-	{
-		Future<?> f = (Future<?>) future;
+    @Override
+    public void waitFor(Object future, long timeout) {
+        Future<?> f = (Future<?>) future;
 
-		try
-		{
-			f.get(timeout, TimeUnit.MILLISECONDS);
-		}
-		catch (InterruptedException ex)
-		{
-			throw new BitronixRuntimeException("job interrupted", ex);
-		}
-		catch (ExecutionException ex)
-		{
-			throw new BitronixRuntimeException("job execution exception", ex);
-		}
-		catch (TimeoutException ex)
-		{
-			// ok, just return
-		}
-	}
+        try {
+            f.get(timeout, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException ex) {
+            throw new BitronixRuntimeException("job interrupted", ex);
+        } catch (ExecutionException ex) {
+            throw new BitronixRuntimeException("job execution exception", ex);
+        } catch (TimeoutException ex) {
+            // ok, just return
+        }
+    }
 
-	@Override
-	public boolean isDone(Object future)
-	{
-		Future<?> f = (Future<?>) future;
+    @Override
+    public boolean isDone(Object future) {
+        Future<?> f = (Future<?>) future;
 
-		return f.isDone();
-	}
+        return f.isDone();
+    }
 
-	@Override
-	public void shutdown()
-	{
-		executorService.shutdownNow();
-	}
+    @Override
+    public void shutdown() {
+        executorService.shutdownNow();
+    }
 }

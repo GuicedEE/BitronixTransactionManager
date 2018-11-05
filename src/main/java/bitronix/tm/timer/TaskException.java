@@ -20,11 +20,8 @@ package bitronix.tm.timer;
  *
  * @author Ludovic Orban
  */
-public class TaskException
-		extends Exception
-{
-	public TaskException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
+public class TaskException extends Exception {
+    public TaskException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
