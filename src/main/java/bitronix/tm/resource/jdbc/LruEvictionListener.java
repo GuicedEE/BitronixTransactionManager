@@ -26,6 +26,6 @@ package bitronix.tm.resource.jdbc;
 public interface LruEvictionListener<T>
 {
 
-	void onEviction(T value);
+	public void onEviction(T value);
 
 }

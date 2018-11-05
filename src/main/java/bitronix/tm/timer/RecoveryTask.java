@@ -48,7 +48,7 @@ public class RecoveryTask
 	}
 
 	@Override
-	public void execute()
+	public void execute() throws TaskException
 	{
 		if (log.isDebugEnabled())
 		{

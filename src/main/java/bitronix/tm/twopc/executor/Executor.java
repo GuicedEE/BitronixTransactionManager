@@ -34,7 +34,7 @@ public interface Executor
 	 *
 	 * @return an object used to monitor the execution of the submitted {@link Runnable}.
 	 */
-	Object submit(Job job);
+	public Object submit(Job job);
 
 	/**
 	 * Wait for the job represented by the future to terminate. The call to this method will block until the job
@@ -45,7 +45,7 @@ public interface Executor
 	 * @param timeout
 	 * 		if the job did not finish during the specified timeout in milliseconds, this method returns anyway.
 	 */
-	void waitFor(Object future, long timeout);
+	public void waitFor(Object future, long timeout);
 
 	/**
 	 * Check if the thread pool has terminated the execution of the job represented by a future.
@@ -55,12 +55,12 @@ public interface Executor
 	 *
 	 * @return true if the job is done, false otherwise.
 	 */
-	boolean isDone(Object future);
+	public boolean isDone(Object future);
 
 	/**
 	 * Shutdown the thead pool.
 	 */
 	@Override
-	void shutdown();
+	public void shutdown();
 
 }

@@ -58,7 +58,7 @@ public class LrcConnectionJavaProxy
 		delegate = null;
 	}
 
-	public boolean isClosed()
+	public boolean isClosed() throws SQLException
 	{
 		return delegate == null;
 	}
@@ -115,7 +115,7 @@ public class LrcConnectionJavaProxy
 		throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
 	}
 
-	public boolean isWrapperFor(Class<?> iface)
+	public boolean isWrapperFor(Class<?> iface) throws SQLException
 	{
 		return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
 	}

@@ -21,20 +21,20 @@ package bitronix.tm.resource.jms;
 public interface PoolingConnectionFactoryMBean
 {
 
-	int getMinPoolSize();
+	public int getMinPoolSize();
 
-	int getMaxPoolSize();
+	public int getMaxPoolSize();
 
-	long getInPoolSize();
+	public long getInPoolSize();
 
-	long getTotalPoolSize();
+	public long getTotalPoolSize();
 
-	boolean isFailed();
+	public boolean isFailed();
 
-	void reset() throws Exception;
+	public void reset() throws Exception;
 
-	boolean isDisabled();
+	public boolean isDisabled();
 
-	void setDisabled(boolean disabled);
+	public void setDisabled(boolean disabled);
 
 }

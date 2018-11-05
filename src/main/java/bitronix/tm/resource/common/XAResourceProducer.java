@@ -37,7 +37,7 @@ public interface XAResourceProducer<R extends XAResourceHolder<R>, T extends XAS
 	 *
 	 * @return the unique name of the resource.
 	 */
-	String getUniqueName();
+	public String getUniqueName();
 
 	/**
 	 * Prepare the recoverable {@link XAResource} producer for recovery.
@@ -47,7 +47,7 @@ public interface XAResourceProducer<R extends XAResourceHolder<R>, T extends XAS
 	 * @throws bitronix.tm.recovery.RecoveryException
 	 * 		thrown when a {@link XAResourceHolderState} cannot be acquired.
 	 */
-	XAResourceHolderState startRecovery() throws RecoveryException;
+	public XAResourceHolderState startRecovery() throws RecoveryException;
 
 	/**
 	 * Release internal resources held after call to <code>startRecovery()</code>.
@@ -55,7 +55,7 @@ public interface XAResourceProducer<R extends XAResourceHolder<R>, T extends XAS
 	 * @throws bitronix.tm.recovery.RecoveryException
 	 * 		thrown when an error occurred while releasing reserved resources.
 	 */
-	void endRecovery() throws RecoveryException;
+	public void endRecovery() throws RecoveryException;
 
 	/**
 	 * Mark this resource producer as failed or not. A resource is considered failed if recovery fails to run on it.
@@ -63,7 +63,7 @@ public interface XAResourceProducer<R extends XAResourceHolder<R>, T extends XAS
 	 * @param failed
 	 * 		true is the resource must be considered failed, false it it must be considered sane.
 	 */
-	void setFailed(boolean failed);
+	public void setFailed(boolean failed);
 
 	/**
 	 * Find in the {@link XAResourceHolder}s created by this {@link XAResourceProducer} the one which this
@@ -75,17 +75,17 @@ public interface XAResourceProducer<R extends XAResourceHolder<R>, T extends XAS
 	 * @return the associated {@link XAResourceHolder} or null if the {@link XAResource} does not belong to this
 	 * 		{@link XAResourceProducer}.
 	 */
-	R findXAResourceHolder(XAResource xaResource);
+	public R findXAResourceHolder(XAResource xaResource);
 
 	/**
 	 * Initialize this {@link XAResourceProducer}'s internal resources.
 	 */
-	void init();
+	public void init();
 
 	/**
 	 * Release this {@link XAResourceProducer}'s internal resources.
 	 */
-	void close();
+	public void close();
 
 	/**
 	 * Create a {@link XAStatefulHolder} that will be placed in an {@link XAPool}.
@@ -100,6 +100,6 @@ public interface XAResourceProducer<R extends XAResourceHolder<R>, T extends XAS
 	 * @throws Exception
 	 * 		thrown when the {@link XAStatefulHolder} cannot be created.
 	 */
-	T createPooledConnection(Object xaFactory, ResourceBean bean) throws Exception;
+	public T createPooledConnection(Object xaFactory, ResourceBean bean) throws Exception;
 
 }

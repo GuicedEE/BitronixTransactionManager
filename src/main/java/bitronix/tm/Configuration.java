@@ -1008,7 +1008,7 @@ public class Configuration
 						}
 						catch (Exception ex2)
 						{
-							String unknownServerId = "unknown-server-id";
+							final String unknownServerId = "unknown-server-id";
 							log.warn("Cannot get the local IP address. Please verify your network configuration. Will use the constant '" + unknownServerId +
 							         "' as server ID (highly unsafe!).", ex2);
 							id = unknownServerId.getBytes();

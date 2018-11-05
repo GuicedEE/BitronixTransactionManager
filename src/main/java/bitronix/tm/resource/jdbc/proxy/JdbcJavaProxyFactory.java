@@ -255,7 +255,7 @@ public class JdbcJavaProxyFactory
 
 			try
 			{
-				return getConstructor().newInstance(handler);
+				return getConstructor().newInstance(new Object[]{handler});
 			}
 			catch (Exception e)
 			{

@@ -457,6 +457,39 @@ public class PoolingDataSource
 			return (T) xaDataSource;
 		}
 		throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
+	}
+
+	@Override
+	public boolean isWrapperFor(Class<?> iface) throws SQLException
+	{
+		return iface.isAssignableFrom(xaDataSource.getClass());
+	}
+
+	@Override
+	public int getInPoolSize()
+	{
+		return pool.inPoolSize();
+	}
+
+	@Override
+	public int getTotalPoolSize()
+	{
+		return pool.totalPoolSize();
+	}
+
+	@Override
+	public boolean isFailed()
+	{
+		return (pool != null ? pool.isFailed() : false);
+	}
+
+	@Override
+	public void setFailed(boolean failed)
+	{
+		if (pool != null)
+		{
+			pool.setFailed(failed);
+		}
 	}	@Override
 	public Connection getConnection() throws SQLException
 	{
@@ -495,47 +528,6 @@ public class PoolingDataSource
 	}
 
 	@Override
-	public boolean isWrapperFor(Class<?> iface) throws SQLException
-	{
-		return iface.isAssignableFrom(xaDataSource.getClass());
-	}
-
-	@Override
-	public int getInPoolSize()
-	{
-		return pool.inPoolSize();
-	}
-
-	@Override
-	public int getTotalPoolSize()
-	{
-		return pool.totalPoolSize();
-	}	@Override
-	public Connection getConnection(String username, String password) throws SQLException
-	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("JDBC connections are pooled, username and password ignored");
-		}
-		return getConnection();
-	}
-
-	@Override
-	public boolean isFailed()
-	{
-		return (pool != null ? pool.isFailed() : false);
-	}
-
-	@Override
-	public void setFailed(boolean failed)
-	{
-		if (pool != null)
-		{
-			pool.setFailed(failed);
-		}
-	}
-
-	@Override
 	public JdbcPooledConnection findXAResourceHolder(XAResource xaResource)
 	{
 		return xaResourceHolderMap.get(xaResource);
@@ -547,7 +539,7 @@ public class PoolingDataSource
 	@Override
 	public synchronized void init()
 	{
-		if (this.pool != null)
+		if (pool != null)
 		{
 			return;
 		}
@@ -555,7 +547,7 @@ public class PoolingDataSource
 		try
 		{
 			buildXAPool();
-			this.jmxName = "bitronix.tm:type=JDBC,UniqueName=" + ManagementRegistrar.makeValidName(getUniqueName());
+			jmxName = "bitronix.tm:type=JDBC,UniqueName=" + ManagementRegistrar.makeValidName(getUniqueName());
 			ManagementRegistrar.register(jmxName, this);
 		}
 		catch (Exception ex)
@@ -619,15 +611,36 @@ public class PoolingDataSource
 
 	}
 
+	@Override
 	public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException
 	{
 		throw new SQLFeatureNotSupportedException();
 	}
 
+
+
+	@Override
+	public Connection getConnection(String username, String password) throws SQLException
+	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("JDBC connections are pooled, username and password ignored");
+		}
+		return getConnection();
+	}
+
+
+	@Override
+	public void setLogWriter(PrintWriter out) throws SQLException
+	{
+		xaDataSource.setLogWriter(out);
+	}
+
+
+
+
+
 	/* DataSource implementation */
-
-
-
 
 
 	@Override
@@ -648,26 +661,15 @@ public class PoolingDataSource
 		return xaDataSource.getLogWriter();
 	}
 
-	@Override
-	public void setLogWriter(PrintWriter out) throws SQLException {
-        xaDataSource.setLogWriter(out);
-    }
 
-    /* java.sql.Wrapper implementation */
+
+	/* java.sql.Wrapper implementation */
 
 
 
 
 
 	/* management */
-
-
-
-
-
-
-
-
 
 
 }

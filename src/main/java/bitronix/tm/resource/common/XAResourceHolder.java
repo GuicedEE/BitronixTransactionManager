@@ -37,7 +37,7 @@ public interface XAResourceHolder<T extends XAResourceHolder<T>>
 	 *
 	 * @return the vendor's XAResource implementation.
 	 */
-	XAResource getXAResource();
+	public XAResource getXAResource();
 
 	/**
 	 * This method implements a standard Visitor Pattern.  For the specified GTRID, the
@@ -54,7 +54,7 @@ public interface XAResourceHolder<T extends XAResourceHolder<T>>
 	 * @param visitor
 	 * 		a {@link XAResourceHolderStateVisitor} instance
 	 */
-	void acceptVisitorForXAResourceHolderStates(Uid gtrid, XAResourceHolderStateVisitor visitor);
+	public void acceptVisitorForXAResourceHolderStates(Uid gtrid, XAResourceHolderStateVisitor visitor);
 
 	/**
 	 * Checks whether there are {@link XAResourceHolderState}s for the specified GTRID.
@@ -64,7 +64,7 @@ public interface XAResourceHolder<T extends XAResourceHolder<T>>
 	 *
 	 * @return true if there are {@link XAResourceHolderState}s, false otherwise
 	 */
-	boolean isExistXAResourceHolderStatesForGtrid(Uid gtrid);
+	public boolean isExistXAResourceHolderStatesForGtrid(Uid gtrid);
 
 	/**
 	 * Get a count of {@link XAResourceHolderState}s for the specified GTRID.
@@ -75,7 +75,7 @@ public interface XAResourceHolder<T extends XAResourceHolder<T>>
 	 * @return the count of {@link XAResourceHolderState}s, or 0 if there are no states for the
 	 * 		specified GTRID
 	 */
-	int getXAResourceHolderStateCountForGtrid(Uid gtrid);
+	public int getXAResourceHolderStateCountForGtrid(Uid gtrid);
 
 	/**
 	 * Add a {@link XAResourceHolderState} of this wrapped resource.
@@ -85,7 +85,7 @@ public interface XAResourceHolder<T extends XAResourceHolder<T>>
 	 * @param xaResourceHolderState
 	 * 		the {@link XAResourceHolderState} to set.
 	 */
-	void putXAResourceHolderState(BitronixXid xid, XAResourceHolderState xaResourceHolderState);
+	public void putXAResourceHolderState(BitronixXid xid, XAResourceHolderState xaResourceHolderState);
 
 
 	/**
@@ -94,7 +94,7 @@ public interface XAResourceHolder<T extends XAResourceHolder<T>>
 	 * @param xid
 	 * 		the Xid of the transaction state to remove.
 	 */
-	void removeXAResourceHolderState(BitronixXid xid);
+	public void removeXAResourceHolderState(BitronixXid xid);
 
 	/**
 	 * Check if this {@link XAResourceHolder} contains a state for a specific {@link XAResourceHolder}.
@@ -105,13 +105,13 @@ public interface XAResourceHolder<T extends XAResourceHolder<T>>
 	 *
 	 * @return true if the {@link XAResourceHolder} is enlisted in some transaction, false otherwise.
 	 */
-	boolean hasStateForXAResource(XAResourceHolder<? extends XAResourceHolder> xaResourceHolder);
+	public boolean hasStateForXAResource(XAResourceHolder<? extends XAResourceHolder> xaResourceHolder);
 
 	/**
 	 * Get the ResourceBean which created this XAResourceHolder.
 	 *
 	 * @return the ResourceBean which created this XAResourceHolder.
 	 */
-	ResourceBean getResourceBean();
+	public ResourceBean getResourceBean();
 
 }

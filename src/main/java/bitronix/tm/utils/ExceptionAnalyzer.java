@@ -34,6 +34,6 @@ public interface ExceptionAnalyzer
 	 *
 	 * @return extra error details as a human-readable string, or null if nothing extra was found.
 	 */
-	String extractExtraXAExceptionDetails(XAException ex);
+	public String extractExtraXAExceptionDetails(XAException ex);
 
 }

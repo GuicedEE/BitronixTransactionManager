@@ -366,7 +366,7 @@ public final class TransactionContextHelper
 		return alreadyDeferred;
 	}
 
-	private static boolean isEnlistedInSomeTransaction(XAResourceHolder<? extends XAResourceHolder> xaResourceHolder)
+	private static boolean isEnlistedInSomeTransaction(XAResourceHolder<? extends XAResourceHolder> xaResourceHolder) throws BitronixSystemException
 	{
 		if (log.isDebugEnabled())
 		{

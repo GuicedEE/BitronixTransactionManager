@@ -33,6 +33,6 @@ public interface TransactionStatusChangeListener
 	 *
 	 * @see javax.transaction.Status Status constant values.
 	 */
-	void statusChanged(int oldStatus, int newStatus);
+	public void statusChanged(int oldStatus, int newStatus);
 
 }

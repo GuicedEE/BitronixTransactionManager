@@ -368,12 +368,13 @@ public class LruStatementCache
 			{
 				return false;
 			}
-			else
+			else if ((resultSetHoldability == null && otherKey.resultSetHoldability != null) ||
+			         (resultSetHoldability != null && !resultSetHoldability.equals(otherKey.resultSetHoldability)))
 			{
-				return (resultSetHoldability != null || otherKey.resultSetHoldability == null) &&
-				       (resultSetHoldability == null || resultSetHoldability.equals(otherKey.resultSetHoldability));
+				return false;
 			}
 
+			return true;
 		}
 	}
 

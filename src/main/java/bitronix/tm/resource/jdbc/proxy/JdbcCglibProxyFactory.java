@@ -271,7 +271,7 @@ public class JdbcCglibProxyFactory
 		}
 
 		@Override
-		public Object loadObject()
+		public Object loadObject() throws Exception
 		{
 			return delegate;
 		}

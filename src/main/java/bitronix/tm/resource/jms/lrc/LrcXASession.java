@@ -47,7 +47,7 @@ public class LrcXASession
 	}
 
 	@Override
-	public Session getSession()
+	public Session getSession() throws JMSException
 	{
 		return nonXaSession;
 	}

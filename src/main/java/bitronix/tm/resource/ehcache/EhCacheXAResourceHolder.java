@@ -83,7 +83,7 @@ public class EhCacheXAResourceHolder
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object getConnectionHandle()
+	public Object getConnectionHandle() throws Exception
 	{
 		throw new UnsupportedOperationException("EhCacheXAResourceHolder cannot be used with an XAPool");
 	}
@@ -92,7 +92,7 @@ public class EhCacheXAResourceHolder
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void close()
+	public void close() throws Exception
 	{
 		throw new UnsupportedOperationException("EhCacheXAResourceHolder cannot be used with an XAPool");
 	}

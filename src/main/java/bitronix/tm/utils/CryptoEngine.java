@@ -403,11 +403,17 @@ public class CryptoEngine
 		 * <var>numSigBytes</var>.
 		 * Code can reuse a byte array by passing a four-byte array as <var>b4</var>.
 		 *
-		 * @param b4          A reusable byte array to reduce array instantiation
-		 * @param threeBytes  the array to convert
-		 * @param numSigBytes the number of significant bytes in your array
-		 * @param options the options
+		 * @param b4
+		 * 		A reusable byte array to reduce array instantiation
+		 * @param threeBytes
+		 * 		the array to convert
+		 * @param numSigBytes
+		 * 		the number of significant bytes in your array
+		 * @param options
+		 * 		the options
+		 *
 		 * @return four byte array in Base64 notation.
+		 *
 		 * @since 1.5.1
 		 */
 		private static byte[] encode3to4(byte[] b4, byte[] threeBytes, int numSigBytes, int options)
@@ -431,13 +437,21 @@ public class CryptoEngine
 		 * <p>This is the lowest level of the encoding methods with
 		 * all possible parameters.</p>
 		 *
-		 * @param source      the array to convert
-		 * @param srcOffset   the index where conversion begins
-		 * @param numSigBytes the number of significant bytes in your array
-		 * @param destination the array to hold the conversion
-		 * @param destOffset  the index where output will be put
-		 * @param options the options
+		 * @param source
+		 * 		the array to convert
+		 * @param srcOffset
+		 * 		the index where conversion begins
+		 * @param numSigBytes
+		 * 		the number of significant bytes in your array
+		 * @param destination
+		 * 		the array to hold the conversion
+		 * @param destOffset
+		 * 		the index where output will be put
+		 * @param options
+		 * 		the options
+		 *
 		 * @return the <var>destination</var> array
+		 *
 		 * @since 1.3
 		 */
 		private static byte[] encode3to4(
@@ -495,7 +509,10 @@ public class CryptoEngine
 		 * It's possible, though silly, to specify ORDERED and URLSAFE
 		 * in which case one of them will be picked, though there is
 		 * no guarantee as to which one will be picked.
-		 * @param options the options
+		 *
+		 * @param options
+		 * 		the options
+		 *
 		 * @return a byte array
 		 */
 		private static byte[] getAlphabet(int options)
@@ -519,8 +536,11 @@ public class CryptoEngine
 		 * Encodes a byte array into Base64 notation.
 		 * Does not GZip-compress data.
 		 *
-		 * @param source The data to convert
+		 * @param source
+		 * 		The data to convert
+		 *
 		 * @return a String
+		 *
 		 * @since 1.4
 		 */
 		public static String encodeBytes(byte[] source)
@@ -541,14 +561,20 @@ public class CryptoEngine
 		 * <p/>
 		 * Example: <code>encodeBytes( myData, Base64.GZIP | Base64.DONT_BREAK_LINES )</code>
 		 *
-		 * @param source  The data to convert
-		 * @param off     Offset in array where conversion should begin
-		 * @param len     Length of data to convert
-		 * @param options alphabet type is pulled from this (standard, url-safe, ordered)
+		 * @param source
+		 * 		The data to convert
+		 * @param off
+		 * 		Offset in array where conversion should begin
+		 * @param len
+		 * 		Length of data to convert
+		 * @param options
+		 * 		alphabet type is pulled from this (standard, url-safe, ordered)
+		 *
+		 * @return a String
+		 *
 		 * @see Base64#GZIP
 		 * @see Base64#DONT_BREAK_LINES
 		 * @since 2.0
-		 * @return a String
 		 */
 		public static String encodeBytes(byte[] source, int off, int len, int options)
 		{
@@ -654,8 +680,11 @@ public class CryptoEngine
 		 * Attempts to decode Base64 data and deserialize a Java
 		 * Object within. Returns <tt>null</tt> if there was an error.
 		 *
-		 * @param encodedObject The Base64 data to decode
+		 * @param encodedObject
+		 * 		The Base64 data to decode
+		 *
 		 * @return The decoded and deserialized object
+		 *
 		 * @since 1.5
 		 */
 		public static Object decodeToObject(String encodedObject)
@@ -717,8 +746,11 @@ public class CryptoEngine
 		 * Decodes data from Base64 notation, automatically
 		 * detecting gzip-compressed data and decompressing it.
 		 *
-		 * @param s the string to decode
+		 * @param s
+		 * 		the string to decode
+		 *
 		 * @return the decoded data
+		 *
 		 * @since 1.4
 		 */
 		public static byte[] decode(String s)
@@ -730,9 +762,13 @@ public class CryptoEngine
 		 * Decodes data from Base64 notation, automatically
 		 * detecting gzip-compressed data and decompressing it.
 		 *
-		 * @param s       the string to decode
-		 * @param options encode options such as URL_SAFE
+		 * @param s
+		 * 		the string to decode
+		 * @param options
+		 * 		encode options such as URL_SAFE
+		 *
 		 * @return the decoded data
+		 *
 		 * @since 1.4
 		 */
 		public static byte[] decode(String s, int options)
@@ -815,11 +851,17 @@ public class CryptoEngine
 		 * the form of a byte array. Does not support automatically
 		 * gunzipping or any other "fancy" features.
 		 *
-		 * @param source The Base64 encoded data
-		 * @param off    The offset of where to begin decoding
-		 * @param len    The length of characters to decode
-		 * @param options the options
+		 * @param source
+		 * 		The Base64 encoded data
+		 * @param off
+		 * 		The offset of where to begin decoding
+		 * @param len
+		 * 		The length of characters to decode
+		 * @param options
+		 * 		the options
+		 *
 		 * @return decoded data
+		 *
 		 * @since 1.3
 		 */
 		public static byte[] decode(byte[] source, int off, int len, int options)
@@ -878,7 +920,10 @@ public class CryptoEngine
 		 * It's possible, though silly, to specify ORDERED and URL_SAFE
 		 * in which case one of them will be picked, though there is
 		 * no guarantee as to which one will be picked.
-		 * @param options the options
+		 *
+		 * @param options
+		 * 		the options
+		 *
 		 * @return a byte array
 		 */
 		private static byte[] getDecodabet(int options)
@@ -914,12 +959,19 @@ public class CryptoEngine
 		 * <p>This is the lowest level of the decoding methods with
 		 * all possible parameters.</p>
 		 *
-		 * @param source      the array to convert
-		 * @param srcOffset   the index where conversion begins
-		 * @param destination the array to hold the conversion
-		 * @param destOffset  the index where output will be put
-		 * @param options     alphabet type is pulled from this (standard, url-safe, ordered)
+		 * @param source
+		 * 		the array to convert
+		 * @param srcOffset
+		 * 		the index where conversion begins
+		 * @param destination
+		 * 		the array to hold the conversion
+		 * @param destOffset
+		 * 		the index where output will be put
+		 * @param options
+		 * 		alphabet type is pulled from this (standard, url-safe, ordered)
+		 *
 		 * @return the number of decoded bytes converted
+		 *
 		 * @since 1.3
 		 */
 		private static int decode4to3(byte[] source, int srcOffset, byte[] destination, int destOffset, int options)
@@ -1106,8 +1158,9 @@ public class CryptoEngine
              *
              *private byte[] decodabet;        // Local copies to avoid extra method callsrite(int)}     /**
              *Constructs a {
-				@link Base64.OutputStream} in ENCODE mode.
-             *
+				@link Base64.OutputStream
+			} in ENCODE mode.
+                        *
              *
 				@param
 				out the <tt > java.io.OutputStream </tt > to which data will be written.
@@ -1161,7 +1214,7 @@ public class CryptoEngine
 				flushBase64();
 				this.suspendEncoding = true;
 			}   // end suspendEncoding            /**     /**
-             * Method added by PHIL. [Thanks, PHIL. - Rob]
+             *Method added by PHIL. [Thanks, PHIL. - Rob]
              *This pads the buffer without closing the stream.
              * @throws java.io.IOException when wrong padding is used
              */
@@ -1222,17 +1275,12 @@ public class CryptoEngine
 				// Base class both flushes and closes.
 				super.close();
 
-                buffer = null;
-                out = null;
-            }   // end close
+				buffer = null;
+				out = null;
+			}   // end close
 
 
+			}   // end inner class OutputStream
+		}   // end class Base64
 
-
-
-
-
-        }   // end inner class OutputStream
-    }   // end class Base64
-
-}
+	}

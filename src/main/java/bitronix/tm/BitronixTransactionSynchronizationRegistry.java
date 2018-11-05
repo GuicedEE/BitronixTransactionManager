@@ -20,6 +20,7 @@ import bitronix.tm.utils.Scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
@@ -223,7 +224,7 @@ public class BitronixTransactionSynchronizationRegistry
 	}
 
 	@Override
-	public Reference getReference()
+	public Reference getReference() throws NamingException
 	{
 		return new Reference(
 				BitronixTransactionManager.class.getName(),

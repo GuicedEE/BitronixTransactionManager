@@ -62,8 +62,8 @@ public class BitronixXid
 	{
 		this.globalTransactionId = globalTransactionId;
 		this.branchQualifier = branchQualifier;
-		toStringValue = precalculateToString();
-		hashCodeValue = precalculateHashCode();
+		this.toStringValue = precalculateToString();
+		this.hashCodeValue = precalculateHashCode();
 	}
 
 	private String precalculateToString()
@@ -93,10 +93,10 @@ public class BitronixXid
 
 	public BitronixXid(Xid xid)
 	{
-		globalTransactionId = new Uid(xid.getGlobalTransactionId());
-		branchQualifier = new Uid(xid.getBranchQualifier());
-		toStringValue = precalculateToString();
-		hashCodeValue = precalculateHashCode();
+		this.globalTransactionId = new Uid(xid.getGlobalTransactionId());
+		this.branchQualifier = new Uid(xid.getBranchQualifier());
+		this.toStringValue = precalculateToString();
+		this.hashCodeValue = precalculateHashCode();
 	}
 
 	/**

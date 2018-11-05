@@ -34,7 +34,7 @@ public interface ConnectionCustomizer
 	 * @param uniqueName
 	 * 		the PoolingDataSource unique name.
 	 */
-	void onAcquire(Connection connection, String uniqueName);
+	public void onAcquire(Connection connection, String uniqueName);
 
 	/**
 	 * Called when the physical connection is leased from the pool.
@@ -44,7 +44,7 @@ public interface ConnectionCustomizer
 	 * @param uniqueName
 	 * 		the PoolingDataSource unique name.
 	 */
-	void onLease(Connection connection, String uniqueName);
+	public void onLease(Connection connection, String uniqueName);
 
 	/**
 	 * Called when the physical connection is returned to the pool.
@@ -54,7 +54,7 @@ public interface ConnectionCustomizer
 	 * @param uniqueName
 	 * 		the PoolingDataSource unique name.
 	 */
-	void onRelease(Connection connection, String uniqueName);
+	public void onRelease(Connection connection, String uniqueName);
 
 	/**
 	 * Called when the physical connection is destroyed.
@@ -64,6 +64,6 @@ public interface ConnectionCustomizer
 	 * @param uniqueName
 	 * 		the PoolingDataSource unique name.
 	 */
-	void onDestroy(Connection connection, String uniqueName);
+	public void onDestroy(Connection connection, String uniqueName);
 
 }

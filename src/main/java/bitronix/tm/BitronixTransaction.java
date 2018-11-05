@@ -348,7 +348,7 @@ public class BitronixTransaction
 	}
 
 	@Override
-	public void registerSynchronization(Synchronization synchronization) throws RollbackException, IllegalStateException
+	public void registerSynchronization(Synchronization synchronization) throws RollbackException, IllegalStateException, SystemException
 	{
 		if (status == Status.STATUS_NO_TRANSACTION)
 		{

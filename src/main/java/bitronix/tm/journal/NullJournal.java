@@ -17,6 +17,7 @@ package bitronix.tm.journal;
 
 import bitronix.tm.utils.Uid;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -37,27 +38,27 @@ public class NullJournal
 	}
 
 	@Override
-	public void log(int status, Uid gtrid, Set<String> uniqueNames)
+	public void log(int status, Uid gtrid, Set<String> uniqueNames) throws IOException
 	{
 	}
 
 	@Override
-	public void open()
+	public void open() throws IOException
 	{
 	}
 
 	@Override
-	public void close()
+	public void close() throws IOException
 	{
 	}
 
 	@Override
-	public void force()
+	public void force() throws IOException
 	{
 	}
 
 	@Override
-	public Map<Uid, JournalRecord> collectDanglingRecords()
+	public Map<Uid, JournalRecord> collectDanglingRecords() throws IOException
 	{
 		return Collections.emptyMap();
 	}

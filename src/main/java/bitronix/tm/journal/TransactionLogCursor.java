@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -185,7 +184,7 @@ public class TransactionLogCursor
 			byte[] nameBytes = new byte[length];
 			page.get(nameBytes);
 			currentPosition += length;
-			uniqueNames.add(new String(nameBytes, StandardCharsets.US_ASCII));
+			uniqueNames.add(new String(nameBytes, "US-ASCII"));
 		}
 		int cEndRecord = page.getInt();
 		currentPosition += 4;

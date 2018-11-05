@@ -40,10 +40,12 @@ public class BitronixTransactionSynchronizationRegistryObjectFactory
 	 *
 	 * @return the unique synchronization registry instance.
 	 *
+	 * @throws java.lang.Exception
+	 * 		throw if an instance cannot be created
 	 * @see bitronix.tm.BitronixTransactionSynchronizationRegistry
 	 */
 	@Override
-	public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment)
+	public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment) throws Exception
 	{
 		if (log.isDebugEnabled())
 		{

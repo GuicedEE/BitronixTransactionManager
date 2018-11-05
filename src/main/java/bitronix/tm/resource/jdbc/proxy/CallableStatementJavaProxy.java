@@ -95,7 +95,7 @@ public class CallableStatementJavaProxy
 		throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
 	}
 
-	public boolean isWrapperFor(Class<?> iface)
+	public boolean isWrapperFor(Class<?> iface) throws SQLException
 	{
 		return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
 	}

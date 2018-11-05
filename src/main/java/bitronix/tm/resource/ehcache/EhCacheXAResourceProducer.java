@@ -26,6 +26,7 @@ import bitronix.tm.resource.common.XAResourceProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.transaction.xa.XAResource;
@@ -178,7 +179,7 @@ public final class EhCacheXAResourceProducer
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void endRecovery()
+	public void endRecovery() throws RecoveryException
 	{
 		recoveryXAResourceHolder = null;
 	}
@@ -240,7 +241,7 @@ public final class EhCacheXAResourceProducer
 	 * {@inheritDoc}
 	 */
 	@Override
-	public EhCacheXAResourceHolder createPooledConnection(Object xaFactory, ResourceBean bean)
+	public EhCacheXAResourceHolder createPooledConnection(Object xaFactory, ResourceBean bean) throws Exception
 	{
 		throw new UnsupportedOperationException("Ehcache is not connection-oriented");
 	}
@@ -249,7 +250,7 @@ public final class EhCacheXAResourceProducer
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Reference getReference()
+	public Reference getReference() throws NamingException
 	{
 		return new Reference(EhCacheXAResourceProducer.class.getName(),
 		                     new StringRefAddr("uniqueName", getUniqueName()),

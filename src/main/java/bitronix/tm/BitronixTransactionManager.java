@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
@@ -256,7 +257,7 @@ public class BitronixTransactionManager
 	}
 
 	@Override
-	public Transaction getTransaction()
+	public Transaction getTransaction() throws SystemException
 	{
 		return getCurrentTransaction();
 	}
@@ -455,7 +456,7 @@ public class BitronixTransactionManager
 	 * @return an empty reference to get the BitronixTransactionManager.
 	 */
 	@Override
-	public Reference getReference()
+	public Reference getReference() throws NamingException
 	{
 		return new Reference(
 				BitronixTransactionManager.class.getName(),

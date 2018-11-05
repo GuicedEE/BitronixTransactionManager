@@ -201,18 +201,18 @@ public class LrcXAResource
 	}
 
 	@Override
-	public void forget(Xid xid)
+	public void forget(Xid xid) throws XAException
 	{
 	}
 
 	@Override
-	public int getTransactionTimeout()
+	public int getTransactionTimeout() throws XAException
 	{
 		return 0;
 	}
 
 	@Override
-	public boolean isSameRM(XAResource xaResource)
+	public boolean isSameRM(XAResource xaResource) throws XAException
 	{
 		return xaResource == this;
 	}
@@ -265,7 +265,7 @@ public class LrcXAResource
 	}
 
 	@Override
-	public Xid[] recover(int flags)
+	public Xid[] recover(int flags) throws XAException
 	{
 		return new Xid[0];
 	}
@@ -322,7 +322,7 @@ public class LrcXAResource
 	}
 
 	@Override
-	public boolean setTransactionTimeout(int seconds)
+	public boolean setTransactionTimeout(int seconds) throws XAException
 	{
 		return false;
 	}

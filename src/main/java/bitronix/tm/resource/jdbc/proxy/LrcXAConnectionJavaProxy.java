@@ -50,7 +50,7 @@ public class LrcXAConnectionJavaProxy
 		delegate = new JdbcJavaProxyFactory().getProxyConnection(xaResource, connection);
 	}
 
-	public XAResource getXAResource()
+	public XAResource getXAResource() throws SQLException
 	{
 		return xaResource;
 	}
@@ -73,7 +73,7 @@ public class LrcXAConnectionJavaProxy
 		}
 	}
 
-	public Connection getConnection()
+	public Connection getConnection() throws SQLException
 	{
 		return delegate;
 	}

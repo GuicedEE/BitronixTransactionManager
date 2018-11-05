@@ -115,7 +115,7 @@ public final class PropertyUtils
 			}
 		}
 
-		String lastPropertyName = propertyName.substring(visitedPropertyName.length());
+		String lastPropertyName = propertyName.substring(visitedPropertyName.length(), propertyName.length());
 		if (currentTarget instanceof Map)
 		{
 			@SuppressWarnings("unchecked")

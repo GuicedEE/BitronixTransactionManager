@@ -17,6 +17,7 @@ package bitronix.tm.resource.jdbc.proxy;
 
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 
@@ -50,7 +51,7 @@ public class ResultSetJavaProxy
 
 	/* Overridden methods of java.sql.ResultSet */
 
-	public Statement getStatement()
+	public Statement getStatement() throws SQLException
 	{
 		return statement;
 	}

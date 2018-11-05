@@ -52,7 +52,7 @@ public class JdbcClassHelper
 
 		try
 		{
-			Method isValidMethod = connectionClass.getMethod("isValid", Integer.TYPE);
+			Method isValidMethod = connectionClass.getMethod("isValid", new Class[]{Integer.TYPE});
 			isValidMethod.invoke(connection, DETECTION_TIMEOUT); // test invoke
 			jdbcVersionDetected = 4;
 			isValidMethods.put(connectionClass, isValidMethod);

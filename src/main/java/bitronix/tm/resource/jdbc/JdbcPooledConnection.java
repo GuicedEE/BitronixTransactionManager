@@ -445,7 +445,7 @@ public class JdbcPooledConnection
 		}
 	}
 
-	private Object getConnectionHandle(Connection connection)
+	private Object getConnectionHandle(Connection connection) throws SQLException
 	{
 		return JdbcProxyFactory.INSTANCE.getProxyConnection(this, connection);
 	}

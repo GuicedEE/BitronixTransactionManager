@@ -60,10 +60,6 @@ public class LrcXADataSource
 	public String getUrl()
 	{
 		return url;
-	}	@Override
-	public int getLoginTimeout() throws SQLException
-	{
-		return loginTimeout;
 	}
 
 	public void setUrl(String url)
@@ -79,15 +75,15 @@ public class LrcXADataSource
 	public void setUser(String user)
 	{
 		this.user = user;
-	}	@Override
-	public void setLoginTimeout(int seconds) throws SQLException
-	{
-		this.loginTimeout = seconds;
 	}
 
 	public String getPassword()
 	{
 		return password;
+	}	@Override
+	public int getLoginTimeout() throws SQLException
+	{
+		return loginTimeout;
 	}
 
 	public void setPassword(String password)
@@ -160,9 +156,14 @@ public class LrcXADataSource
 		return "a JDBC LrcXADataSource on " + driverClassName + " with URL " + url;
 	}
 
+	@Override
 	public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException
 	{
 		throw new SQLFeatureNotSupportedException();
+	}	@Override
+	public void setLoginTimeout(int seconds) throws SQLException
+	{
+		loginTimeout = seconds;
 	}
 
 

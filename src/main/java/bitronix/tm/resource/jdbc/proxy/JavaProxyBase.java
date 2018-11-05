@@ -127,7 +127,7 @@ public abstract class JavaProxyBase<T>
 	{
 		if (Proxy.isProxyClass(proxy.getClass()))
 		{
-			this.proxy = proxy;
+			this.proxy = (T) proxy;
 		}
 
 		try

@@ -27,6 +27,6 @@ public interface Service
 	/**
 	 * Shutdown the service and free all held resources.
 	 */
-	void shutdown();
+	public void shutdown();
 
 }

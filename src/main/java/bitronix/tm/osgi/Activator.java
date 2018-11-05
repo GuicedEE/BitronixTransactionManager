@@ -29,10 +29,7 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -130,7 +127,7 @@ public class Activator
 	}
 
 	@Override
-	public void stop(BundleContext context)
+	public void stop(BundleContext context) throws Exception
 	{
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
 		tm.shutdown();
@@ -148,7 +145,7 @@ public class Activator
 		log.info(String.format("Stopped JTA for server ID '%s'.", conf.getServerId()));
 	}
 
-	private Map<String, Integer> rankingOfUniqueNameProperties(File file) throws IOException
+	private Map<String, Integer> rankingOfUniqueNameProperties(File file) throws FileNotFoundException, IOException
 	{
 		Map<String, Integer> lineNumbers = new HashMap<String, Integer>();
 		BufferedReader reader = new BufferedReader(new FileReader(file));

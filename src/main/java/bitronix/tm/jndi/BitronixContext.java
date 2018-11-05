@@ -211,13 +211,13 @@ public class BitronixContext
 	}
 
 	@Override
-	public NameParser getNameParser(Name name)
+	public NameParser getNameParser(Name name) throws NamingException
 	{
 		return BitronixNameParser.INSTANCE;
 	}
 
 	@Override
-	public NameParser getNameParser(String s)
+	public NameParser getNameParser(String s) throws NamingException
 	{
 		return BitronixNameParser.INSTANCE;
 	}
@@ -253,7 +253,7 @@ public class BitronixContext
 	}
 
 	@Override
-	public void close()
+	public void close() throws NamingException
 	{
 		closed = true;
 	}

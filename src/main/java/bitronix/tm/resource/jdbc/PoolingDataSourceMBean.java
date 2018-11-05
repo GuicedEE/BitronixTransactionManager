@@ -21,20 +21,20 @@ package bitronix.tm.resource.jdbc;
 public interface PoolingDataSourceMBean
 {
 
-	int getMinPoolSize();
+	public int getMinPoolSize();
 
-	int getMaxPoolSize();
+	public int getMaxPoolSize();
 
-	int getInPoolSize();
+	public int getInPoolSize();
 
-	int getTotalPoolSize();
+	public int getTotalPoolSize();
 
-	boolean isFailed();
+	public boolean isFailed();
 
-	void reset() throws Exception;
+	public void reset() throws Exception;
 
-	boolean isDisabled();
+	public boolean isDisabled();
 
-	void setDisabled(boolean disabled);
+	public void setDisabled(boolean disabled);
 
 }

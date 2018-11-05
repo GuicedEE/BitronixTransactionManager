@@ -40,10 +40,12 @@ public class BitronixTransactionManagerObjectFactory
 	 *
 	 * @return the unique transaction manager instance.
 	 *
+	 * @throws java.lang.Exception
+	 * 		thrown if an instance of the transaction manager cannot be created
 	 * @see BitronixTransactionManager
 	 */
 	@Override
-	public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment)
+	public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment) throws Exception
 	{
 		if (log.isDebugEnabled())
 		{

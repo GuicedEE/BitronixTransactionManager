@@ -34,7 +34,7 @@ public interface XAStatefulHolder<T extends XAStatefulHolder<T>>
 	 *
 	 * @return the current resource state.
 	 */
-	State getState();
+	public State getState();
 
 	/**
 	 * Set the current resource state.
@@ -43,7 +43,7 @@ public interface XAStatefulHolder<T extends XAStatefulHolder<T>>
 	 * @param state
 	 * 		the current resource state.
 	 */
-	void setState(State state);
+	public void setState(State state);
 
 	/**
 	 * Register an implementation of {@link StateChangeListener}.
@@ -51,7 +51,7 @@ public interface XAStatefulHolder<T extends XAStatefulHolder<T>>
 	 * @param listener
 	 * 		the {@link StateChangeListener} implementation to register.
 	 */
-	void addStateChangeEventListener(StateChangeListener<T> listener);
+	public void addStateChangeEventListener(StateChangeListener<T> listener);
 
 	/**
 	 * Unregister an implementation of {@link StateChangeListener}.
@@ -59,7 +59,7 @@ public interface XAStatefulHolder<T extends XAStatefulHolder<T>>
 	 * @param listener
 	 * 		the {@link StateChangeListener} implementation to unregister.
 	 */
-	void removeStateChangeEventListener(StateChangeListener<T> listener);
+	public void removeStateChangeEventListener(StateChangeListener<T> listener);
 
 	/**
 	 * Get the list of {@link bitronix.tm.resource.common.XAResourceHolder}s created by this
@@ -69,7 +69,7 @@ public interface XAStatefulHolder<T extends XAStatefulHolder<T>>
 	 * @return the list of {@link XAResourceHolder}s created by this
 	 * 		{@link bitronix.tm.resource.common.XAStatefulHolder} that are still open.
 	 */
-	List<? extends XAResourceHolder<? extends XAResourceHolder>> getXAResourceHolders();
+	public List<? extends XAResourceHolder<? extends XAResourceHolder>> getXAResourceHolders();
 
 	/**
 	 * Create a disposable handler used to drive a pooled instance of
@@ -81,7 +81,7 @@ public interface XAStatefulHolder<T extends XAStatefulHolder<T>>
 	 * @throws Exception
 	 * 		a resource-specific exception thrown when the disposable connection cannot be created.
 	 */
-	Object getConnectionHandle() throws Exception;
+	public Object getConnectionHandle() throws Exception;
 
 	/**
 	 * Close the physical connection that this {@link bitronix.tm.resource.common.XAStatefulHolder} represents.
@@ -89,7 +89,7 @@ public interface XAStatefulHolder<T extends XAStatefulHolder<T>>
 	 * @throws Exception
 	 * 		a resource-specific exception thrown when there is an error closing the physical connection.
 	 */
-	void close() throws Exception;
+	public void close() throws Exception;
 
 	/**
 	 * Get the date at which this object was last released to the pool. This is required to check if it is eligible
@@ -97,14 +97,14 @@ public interface XAStatefulHolder<T extends XAStatefulHolder<T>>
 	 *
 	 * @return the date at which this object was last released to the pool or null if it never left the pool.
 	 */
-	Date getLastReleaseDate();
+	public Date getLastReleaseDate();
 
 	/**
 	 * Get the date at which this object was created in the pool.
 	 *
 	 * @return the date at which this object was created in the pool.
 	 */
-	Date getCreationDate();
+	public Date getCreationDate();
 
 	enum State
 	{

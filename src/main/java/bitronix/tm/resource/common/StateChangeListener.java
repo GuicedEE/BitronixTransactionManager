@@ -35,7 +35,7 @@ public interface StateChangeListener<T extends XAStatefulHolder<T>>
 	 * @param newState
 	 * 		the new state of the {@link XAStatefulHolder}.
 	 */
-	void stateChanged(T source, State oldState, State newState);
+	public void stateChanged(T source, State oldState, State newState);
 
 	/**
 	 * Fired before the internal state of a {@link XAStatefulHolder} has changed.
@@ -47,6 +47,6 @@ public interface StateChangeListener<T extends XAStatefulHolder<T>>
 	 * @param futureState
 	 * 		the future state of the {@link XAStatefulHolder}.
 	 */
-	void stateChanging(T source, State currentState, State futureState);
+	public void stateChanging(T source, State currentState, State futureState);
 
 }

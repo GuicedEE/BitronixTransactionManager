@@ -245,7 +245,7 @@ public class JmsPooledConnection
 		}
 	}
 
-	protected Session createSession(boolean transacted, int acknowledgeMode)
+	protected Session createSession(boolean transacted, int acknowledgeMode) throws JMSException
 	{
 		synchronized (sessions)
 		{

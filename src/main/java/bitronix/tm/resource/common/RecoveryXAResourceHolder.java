@@ -55,7 +55,7 @@ public class RecoveryXAResourceHolder
 	}
 
 	@Override
-	public Object getConnectionHandle()
+	public Object getConnectionHandle() throws Exception
 	{
 		throw new UnsupportedOperationException("illegal connection creation attempt out of " + this);
 	}

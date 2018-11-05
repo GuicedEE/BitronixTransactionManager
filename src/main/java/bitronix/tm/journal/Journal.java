@@ -46,7 +46,7 @@ public interface Journal
 	 * @throws IOException
 	 * 		if an I/O error occurs.
 	 */
-	void log(int status, Uid gtrid, Set<String> uniqueNames) throws IOException;
+	public void log(int status, Uid gtrid, Set<String> uniqueNames) throws IOException;
 
 	/**
 	 * Open the journal. Integrity should be checked and an exception should be thrown in case the journal is corrupt.
@@ -54,7 +54,7 @@ public interface Journal
 	 * @throws IOException
 	 * 		if an I/O error occurs.
 	 */
-	void open() throws IOException;
+	public void open() throws IOException;
 
 	/**
 	 * Close this journal and release all underlying resources.
@@ -62,7 +62,7 @@ public interface Journal
 	 * @throws IOException
 	 * 		if an I/O error occurs.
 	 */
-	void close() throws IOException;
+	public void close() throws IOException;
 
 	/**
 	 * Force journal to synchronize with permanent storage.
@@ -70,7 +70,7 @@ public interface Journal
 	 * @throws IOException
 	 * 		if an I/O error occurs.
 	 */
-	void force() throws IOException;
+	public void force() throws IOException;
 
 	/**
 	 * Collect all dangling records of the journal, ie: COMMITTING records with no corresponding COMMITTED record.
@@ -80,5 +80,5 @@ public interface Journal
 	 * @throws IOException
 	 * 		if an I/O error occurs.
 	 */
-	Map<Uid, JournalRecord> collectDanglingRecords() throws IOException;
+	public Map<Uid, JournalRecord> collectDanglingRecords() throws IOException;
 }

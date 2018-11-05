@@ -21,6 +21,7 @@ import bitronix.tm.utils.Uid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -354,7 +355,7 @@ public class TransactionLogRecord
 		}
 
 		@Override
-		public void write(int b)
+		public void write(int b) throws IOException
 		{
 		}
 	}

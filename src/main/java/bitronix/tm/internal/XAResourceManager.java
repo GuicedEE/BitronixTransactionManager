@@ -92,8 +92,11 @@ public class XAResourceManager
 	 *
 	 * @return the {@link XAResourceHolderState} of the enlisted resource or null if the {@link XAResource} has not
 	 * 		been enlisted in this {@link XAResourceManager}.
+	 *
+	 * @throws BitronixSystemException
+	 * 		if an internal error happens.
 	 */
-	public XAResourceHolderState findXAResourceHolderState(XAResource xaResource)
+	public XAResourceHolderState findXAResourceHolderState(XAResource xaResource) throws BitronixSystemException
 	{
 		for (XAResourceHolderState xaResourceHolderState : resources)
 		{

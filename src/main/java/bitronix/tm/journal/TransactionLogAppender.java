@@ -98,8 +98,11 @@ public class TransactionLogAppender
 	 * 		the TransactionLogRecord
 	 *
 	 * @return true if the log should rollover, false otherwise
+	 *
+	 * @throws IOException
+	 * 		if an I/O error occurs
 	 */
-	protected boolean setPositionAndAdvance(TransactionLogRecord tlog)
+	protected boolean setPositionAndAdvance(TransactionLogRecord tlog) throws IOException
 	{
 		int tlogSize = tlog.calculateTotalRecordSize();
 		if (position + tlogSize > maxFileLength)

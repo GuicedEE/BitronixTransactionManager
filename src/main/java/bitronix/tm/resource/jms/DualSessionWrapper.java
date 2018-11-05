@@ -194,7 +194,7 @@ public class DualSessionWrapper
 	}
 
 	@Override
-	public Object getConnectionHandle()
+	public Object getConnectionHandle() throws Exception
 	{
 		return null;
 	}
@@ -372,7 +372,7 @@ public class DualSessionWrapper
 	/* XA-enhanced methods */
 
 	@Override
-	public MessageListener getMessageListener()
+	public MessageListener getMessageListener() throws JMSException
 	{
 		return listener;
 	}
