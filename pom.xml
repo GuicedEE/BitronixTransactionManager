@@ -166,6 +166,7 @@
                 <groupId>cglib</groupId>
                 <artifactId>cglib</artifactId>
                 <version>3.2.9</version>
+                <scope>provided</scope>
             </dependency>
 
             <dependency>
@@ -339,6 +340,7 @@
                 <maven.compiler.target>1.7</maven.compiler.target>
             </properties>
         </profile>
+
         <profile>
             <id>jdk8</id>
             <properties>
@@ -346,59 +348,6 @@
                 <maven.compiler.source>1.8</maven.compiler.source>
                 <maven.compiler.target>1.8</maven.compiler.target>
             </properties>
-        </profile>
-        <profile>
-            <id>jdk10</id>
-            <properties>
-                <java.version>1.10</java.version>
-                <jdk.version>1.10</jdk.version>
-                <maven.compiler.source>1.10</maven.compiler.source>
-                <maven.compiler.target>1.10</maven.compiler.target>
-                <maven.compiler.release>10</maven.compiler.release>
-            </properties>
-
-            <build>
-                <plugins>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>${maven.javadoc.version}</version>
-                        <configuration>
-                            <detectJavaApiLink>false</detectJavaApiLink>
-                            <offlineLinks>
-                                <offlineLink>
-                                    <url>https://docs.oracle.com/javase/${maven.compiler.release}/docs/api/</url>
-                                    <location>${project.basedir}</location>
-                                </offlineLink>
-                            </offlineLinks>
-                            <failOnError>true</failOnError>
-                            <javadocExecutable>/opt/jdk11/jdk-11/bin/javadoc</javadocExecutable>
-                        </configuration>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>${build.helper.maven.plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>add-source</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>src/main/java</source>
-                                        <source>src/jre10/java</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
         <profile>
