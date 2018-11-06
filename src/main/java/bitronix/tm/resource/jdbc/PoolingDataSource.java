@@ -57,7 +57,7 @@ public class PoolingDataSource
 {
 
 	private final static Logger log = LoggerFactory.getLogger(PoolingDataSource.class);
-	private final List<ConnectionCustomizer> connectionCustomizers = new CopyOnWriteArrayList<ConnectionCustomizer>();
+	private final List<ConnectionCustomizer> connectionCustomizers = new CopyOnWriteArrayList<>();
 	private volatile transient XAPool<JdbcPooledConnection, JdbcPooledConnection> pool;
 	private volatile transient XADataSource xaDataSource;
 	private volatile transient RecoveryXAResourceHolder recoveryXAResourceHolder;
@@ -74,7 +74,7 @@ public class PoolingDataSource
 
 	public PoolingDataSource()
 	{
-		xaResourceHolderMap = new ConcurrentHashMap<XAResource, JdbcPooledConnection>();
+		xaResourceHolderMap = new ConcurrentHashMap<>();
 	}
 
 	/**
@@ -376,7 +376,7 @@ public class PoolingDataSource
 		{
 			log.debug("building XA pool for " + getUniqueName() + " with " + getMinPoolSize() + " connection(s)");
 		}
-		pool = new XAPool<JdbcPooledConnection, JdbcPooledConnection>(this, this, xaDataSource);
+		pool = new XAPool<>(this, this, xaDataSource);
 		boolean builtXaFactory = false;
 		if (xaDataSource == null)
 		{

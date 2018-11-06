@@ -25,11 +25,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import javax.transaction.xa.XAResource;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -109,25 +110,17 @@ public class ResourceRegistrarTest
 	private Future registerBlockingProducer(XAResourceProducer producer, CountDownLatch border) throws RecoveryException
 	{
 		XAResourceHolderState resourceHolderState = producer.startRecovery();
-		when(producer.startRecovery()).thenAnswer(new Answer<>()
-		{
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable
-			{
-				border.await();
-				return resourceHolderState;
-			}
-		});
+		when(producer.startRecovery()).thenAnswer(invocation ->
+		                                          {
+			                                          border.await();
+			                                          return resourceHolderState;
+		                                          });
 
-		return executorService.submit(new Callable<>()
-		{
-			@Override
-			public Object call() throws Exception
-			{
-				ResourceRegistrar.register(producer);
-				return null;
-			}
-		});
+		return executorService.submit(() ->
+		                              {
+			                              ResourceRegistrar.register(producer);
+			                              return null;
+		                              });
 	}
 
 	@Test

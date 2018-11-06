@@ -16,7 +16,6 @@
 package bitronix.tm.mock.resource.jms;
 
 import bitronix.tm.mock.resource.MockXAResource;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import javax.jms.*;
@@ -67,39 +66,31 @@ public class MockXAConnectionFactory
 			throw staticCreateXAConnectionException;
 		}
 
-		Answer xaSessionAnswer = new Answer<XASession>()
+		Answer xaSessionAnswer = (Answer<XASession>) invocation ->
 		{
-			@Override
-			public XASession answer(InvocationOnMock invocation) throws Throwable
+			XASession mockXASession = mock(XASession.class);
+			MessageProducer messageProducer = mock(MessageProducer.class);
+			when(mockXASession.createProducer(anyObject())).thenReturn(messageProducer);
+			MessageConsumer messageConsumer = mock(MessageConsumer.class);
+			when(mockXASession.createConsumer(anyObject())).thenReturn(messageConsumer);
+			when(mockXASession.createConsumer(anyObject(), anyString())).thenReturn(messageConsumer);
+			when(mockXASession.createConsumer(anyObject(), anyString(), anyBoolean())).thenReturn(messageConsumer);
+			Queue queue = mock(Queue.class);
+			when(mockXASession.createQueue(anyString())).thenReturn(queue);
+			Topic topic = mock(Topic.class);
+			when(mockXASession.createTopic(anyString())).thenReturn(topic);
+			MockXAResource mockXAResource = new MockXAResource(null);
+			when(mockXASession.getXAResource()).thenReturn(mockXAResource);
+			Answer<Session> sessionAnswer = invocation1 ->
 			{
-				XASession mockXASession = mock(XASession.class);
-				MessageProducer messageProducer = mock(MessageProducer.class);
-				when(mockXASession.createProducer(anyObject())).thenReturn(messageProducer);
-				MessageConsumer messageConsumer = mock(MessageConsumer.class);
-				when(mockXASession.createConsumer(anyObject())).thenReturn(messageConsumer);
-				when(mockXASession.createConsumer(anyObject(), anyString())).thenReturn(messageConsumer);
-				when(mockXASession.createConsumer(anyObject(), anyString(), anyBoolean())).thenReturn(messageConsumer);
-				Queue queue = mock(Queue.class);
-				when(mockXASession.createQueue(anyString())).thenReturn(queue);
-				Topic topic = mock(Topic.class);
-				when(mockXASession.createTopic(anyString())).thenReturn(topic);
-				MockXAResource mockXAResource = new MockXAResource(null);
-				when(mockXASession.getXAResource()).thenReturn(mockXAResource);
-				Answer<Session> sessionAnswer = new Answer<>()
-				{
-					@Override
-					public Session answer(InvocationOnMock invocation) throws Throwable
-					{
-						Session session = mock(Session.class);
-						MessageProducer producer = mock(MessageProducer.class);
-						when(session.createProducer(anyObject())).thenReturn(producer);
-						return session;
-					}
-				};
-				when(mockXASession.getSession()).thenAnswer(sessionAnswer);
+				Session session = mock(Session.class);
+				MessageProducer producer = mock(MessageProducer.class);
+				when(session.createProducer(anyObject())).thenReturn(producer);
+				return session;
+			};
+			when(mockXASession.getSession()).thenAnswer(sessionAnswer);
 
-				return mockXASession;
-			}
+			return mockXASession;
 		};
 
 		XAConnection mockXAConnection = mock(XAConnection.class);

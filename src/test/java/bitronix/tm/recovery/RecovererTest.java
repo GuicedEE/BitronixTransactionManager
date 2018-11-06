@@ -19,7 +19,6 @@ import bitronix.tm.BitronixTransaction;
 import bitronix.tm.BitronixTransactionManager;
 import bitronix.tm.BitronixXid;
 import bitronix.tm.TransactionManagerServices;
-import bitronix.tm.internal.TransactionStatusChangeListener;
 import bitronix.tm.journal.Journal;
 import bitronix.tm.mock.events.Event;
 import bitronix.tm.mock.events.EventRecorder;
@@ -384,23 +383,19 @@ public class RecovererTest
 			btm.begin();
 
 			BitronixTransaction tx = btm.getCurrentTransaction();
-			tx.addTransactionStatusChangeListener(new TransactionStatusChangeListener()
-			{
-				@Override
-				public void statusChanged(int oldStatus, int newStatus)
-				{
-					if (newStatus != Status.STATUS_COMMITTING)
-					{
-						return;
-					}
+			tx.addTransactionStatusChangeListener((oldStatus, newStatus) ->
+			                                      {
+				                                      if (newStatus != Status.STATUS_COMMITTING)
+				                                      {
+					                                      return;
+				                                      }
 
-					recoverer.run();
-					assertEquals(0, recoverer.getCommittedCount());
-					assertEquals(0, recoverer.getRolledbackCount());
-					assertNull(recoverer.getCompletionException());
-					listenerExecuted = true;
-				}
-			});
+				                                      recoverer.run();
+				                                      assertEquals(0, recoverer.getCommittedCount());
+				                                      assertEquals(0, recoverer.getRolledbackCount());
+				                                      assertNull(recoverer.getCompletionException());
+				                                      listenerExecuted = true;
+			                                      });
 
 			Connection c = pds.getConnection();
 			c.createStatement();

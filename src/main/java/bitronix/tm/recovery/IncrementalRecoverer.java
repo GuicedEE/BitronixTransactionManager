@@ -37,81 +37,130 @@ import java.util.Set;
  *
  * @author Ludovic Orban
  */
-public class IncrementalRecoverer {
+public class IncrementalRecoverer
+{
 
-    private final static Logger log = LoggerFactory.getLogger(IncrementalRecoverer.class);
+	private final static Logger log = LoggerFactory.getLogger(IncrementalRecoverer.class);
 
-    /**
-     * Run incremental recovery on the specified resource.
-     * @param xaResourceProducer the resource to recover.
-     * @throws RecoveryException when an error preventing recovery happens.
-     */
-    public static void recover(XAResourceProducer xaResourceProducer) throws RecoveryException {
-        String uniqueName = xaResourceProducer.getUniqueName();
-        if (log.isDebugEnabled()) { log.debug("start of incremental recovery on resource " + uniqueName); }
+	/**
+	 * Run incremental recovery on the specified resource.
+	 *
+	 * @param xaResourceProducer
+	 * 		the resource to recover.
+	 *
+	 * @throws RecoveryException
+	 * 		when an error preventing recovery happens.
+	 */
+	public static void recover(XAResourceProducer xaResourceProducer) throws RecoveryException
+	{
+		String uniqueName = xaResourceProducer.getUniqueName();
+		if (log.isDebugEnabled())
+		{
+			log.debug("start of incremental recovery on resource " + uniqueName);
+		}
 
-        try {
-            XAResourceHolderState xaResourceHolderState = xaResourceProducer.startRecovery();
-            boolean success = true;
-            Set<BitronixXid> xids = RecoveryHelper.recover(xaResourceHolderState);
-            if (log.isDebugEnabled()) { log.debug(xids.size() + " dangling transaction(s) found on resource"); }
-            Map<?, ?> danglingRecords = TransactionManagerServices.getJournal().collectDanglingRecords();
-            if (log.isDebugEnabled()) { log.debug(danglingRecords.size() + " dangling transaction(s) found in journal"); }
+		try
+		{
+			XAResourceHolderState xaResourceHolderState = xaResourceProducer.startRecovery();
+			boolean success = true;
+			Set<BitronixXid> xids = RecoveryHelper.recover(xaResourceHolderState);
+			if (log.isDebugEnabled())
+			{
+				log.debug(xids.size() + " dangling transaction(s) found on resource");
+			}
+			Map<?, ?> danglingRecords = TransactionManagerServices.getJournal()
+			                                                      .collectDanglingRecords();
+			if (log.isDebugEnabled())
+			{
+				log.debug(danglingRecords.size() + " dangling transaction(s) found in journal");
+			}
 
-            int commitCount = 0;
-            int rollbackCount = 0;
-            for (BitronixXid xid : xids) {
-                Uid gtrid = xid.getGlobalTransactionIdUid();
+			int commitCount = 0;
+			int rollbackCount = 0;
+			for (BitronixXid xid : xids)
+			{
+				Uid gtrid = xid.getGlobalTransactionIdUid();
 
-                JournalRecord tlog = (JournalRecord) danglingRecords.get(gtrid);
-                if (tlog != null) {
-                    if (log.isDebugEnabled()) { log.debug("committing " + xid); }
-                    success &= RecoveryHelper.commit(xaResourceHolderState, xid);
-                    updateJournal(xid.getGlobalTransactionIdUid(), uniqueName, Status.STATUS_COMMITTED);
-                    commitCount++;
-                } else {
-                    if (log.isDebugEnabled()) { log.debug("rolling back " + xid); }
-                    success &= RecoveryHelper.rollback(xaResourceHolderState, xid);
-                    updateJournal(xid.getGlobalTransactionIdUid(), uniqueName, Status.STATUS_ROLLEDBACK);
-                    rollbackCount++;
-                }
-            }
+				JournalRecord tlog = (JournalRecord) danglingRecords.get(gtrid);
+				if (tlog != null)
+				{
+					if (log.isDebugEnabled())
+					{
+						log.debug("committing " + xid);
+					}
+					success &= RecoveryHelper.commit(xaResourceHolderState, xid);
+					updateJournal(xid.getGlobalTransactionIdUid(), uniqueName, Status.STATUS_COMMITTED);
+					commitCount++;
+				}
+				else
+				{
+					if (log.isDebugEnabled())
+					{
+						log.debug("rolling back " + xid);
+					}
+					success &= RecoveryHelper.rollback(xaResourceHolderState, xid);
+					updateJournal(xid.getGlobalTransactionIdUid(), uniqueName, Status.STATUS_ROLLEDBACK);
+					rollbackCount++;
+				}
+			}
 
-            // if recovery isn't successful we don't mark the resource as failed: heuristics might have happened
-            // but communication with the resouce is working.
-            if (!success)
-                throw new RecoveryException("error recovering resource '" + uniqueName + "' due to an incompatible heuristic decision");
+			// if recovery isn't successful we don't mark the resource as failed: heuristics might have happened
+			// but communication with the resouce is working.
+			if (!success)
+			{
+				throw new RecoveryException("error recovering resource '" + uniqueName + "' due to an incompatible heuristic decision");
+			}
 
-            xaResourceProducer.setFailed(false);
+			xaResourceProducer.setFailed(false);
 
-            log.info("incremental recovery committed " + commitCount + " dangling transaction(s) and rolled back " + rollbackCount +
-                    " aborted transaction(s) on resource [" + uniqueName + "]" +
-                    ((TransactionManagerServices.getConfiguration().isCurrentNodeOnlyRecovery()) ? " (restricted to serverId '" + TransactionManagerServices.getConfiguration().getServerId() + "')" : ""));
+			log.info("incremental recovery committed " + commitCount + " dangling transaction(s) and rolled back " + rollbackCount +
+			         " aborted transaction(s) on resource [" + uniqueName + "]" +
+			         ((TransactionManagerServices.getConfiguration()
+			                                     .isCurrentNodeOnlyRecovery()) ? " (restricted to serverId '" + TransactionManagerServices.getConfiguration()
+			                                                                                                                              .getServerId() + "')" : ""));
 
-        } catch (XAException ex) {
-            xaResourceProducer.setFailed(true);
-            throw new RecoveryException("failed recovering resource " + uniqueName, ex);
-        } catch (IOException ex) {
-            xaResourceProducer.setFailed(true);
-            throw new RecoveryException("failed recovering resource " + uniqueName, ex);
-        } catch (RuntimeException ex) {
-            xaResourceProducer.setFailed(true);
-            throw new RecoveryException("failed recovering resource " + uniqueName, ex);
-        } catch (RecoveryException ex) {
-            xaResourceProducer.setFailed(true);
-            throw ex;
-        } finally {
-            xaResourceProducer.endRecovery();
-            if (log.isDebugEnabled()) { log.debug("end of incremental recovery on resource " + uniqueName); }
-        }
-    }
+		}
+		catch (XAException ex)
+		{
+			xaResourceProducer.setFailed(true);
+			throw new RecoveryException("failed recovering resource " + uniqueName, ex);
+		}
+		catch (IOException ex)
+		{
+			xaResourceProducer.setFailed(true);
+			throw new RecoveryException("failed recovering resource " + uniqueName, ex);
+		}
+		catch (RuntimeException ex)
+		{
+			xaResourceProducer.setFailed(true);
+			throw new RecoveryException("failed recovering resource " + uniqueName, ex);
+		}
+		catch (RecoveryException ex)
+		{
+			xaResourceProducer.setFailed(true);
+			throw ex;
+		}
+		finally
+		{
+			xaResourceProducer.endRecovery();
+			if (log.isDebugEnabled())
+			{
+				log.debug("end of incremental recovery on resource " + uniqueName);
+			}
+		}
+	}
 
-    private static void updateJournal(Uid gtrid, String uniqueName, int status) throws IOException {
-        if (log.isDebugEnabled()) { log.debug("updating journal, adding " + Decoder.decodeStatus(status) + " entry for [" + uniqueName + "] on GTRID [" +  gtrid + "]"); }
-        Set<String> participatingUniqueNames = new HashSet<String>();
-        participatingUniqueNames.add(uniqueName);
-        TransactionManagerServices.getJournal().log(status, gtrid, participatingUniqueNames);
-    }
+	private static void updateJournal(Uid gtrid, String uniqueName, int status) throws IOException
+	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("updating journal, adding " + Decoder.decodeStatus(status) + " entry for [" + uniqueName + "] on GTRID [" + gtrid + "]");
+		}
+		Set<String> participatingUniqueNames = new HashSet<>();
+		participatingUniqueNames.add(uniqueName);
+		TransactionManagerServices.getJournal()
+		                          .log(status, gtrid, participatingUniqueNames);
+	}
 
 
 }

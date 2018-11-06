@@ -18,7 +18,6 @@ package bitronix.tm.utils;
 import junit.framework.TestCase;
 
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -68,19 +67,15 @@ public class UidGeneratorTest
 		{
 			for (int i = 0; i < concurrency; i++)
 			{
-				handles.add(executorService.submit(new Callable<>()
-				{
-					@Override
-					public Set<Uid> call()
-					{
-						Set<Uid> ids = new HashSet<>(callsPerThread);
-						for (int i = 0; i < callsPerThread; i++)
-						{
-							ids.add(UidGenerator.generateUid());
-						}
-						return ids;
-					}
-				}));
+				handles.add(executorService.submit(() ->
+				                                   {
+					                                   Set<Uid> ids = new HashSet<>(callsPerThread);
+					                                   for (int i1 = 0; i1 < callsPerThread; i1++)
+					                                   {
+						                                   ids.add(UidGenerator.generateUid());
+					                                   }
+					                                   return ids;
+				                                   }));
 			}
 		}
 		finally

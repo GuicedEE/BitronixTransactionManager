@@ -38,183 +38,228 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * EHCache implementation of BTM's XAResourceProducer.
  * <p>
- *   Copyright 2003-2010 Terracotta, Inc.
+ * Copyright 2003-2010 Terracotta, Inc.
  * </p>
+ *
  * @author Ludovic Orban
  */
 @SuppressWarnings("serial")
-public final class EhCacheXAResourceProducer extends ResourceBean implements XAResourceProducer<EhCacheXAResourceHolder, EhCacheXAResourceHolder> {
+public final class EhCacheXAResourceProducer
+		extends ResourceBean
+		implements XAResourceProducer<EhCacheXAResourceHolder, EhCacheXAResourceHolder>
+{
 
-    private static final Logger log = LoggerFactory.getLogger(EhCacheXAResourceProducer.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(EhCacheXAResourceProducer.class.getName());
 
-    private static final ConcurrentMap<String, EhCacheXAResourceProducer> producers = new ConcurrentHashMap<String, EhCacheXAResourceProducer>();
+	private static final ConcurrentMap<String, EhCacheXAResourceProducer> producers = new ConcurrentHashMap<>();
 
-    private final ConcurrentMap<Integer, EhCacheXAResourceHolder> xaResourceHolders = new ConcurrentHashMap<Integer, EhCacheXAResourceHolder>();
-    private final AtomicInteger xaResourceHolderCounter = new AtomicInteger();
-    private volatile RecoveryXAResourceHolder recoveryXAResourceHolder;
-
-
-    private EhCacheXAResourceProducer() {
-        setApplyTransactionTimeout(true);
-    }
+	private final ConcurrentMap<Integer, EhCacheXAResourceHolder> xaResourceHolders = new ConcurrentHashMap<>();
+	private final AtomicInteger xaResourceHolderCounter = new AtomicInteger();
+	private volatile RecoveryXAResourceHolder recoveryXAResourceHolder;
 
 
-    /**
-     * Register an XAResource of a cache with BTM. The first time a XAResource is registered a new
-     * EhCacheXAResourceProducer is created to hold it.
-     * @param uniqueName the uniqueName of this XAResourceProducer, usually the cache's name
-     * @param xaResource the XAResource to be registered
-     */
-    public static void registerXAResource(String uniqueName, XAResource xaResource) {
-        EhCacheXAResourceProducer xaResourceProducer = producers.get(uniqueName);
-        if (xaResourceProducer == null) {
-            xaResourceProducer = new EhCacheXAResourceProducer();
-            xaResourceProducer.setUniqueName(uniqueName);
-            // the initial xaResource must be added before init() can be called
-            xaResourceProducer.addXAResource(xaResource);
-
-            EhCacheXAResourceProducer previous = producers.putIfAbsent(uniqueName, xaResourceProducer);
-            if (previous == null) {
-                xaResourceProducer.init();
-            } else {
-                previous.addXAResource(xaResource);
-            }
-        } else {
-            xaResourceProducer.addXAResource(xaResource);
-        }
-    }
-
-    /**
-     * Unregister an XAResource of a cache from BTM.
-     * @param uniqueName the uniqueName of this XAResourceProducer, usually the cache's name
-     * @param xaResource the XAResource to be registered
-     */
-    public static void unregisterXAResource(String uniqueName, XAResource xaResource) {
-        EhCacheXAResourceProducer xaResourceProducer = producers.get(uniqueName);
-
-        if (xaResourceProducer != null) {
-            boolean found = xaResourceProducer.removeXAResource(xaResource);
-            if (!found) {
-                log.error("no XAResource " + xaResource + " found in XAResourceProducer with name " + uniqueName);
-            }
-            if (xaResourceProducer.xaResourceHolders.isEmpty()) {
-                xaResourceProducer.close();
-                producers.remove(uniqueName);
-            }
-        } else {
-            log.error("no XAResourceProducer registered with name " + uniqueName);
-        }
-    }
+	private EhCacheXAResourceProducer()
+	{
+		setApplyTransactionTimeout(true);
+	}
 
 
-    private void addXAResource(XAResource xaResource) {
-        EhCacheXAResourceHolder xaResourceHolder = new EhCacheXAResourceHolder(xaResource, this);
-        int key = xaResourceHolderCounter.incrementAndGet();
+	/**
+	 * Register an XAResource of a cache with BTM. The first time a XAResource is registered a new
+	 * EhCacheXAResourceProducer is created to hold it.
+	 *
+	 * @param uniqueName
+	 * 		the uniqueName of this XAResourceProducer, usually the cache's name
+	 * @param xaResource
+	 * 		the XAResource to be registered
+	 */
+	public static void registerXAResource(String uniqueName, XAResource xaResource)
+	{
+		EhCacheXAResourceProducer xaResourceProducer = producers.get(uniqueName);
+		if (xaResourceProducer == null)
+		{
+			xaResourceProducer = new EhCacheXAResourceProducer();
+			xaResourceProducer.setUniqueName(uniqueName);
+			// the initial xaResource must be added before init() can be called
+			xaResourceProducer.addXAResource(xaResource);
 
-        xaResourceHolders.put(key, xaResourceHolder);
-    }
+			EhCacheXAResourceProducer previous = producers.putIfAbsent(uniqueName, xaResourceProducer);
+			if (previous == null)
+			{
+				xaResourceProducer.init();
+			}
+			else
+			{
+				previous.addXAResource(xaResource);
+			}
+		}
+		else
+		{
+			xaResourceProducer.addXAResource(xaResource);
+		}
+	}
 
-    private boolean removeXAResource(XAResource xaResource) {
-        for (Map.Entry<Integer, EhCacheXAResourceHolder> entry : xaResourceHolders.entrySet()) {
-            Integer key = entry.getKey();
-            EhCacheXAResourceHolder xaResourceHolder = entry.getValue();
-            if (xaResourceHolder.getXAResource() == xaResource) {
-                xaResourceHolders.remove(key);
-                return true;
-            }
-        }
-        return false;
-    }
+	private void addXAResource(XAResource xaResource)
+	{
+		EhCacheXAResourceHolder xaResourceHolder = new EhCacheXAResourceHolder(xaResource, this);
+		int key = xaResourceHolderCounter.incrementAndGet();
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public XAResourceHolderState startRecovery() throws RecoveryException {
-        if (recoveryXAResourceHolder != null) {
-            throw new RecoveryException("recovery already in progress on " + this);
-        }
+		xaResourceHolders.put(key, xaResourceHolder);
+	}
 
-        if (xaResourceHolders.isEmpty()) {
-            throw new RecoveryException("no XAResource registered, recovery cannot be done on " + this);
-        }
+	/**
+	 * Unregister an XAResource of a cache from BTM.
+	 *
+	 * @param uniqueName
+	 * 		the uniqueName of this XAResourceProducer, usually the cache's name
+	 * @param xaResource
+	 * 		the XAResource to be registered
+	 */
+	public static void unregisterXAResource(String uniqueName, XAResource xaResource)
+	{
+		EhCacheXAResourceProducer xaResourceProducer = producers.get(uniqueName);
 
-        recoveryXAResourceHolder = new RecoveryXAResourceHolder(xaResourceHolders.values().iterator().next());
-        return new XAResourceHolderState(recoveryXAResourceHolder, this);
-    }
+		if (xaResourceProducer != null)
+		{
+			boolean found = xaResourceProducer.removeXAResource(xaResource);
+			if (!found)
+			{
+				log.error("no XAResource " + xaResource + " found in XAResourceProducer with name " + uniqueName);
+			}
+			if (xaResourceProducer.xaResourceHolders.isEmpty())
+			{
+				xaResourceProducer.close();
+				producers.remove(uniqueName);
+			}
+		}
+		else
+		{
+			log.error("no XAResourceProducer registered with name " + uniqueName);
+		}
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void endRecovery() throws RecoveryException {
-        recoveryXAResourceHolder = null;
-    }
+	private boolean removeXAResource(XAResource xaResource)
+	{
+		for (Map.Entry<Integer, EhCacheXAResourceHolder> entry : xaResourceHolders.entrySet())
+		{
+			Integer key = entry.getKey();
+			EhCacheXAResourceHolder xaResourceHolder = entry.getValue();
+			if (xaResourceHolder.getXAResource() == xaResource)
+			{
+				xaResourceHolders.remove(key);
+				return true;
+			}
+		}
+		return false;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setFailed(boolean failed) {
-        // cache cannot fail as it's not connection oriented
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public XAResourceHolderState startRecovery() throws RecoveryException
+	{
+		if (recoveryXAResourceHolder != null)
+		{
+			throw new RecoveryException("recovery already in progress on " + this);
+		}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public EhCacheXAResourceHolder findXAResourceHolder(XAResource xaResource) {
-        for (EhCacheXAResourceHolder xaResourceHolder : xaResourceHolders.values()) {
-            if (xaResource == xaResourceHolder.getXAResource()) {
-                return xaResourceHolder;
-            }
-        }
+		if (xaResourceHolders.isEmpty())
+		{
+			throw new RecoveryException("no XAResource registered, recovery cannot be done on " + this);
+		}
 
-        return null;
-    }
+		recoveryXAResourceHolder = new RecoveryXAResourceHolder(xaResourceHolders.values()
+		                                                                         .iterator()
+		                                                                         .next());
+		return new XAResourceHolderState(recoveryXAResourceHolder, this);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void init() {
-        try {
-            ResourceRegistrar.register(this);
-        } catch (RecoveryException ex) {
-            throw new BitronixRuntimeException("error recovering " + this, ex);
-        }
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void endRecovery() throws RecoveryException
+	{
+		recoveryXAResourceHolder = null;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void close() {
-        xaResourceHolders.clear();
-        xaResourceHolderCounter.set(0);
-        ResourceRegistrar.unregister(this);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setFailed(boolean failed)
+	{
+		// cache cannot fail as it's not connection oriented
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public EhCacheXAResourceHolder createPooledConnection(Object xaFactory, ResourceBean bean) throws Exception {
-        throw new UnsupportedOperationException("Ehcache is not connection-oriented");
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public EhCacheXAResourceHolder findXAResourceHolder(XAResource xaResource)
+	{
+		for (EhCacheXAResourceHolder xaResourceHolder : xaResourceHolders.values())
+		{
+			if (xaResource == xaResourceHolder.getXAResource())
+			{
+				return xaResourceHolder;
+			}
+		}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Reference getReference() throws NamingException {
-        return new Reference(EhCacheXAResourceProducer.class.getName(),
-                new StringRefAddr("uniqueName", getUniqueName()),
-                ResourceObjectFactory.class.getName(), null);
-    }
+		return null;
+	}
 
-    @Override
-    public String toString() {
-        return "a EhCacheXAResourceProducer with uniqueName " + getUniqueName();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void init()
+	{
+		try
+		{
+			ResourceRegistrar.register(this);
+		}
+		catch (RecoveryException ex)
+		{
+			throw new BitronixRuntimeException("error recovering " + this, ex);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void close()
+	{
+		xaResourceHolders.clear();
+		xaResourceHolderCounter.set(0);
+		ResourceRegistrar.unregister(this);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public EhCacheXAResourceHolder createPooledConnection(Object xaFactory, ResourceBean bean) throws Exception
+	{
+		throw new UnsupportedOperationException("Ehcache is not connection-oriented");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Reference getReference() throws NamingException
+	{
+		return new Reference(EhCacheXAResourceProducer.class.getName(),
+		                     new StringRefAddr("uniqueName", getUniqueName()),
+		                     ResourceObjectFactory.class.getName(), null);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "a EhCacheXAResourceProducer with uniqueName " + getUniqueName();
+	}
 }

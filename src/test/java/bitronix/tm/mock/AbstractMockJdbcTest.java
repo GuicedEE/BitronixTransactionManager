@@ -127,7 +127,8 @@ public abstract class AbstractMockJdbcTest
 		while (iterator.hasNext())
 		{
 			JdbcPooledConnection jdbcPooledConnection = iterator.next();
-			jdbcPooledConnection.addStateChangeEventListener(new StateChangeListener<>()
+			//noinspection Convert2Diamond
+			jdbcPooledConnection.addStateChangeEventListener(new StateChangeListener<JdbcPooledConnection>()
 			{
 				@Override
 				public void stateChanged(JdbcPooledConnection source, State oldState, State newState)

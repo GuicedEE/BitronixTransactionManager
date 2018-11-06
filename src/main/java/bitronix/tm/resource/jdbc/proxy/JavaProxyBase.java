@@ -26,93 +26,126 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author Brett Wooldridge
  */
-public abstract class JavaProxyBase<T> implements InvocationHandler {
+public abstract class JavaProxyBase<T>
+		implements InvocationHandler
+{
 
-    private final static Map<Method, String> methodKeyMap = new ConcurrentHashMap<Method, String>();
+	private final static Map<Method, String> methodKeyMap = new ConcurrentHashMap<>();
 
-    protected Object proxy;
+	protected Object proxy;
 
-    protected T delegate;
+	protected T delegate;
 
-    protected abstract Map<String, Method> getMethodMap();
+	protected static Map<String, Method> createMethodMap(Class<?> clazz)
+	{
+		HashMap<String, Method> selfMethodMap = new HashMap<>();
+		for (Method method : clazz.getDeclaredMethods())
+		{
+			if ((method.getModifiers() & Method.PUBLIC) == Method.PUBLIC)
+			{
+				selfMethodMap.put(getMethodKey(method), method);
+			}
+		}
+		return selfMethodMap;
+	}
 
-    @SuppressWarnings("unchecked")
-	protected T getProxy() {
-        return (T) proxy;
-    }
+	protected static String getMethodKey(Method method)
+	{
+		String key = methodKeyMap.get(method);
+		if (key != null)
+		{
+			return key;
+		}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    	if (Proxy.isProxyClass(proxy.getClass())) {
-    		this.proxy = (T) proxy;
-    	}
+		StringBuilder sb = new StringBuilder();
+		sb.append(method.getReturnType()
+		                .getName())
+		  .append(method.getName());
+		for (Class<?> type : method.getParameterTypes())
+		{
+			sb.append(type.getName());
+		}
+		key = sb.toString();
+		methodKeyMap.put(method, key);
+		return key;
+	}
 
-        try {
-            Method ourMethod = getMethodMap().get(getMethodKey(method));
-            if (ourMethod != null) {
-                return ourMethod.invoke(this, args);
-            }
+	protected static boolean isWrapperFor(Object obj, Class<?> param)
+	{
+		try
+		{
+			Method isWrapperForMethod = obj.getClass()
+			                               .getMethod("isWrapperFor", Class.class);
+			return (Boolean) isWrapperForMethod.invoke(obj, param);
+		}
+		catch (NoSuchMethodException ex)
+		{
+			throw new UnsupportedOperationException("isWrapperFor is not supported", ex);
+		}
+		catch (IllegalAccessException ex)
+		{
+			throw new UnsupportedOperationException("isWrapperFor is not supported", ex);
+		}
+		catch (InvocationTargetException ex)
+		{
+			throw new UnsupportedOperationException("isWrapperFor is not supported", ex);
+		}
+	}
 
-            return method.invoke(delegate, args);
-        }
-        catch (InvocationTargetException ite) {
-            throw ite.getTargetException();
-        }
-    }
+	@SuppressWarnings("unchecked")
+	protected static <T> T unwrap(Object obj, Class<T> param)
+	{
+		try
+		{
+			Method unwrapMethod = obj.getClass()
+			                         .getMethod("unwrap", Class.class);
+			return (T) unwrapMethod.invoke(obj, param);
+		}
+		catch (NoSuchMethodException ex)
+		{
+			throw new UnsupportedOperationException("unwrap is not supported", ex);
+		}
+		catch (IllegalAccessException ex)
+		{
+			throw new UnsupportedOperationException("unwrap is not supported", ex);
+		}
+		catch (InvocationTargetException ex)
+		{
+			throw new UnsupportedOperationException("unwrap is not supported", ex);
+		}
+	}
 
-    protected static Map<String, Method> createMethodMap(Class<?> clazz) {
-        HashMap<String, Method> selfMethodMap = new HashMap<String, Method>();
-        for (Method method : clazz.getDeclaredMethods()) {
-            if ((method.getModifiers() & Method.PUBLIC) == Method.PUBLIC) {
-                selfMethodMap.put(getMethodKey(method), method);
-            }
-        }
-        return selfMethodMap;
-    }
+	@SuppressWarnings("unchecked")
+	protected T getProxy()
+	{
+		return (T) proxy;
+	}
 
-    protected static String getMethodKey(Method method) {
-        String key = methodKeyMap.get(method);
-        if (key != null) {
-            return key;
-        }
+	@SuppressWarnings("unchecked")
+	@Override
+	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+	{
+		if (Proxy.isProxyClass(proxy.getClass()))
+		{
+			this.proxy = (T) proxy;
+		}
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(method.getReturnType().getName())
-          .append(method.getName());
-        for (Class<?> type : method.getParameterTypes()) {
-            sb.append(type.getName());
-        }
-        key = sb.toString();
-        methodKeyMap.put(method, key);
-        return key;
-    }
+		try
+		{
+			Method ourMethod = getMethodMap().get(getMethodKey(method));
+			if (ourMethod != null)
+			{
+				return ourMethod.invoke(this, args);
+			}
 
-    protected static boolean isWrapperFor(Object obj, Class<?> param) {
-        try {
-            Method isWrapperForMethod = obj.getClass().getMethod("isWrapperFor", Class.class);
-            return (Boolean) isWrapperForMethod.invoke(obj, param);
-        } catch (NoSuchMethodException ex) {
-            throw new UnsupportedOperationException("isWrapperFor is not supported", ex);
-        } catch (IllegalAccessException ex) {
-            throw new UnsupportedOperationException("isWrapperFor is not supported", ex);
-        } catch (InvocationTargetException ex) {
-            throw new UnsupportedOperationException("isWrapperFor is not supported", ex);
-        }
-    }
+			return method.invoke(delegate, args);
+		}
+		catch (InvocationTargetException ite)
+		{
+			throw ite.getTargetException();
+		}
+	}
 
-    @SuppressWarnings("unchecked")
-    protected static <T> T unwrap(Object obj, Class<T> param) {
-        try {
-            Method unwrapMethod = obj.getClass().getMethod("unwrap", Class.class);
-            return (T) unwrapMethod.invoke(obj, param);
-        } catch (NoSuchMethodException ex) {
-            throw new UnsupportedOperationException("unwrap is not supported", ex);
-        } catch (IllegalAccessException ex) {
-            throw new UnsupportedOperationException("unwrap is not supported", ex);
-        } catch (InvocationTargetException ex) {
-            throw new UnsupportedOperationException("unwrap is not supported", ex);
-        }
-    }
+	protected abstract Map<String, Method> getMethodMap();
 
 }

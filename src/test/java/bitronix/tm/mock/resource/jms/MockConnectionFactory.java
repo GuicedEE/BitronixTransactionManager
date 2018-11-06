@@ -15,7 +15,6 @@
  */
 package bitronix.tm.mock.resource.jms;
 
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import javax.jms.*;
@@ -35,16 +34,12 @@ public class MockConnectionFactory
 	@Override
 	public Connection createConnection() throws JMSException
 	{
-		Answer<Session> sessionAnswer = new Answer<>()
+		Answer<Session> sessionAnswer = invocation ->
 		{
-			@Override
-			public Session answer(InvocationOnMock invocation) throws Throwable
-			{
-				Session session = mock(Session.class);
-				MessageProducer producer = mock(MessageProducer.class);
-				when(session.createProducer(anyObject())).thenReturn(producer);
-				return session;
-			}
+			Session session = mock(Session.class);
+			MessageProducer producer = mock(MessageProducer.class);
+			when(session.createProducer(anyObject())).thenReturn(producer);
+			return session;
 		};
 
 		Connection connection = mock(Connection.class);
