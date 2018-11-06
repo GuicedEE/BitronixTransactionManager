@@ -22,34 +22,45 @@ import bitronix.tm.utils.Service;
  *
  * @author Ludovic Orban
  */
-public interface Executor extends Service {
+public interface Executor
+		extends Service
+{
 
-    /**
-     * Submit a job to be executed by the thread pool.
-     * @param job the {@link Runnable} to execute.
-     * @return an object used to monitor the execution of the submitted {@link Runnable}.
-     */
-    public Object submit(Job job);
+	/**
+	 * Submit a job to be executed by the thread pool.
+	 *
+	 * @param job
+	 * 		the {@link Runnable} to execute.
+	 *
+	 * @return an object used to monitor the execution of the submitted {@link Runnable}.
+	 */
+	Object submit(Job job);
 
-    /**
-     * Wait for the job represented by the future to terminate. The call to this method will block until the job
-     * finished its execution or the specified timeout elapsed.
-     * @param future the future representing the job as returned by {@link #submit}.
-     * @param timeout if the job did not finish during the specified timeout in milliseconds, this method returns anyway.
-     */
-    public void waitFor(Object future, long timeout);
+	/**
+	 * Wait for the job represented by the future to terminate. The call to this method will block until the job
+	 * finished its execution or the specified timeout elapsed.
+	 *
+	 * @param future
+	 * 		the future representing the job as returned by {@link #submit}.
+	 * @param timeout
+	 * 		if the job did not finish during the specified timeout in milliseconds, this method returns anyway.
+	 */
+	void waitFor(Object future, long timeout);
 
-    /**
-     * Check if the thread pool has terminated the execution of the job represented by a future.
-     * @param future the future representing the job as returned by {@link #submit}.
-     * @return true if the job is done, false otherwise.
-     */
-    public boolean isDone(Object future);
+	/**
+	 * Check if the thread pool has terminated the execution of the job represented by a future.
+	 *
+	 * @param future
+	 * 		the future representing the job as returned by {@link #submit}.
+	 *
+	 * @return true if the job is done, false otherwise.
+	 */
+	boolean isDone(Object future);
 
-    /**
-     * Shutdown the thead pool.
-     */
-    @Override
-    public void shutdown();
+	/**
+	 * Shutdown the thead pool.
+	 */
+	@Override
+	void shutdown();
 
 }

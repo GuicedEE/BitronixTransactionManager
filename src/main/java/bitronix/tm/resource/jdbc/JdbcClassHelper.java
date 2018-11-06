@@ -52,18 +52,13 @@ public class JdbcClassHelper
 
 		try
 		{
-			Method isValidMethod = connectionClass.getMethod("isValid", new Class[]{Integer.TYPE});
+			Method isValidMethod = connectionClass.getMethod("isValid", Integer.TYPE);
 			isValidMethod.invoke(connection, DETECTION_TIMEOUT); // test invoke
 			jdbcVersionDetected = 4;
 			isValidMethods.put(connectionClass, isValidMethod);
 		}
-		catch (Exception ex)
+		catch (Exception | AbstractMethodError ex)
 		{
-			jdbcVersionDetected = 3;
-		}
-		catch (AbstractMethodError er)
-		{
-			// this happens if the driver implements JDBC 3 but runs on JDK 1.6+ (which embeds the JDBC 4 interfaces)
 			jdbcVersionDetected = 3;
 		}
 

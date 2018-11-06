@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,7 +33,7 @@ public class ClassLoaderUtils
 	public static Set<Class<?>> getAllInterfaces(Class<?> clazz)
 	{
 		Set<Class<?>> interfaces = new HashSet<>();
-		for (Class<?> intf : Arrays.asList(clazz.getInterfaces()))
+		for (Class<?> intf : clazz.getInterfaces())
 		{
 			if (intf.getInterfaces().length > 0)
 			{
