@@ -183,22 +183,18 @@ public class JtaTest
 		Transaction tx = btm.getTransaction();
 
 		// commit on a different thread
-		Thread t = new Thread()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					tx.commit();
-				}
-				catch (Exception ex)
-				{
-					ex.printStackTrace();
-					fail();
-				}
-			}
-		};
+		Thread t = new Thread(() ->
+		                      {
+			                      try
+			                      {
+				                      tx.commit();
+			                      }
+			                      catch (Exception ex)
+			                      {
+				                      ex.printStackTrace();
+				                      fail();
+			                      }
+		                      });
 
 		t.start();
 		t.join();

@@ -55,24 +55,20 @@ public class BitronixTransactionSynchronizationRegistryTest
 		assertEquals("one", reg.getResource("1"));
 		btm.commit();
 
-		Thread t = new Thread()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					btm.begin();
-					reg.putResource("1", "one");
-					assertEquals("one", reg.getResource("1"));
-					btm.commit();
-				}
-				catch (Exception e)
-				{
-					throw new RuntimeException(e);
-				}
-			}
-		};
+		Thread t = new Thread(() ->
+		                      {
+			                      try
+			                      {
+				                      btm.begin();
+				                      reg.putResource("1", "one");
+				                      assertEquals("one", reg.getResource("1"));
+				                      btm.commit();
+			                      }
+			                      catch (Exception e)
+			                      {
+				                      throw new RuntimeException(e);
+			                      }
+		                      });
 
 		t.start();
 		t.join();

@@ -11,9 +11,10 @@ module tm.bitronix.btm {
 	requires java.management;
 	requires java.management.rmi;
 
-	requires jms;
-	requires org.slf4j;
+	requires static jms;
+	requires static org.osgi.core;
 
 	requires java.sql;
 
+	requires org.slf4j;
 }

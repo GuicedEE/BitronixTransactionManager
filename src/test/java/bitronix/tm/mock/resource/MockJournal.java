@@ -60,7 +60,7 @@ public class MockJournal
 	@Override
 	public void open()
 	{
-		danglingRecords = new HashMap<Uid, JournalRecord>();
+		danglingRecords = new HashMap<>();
 	}
 
 	@Override

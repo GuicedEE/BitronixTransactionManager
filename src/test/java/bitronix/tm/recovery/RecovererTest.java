@@ -181,7 +181,7 @@ public class RecovererTest
 		                                      .getArray(), BitronixXid.FORMAT_ID);
 		xaResource.addInDoubtXid(xid2);
 
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new HashSet<>();
 		names.add(pds.getUniqueName());
 		journal.log(Status.STATUS_COMMITTING, new Uid(xid0.getGlobalTransactionId()), names);
 		journal.log(Status.STATUS_COMMITTING, new Uid(xid1.getGlobalTransactionId()), names);
@@ -213,7 +213,7 @@ public class RecovererTest
 		                                      .getArray(), BitronixXid.FORMAT_ID);
 		xaResource.addInDoubtXid(xid2);
 
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new HashSet<>();
 		names.add(pds.getUniqueName());
 		journal.log(Status.STATUS_COMMITTING, new Uid(xid0.getGlobalTransactionId()), names);
 		journal.log(Status.STATUS_COMMITTING, new Uid(xid1.getGlobalTransactionId()), names);
@@ -271,7 +271,7 @@ public class RecovererTest
 		Uid uid0 = UidGenerator.generateUid();
 		Xid xid0 = new MockXid(0, uid0.getArray(), BitronixXid.FORMAT_ID);
 		xaResource.addInDoubtXid(xid0);
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new HashSet<>();
 		names.add(pds.getUniqueName());
 		journal.log(Status.STATUS_COMMITTING, new Uid(xid0.getGlobalTransactionId()), names);
 
@@ -283,7 +283,7 @@ public class RecovererTest
 		                                      .getArray(), BitronixXid.FORMAT_ID);
 		xaResource.addInDoubtXid(xid1);
 
-		names = new HashSet<String>();
+		names = new HashSet<>();
 		names.add(pds.getUniqueName());
 		journal.log(Status.STATUS_COMMITTING, new Uid(xid1.getGlobalTransactionId()), names);
 
@@ -309,7 +309,7 @@ public class RecovererTest
 		                                      .getArray(), BitronixXid.FORMAT_ID);
 		xaResource.addInDoubtXid(xid0);
 
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new HashSet<>();
 		names.add("no-such-registered-resource");
 		journal.log(Status.STATUS_COMMITTING, new Uid(xid0.getGlobalTransactionId()), names);
 		assertEquals(1, TransactionManagerServices.getJournal()
@@ -445,7 +445,7 @@ public class RecovererTest
 		Recoverer recoverer = new Recoverer();
 		xaResource.setRecoveryDelay(1000);
 
-		List<Thread> threads = new ArrayList<Thread>();
+		List<Thread> threads = new ArrayList<>();
 
 		//create
 		for (int i = 0; i < THREAD_COUNT; i++)

@@ -39,7 +39,7 @@ public class AbstractXAResourceHolderTest
 		{
 		};
 
-		AbstractXAResourceHolder<DummyResourceHolder> xaResourceHolder = new AbstractXAResourceHolder<DummyResourceHolder>()
+		AbstractXAResourceHolder<DummyResourceHolder> xaResourceHolder = new AbstractXAResourceHolder<>()
 		{
 			@Override
 			public XAResource getXAResource()

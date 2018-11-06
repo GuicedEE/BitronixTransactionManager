@@ -23,8 +23,8 @@ import java.util.*;
 public class EventRecorder
 {
 
-	private static final Map<Object, EventRecorder> eventRecorders = new HashMap<Object, EventRecorder>();
-	private final List<Event> events = new ArrayList<Event>();
+	private static final Map<Object, EventRecorder> eventRecorders = new HashMap<>();
+	private final List<Event> events = new ArrayList<>();
 
 	private EventRecorder()
 	{
@@ -49,7 +49,7 @@ public class EventRecorder
 	public static List<? extends Event> getOrderedEvents()
 	{
 		Iterator<? extends Event> iterator = iterateEvents();
-		List<Event> orderedEvents = new ArrayList<Event>();
+		List<Event> orderedEvents = new ArrayList<>();
 		while (iterator.hasNext())
 		{
 			Event ev = iterator.next();

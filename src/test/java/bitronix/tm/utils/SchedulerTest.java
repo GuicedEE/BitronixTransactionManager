@@ -40,7 +40,7 @@ public class SchedulerTest
 
 	public void testNaturalOrdering()
 	{
-		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<XAResourceHolderState>();
+		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<>();
 
 		XAResourceHolderState xarhs0 = new XAResourceHolderState(null, new MockResourceBean(1));
 		XAResourceHolderState xarhs1 = new XAResourceHolderState(null, new MockResourceBean(1));
@@ -84,7 +84,7 @@ public class SchedulerTest
 
 	public void testReverseOrdering()
 	{
-		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<XAResourceHolderState>();
+		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<>();
 
 		XAResourceHolderState xarhs0 = new XAResourceHolderState(null, new MockResourceBean(1));
 		XAResourceHolderState xarhs1 = new XAResourceHolderState(null, new MockResourceBean(1));
@@ -126,7 +126,7 @@ public class SchedulerTest
 
 	public void testIterator()
 	{
-		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<XAResourceHolderState>();
+		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<>();
 
 		XAResourceHolderState xarhs0 = new XAResourceHolderState(null, new MockResourceBean(1));
 		XAResourceHolderState xarhs1 = new XAResourceHolderState(null, new MockResourceBean(1));
@@ -169,7 +169,7 @@ public class SchedulerTest
 
 	public void testReverseIterator()
 	{
-		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<XAResourceHolderState>();
+		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<>();
 
 		XAResourceHolderState xarhs0 = new XAResourceHolderState(null, new MockResourceBean(1));
 		XAResourceHolderState xarhs1 = new XAResourceHolderState(null, new MockResourceBean(1));
@@ -199,7 +199,7 @@ public class SchedulerTest
 
 	public void testRemove()
 	{
-		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<XAResourceHolderState>();
+		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<>();
 
 		XAResourceHolderState xarhs0 = new XAResourceHolderState(null, new MockResourceBean(0));
 		XAResourceHolderState xarhs1 = new XAResourceHolderState(null, new MockResourceBean(1));
@@ -220,7 +220,7 @@ public class SchedulerTest
 
 	public void testReverseRemove()
 	{
-		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<XAResourceHolderState>();
+		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<>();
 
 		XAResourceHolderState xarhs0 = new XAResourceHolderState(null, new MockResourceBean(0));
 		XAResourceHolderState xarhs1 = new XAResourceHolderState(null, new MockResourceBean(1));
@@ -241,7 +241,7 @@ public class SchedulerTest
 
 	public void testHasNext()
 	{
-		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<XAResourceHolderState>();
+		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<>();
 
 		XAResourceHolderState xarhs0 = new XAResourceHolderState(null, new MockResourceBean(0));
 		XAResourceHolderState xarhs1 = new XAResourceHolderState(null, new MockResourceBean(10));

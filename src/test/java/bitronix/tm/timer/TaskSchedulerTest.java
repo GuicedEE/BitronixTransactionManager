@@ -65,7 +65,7 @@ public class TaskSchedulerTest
 
 	public void testTaskOrdering() throws Exception
 	{
-		List<SimpleTask> result = Collections.synchronizedList(new ArrayList<SimpleTask>());
+		List<SimpleTask> result = Collections.synchronizedList(new ArrayList<>());
 
 		ts.addTask(new SimpleTask(new Date(MonotonicClock.currentTimeMillis() + 100), ts, 0, result));
 		ts.addTask(new SimpleTask(new Date(MonotonicClock.currentTimeMillis() + 200), ts, 1, result));
@@ -83,7 +83,7 @@ public class TaskSchedulerTest
 
 	public void testIdenticalScheduleTimestamp() throws Exception
 	{
-		List<SimpleTask> result = Collections.synchronizedList(new ArrayList<SimpleTask>());
+		List<SimpleTask> result = Collections.synchronizedList(new ArrayList<>());
 
 		long firstTimestamp = MonotonicClock.currentTimeMillis();
 		long secondTimestamp = MonotonicClock.currentTimeMillis() + 200;

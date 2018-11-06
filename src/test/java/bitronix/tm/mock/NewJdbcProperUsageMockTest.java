@@ -1628,7 +1628,7 @@ public class NewJdbcProperUsageMockTest
 	{
 		Thread.currentThread()
 		      .setName("testPoolBoundsWithLooseEnlistment");
-		ArrayList<LooseTransactionThread> list = new ArrayList<LooseTransactionThread>();
+		ArrayList<LooseTransactionThread> list = new ArrayList<>();
 
 		for (int i = 0; i < LOOPS; i++)
 		{

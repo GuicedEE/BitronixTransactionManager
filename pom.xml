@@ -7,20 +7,9 @@
         <version>0.0.0_0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.jwebmp.jre11</groupId>
     <artifactId>btm</artifactId>
     <name>JPMS Bitronix Transaction Manager :: Core</name>
-    <packaging>bundle</packaging>
-
-    <organization>
-        <name>Bitronix Software</name>
-        <url>http://bitronix.be/</url>
-    </organization>
-
-    <issueManagement>
-        <system>github</system>
-        <url>https://github.com/bitronix/btm/issues</url>
-    </issueManagement>
+    <packaging>jar</packaging>
 
     <licenses>
         <license>
@@ -28,13 +17,12 @@
             <url>http://apache.org/licenses/LICENSE-2.0</url>
             <distribution>repo</distribution>
         </license>
+        <license>
+            <name>GPL 3</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
+            <distribution>repo</distribution>
+        </license>
     </licenses>
-
-    <scm>
-        <url>git@github.com:bitronix/btm.git</url>
-        <connection>scm:git:git@github.com/bitronix/btm.git</connection>
-        <developerConnection>scm:git:git@github.com:bitronix/btm.git</developerConnection>
-    </scm>
 
     <developers>
         <developer>
@@ -45,10 +33,30 @@
             <id>brettwooldridge</id>
             <name>Brett Wooldridge</name>
         </developer>
+        <developer>
+            <id>GedMarc</id>
+            <name>Marc Magon</name>
+            <email>marc.magon@gmail.com</email>
+            <url>https://github.com/GedMarc</url>
+        </developer>
     </developers>
 
-    
+    <scm>
+        <url>https://github.com/GedMarc?tab=repositories</url>
+    </scm>
+
     <dependencies>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
@@ -71,50 +79,28 @@
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.osgi.core</artifactId>
-            <version>1.0.0</version>
-            <scope>provided</scope>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>javax.jms</groupId>
             <artifactId>jms</artifactId>
-            <version>1.1</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.0.0</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
-            <version>3.2.9</version>
-            <scope>provided</scope>
             <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.8.0-beta2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.5</version>
         </dependency>
 
         <dependency>
             <groupId>org.jboss.spec.javax.rmi</groupId>
             <artifactId>jboss-rmi-api_1.0_spec</artifactId>
-            <version>1.0.6.Final</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -123,6 +109,7 @@
             <type>jar</type>
             <version>${javax.transaction.transactionapi}</version>
         </dependency>
+
     </dependencies>
 
     <profiles>

@@ -971,40 +971,36 @@ public class NewJdbcSuspendResumeMockTest
 		tm.begin();
 		assertNotNull(tm.getCurrentTransaction());
 
-		Thread thread = new Thread()
-		{
-			@Override
-			public void run()
-			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("*** getting TM");
-				}
+		Thread thread = new Thread(() ->
+		                           {
+			                           if (log.isDebugEnabled())
+			                           {
+				                           log.debug("*** getting TM");
+			                           }
 
-				try
-				{
-					if (log.isDebugEnabled())
-					{
-						log.debug("*** resuming transaction in new thread");
-					}
-					tm.resume(suspended);
-					if (log.isDebugEnabled())
-					{
-						log.debug("*** committing transaction in new thread");
-					}
-					tm.commit();
-					if (log.isDebugEnabled())
-					{
-						log.debug("*** new thread commit complete, exiting");
-					}
-					assertNull(tm.getCurrentTransaction());
-				}
-				catch (Exception e)
-				{
-					fail(e.getMessage());
-				}
-			}
-		};
+			                           try
+			                           {
+				                           if (log.isDebugEnabled())
+				                           {
+					                           log.debug("*** resuming transaction in new thread");
+				                           }
+				                           tm.resume(suspended);
+				                           if (log.isDebugEnabled())
+				                           {
+					                           log.debug("*** committing transaction in new thread");
+				                           }
+				                           tm.commit();
+				                           if (log.isDebugEnabled())
+				                           {
+					                           log.debug("*** new thread commit complete, exiting");
+				                           }
+				                           assertNull(tm.getCurrentTransaction());
+			                           }
+			                           catch (Exception e)
+			                           {
+				                           fail(e.getMessage());
+			                           }
+		                           });
 		thread.start();
 		thread.join();
 

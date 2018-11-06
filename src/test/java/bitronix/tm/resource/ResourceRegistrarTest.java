@@ -109,7 +109,7 @@ public class ResourceRegistrarTest
 	private Future registerBlockingProducer(XAResourceProducer producer, CountDownLatch border) throws RecoveryException
 	{
 		XAResourceHolderState resourceHolderState = producer.startRecovery();
-		when(producer.startRecovery()).thenAnswer(new Answer<Object>()
+		when(producer.startRecovery()).thenAnswer(new Answer<>()
 		{
 			@Override
 			public Object answer(InvocationOnMock invocation) throws Throwable
@@ -119,7 +119,7 @@ public class ResourceRegistrarTest
 			}
 		});
 
-		return executorService.submit(new Callable<Object>()
+		return executorService.submit(new Callable<>()
 		{
 			@Override
 			public Object call() throws Exception

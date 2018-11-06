@@ -60,7 +60,7 @@ public class ManagementRegistrarTest
 	public void testCanRegister() throws Exception
 	{
 		int iterations = 100000;
-		List<TestBean> beans = new ArrayList<TestBean>(iterations);
+		List<TestBean> beans = new ArrayList<>(iterations);
 
 		for (int i = 0; i < iterations; i++)
 		{

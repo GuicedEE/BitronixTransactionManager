@@ -70,7 +70,7 @@ public class JndiTest
 		pds.setUniqueName("jdbc/pds");
 		pds.init();
 
-		Hashtable<String, String> env = new Hashtable<String, String>();
+		Hashtable<String, String> env = new Hashtable<>();
 		env.put(Context.INITIAL_CONTEXT_FACTORY, BitronixInitialContextFactory.class.getName());
 		Context ctx = new InitialContext(env);
 
@@ -100,7 +100,7 @@ public class JndiTest
 		                          .setJndiUserTransactionName("TM");
 		transactionManager = TransactionManagerServices.getTransactionManager();
 
-		Hashtable<String, String> env = new Hashtable<String, String>();
+		Hashtable<String, String> env = new Hashtable<>();
 		env.put(Context.INITIAL_CONTEXT_FACTORY, BitronixInitialContextFactory.class.getName());
 		Context ctx = new InitialContext(env);
 

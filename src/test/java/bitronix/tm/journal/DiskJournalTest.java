@@ -98,16 +98,33 @@ public class DiskJournalTest
 		journal.shutdown();
 	}
 
-	private SortedSet<String> csvToSet(String s)
+	public void testCrc32Value()
 	{
-		SortedSet<String> result = new TreeSet<String>();
-		String[] names = s.split("\\,");
-		for (int i = 0; i < names.length; i++)
+		Set<String> names = new HashSet<>();
+		names.add("ActiveMQ");
+		names.add("com.mysql.jdbc.jdbc2.optional.MysqlXADataSource");
+
+		String uidString = "626974726F6E697853657276657249440000011C31FD45510000955B";
+		byte[] uidArray = new byte[uidString.length() / 2];
+		for (int i = 0; i < uidString.length() / 2; i++)
 		{
-			String name = names[i];
-			result.add(name);
+			String substr = uidString.substring(i * 2, i * 2 + 2);
+			byte b = (byte) Integer.parseInt(substr, 16);
+
+			uidArray[i] = b;
 		}
-		return result;
+		Uid uid = new Uid(uidArray);
+
+		TransactionLogRecord tlr = new TransactionLogRecord(Status.STATUS_COMMITTED, 116, 28, 1220609394845L, 38266, -1380478121, uid, names, TransactionLogAppender.END_RECORD);
+		boolean correct = tlr.isCrc32Correct();
+		assertTrue("CRC32 values did not match", correct);
+
+		names = new TreeSet<>();
+		names.add("com.mysql.jdbc.jdbc2.optional.MysqlXADataSource");
+		names.add("ActiveMQ");
+
+		tlr = new TransactionLogRecord(Status.STATUS_COMMITTED, 116, 28, 1220609394845L, 38266, -1380478121, uid, names, TransactionLogAppender.END_RECORD);
+		assertTrue(tlr.isCrc32Correct());
 	}
 
 	public void testComplexCollectDanglingRecords() throws Exception
@@ -206,35 +223,6 @@ public class DiskJournalTest
 		journal.shutdown();
 	}
 
-	public void testCrc32Value()
-	{
-		Set<String> names = new HashSet<String>();
-		names.add("ActiveMQ");
-		names.add("com.mysql.jdbc.jdbc2.optional.MysqlXADataSource");
-
-		String uidString = "626974726F6E697853657276657249440000011C31FD45510000955B";
-		byte[] uidArray = new byte[uidString.length() / 2];
-		for (int i = 0; i < uidString.length() / 2; i++)
-		{
-			String substr = uidString.substring(i * 2, i * 2 + 2);
-			byte b = (byte) Integer.parseInt(substr, 16);
-
-			uidArray[i] = b;
-		}
-		Uid uid = new Uid(uidArray);
-
-		TransactionLogRecord tlr = new TransactionLogRecord(Status.STATUS_COMMITTED, 116, 28, 1220609394845L, 38266, -1380478121, uid, names, TransactionLogAppender.END_RECORD);
-		boolean correct = tlr.isCrc32Correct();
-		assertTrue("CRC32 values did not match", correct);
-
-		names = new TreeSet<String>();
-		names.add("com.mysql.jdbc.jdbc2.optional.MysqlXADataSource");
-		names.add("ActiveMQ");
-
-		tlr = new TransactionLogRecord(Status.STATUS_COMMITTED, 116, 28, 1220609394845L, 38266, -1380478121, uid, names, TransactionLogAppender.END_RECORD);
-		assertTrue(tlr.isCrc32Correct());
-	}
-
 	public void testRollover() throws Exception
 	{
 		TransactionManagerServices.getConfiguration()
@@ -242,7 +230,7 @@ public class DiskJournalTest
 		DiskJournal journal = new DiskJournal();
 		journal.open();
 
-		List<Uid> uncommitted = new ArrayList<Uid>();
+		List<Uid> uncommitted = new ArrayList<>();
 		for (int i = 1; i < 4000; i++)
 		{
 			Uid gtrid = UidGenerator.generateUid();
@@ -274,6 +262,18 @@ public class DiskJournalTest
 		                       .size());
 
 		journal.shutdown();
+	}
+
+	private SortedSet<String> csvToSet(String s)
+	{
+		SortedSet<String> result = new TreeSet<>();
+		String[] names = s.split("\\,");
+		for (int i = 0; i < names.length; i++)
+		{
+			String name = names[i];
+			result.add(name);
+		}
+		return result;
 	}
 
 	public void testJournalPerformance() throws IOException, InterruptedException

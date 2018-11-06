@@ -50,7 +50,7 @@ public class UidGeneratorTest
 	public void testUniqueness()
 	{
 		int count = 10000;
-		HashSet<String> uids = new HashSet<String>(2048);
+		HashSet<String> uids = new HashSet<>(2048);
 
 		for (int i = 0; i < count; i++)
 		{
@@ -62,18 +62,18 @@ public class UidGeneratorTest
 	public void testMultiThreadedUniqueness() throws Exception
 	{
 		int concurrency = 128, callsPerThread = 1000;
-		List<Future<Set<Uid>>> handles = new ArrayList<Future<Set<Uid>>>(concurrency);
+		List<Future<Set<Uid>>> handles = new ArrayList<>(concurrency);
 		ExecutorService executorService = Executors.newFixedThreadPool(concurrency);
 		try
 		{
 			for (int i = 0; i < concurrency; i++)
 			{
-				handles.add(executorService.submit(new Callable<Set<Uid>>()
+				handles.add(executorService.submit(new Callable<>()
 				{
 					@Override
 					public Set<Uid> call()
 					{
-						Set<Uid> ids = new HashSet<Uid>(callsPerThread);
+						Set<Uid> ids = new HashSet<>(callsPerThread);
 						for (int i = 0; i < callsPerThread; i++)
 						{
 							ids.add(UidGenerator.generateUid());
@@ -88,7 +88,7 @@ public class UidGeneratorTest
 			executorService.shutdown();
 		}
 
-		Set<Uid> allIds = new HashSet<Uid>(concurrency * callsPerThread);
+		Set<Uid> allIds = new HashSet<>(concurrency * callsPerThread);
 		for (Future<Set<Uid>> handle : handles)
 		{
 			allIds.addAll(handle.get());

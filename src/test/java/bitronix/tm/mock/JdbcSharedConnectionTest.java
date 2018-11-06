@@ -54,57 +54,49 @@ public class JdbcSharedConnectionTest
 
 		Transaction suspended = tm.suspend();
 
-		ArrayList<Connection> twoConnections = new ArrayList<Connection>();
-		Thread thread1 = new Thread()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					tm.resume(suspended);
-					if (log.isDebugEnabled())
-					{
-						log.debug("*** getting connection from DS1");
-					}
-					Connection connection = poolingDataSource1.getConnection();
-					connection.createStatement();
-					twoConnections.add(connection);
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-					fail(e.getMessage());
-				}
-			}
-		};
+		ArrayList<Connection> twoConnections = new ArrayList<>();
+		Thread thread1 = new Thread(() ->
+		                            {
+			                            try
+			                            {
+				                            tm.resume(suspended);
+				                            if (log.isDebugEnabled())
+				                            {
+					                            log.debug("*** getting connection from DS1");
+				                            }
+				                            Connection connection = poolingDataSource1.getConnection();
+				                            connection.createStatement();
+				                            twoConnections.add(connection);
+			                            }
+			                            catch (Exception e)
+			                            {
+				                            e.printStackTrace();
+				                            fail(e.getMessage());
+			                            }
+		                            });
 		thread1.start();
 		thread1.join();
 
-		Thread thread2 = new Thread()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					tm.resume(suspended);
-					if (log.isDebugEnabled())
-					{
-						log.debug("*** getting connection from DS1");
-					}
-					Connection connection = poolingDataSource1.getConnection();
-					connection.createStatement();
-					twoConnections.add(connection);
-					tm.commit();
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-					fail(e.getMessage());
-				}
-			}
-		};
+		Thread thread2 = new Thread(() ->
+		                            {
+			                            try
+			                            {
+				                            tm.resume(suspended);
+				                            if (log.isDebugEnabled())
+				                            {
+					                            log.debug("*** getting connection from DS1");
+				                            }
+				                            Connection connection = poolingDataSource1.getConnection();
+				                            connection.createStatement();
+				                            twoConnections.add(connection);
+				                            tm.commit();
+			                            }
+			                            catch (Exception e)
+			                            {
+				                            e.printStackTrace();
+				                            fail(e.getMessage());
+			                            }
+		                            });
 		thread2.start();
 		thread2.join();
 

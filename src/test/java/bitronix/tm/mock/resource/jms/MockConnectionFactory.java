@@ -35,7 +35,7 @@ public class MockConnectionFactory
 	@Override
 	public Connection createConnection() throws JMSException
 	{
-		Answer<Session> sessionAnswer = new Answer<Session>()
+		Answer<Session> sessionAnswer = new Answer<>()
 		{
 			@Override
 			public Session answer(InvocationOnMock invocation) throws Throwable

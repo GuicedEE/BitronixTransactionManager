@@ -85,7 +85,7 @@ public class MockXAConnectionFactory
 				when(mockXASession.createTopic(anyString())).thenReturn(topic);
 				MockXAResource mockXAResource = new MockXAResource(null);
 				when(mockXASession.getXAResource()).thenReturn(mockXAResource);
-				Answer<Session> sessionAnswer = new Answer<Session>()
+				Answer<Session> sessionAnswer = new Answer<>()
 				{
 					@Override
 					public Session answer(InvocationOnMock invocation) throws Throwable
