@@ -1,7 +1,9 @@
 # GedMarc Update
 
 * JRE 11 Full JPMS
+* SonarLinted to JRE8
 * Dependency updates for compatibility
+* Removed links to desktop (gui package)
 * Cant deploy to that maven group, so the artifact is located under com.jwebmp.jre11
 [Here]()
 * Module name is <code>tm.bitronix.btm</code> 
@@ -20,7 +22,7 @@ module tm.bitronix.btm {
     
     requires java.management.rmi;
     
-    requires jms;
+    requires static jms;
     requires org.slf4j;
     
     requires java.sql;
