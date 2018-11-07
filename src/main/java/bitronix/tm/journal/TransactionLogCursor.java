@@ -34,7 +34,7 @@ import java.util.Set;
 public class TransactionLogCursor
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogCursor.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogCursor.class.toString());
 
 	// private final RandomAccessFile randomAccessFile;
 	private final FileInputStream fis;
@@ -63,7 +63,7 @@ public class TransactionLogCursor
 		fileChannel.read(page);
 		page.rewind();
 		endPosition = page.getLong();
-		currentPosition = TransactionLogHeader.CURRENT_POSITION_HEADER + 8;
+		currentPosition = TransactionLogHeader.CURRENT_POSITION_HEADER + 8L;
 	}
 
 	/**

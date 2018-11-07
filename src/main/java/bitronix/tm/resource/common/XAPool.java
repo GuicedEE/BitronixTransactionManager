@@ -306,7 +306,7 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 					{
 						try
 						{
-							Thread.sleep(waitTime);
+							wait(waitTime);
 						}
 						catch (InterruptedException ex2)
 						{
@@ -477,7 +477,7 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		}
 		catch (InterruptedException e)
 		{
-			throw new BitronixRuntimeException("Interrupted while waiting for IN_POOL connection.");
+			throw new BitronixRuntimeException("Interrupted while waiting for IN_POOL connection.", e);
 		}
 	}
 

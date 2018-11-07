@@ -53,7 +53,7 @@ public class DiskJournal
 		implements Journal, MigratableJournal, ReadableJournal
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(DiskJournal.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(DiskJournal.class.toString());
 
 	/**
 	 * The active log appender. This is exactly the same reference as tla1 or tla2 depending on which one is
@@ -177,6 +177,79 @@ public class DiskJournal
 	}
 
 	/**
+	 * <p>Swap the active and the passive journal files so that the active one becomes passive and the passive one
+	 * becomes active.</p>
+	 * List of actions taken by this method:
+	 * <ul>
+	 * <li>ensure the all data has been forced to the active log file.</li>
+	 * <li>copy dangling COMMITTING records to the passive log file.</li>
+	 * <li>update header timestamp of passive log file (makes it become active).</li>
+	 * <li>do a force on passive log file. It is now the active file.</li>
+	 * <li>switch references of active/passive files.</li>
+	 * </ul>
+	 *
+	 * @throws java.io.IOException
+	 * 		in case of disk IO failure.
+	 */
+	private synchronized void swapJournalFiles() throws IOException
+	{
+		if (LogDebugCheck.isDebugEnabled())
+		{
+			log.finer("swapping journal log file to " + getPassiveTransactionLogAppender());
+		}
+
+		//step 1
+		activeTla.get()
+		         .force();
+
+		//step 2
+		TransactionLogAppender passiveTla = getPassiveTransactionLogAppender();
+		passiveTla.rewind();
+
+		List<TransactionLogRecord> danglingLogs = activeTla.get()
+		                                                   .getDanglingLogs();
+		for (TransactionLogRecord tlog : danglingLogs)
+		{
+			boolean rolloverError = passiveTla.setPositionAndAdvance(tlog);
+			if (rolloverError)
+			{
+				throw new IOException("moving in-flight transactions the rollover log file would have resulted in an overflow of that file");
+			}
+			passiveTla.writeLog(tlog);
+		}
+
+		if (LogDebugCheck.isDebugEnabled())
+		{
+			log.finer(danglingLogs.size() + " dangling record(s) copied to passive log file");
+		}
+
+		activeTla.get()
+		         .clearDanglingLogs();
+
+		//step 3
+		passiveTla.setTimestamp(MonotonicClock.currentTimeMillis());
+
+		//step 4
+		passiveTla.force();
+
+		//step 5
+		activeTla.set(passiveTla);
+
+		if (LogDebugCheck.isDebugEnabled())
+		{
+			log.finer("journal log files swapped");
+		}
+	}
+
+	/**
+	 * @return the TransactionFileAppender of the passive journal file.
+	 */
+	private synchronized TransactionLogAppender getPassiveTransactionLogAppender()
+	{
+		return (tla1 == activeTla.get() ? tla2 : tla1);
+	}
+
+	/**
 	 * Open the disk journal. Files are checked for integrity and DiskJournal will refuse to open corrupted log files.
 	 * If files are not present on disk, this method will create and pre-allocate them.
 	 *
@@ -206,7 +279,7 @@ public class DiskJournal
 			{
 				try
 				{
-					Thread.sleep(100);
+					wait(100);
 				}
 				catch (InterruptedException ex)
 				{ /* ignore */ }
@@ -422,6 +495,10 @@ public class DiskJournal
 		}
 	}
 
+	/*
+	 * Internal impl.
+	 */
+
 	/**
 	 * Collect all dangling records of the active log file.
 	 *
@@ -438,83 +515,6 @@ public class DiskJournal
 			throw new IOException("cannot collect dangling records, disk logger is not open");
 		}
 		return collectDanglingRecords(activeTla.get());
-	}
-
-	/**
-	 * <p>Swap the active and the passive journal files so that the active one becomes passive and the passive one
-	 * becomes active.</p>
-	 * List of actions taken by this method:
-	 * <ul>
-	 * <li>ensure the all data has been forced to the active log file.</li>
-	 * <li>copy dangling COMMITTING records to the passive log file.</li>
-	 * <li>update header timestamp of passive log file (makes it become active).</li>
-	 * <li>do a force on passive log file. It is now the active file.</li>
-	 * <li>switch references of active/passive files.</li>
-	 * </ul>
-	 *
-	 * @throws java.io.IOException
-	 * 		in case of disk IO failure.
-	 */
-	private synchronized void swapJournalFiles() throws IOException
-	{
-		if (LogDebugCheck.isDebugEnabled())
-		{
-			log.finer("swapping journal log file to " + getPassiveTransactionLogAppender());
-		}
-
-		//step 1
-		activeTla.get()
-		         .force();
-
-		//step 2
-		TransactionLogAppender passiveTla = getPassiveTransactionLogAppender();
-		passiveTla.rewind();
-
-		List<TransactionLogRecord> danglingLogs = activeTla.get()
-		                                                   .getDanglingLogs();
-		for (TransactionLogRecord tlog : danglingLogs)
-		{
-			boolean rolloverError = passiveTla.setPositionAndAdvance(tlog);
-			if (rolloverError)
-			{
-				throw new IOException("moving in-flight transactions the rollover log file would have resulted in an overflow of that file");
-			}
-			passiveTla.writeLog(tlog);
-		}
-
-		if (LogDebugCheck.isDebugEnabled())
-		{
-			log.finer(danglingLogs.size() + " dangling record(s) copied to passive log file");
-		}
-
-		activeTla.get()
-		         .clearDanglingLogs();
-
-		//step 3
-		passiveTla.setTimestamp(MonotonicClock.currentTimeMillis());
-
-		//step 4
-		passiveTla.force();
-
-		//step 5
-		activeTla.set(passiveTla);
-
-		if (LogDebugCheck.isDebugEnabled())
-		{
-			log.finer("journal log files swapped");
-		}
-	}
-
-	/*
-	 * Internal impl.
-	 */
-
-	/**
-	 * @return the TransactionFileAppender of the passive journal file.
-	 */
-	private synchronized TransactionLogAppender getPassiveTransactionLogAppender()
-	{
-		return (tla1 == activeTla.get() ? tla2 : tla1);
 	}
 
 	/**
@@ -724,8 +724,14 @@ public class DiskJournal
 
 		try
 		{
-			it.hasNext();
-			return it;
+			if (it.hasNext())
+			{
+				return it;
+			}
+			else
+			{
+				return null;
+			}
 		}
 		catch (RuntimeException ex)
 		{

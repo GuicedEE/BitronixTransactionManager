@@ -42,11 +42,9 @@ public class BitronixTransactionManager
 		implements TransactionManager, UserTransaction, Referenceable, Service
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixTransactionManager.class.toString());
-	private final static String MDC_GTRID_KEY = "btm-gtrid";
-
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixTransactionManager.class.toString());
+	private static final String NO_TRANSACTION_TEXT = "no transaction started on this thread";
 	private final SortedMap<BitronixTransaction, ClearContextSynchronization> inFlightTransactions;
-
 	private volatile boolean shuttingDown;
 
 	/**
@@ -166,7 +164,7 @@ public class BitronixTransactionManager
 		{
 			if (debug)
 			{
-				log.finer("Concurrent sorted map 'ConcurrentSkipListMap' is not available. Falling back to a synchronized TreeMap.");
+				log.log(Level.FINER, "Concurrent sorted map 'ConcurrentSkipListMap' is not available. Falling back to a synchronized TreeMap.", e);
 			}
 			return Collections.synchronizedSortedMap(
 					new TreeMap<>(timestampSortComparator));
@@ -228,7 +226,7 @@ public class BitronixTransactionManager
 	}
 
 	@Override
-	public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SecurityException, IllegalStateException, SystemException
+	public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SystemException
 	{
 		BitronixTransaction currentTx = getCurrentTransaction();
 		if (LogDebugCheck.isDebugEnabled())
@@ -237,7 +235,7 @@ public class BitronixTransactionManager
 		}
 		if (currentTx == null)
 		{
-			throw new IllegalStateException("no transaction started on this thread");
+			throw new IllegalStateException(NO_TRANSACTION_TEXT);
 		}
 
 		currentTx.commit();
@@ -262,7 +260,7 @@ public class BitronixTransactionManager
 	}
 
 	@Override
-	public void resume(Transaction transaction) throws InvalidTransactionException, IllegalStateException, SystemException
+	public void resume(Transaction transaction) throws InvalidTransactionException, SystemException
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
@@ -302,7 +300,7 @@ public class BitronixTransactionManager
 	}
 
 	@Override
-	public void rollback() throws IllegalStateException, SecurityException, SystemException
+	public void rollback() throws SystemException
 	{
 		BitronixTransaction currentTx = getCurrentTransaction();
 		if (LogDebugCheck.isDebugEnabled())
@@ -311,14 +309,14 @@ public class BitronixTransactionManager
 		}
 		if (currentTx == null)
 		{
-			throw new IllegalStateException("no transaction started on this thread");
+			throw new IllegalStateException(NO_TRANSACTION_TEXT);
 		}
 
 		currentTx.rollback();
 	}
 
 	@Override
-	public void setRollbackOnly() throws IllegalStateException, SystemException
+	public void setRollbackOnly() throws SystemException
 	{
 		BitronixTransaction currentTx = getCurrentTransaction();
 		if (LogDebugCheck.isDebugEnabled())
@@ -327,7 +325,7 @@ public class BitronixTransactionManager
 		}
 		if (currentTx == null)
 		{
-			throw new IllegalStateException("no transaction started on this thread");
+			throw new IllegalStateException(NO_TRANSACTION_TEXT);
 		}
 
 		currentTx.setRollbackOnly();
@@ -497,7 +495,7 @@ public class BitronixTransactionManager
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("oldest in-flight transaction's timestamp: " + Long.MIN_VALUE);
+				log.log(Level.FINER, "oldest in-flight transaction's timestamp: " + Long.MIN_VALUE, e);
 			}
 			return Long.MIN_VALUE;
 		}
@@ -603,7 +601,7 @@ public class BitronixTransactionManager
 				}
 				try
 				{
-					Thread.sleep(1000);
+					wait(1000);
 				}
 				catch (InterruptedException ex)
 				{
@@ -657,6 +655,7 @@ public class BitronixTransactionManager
 		@Override
 		public void beforeCompletion()
 		{
+			//Nothing to do
 		}
 
 		@Override

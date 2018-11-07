@@ -86,7 +86,7 @@ public final class ManagementRegistrar
 						try
 						{
 							normalizeAndRunQueuedCommands();
-							sleep(250); // sampling interval
+							wait(250); // sampling interval
 						}
 						catch (InterruptedException ex)
 						{

@@ -35,23 +35,23 @@ public class TransactionLogHeader
 	/**
 	 * Position of the format ID in the header (see {@link bitronix.tm.BitronixXid#FORMAT_ID}).
 	 */
-	public final static int FORMAT_ID_HEADER = 0;
+	public final static long FORMAT_ID_HEADER = 0;
 	/**
 	 * Position of the timestamp in the header.
 	 */
-	public final static int TIMESTAMP_HEADER = FORMAT_ID_HEADER + 4;
+	public final static long TIMESTAMP_HEADER = FORMAT_ID_HEADER + 4;
 	/**
 	 * Position of the log file state in the header.
 	 */
-	public final static int STATE_HEADER = TIMESTAMP_HEADER + 8;
+	public final static long STATE_HEADER = TIMESTAMP_HEADER + 8;
 	/**
 	 * Position of the current log position in the header.
 	 */
-	public final static int CURRENT_POSITION_HEADER = STATE_HEADER + 1;
+	public final static long CURRENT_POSITION_HEADER = STATE_HEADER + 1;
 	/**
 	 * Total length of the header.
 	 */
-	public final static int HEADER_LENGTH = CURRENT_POSITION_HEADER + 8;
+	public final static long HEADER_LENGTH = CURRENT_POSITION_HEADER + 8;
 	/**
 	 * State of the log file when it has been closed properly.
 	 */

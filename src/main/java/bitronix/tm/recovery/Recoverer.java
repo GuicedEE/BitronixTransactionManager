@@ -83,7 +83,7 @@ public class Recoverer
 		implements Runnable, Service, RecovererMBean
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(Recoverer.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(Recoverer.class.toString());
 
 	private final Map<String, XAResourceProducer> registeredResources = new HashMap<>();
 	private final Map<String, Set<BitronixXid>> recoveredXidSets = new HashMap<>();
@@ -230,7 +230,10 @@ public class Recoverer
 			}
 			catch (Exception ex)
 			{
-				producer.setFailed(true);
+				if (producer != null)
+				{
+					producer.setFailed(true);
+				}
 				registeredResources.remove(uniqueName);
 				log.log(Level.WARNING, "error running recovery on resource '" + uniqueName + "', resource marked as failed (background recoverer will retry recovery)", ex);
 			}
@@ -294,7 +297,7 @@ public class Recoverer
 
 				Set<String> participatingUniqueNames = filterParticipatingUniqueNamesInRecoveredXids(uniqueNames);
 
-				if (participatingUniqueNames.size() > 0)
+				if (!participatingUniqueNames.isEmpty())
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{

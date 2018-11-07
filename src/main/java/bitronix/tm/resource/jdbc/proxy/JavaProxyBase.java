@@ -41,10 +41,7 @@ public abstract class JavaProxyBase<T>
 		HashMap<String, Method> selfMethodMap = new HashMap<>();
 		for (Method method : clazz.getDeclaredMethods())
 		{
-			if ((method.getModifiers() & Method.PUBLIC) == Method.PUBLIC)
-			{
-				selfMethodMap.put(getMethodKey(method), method);
-			}
+			selfMethodMap.put(getMethodKey(method), method);
 		}
 		return selfMethodMap;
 	}
@@ -78,15 +75,7 @@ public abstract class JavaProxyBase<T>
 			                               .getMethod("isWrapperFor", Class.class);
 			return (Boolean) isWrapperForMethod.invoke(obj, param);
 		}
-		catch (NoSuchMethodException ex)
-		{
-			throw new UnsupportedOperationException("isWrapperFor is not supported", ex);
-		}
-		catch (IllegalAccessException ex)
-		{
-			throw new UnsupportedOperationException("isWrapperFor is not supported", ex);
-		}
-		catch (InvocationTargetException ex)
+		catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ex)
 		{
 			throw new UnsupportedOperationException("isWrapperFor is not supported", ex);
 		}
@@ -101,15 +90,7 @@ public abstract class JavaProxyBase<T>
 			                         .getMethod("unwrap", Class.class);
 			return (T) unwrapMethod.invoke(obj, param);
 		}
-		catch (NoSuchMethodException ex)
-		{
-			throw new UnsupportedOperationException("unwrap is not supported", ex);
-		}
-		catch (IllegalAccessException ex)
-		{
-			throw new UnsupportedOperationException("unwrap is not supported", ex);
-		}
-		catch (InvocationTargetException ex)
+		catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex)
 		{
 			throw new UnsupportedOperationException("unwrap is not supported", ex);
 		}

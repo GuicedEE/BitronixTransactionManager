@@ -45,12 +45,11 @@ public class DualSessionWrapper
 		implements Session, StateChangeListener<DualSessionWrapper>
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(DualSessionWrapper.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(DualSessionWrapper.class.toString());
 
 	private final JmsPooledConnection pooledConnection;
 	private final boolean transacted;
 	private final int acknowledgeMode;
-	//TODO: shouldn't producers/consumers/subscribers be separated between XA and non-XA session ?
 	private final Map<MessageProducerConsumerKey, MessageProducer> messageProducers = new HashMap<>();
 	private final Map<MessageProducerConsumerKey, MessageConsumer> messageConsumers = new HashMap<>();
 	private final Map<MessageProducerConsumerKey, TopicSubscriberWrapper> topicSubscribers = new HashMap<>();
@@ -165,6 +164,7 @@ public class DualSessionWrapper
 	@Override
 	public void stateChanging(DualSessionWrapper source, State currentState, State futureState)
 	{
+		//No config required
 	}
 
 	@Override
@@ -402,12 +402,12 @@ public class DualSessionWrapper
 	{
 		try
 		{
-			Session session = getSession(true);
+			Session internalSession = getSession(true);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("running XA session " + session);
+				log.finer("running XA session " + internalSession);
 			}
-			session.run();
+			internalSession.run();
 		}
 		catch (JMSException ex)
 		{
@@ -761,11 +761,7 @@ public class DualSessionWrapper
 			{
 				TransactionContextHelper.enlistInCurrentTransaction(this);
 			}
-			catch (SystemException ex)
-			{
-				throw (JMSException) new JMSException("error enlisting " + this).initCause(ex);
-			}
-			catch (RollbackException ex)
+			catch (SystemException | RollbackException ex)
 			{
 				throw (JMSException) new JMSException("error enlisting " + this).initCause(ex);
 			}

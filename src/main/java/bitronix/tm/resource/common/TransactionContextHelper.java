@@ -416,16 +416,19 @@ public final class TransactionContextHelper
 		{
 			log.finer("marking " + xaStatefulHolder + " as recycled in " + currentTransaction);
 		}
-		Scheduler<Synchronization> synchronizationScheduler = currentTransaction.getSynchronizationScheduler();
-
-		DeferredReleaseSynchronization deferredReleaseSynchronization = findDeferredRelease(xaStatefulHolder, currentTransaction);
-		if (deferredReleaseSynchronization != null)
+		if (currentTransaction != null)
 		{
-			if (LogDebugCheck.isDebugEnabled())
+			Scheduler<Synchronization> synchronizationScheduler = currentTransaction.getSynchronizationScheduler();
+
+			DeferredReleaseSynchronization deferredReleaseSynchronization = findDeferredRelease(xaStatefulHolder, currentTransaction);
+			if (deferredReleaseSynchronization != null)
 			{
-				log.finer(xaStatefulHolder + " has been recycled, unregistering deferred release from " + currentTransaction);
+				if (LogDebugCheck.isDebugEnabled())
+				{
+					log.finer(xaStatefulHolder + " has been recycled, unregistering deferred release from " + currentTransaction);
+				}
+				synchronizationScheduler.remove(deferredReleaseSynchronization);
 			}
-			synchronizationScheduler.remove(deferredReleaseSynchronization);
 		}
 	}
 }

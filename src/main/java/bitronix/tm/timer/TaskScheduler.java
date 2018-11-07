@@ -90,7 +90,7 @@ public class TaskScheduler
 			try
 			{
 				long gracefulShutdownTime = TransactionManagerServices.getConfiguration()
-				                                                      .getGracefulShutdownInterval() * 1000;
+				                                                      .getGracefulShutdownInterval() * 1000L;
 				if (LogDebugCheck.isDebugEnabled())
 				{
 					log.finer("graceful scheduler shutdown interval: " + gracefulShutdownTime + "ms");
@@ -99,8 +99,8 @@ public class TaskScheduler
 			}
 			catch (InterruptedException ex)
 			{
-				log.severe("could not stop the task scheduler within " + TransactionManagerServices.getConfiguration()
-				                                                                                   .getGracefulShutdownInterval() + "s");
+				log.log(Level.SEVERE, "could not stop the task scheduler within " + TransactionManagerServices.getConfiguration()
+				                                                                                              .getGracefulShutdownInterval() + "s", ex);
 			}
 		}
 	}

@@ -23,18 +23,22 @@ import javax.crypto.spec.DESKeySpec;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.logging.Level;
 
 /**
  * <p>Simple crypto helper that uses symetric keys to crypt and decrypt resources passwords.</p>
  *
  * @author Ludovic Orban
  */
+@SuppressWarnings({"MissingFieldJavaDoc", "MissingMethodJavaDoc", "WeakerAccess"})
 public class CryptoEngine
 {
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(CryptoEngine.class.toString());
 
 	private static final int LONG_SIZE_IN_BYTES = 8;
 	private static final String CRYPTO_PASSWORD = "B1tr0n!+";
@@ -73,29 +77,24 @@ public class CryptoEngine
 		desCipher.init(Cipher.DECRYPT_MODE, secretKey);
 
 		byte[] cypherBytes = Base64.decode(data);
-
-		ByteArrayInputStream bis = new ByteArrayInputStream(cypherBytes);
-		CipherInputStream cis = new CipherInputStream(bis, desCipher);
-
 		StringBuilder sb = new StringBuilder();
-
-		while (true)
+		try (ByteArrayInputStream bis = new ByteArrayInputStream(cypherBytes);
+		     CipherInputStream cis = new CipherInputStream(bis, desCipher))
 		{
-			int b = cis.read();
-			if (b == -1)
+			while (true)
 			{
-				break;
+				int b = cis.read();
+				if (b == -1)
+				{
+					break;
+				}
+				sb.append((char) b);
 			}
-			sb.append((char) b);
 		}
-
-		cis.close();
-
 		if (sb.length() < LONG_SIZE_IN_BYTES + 1)
 		{
 			throw new BitronixRuntimeException("invalid crypted password '" + data + "'");
 		}
-
 		return sb.substring(LONG_SIZE_IN_BYTES);
 	}
 
@@ -174,14 +173,13 @@ public class CryptoEngine
 		Cipher desCipher = Cipher.getInstance(cipher);
 		desCipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		CipherOutputStream cos = new CipherOutputStream(bos, desCipher);
-		cos.write(toCrypt);
-		cos.close();
-		bos.close();
-
-		byte[] cypherBytes = bos.toByteArray();
-		return Base64.encodeBytes(cypherBytes);
+		try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		     CipherOutputStream cos = new CipherOutputStream(bos, desCipher))
+		{
+			cos.write(toCrypt);
+			byte[] cypherBytes = bos.toByteArray();
+			return Base64.encodeBytes(cypherBytes);
+		}
 	}
 
 	/**
@@ -191,6 +189,7 @@ public class CryptoEngine
 	 * @author Robert Harder
 	 * @author rob@iharder.net
 	 */
+	@SuppressWarnings({"unused", "UnusedReturnValue"})
 	private final static class Base64
 	{
 
@@ -585,58 +584,20 @@ public class CryptoEngine
 			// Compress?
 			if (gzip == GZIP)
 			{
-				java.io.ByteArrayOutputStream baos = null;
-				java.util.zip.GZIPOutputStream gzos = null;
-				Base64.OutputStream b64os = null;
-
-
-				try
+				try (ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+				     Base64.OutputStream b64os = new Base64.OutputStream(baos, ENCODE | options);
+				     java.util.zip.GZIPOutputStream gzos = new java.util.zip.GZIPOutputStream(b64os))
 				{
 					// GZip -> Base64 -> ByteArray
-					baos = new java.io.ByteArrayOutputStream();
-					b64os = new Base64.OutputStream(baos, ENCODE | options);
-					gzos = new java.util.zip.GZIPOutputStream(b64os);
-
 					gzos.write(source, off, len);
-					gzos.close();
-				}   // end try
+					return new String(baos.toByteArray(), UTF8);
+				}
 				catch (java.io.IOException e)
 				{
-					e.printStackTrace();
+					log.log(Level.WARNING, "Unable to crypto gzip", e);
 					return null;
-				}   // end catch
-				finally
-				{
-					try
-					{
-						gzos.close();
-					}
-					catch (Exception e)
-					{
-						// ignore
-					}
-					try
-					{
-						b64os.close();
-					}
-					catch (Exception e)
-					{
-						// ignore
-					}
-					try
-					{
-						baos.close();
-					}
-					catch (Exception e)
-					{
-						// ignore
-					}
-				}   // end finally
-
-				// Return value according to relevant encoding.
-				return new String(baos.toByteArray(), UTF8);
-			}   // end if: compress
-
+				}
+			}
 			// Else, don't compress. Better not to use streams at all then.
 			else
 			{
@@ -689,58 +650,22 @@ public class CryptoEngine
 		 */
 		public static Object decodeToObject(String encodedObject)
 		{
-			// Decode and gunzip if necessary
 			byte[] objBytes = decode(encodedObject);
 
-			java.io.ByteArrayInputStream bais = null;
-			java.io.ObjectInputStream ois = null;
-			Object obj = null;
-
-			try
+			Object obj;
+			try (ByteArrayInputStream bais = new java.io.ByteArrayInputStream(objBytes);
+			     ObjectInputStream ois = new java.io.ObjectInputStream(bais)
+			)
 			{
-				bais = new java.io.ByteArrayInputStream(objBytes);
-				ois = new java.io.ObjectInputStream(bais);
-
 				obj = ois.readObject();
-			}   // end try
-			catch (java.io.IOException e)
+			}
+			catch (IOException | ClassNotFoundException e)
 			{
-				e.printStackTrace();
+				log.log(Level.WARNING, "Unable to crypto decode to object", e);
 				obj = null;
-			}   // end catch
-			catch (java.lang.ClassNotFoundException e)
-			{
-				e.printStackTrace();
-				obj = null;
-			}   // end catch
-			finally
-			{
-				try
-				{
-					if (bais != null)
-					{
-						bais.close();
-					}
-				}
-				catch (Exception e)
-				{
-					// ignore
-				}
-				try
-				{
-					if (ois != null)
-					{
-						ois.close();
-					}
-				}
-				catch (Exception e)
-				{
-					// ignore
-				}
-			}   // end finally
-
+			}
 			return obj;
-		}   // end decodeObject
+		}
 
 		/**
 		 * Decodes data from Base64 notation, automatically
@@ -783,22 +708,15 @@ public class CryptoEngine
 			// GZIP Magic Two-Byte Number: 0x8b1f (35615)
 			if (bytes != null && bytes.length >= 4)
 			{
-
 				int head = ((int) bytes[0] & 0xff) | ((bytes[1] << 8) & 0xff00);
 				if (java.util.zip.GZIPInputStream.GZIP_MAGIC == head)
 				{
-					java.io.ByteArrayInputStream bais = null;
-					java.util.zip.GZIPInputStream gzis = null;
-					java.io.ByteArrayOutputStream baos = null;
 					byte[] buffer = new byte[2048];
 					int length;
-
-					try
+					try (java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+					     java.io.ByteArrayInputStream bais = new java.io.ByteArrayInputStream(bytes);
+					     java.util.zip.GZIPInputStream gzis = new java.util.zip.GZIPInputStream(bais))
 					{
-						baos = new java.io.ByteArrayOutputStream();
-						bais = new java.io.ByteArrayInputStream(bytes);
-						gzis = new java.util.zip.GZIPInputStream(bais);
-
 						while ((length = gzis.read(buffer)) >= 0)
 						{
 							baos.write(buffer, 0, length);
@@ -810,36 +728,9 @@ public class CryptoEngine
 					}   // end try
 					catch (java.io.IOException e)
 					{
-						// Just return originally-decoded bytes
+						log.log(Level.FINE, "Unable to gzip gzip un", e);
+						return bytes;
 					}   // end catch
-					finally
-					{
-						try
-						{
-							baos.close();
-						}
-						catch (Exception e)
-						{
-							// ignore
-						}
-						try
-						{
-							gzis.close();
-						}
-						catch (Exception e)
-						{
-							// ignore
-						}
-						try
-						{
-							bais.close();
-						}
-						catch (Exception e)
-						{
-							// ignore
-						}
-					}   // end finally
-
 				}   // end if: gzipped
 			}   // end if: bytes.length >= 2
 
@@ -1035,10 +926,12 @@ public class CryptoEngine
 					System.out.println("" + source[srcOffset + 1] + ": " + (DECODABET[source[srcOffset + 1]]));
 					System.out.println("" + source[srcOffset + 2] + ": " + (DECODABET[source[srcOffset + 2]]));
 					System.out.println("" + source[srcOffset + 3] + ": " + (DECODABET[source[srcOffset + 3]]));
+					log.log(Level.SEVERE, "Should never happen excpetion crypto engine", e);
 					return -1;
 				}
 			}
 		}
+
 
 		public static class OutputStream
 				extends java.io.FilterOutputStream
@@ -1162,18 +1055,14 @@ public class CryptoEngine
 				}
 			}
 
-
 			@Override
 			public void close() throws java.io.IOException
 			{
 				flushBase64();
 				super.close();
-
 				buffer = null;
 				out = null;
 			}
-
-
 		}
 	}
 

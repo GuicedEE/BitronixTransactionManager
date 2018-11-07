@@ -98,6 +98,18 @@ public class DiskJournalTest
 		journal.shutdown();
 	}
 
+	private SortedSet<String> csvToSet(String s)
+	{
+		SortedSet<String> result = new TreeSet<>();
+		String[] names = s.split("\\,");
+		for (int i = 0; i < names.length; i++)
+		{
+			String name = names[i];
+			result.add(name);
+		}
+		return result;
+	}
+
 	public void testCrc32Value()
 	{
 		Set<String> names = new HashSet<>();
@@ -264,18 +276,6 @@ public class DiskJournalTest
 		journal.shutdown();
 	}
 
-	private SortedSet<String> csvToSet(String s)
-	{
-		SortedSet<String> result = new TreeSet<>();
-		String[] names = s.split("\\,");
-		for (int i = 0; i < names.length; i++)
-		{
-			String name = names[i];
-			result.add(name);
-		}
-		return result;
-	}
-
 	public void testJournalPerformance() throws IOException, InterruptedException
 	{
 		TransactionManagerServices.getConfiguration()
@@ -335,6 +335,7 @@ public class DiskJournalTest
 
 		journal.shutdown();
 	}
+
 
 	public void testRolloverStress() throws IOException, InterruptedException
 	{
