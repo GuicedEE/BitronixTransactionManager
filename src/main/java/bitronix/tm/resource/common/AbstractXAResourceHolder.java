@@ -17,10 +17,9 @@ package bitronix.tm.resource.common;
 
 import bitronix.tm.BitronixTransaction;
 import bitronix.tm.BitronixXid;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.internal.XAResourceHolderState;
 import bitronix.tm.utils.Uid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -38,7 +37,7 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 		implements XAResourceHolder<T>
 {
 
-	private final static Logger log = LoggerFactory.getLogger(AbstractXAResourceHolder.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(AbstractXAResourceHolder.class.toString());
 
 	private final Map<Uid, Map<Uid, XAResourceHolderState>> xaResourceHolderStates = new HashMap<>();
 	private final ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
@@ -132,15 +131,15 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 		      .lock();
 		try
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("putting XAResourceHolderState [" + xaResourceHolderState + "] on " + this);
+				log.finer("putting XAResourceHolderState [" + xaResourceHolderState + "] on " + this);
 			}
 			if (!xaResourceHolderStates.containsKey(gtrid))
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("GTRID [" + gtrid + "] previously unknown to " + this + ", adding it to the resource's transactions list");
+					log.finer("GTRID [" + gtrid + "] previously unknown to " + this + ", adding it to the resource's transactions list");
 				}
 
 				// use a LinkedHashMap as iteration order must be guaranteed
@@ -150,9 +149,9 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 			}
 			else
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("GTRID [" + gtrid + "] previously known to " + this + ", adding it to the resource's transactions list");
+					log.finer("GTRID [" + gtrid + "] previously known to " + this + ", adding it to the resource's transactions list");
 				}
 
 				Map<Uid, XAResourceHolderState> statesForGtrid = xaResourceHolderStates.get(gtrid);
@@ -176,22 +175,22 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 		      .lock();
 		try
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("removing XAResourceHolderState of xid " + xid + " from " + this);
+				log.finer("removing XAResourceHolderState of xid " + xid + " from " + this);
 			}
 
 			Map<Uid, XAResourceHolderState> statesForGtrid = xaResourceHolderStates.get(gtrid);
 			if (statesForGtrid == null)
 			{
-				log.warn("tried to remove unknown GTRID [" + gtrid + "] from " + this + " - Bug?");
+				log.warning("tried to remove unknown GTRID [" + gtrid + "] from " + this + " - Bug?");
 				return;
 			}
 
 			XAResourceHolderState removed = statesForGtrid.remove(bqual);
 			if (removed == null)
 			{
-				log.warn("tried to remove unknown BQUAL [" + bqual + "] from " + this + " - Bug?");
+				log.warning("tried to remove unknown BQUAL [" + bqual + "] from " + this + " - Bug?");
 				return;
 			}
 
@@ -220,9 +219,9 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 				{
 					if (otherXaResourceHolderState.getXAResource() == xaResourceHolder.getXAResource())
 					{
-						if (log.isDebugEnabled())
+						if (LogDebugCheck.isDebugEnabled())
 						{
-							log.debug("resource " + xaResourceHolder + " is enlisted in another transaction with " + otherXaResourceHolderState.getXid()
+							log.finer("resource " + xaResourceHolder + " is enlisted in another transaction with " + otherXaResourceHolderState.getXid()
 							                                                                                                                   .toString());
 						}
 						return true;
@@ -230,9 +229,9 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 				}
 			}
 
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("resource not enlisted in any transaction: " + xaResourceHolder);
+				log.finer("resource not enlisted in any transaction: " + xaResourceHolder);
 			}
 			return false;
 		}

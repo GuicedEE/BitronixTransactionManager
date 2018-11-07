@@ -28,8 +28,6 @@ import bitronix.tm.resource.jdbc.PooledConnectionProxy;
 import bitronix.tm.resource.jdbc.PoolingDataSource;
 import bitronix.tm.resource.jdbc.lrc.LrcXADataSource;
 import junit.framework.TestCase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.XAConnection;
 import javax.transaction.RollbackException;
@@ -46,7 +44,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Phase1FailureTest
 		extends TestCase
 {
-	private final static Logger log = LoggerFactory.getLogger(Phase1FailureTest.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(Phase1FailureTest.class.toString());
 
 
 	private PoolingDataSource poolingDataSource1;

@@ -35,8 +35,6 @@ import bitronix.tm.resource.jdbc.PoolingDataSource;
 import bitronix.tm.utils.Uid;
 import bitronix.tm.utils.UidGenerator;
 import junit.framework.TestCase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.transaction.Status;
 import javax.transaction.xa.XAResource;
@@ -53,7 +51,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class RecovererTest
 		extends TestCase
 {
-	private final static Logger log = LoggerFactory.getLogger(RecovererTest.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(RecovererTest.class.toString());
 	volatile boolean listenerExecuted = false;
 	private MockXAResource xaResource;
 	private PoolingDataSource pds;
@@ -435,7 +433,7 @@ public class RecovererTest
 
 	public void testReentrance() throws Exception
 	{
-		log.debug("Start test RecovererTest.testReentrance()");
+		log.finer("Start test RecovererTest.testReentrance()");
 		int THREAD_COUNT = 10;
 		Recoverer recoverer = new Recoverer();
 		xaResource.setRecoveryDelay(1000);

@@ -16,9 +16,8 @@
 package bitronix.tm;
 
 import bitronix.tm.internal.BitronixRuntimeException;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.utils.Scheduler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.naming.NamingException;
 import javax.naming.Reference;
@@ -40,8 +39,8 @@ public class BitronixTransactionSynchronizationRegistry
 		implements TransactionSynchronizationRegistry, Referenceable
 {
 
-	private final static Logger log = LoggerFactory.getLogger(BitronixTransactionSynchronizationRegistry.class);
-	private final static ThreadLocal<Map<Object, Object>> resourcesTl = ThreadLocal.withInitial(() -> new HashMap<>());
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixTransactionSynchronizationRegistry.class.toString());
+	private final static ThreadLocal<Map<Object, Object>> resourcesTl = ThreadLocal.withInitial(HashMap::new);
 	private final BitronixTransactionManager transactionManager;
 
 
@@ -86,9 +85,9 @@ public class BitronixTransactionSynchronizationRegistry
 
 			if (oldValue == null && getResources().size() == 1)
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("first resource put in synchronization registry, registering a ClearRegistryResourcesSynchronization");
+					log.finer("first resource put in synchronization registry, registering a ClearRegistryResourcesSynchronization");
 				}
 				Synchronization synchronization = new ClearRegistryResourcesSynchronization();
 				currentTransaction().getSynchronizationScheduler()
@@ -238,9 +237,9 @@ public class BitronixTransactionSynchronizationRegistry
 		@Override
 		public void afterCompletion(int status)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("clearing resources");
+				log.finer("clearing resources");
 			}
 			getResources().clear();
 		}

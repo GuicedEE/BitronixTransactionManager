@@ -17,8 +17,7 @@ package bitronix.tm.timer;
 
 import bitronix.tm.BitronixTransaction;
 import bitronix.tm.internal.BitronixSystemException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import bitronix.tm.internal.LogDebugCheck;
 
 import java.util.Date;
 
@@ -27,35 +26,47 @@ import java.util.Date;
  *
  * @author Ludovic Orban
  */
-public class TransactionTimeoutTask extends Task {
+public class TransactionTimeoutTask
+		extends Task
+{
 
-    private final static Logger log = LoggerFactory.getLogger(TransactionTimeoutTask.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionTimeoutTask.class.toString());
 
-    private final BitronixTransaction transaction;
+	private final BitronixTransaction transaction;
 
-    public TransactionTimeoutTask(BitronixTransaction transaction, Date executionTime, TaskScheduler scheduler) {
-        super(executionTime, scheduler);
-        this.transaction = transaction;
-    }
+	public TransactionTimeoutTask(BitronixTransaction transaction, Date executionTime, TaskScheduler scheduler)
+	{
+		super(executionTime, scheduler);
+		this.transaction = transaction;
+	}
 
-    @Override
-    public Object getObject() {
-        return transaction;
-    }
+	@Override
+	public Object getObject()
+	{
+		return transaction;
+	}
 
-    @Override
-    public void execute() throws TaskException {
-        try {
-            if (log.isDebugEnabled()) { log.debug("marking " + transaction + " as timed out"); }
-            transaction.timeout();
-        } catch (BitronixSystemException ex) {
-            throw new TaskException("failed to timeout " + transaction, ex);
-        }
-    }
+	@Override
+	public void execute() throws TaskException
+	{
+		try
+		{
+			if (LogDebugCheck.isDebugEnabled())
+			{
+				log.finer("marking " + transaction + " as timed out");
+			}
+			transaction.timeout();
+		}
+		catch (BitronixSystemException ex)
+		{
+			throw new TaskException("failed to timeout " + transaction, ex);
+		}
+	}
 
-    @Override
-    public String toString() {
-        return "a TransactionTimeoutTask on " + transaction + " scheduled for " + getExecutionTime();
-    }
+	@Override
+	public String toString()
+	{
+		return "a TransactionTimeoutTask on " + transaction + " scheduled for " + getExecutionTime();
+	}
 
 }

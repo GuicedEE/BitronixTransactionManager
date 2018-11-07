@@ -16,12 +16,11 @@
 package bitronix.tm.resource;
 
 import bitronix.tm.TransactionManagerServices;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.recovery.IncrementalRecoverer;
 import bitronix.tm.recovery.RecoveryException;
 import bitronix.tm.resource.common.XAResourceHolder;
 import bitronix.tm.resource.common.XAResourceProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.transaction.xa.XAResource;
 import java.nio.charset.Charset;
@@ -29,6 +28,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.logging.Level;
 
 /**
  * Collection of initialized {@link XAResourceProducer}s. All resources must be registered in the {@link ResourceRegistrar}
@@ -48,7 +48,7 @@ public final class ResourceRegistrar
 	 * Specifies the charset that unique names of resources must be encodable with to be storeable in a TX journal.
 	 */
 	public final static Charset UNIQUE_NAME_CHARSET = Charset.forName("US-ASCII");
-	private final static Logger log = LoggerFactory.getLogger(ResourceRegistrar.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ResourceRegistrar.class.toString());
 	private final static Set<ProducerHolder> resources = new CopyOnWriteArraySet<>();
 
 	private ResourceRegistrar()
@@ -126,9 +126,9 @@ public final class ResourceRegistrar
 					boolean recovered = false;
 					try
 					{
-						if (log.isDebugEnabled())
+						if (LogDebugCheck.isDebugEnabled())
 						{
-							log.debug("Transaction manager is running, recovering resource '" + holder.getUniqueName() + "'.");
+							log.finer("Transaction manager is running, recovering resource '" + holder.getUniqueName() + "'.");
 						}
 						IncrementalRecoverer.recover(producer);
 						((InitializableProducerHolder) holder).initialize();
@@ -167,9 +167,9 @@ public final class ResourceRegistrar
 
 		if (!resources.remove(holder))
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("resource with uniqueName '{}' has not been registered", holder.getUniqueName());
+				log.log(Level.FINER, "resource with uniqueName '{}' has not been registered", holder.getUniqueName());
 			}
 		}
 	}
@@ -184,7 +184,7 @@ public final class ResourceRegistrar
 	 */
 	public static XAResourceHolder findXAResourceHolder(XAResource xaResource)
 	{
-		boolean debug = log.isDebugEnabled();
+		boolean debug = LogDebugCheck.isDebugEnabled();
 
 		for (ProducerHolder holder : resources)
 		{
@@ -199,13 +199,13 @@ public final class ResourceRegistrar
 			{
 				if (debug)
 				{
-					log.debug("XAResource " + xaResource + " belongs to " + resourceHolder + " that itself belongs to " + producer);
+					log.finer("XAResource " + xaResource + " belongs to " + resourceHolder + " that itself belongs to " + producer);
 				}
 				return resourceHolder;
 			}
 			if (debug)
 			{
-				log.debug("XAResource " + xaResource + " does not belong to any resource of " + producer);
+				log.finer("XAResource " + xaResource + " does not belong to any resource of " + producer);
 			}
 		}
 

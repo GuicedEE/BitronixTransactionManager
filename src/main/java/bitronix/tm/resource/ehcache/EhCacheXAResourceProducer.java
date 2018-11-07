@@ -23,8 +23,6 @@ import bitronix.tm.resource.ResourceRegistrar;
 import bitronix.tm.resource.common.RecoveryXAResourceHolder;
 import bitronix.tm.resource.common.ResourceBean;
 import bitronix.tm.resource.common.XAResourceProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.naming.NamingException;
 import javax.naming.Reference;
@@ -34,6 +32,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 /**
  * EHCache implementation of BTM's XAResourceProducer.
@@ -49,7 +48,7 @@ public final class EhCacheXAResourceProducer
 		implements XAResourceProducer<EhCacheXAResourceHolder, EhCacheXAResourceHolder>
 {
 
-	private static final Logger log = LoggerFactory.getLogger(EhCacheXAResourceProducer.class.getName());
+	private static final Logger log = Logger.getLogger(EhCacheXAResourceProducer.class.getName());
 
 	private static final ConcurrentMap<String, EhCacheXAResourceProducer> producers = new ConcurrentHashMap<>();
 
@@ -124,7 +123,7 @@ public final class EhCacheXAResourceProducer
 			boolean found = xaResourceProducer.removeXAResource(xaResource);
 			if (!found)
 			{
-				log.error("no XAResource " + xaResource + " found in XAResourceProducer with name " + uniqueName);
+				log.severe("no XAResource " + xaResource + " found in XAResourceProducer with name " + uniqueName);
 			}
 			if (xaResourceProducer.xaResourceHolders.isEmpty())
 			{
@@ -134,7 +133,7 @@ public final class EhCacheXAResourceProducer
 		}
 		else
 		{
-			log.error("no XAResourceProducer registered with name " + uniqueName);
+			log.severe("no XAResourceProducer registered with name " + uniqueName);
 		}
 	}
 

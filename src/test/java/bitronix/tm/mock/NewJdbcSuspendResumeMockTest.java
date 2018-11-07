@@ -17,9 +17,8 @@ package bitronix.tm.mock;
 
 import bitronix.tm.BitronixTransactionManager;
 import bitronix.tm.TransactionManagerServices;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.mock.events.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.transaction.InvalidTransactionException;
 import javax.transaction.Status;
@@ -36,13 +35,13 @@ public class NewJdbcSuspendResumeMockTest
 		extends AbstractMockJdbcTest
 {
 
-	private final static Logger log = LoggerFactory.getLogger(NewJdbcSuspendResumeMockTest.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(NewJdbcSuspendResumeMockTest.class.toString());
 
 	public void testSimpleAssertions() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting TM");
+			log.finer("*** getting TM");
 		}
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
 
@@ -58,92 +57,92 @@ public class NewJdbcSuspendResumeMockTest
 			assertEquals("resumed transaction cannot be null", ex.getMessage());
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin");
+			log.finer("*** before begin");
 		}
 		tm.begin();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** after begin");
+			log.finer("*** after begin");
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting connection from DS1");
+			log.finer("*** getting connection from DS1");
 		}
 		Connection connection1 = poolingDataSource1.getConnection();
 		connection1.createStatement();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** closing connection 1");
+			log.finer("*** closing connection 1");
 		}
 		connection1.close();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** committing");
+			log.finer("*** committing");
 		}
 		tm.commit();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** TX is done");
+			log.finer("*** TX is done");
 		}
 	}
 
 	public void testSimpleWorkingCase() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting TM");
+			log.finer("*** getting TM");
 		}
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin");
+			log.finer("*** before begin");
 		}
 		tm.begin();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** after begin");
+			log.finer("*** after begin");
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting connection from DS1");
+			log.finer("*** getting connection from DS1");
 		}
 		Connection connection1 = poolingDataSource1.getConnection();
 		connection1.createStatement();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** suspending");
+			log.finer("*** suspending");
 		}
 		Transaction t1 = tm.suspend();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** resuming");
+			log.finer("*** resuming");
 		}
 		tm.resume(t1);
 
 		connection1.createStatement();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** closing connection 1");
+			log.finer("*** closing connection 1");
 		}
 		connection1.close();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** committing");
+			log.finer("*** committing");
 		}
 		tm.commit();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** TX is done");
+			log.finer("*** TX is done");
 		}
 
 		// check flow
@@ -175,56 +174,56 @@ public class NewJdbcSuspendResumeMockTest
 	{
 		poolingDataSource1.setUseTmJoin(false);
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting TM");
+			log.finer("*** getting TM");
 		}
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin");
+			log.finer("*** before begin");
 		}
 		tm.begin();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** after begin");
+			log.finer("*** after begin");
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting connection from DS1");
+			log.finer("*** getting connection from DS1");
 		}
 		Connection connection1 = poolingDataSource1.getConnection();
 		connection1.createStatement();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** suspending");
+			log.finer("*** suspending");
 		}
 		Transaction t1 = tm.suspend();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** resuming");
+			log.finer("*** resuming");
 		}
 		tm.resume(t1);
 
 		connection1.createStatement();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** closing connection 1");
+			log.finer("*** closing connection 1");
 		}
 		connection1.close();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** committing");
+			log.finer("*** committing");
 		}
 		tm.commit();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** TX is done");
+			log.finer("*** TX is done");
 		}
 
 		// check flow
@@ -256,83 +255,83 @@ public class NewJdbcSuspendResumeMockTest
 
 	public void testReEnlistmentAfterSuspend() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting TM");
+			log.finer("*** getting TM");
 		}
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin");
+			log.finer("*** before begin");
 		}
 		tm.begin();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** after begin");
+			log.finer("*** after begin");
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting connection from DS1");
+			log.finer("*** getting connection from DS1");
 		}
 		Connection connection1 = poolingDataSource1.getConnection();
 		connection1.createStatement();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** suspending");
+			log.finer("*** suspending");
 		}
 		Transaction t1 = tm.suspend();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin2");
+			log.finer("*** before begin2");
 		}
 		tm.begin();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** after begin2");
+			log.finer("*** after begin2");
 		}
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** reusing connection 1");
+			log.finer("*** reusing connection 1");
 		}
 		connection1.createStatement();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** marking subTX as rollback only");
+			log.finer("*** marking subTX as rollback only");
 		}
 		tm.setRollbackOnly();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** rolling back");
+			log.finer("*** rolling back");
 		}
 		tm.rollback();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** rolling back");
+			log.finer("*** rolling back");
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** subTX is done");
+			log.finer("*** subTX is done");
 		}
 		tm.resume(t1);
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** closing connection 1");
+			log.finer("*** closing connection 1");
 		}
 		connection1.close();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** committing");
+			log.finer("*** committing");
 		}
 		tm.commit();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** TX is done");
+			log.finer("*** TX is done");
 		}
 
 		// check flow
@@ -373,38 +372,38 @@ public class NewJdbcSuspendResumeMockTest
 
 	public void testClosingSuspendedConnections() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting TM");
+			log.finer("*** getting TM");
 		}
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin");
+			log.finer("*** before begin");
 		}
 		tm.begin();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting connection from DS1");
+			log.finer("*** getting connection from DS1");
 		}
 		Connection connection1 = poolingDataSource1.getConnection();
 		connection1.createStatement();
 
 		assertEquals(POOL_SIZE - 1, getPool(poolingDataSource1).inPoolSize());
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** suspending");
+			log.finer("*** suspending");
 		}
 		Transaction t1 = tm.suspend();
 
 		assertEquals(POOL_SIZE - 1, getPool(poolingDataSource1).inPoolSize());
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** closing connection 1 too eagerly");
+			log.finer("*** closing connection 1 too eagerly");
 		}
 		try
 		{
@@ -422,29 +421,29 @@ public class NewJdbcSuspendResumeMockTest
 
 		assertEquals(POOL_SIZE - 1, getPool(poolingDataSource1).inPoolSize());
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** resuming");
+			log.finer("*** resuming");
 		}
 		tm.resume(t1);
 
 		assertEquals(POOL_SIZE - 1, getPool(poolingDataSource1).inPoolSize());
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** committing");
+			log.finer("*** committing");
 		}
 		tm.commit();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** TX is done");
+			log.finer("*** TX is done");
 		}
 
 		assertEquals(POOL_SIZE - 1, getPool(poolingDataSource1).inPoolSize());
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** closing connection 1");
+			log.finer("*** closing connection 1");
 		}
 		connection1.close();
 
@@ -477,31 +476,31 @@ public class NewJdbcSuspendResumeMockTest
 
 	public void testInterleavedLocalGlobalTransactions() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting TM");
+			log.finer("*** getting TM");
 		}
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin");
+			log.finer("*** before begin");
 		}
 		tm.begin();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** after begin");
+			log.finer("*** after begin");
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting connection from DS1");
+			log.finer("*** getting connection from DS1");
 		}
 		Connection connection1 = poolingDataSource1.getConnection();
 		connection1.createStatement();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** suspending");
+			log.finer("*** suspending");
 		}
 		Transaction t1 = tm.suspend();
 
@@ -510,26 +509,26 @@ public class NewJdbcSuspendResumeMockTest
 		connection2.createStatement();
 		connection2.close();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** resuming");
+			log.finer("*** resuming");
 		}
 		tm.resume(t1);
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** closing connection 1");
+			log.finer("*** closing connection 1");
 		}
 		connection1.close();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** committing");
+			log.finer("*** committing");
 		}
 		tm.commit();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** TX is done");
+			log.finer("*** TX is done");
 		}
 
 		// check flow
@@ -567,69 +566,69 @@ public class NewJdbcSuspendResumeMockTest
 
 	public void testInterleavedGlobalGlobalTransactionsWithDifferentConnections() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting TM");
+			log.finer("*** getting TM");
 		}
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin");
+			log.finer("*** before begin");
 		}
 		tm.begin();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** after begin");
+			log.finer("*** after begin");
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting connection from DS1");
+			log.finer("*** getting connection from DS1");
 		}
 		Connection connection1 = poolingDataSource1.getConnection();
 		connection1.createStatement();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug(" *** suspending transaction");
+			log.finer(" *** suspending transaction");
 		}
 		Transaction t1 = tm.suspend();
 		assertNull(tm.getTransaction());
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug(" *** begin interleaved transaction");
+			log.finer(" *** begin interleaved transaction");
 		}
 		tm.begin();
 		Connection connection2 = poolingDataSource1.getConnection();
 		connection2.createStatement();
 		connection2.close();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug(" *** commit interleaved transaction");
+			log.finer(" *** commit interleaved transaction");
 		}
 		tm.commit();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug(" *** resuming transaction");
+			log.finer(" *** resuming transaction");
 		}
 		tm.resume(t1);
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** closing connection 1");
+			log.finer("*** closing connection 1");
 		}
 		connection1.close();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** committing");
+			log.finer("*** committing");
 		}
 		tm.commit();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** TX is done");
+			log.finer("*** TX is done");
 		}
 
 		// check flow
@@ -678,71 +677,71 @@ public class NewJdbcSuspendResumeMockTest
 
 	public void testInterleavedGlobalGlobalTransactionsWithDifferentConnectionsLateSuspend() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting TM");
+			log.finer("*** getting TM");
 		}
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin");
+			log.finer("*** before begin");
 		}
 		tm.begin();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** after begin");
+			log.finer("*** after begin");
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting connection from DS1");
+			log.finer("*** getting connection from DS1");
 		}
 		Connection connection1 = poolingDataSource1.getConnection();
 		connection1.createStatement();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** closing connection 1");
+			log.finer("*** closing connection 1");
 		}
 		connection1.close();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug(" *** suspending transaction");
+			log.finer(" *** suspending transaction");
 		}
 		Transaction t1 = tm.suspend();
 		assertNull(tm.getTransaction());
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug(" *** begin interleaved transaction");
+			log.finer(" *** begin interleaved transaction");
 		}
 		tm.begin();
 		Connection connection2 = poolingDataSource1.getConnection();
 		assertEquals(POOL_SIZE - 2, getPool(poolingDataSource1).inPoolSize());
 		connection2.createStatement();
 		connection2.close();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug(" *** commit interleaved transaction");
+			log.finer(" *** commit interleaved transaction");
 		}
 		tm.commit();
 		assertEquals(POOL_SIZE - 1, getPool(poolingDataSource1).inPoolSize());
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug(" *** resuming transaction");
+			log.finer(" *** resuming transaction");
 		}
 		tm.resume(t1);
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** committing");
+			log.finer("*** committing");
 		}
 		tm.commit();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** TX is done");
+			log.finer("*** TX is done");
 		}
 		assertEquals(POOL_SIZE, getPool(poolingDataSource1).inPoolSize());
 
@@ -795,17 +794,17 @@ public class NewJdbcSuspendResumeMockTest
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
 		tm.begin();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** get C1");
+			log.finer("*** get C1");
 		}
 		Connection c1 = poolingDataSource1.getConnection();
 		c1.createStatement();
 		c1.close();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** get C2");
+			log.finer("*** get C2");
 		}
 		Connection c2 = poolingDataSource2.getConnection();
 		c2.createStatement();
@@ -814,17 +813,17 @@ public class NewJdbcSuspendResumeMockTest
 		Transaction tx = tm.suspend();
 		tm.resume(tx);
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** get C3");
+			log.finer("*** get C3");
 		}
 		Connection c3 = poolingDataSource2.getConnection();
 		c3.createStatement();
 		c3.close();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** get C4");
+			log.finer("*** get C4");
 		}
 		Connection c4 = poolingDataSource1.getConnection();
 		c4.createStatement();
@@ -891,25 +890,25 @@ public class NewJdbcSuspendResumeMockTest
 
 	public void testReusePreparedStatementAfterSuspendResume() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting TM");
+			log.finer("*** getting TM");
 		}
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin");
+			log.finer("*** before begin");
 		}
 		tm.begin();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** after begin");
+			log.finer("*** after begin");
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting connection from DS1");
+			log.finer("*** getting connection from DS1");
 		}
 		Connection connection1 = poolingDataSource1.getConnection();
 
@@ -918,20 +917,20 @@ public class NewJdbcSuspendResumeMockTest
 
 		connection1.prepareStatement("some sql");
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** closing connection 1");
+			log.finer("*** closing connection 1");
 		}
 		connection1.close();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** committing");
+			log.finer("*** committing");
 		}
 		tm.commit();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** TX is done");
+			log.finer("*** TX is done");
 		}
 
 		// check flow
@@ -941,58 +940,58 @@ public class NewJdbcSuspendResumeMockTest
 
 	public void testSuspendResumeSeparateThreads() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting TM");
+			log.finer("*** getting TM");
 		}
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin");
+			log.finer("*** before begin");
 		}
 		tm.begin();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** after begin");
+			log.finer("*** after begin");
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** suspending transaction");
+			log.finer("*** suspending transaction");
 		}
 		Transaction suspended = tm.suspend();
 
 		assertNull(tm.getCurrentTransaction());
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before 2nd begin");
+			log.finer("*** before 2nd begin");
 		}
 		tm.begin();
 		assertNotNull(tm.getCurrentTransaction());
 
 		Thread thread = new Thread(() ->
 		                           {
-			                           if (log.isDebugEnabled())
+			                           if (LogDebugCheck.isDebugEnabled())
 			                           {
-				                           log.debug("*** getting TM");
+				                           log.finer("*** getting TM");
 			                           }
 
 			                           try
 			                           {
-				                           if (log.isDebugEnabled())
+				                           if (LogDebugCheck.isDebugEnabled())
 				                           {
-					                           log.debug("*** resuming transaction in new thread");
+					                           log.finer("*** resuming transaction in new thread");
 				                           }
 				                           tm.resume(suspended);
-				                           if (log.isDebugEnabled())
+				                           if (LogDebugCheck.isDebugEnabled())
 				                           {
-					                           log.debug("*** committing transaction in new thread");
+					                           log.finer("*** committing transaction in new thread");
 				                           }
 				                           tm.commit();
-				                           if (log.isDebugEnabled())
+				                           if (LogDebugCheck.isDebugEnabled())
 				                           {
-					                           log.debug("*** new thread commit complete, exiting");
+					                           log.finer("*** new thread commit complete, exiting");
 				                           }
 				                           assertNull(tm.getCurrentTransaction());
 			                           }
@@ -1005,14 +1004,14 @@ public class NewJdbcSuspendResumeMockTest
 		thread.join();
 
 		assertNotNull(tm.getCurrentTransaction());
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** committing transaction in main thread");
+			log.finer("*** committing transaction in main thread");
 		}
 		tm.commit();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** main thread complete");
+			log.finer("*** main thread complete");
 		}
 		assertNull(tm.getCurrentTransaction());
 	}

@@ -2,6 +2,10 @@
 
 * JRE 11 Full JPMS
 * SonarLinted to JRE8
+    - Removed SL4J for JDK
+    - Min Compat JRE8
+    - Try with resources on files and streams
+    - Removed OSGI for JDK OSGi and Modules
 * Dependency updates for compatibility
 * Removed links to desktop (gui package)
 * Cant deploy to that maven group, so the artifact is located under com.jwebmp.jre11

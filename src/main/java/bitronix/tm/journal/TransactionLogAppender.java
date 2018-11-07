@@ -15,9 +15,8 @@
  */
 package bitronix.tm.journal;
 
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.utils.Uid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.transaction.Status;
 import java.io.File;
@@ -44,7 +43,7 @@ public class TransactionLogAppender
 	 * same size. Very useful when debugging and eventually restoring broken log files.
 	 */
 	public static final int END_RECORD = 0x786e7442;
-	private final static Logger log = LoggerFactory.getLogger(TransactionLogAppender.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogAppender.class.toString());
 	private final File file;
 	private final RandomAccessFile randomeAccessFile;
 	private final FileChannel fc;
@@ -154,9 +153,9 @@ public class TransactionLogAppender
 			buf.putInt(tlog.getEndRecord());
 			buf.flip();
 
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("between " + tlog.getWritePosition() + " and " + tlog.getWritePosition() + tlog.calculateTotalRecordSize() + ", writing " + tlog);
+				log.finer("between " + tlog.getWritePosition() + " and " + tlog.getWritePosition() + tlog.calculateTotalRecordSize() + ", writing " + tlog);
 			}
 
 			long writePosition = tlog.getWritePosition();
@@ -367,14 +366,14 @@ public class TransactionLogAppender
 	 */
 	protected void force() throws IOException
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("forcing log writing");
+			log.finer("forcing log writing");
 		}
 		fc.force(false);
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("done forcing log");
+			log.finer("done forcing log");
 		}
 	}
 

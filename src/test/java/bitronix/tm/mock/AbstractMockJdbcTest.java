@@ -16,6 +16,7 @@
 package bitronix.tm.mock;
 
 import bitronix.tm.TransactionManagerServices;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.journal.Journal;
 import bitronix.tm.mock.events.ConnectionDequeuedEvent;
 import bitronix.tm.mock.events.ConnectionQueuedEvent;
@@ -29,8 +30,6 @@ import bitronix.tm.resource.common.XAStatefulHolder.State;
 import bitronix.tm.resource.jdbc.JdbcPooledConnection;
 import bitronix.tm.resource.jdbc.PoolingDataSource;
 import junit.framework.TestCase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.Iterator;
@@ -46,7 +45,7 @@ public abstract class AbstractMockJdbcTest
 	protected static final int POOL_SIZE = 5;
 	protected static final String DATASOURCE1_NAME = "pds1";
 	protected static final String DATASOURCE2_NAME = "pds2";
-	private final static Logger log = LoggerFactory.getLogger(AbstractMockJdbcTest.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(AbstractMockJdbcTest.class.toString());
 	protected PoolingDataSource poolingDataSource1;
 	protected PoolingDataSource poolingDataSource2;
 
@@ -158,9 +157,9 @@ public abstract class AbstractMockJdbcTest
 	{
 		try
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("*** tearDown rollback");
+				log.finer("*** tearDown rollback");
 			}
 			TransactionManagerServices.getTransactionManager()
 			                          .rollback();

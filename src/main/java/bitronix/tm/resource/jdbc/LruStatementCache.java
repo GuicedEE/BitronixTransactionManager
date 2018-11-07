@@ -15,8 +15,7 @@
  */
 package bitronix.tm.resource.jdbc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import bitronix.tm.internal.LogDebugCheck;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,7 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class LruStatementCache
 {
 
-	private final static Logger log = LoggerFactory.getLogger(LruStatementCache.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(LruStatementCache.class.toString());
 	/**
 	 * We use a LinkedHashMap with _access order_ specified in the
 	 * constructor.  According to the LinkedHashMap documentation:
@@ -114,9 +113,9 @@ public class LruStatementCache
 			if (cached != null)
 			{
 				cached.usageCount++;
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("delivered from cache with usage count " + cached.usageCount + " statement <" + key + ">");
+					log.finer("delivered from cache with usage count " + cached.usageCount + " statement <" + key + ">");
 				}
 				return cached.statement;
 			}
@@ -157,9 +156,9 @@ public class LruStatementCache
 			StatementTracker cached = cache.get(key);
 			if (cached == null)
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("adding to cache statement <" + key + ">");
+					log.finer("adding to cache statement <" + key + ">");
 				}
 				cache.put(key, new StatementTracker(statement));
 				size++;
@@ -168,9 +167,9 @@ public class LruStatementCache
 			{
 				cached.usageCount--;
 				statement = cached.statement;
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("returning to cache statement <" + key + "> with usage count " + cached.usageCount);
+					log.finer("returning to cache statement <" + key + "> with usage count " + cached.usageCount);
 				}
 			}
 
@@ -206,9 +205,9 @@ public class LruStatementCache
 				it.remove();
 				size--;
 				CacheKey key = entry.getKey();
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("evicting from cache statement <" + key + "> " + entry.getValue().statement);
+					log.finer("evicting from cache statement <" + key + "> " + entry.getValue().statement);
 				}
 				fireEvictionEvent(tracker.statement);
 				// We can stop evicting if we're at maxSize...

@@ -16,14 +16,13 @@
 package bitronix.tm.mock;
 
 import bitronix.tm.TransactionManagerServices;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.mock.resource.jdbc.MockitoXADataSource;
 import bitronix.tm.recovery.RecoveryException;
 import bitronix.tm.resource.ResourceConfigurationException;
 import bitronix.tm.resource.common.XAPool;
 import bitronix.tm.resource.jdbc.PoolingDataSource;
 import junit.framework.TestCase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import javax.sql.XADataSource;
@@ -40,7 +39,7 @@ public class JdbcPoolTest
 		extends TestCase
 {
 
-	private final static Logger log = LoggerFactory.getLogger(JdbcPoolTest.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(JdbcPoolTest.class.toString());
 	private PoolingDataSource pds;
 
 	@Override
@@ -90,9 +89,9 @@ public class JdbcPoolTest
 
 	public void testInitFailure() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testInitFailure");
+			log.finer("*** Starting testInitFailure");
 		}
 		pds.close();
 
@@ -134,9 +133,9 @@ public class JdbcPoolTest
 
 	public void testReEnteringRecovery() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testReEnteringRecovery");
+			log.finer("*** Starting testReEnteringRecovery");
 		}
 		pds.startRecovery();
 		try
@@ -157,9 +156,9 @@ public class JdbcPoolTest
 
 	public void testPoolGrowth() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testPoolGrowth");
+			log.finer("*** Starting testPoolGrowth");
 		}
 		Field poolField = pds.getClass()
 		                     .getDeclaredField("pool");
@@ -196,9 +195,9 @@ public class JdbcPoolTest
 
 	public void testPoolShrink() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testPoolShrink");
+			log.finer("*** Starting testPoolShrink");
 		}
 		Field poolField = pds.getClass()
 		                     .getDeclaredField("pool");
@@ -224,9 +223,9 @@ public class JdbcPoolTest
 		                          .interrupt(); // wake up the task scheduler
 		Thread.sleep(1200); // leave enough time for the scheduled shrinking task to do its work
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** checking pool sizes");
+			log.finer("*** checking pool sizes");
 		}
 		assertEquals(1, pool.inPoolSize());
 		assertEquals(1, pool.totalPoolSize());
@@ -234,9 +233,9 @@ public class JdbcPoolTest
 
 	public void testPoolShrinkErrorHandling() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testPoolShrinkErrorHandling");
+			log.finer("*** Starting testPoolShrinkErrorHandling");
 		}
 
 		Field poolField = pds.getClass()
@@ -274,9 +273,9 @@ public class JdbcPoolTest
 
 	public void testPoolReset() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testPoolReset");
+			log.finer("*** Starting testPoolReset");
 		}
 
 		Field poolField = pds.getClass()
@@ -306,9 +305,9 @@ public class JdbcPoolTest
 
 	public void testPoolResetErrorHandling() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testPoolResetErrorHandling");
+			log.finer("*** Starting testPoolResetErrorHandling");
 		}
 		Field poolField = pds.getClass()
 		                     .getDeclaredField("pool");
@@ -343,9 +342,9 @@ public class JdbcPoolTest
 
 	public void testCloseLocalContext() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testCloseLocalContext");
+			log.finer("*** Starting testCloseLocalContext");
 		}
 		Connection c = pds.getConnection();
 		Statement stmt = c.createStatement();
@@ -366,9 +365,9 @@ public class JdbcPoolTest
 
 	public void testCloseGlobalContextRecycle() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testCloseGlobalContextRecycle");
+			log.finer("*** Starting testCloseGlobalContextRecycle");
 		}
 		TransactionManager tm = TransactionManagerServices.getTransactionManager();
 		tm.begin();
@@ -430,9 +429,9 @@ public class JdbcPoolTest
 
 	public void testCloseGlobalContextNoRecycle() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testCloseGlobalContextNoRecycle");
+			log.finer("*** Starting testCloseGlobalContextNoRecycle");
 		}
 		TransactionManager tm = TransactionManagerServices.getTransactionManager();
 		tm.begin();
@@ -494,9 +493,9 @@ public class JdbcPoolTest
 
 	public void testPoolNotStartingTransactionManager() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testPoolNotStartingTransactionManager");
+			log.finer("*** Starting testPoolNotStartingTransactionManager");
 		}
 		// make sure TM is not running
 		TransactionManagerServices.getTransactionManager()
@@ -528,9 +527,9 @@ public class JdbcPoolTest
 
 	public void testWrappers() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testWrappers");
+			log.finer("*** Starting testWrappers");
 		}
 
 		// XADataSource

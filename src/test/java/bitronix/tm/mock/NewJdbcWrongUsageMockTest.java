@@ -27,8 +27,6 @@ import bitronix.tm.resource.jdbc.PoolingDataSource;
 import bitronix.tm.resource.jdbc.lrc.LrcXADataSource;
 import bitronix.tm.resource.jms.PoolingConnectionFactory;
 import bitronix.tm.resource.jms.lrc.LrcXAConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.XAConnection;
 import javax.transaction.InvalidTransactionException;
@@ -48,7 +46,7 @@ public class NewJdbcWrongUsageMockTest
 		extends AbstractMockJdbcTest
 {
 
-	private final static Logger log = LoggerFactory.getLogger(NewJdbcWrongUsageMockTest.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(NewJdbcWrongUsageMockTest.class.toString());
 
 	public void testPrepareXAFailureCase() throws Exception
 	{

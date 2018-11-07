@@ -17,9 +17,8 @@ package bitronix.tm.mock;
 
 import bitronix.tm.BitronixTransactionManager;
 import bitronix.tm.TransactionManagerServices;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.resource.jdbc.PooledConnectionProxy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.transaction.Transaction;
 import java.sql.Connection;
@@ -31,25 +30,25 @@ import java.util.ArrayList;
 public class JdbcSharedConnectionTest
 		extends AbstractMockJdbcTest
 {
-	private final static Logger log = LoggerFactory.getLogger(NewJdbcProperUsageMockTest.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(NewJdbcProperUsageMockTest.class.toString());
 
 	public void testSharedConnectionMultithreaded() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testSharedConnectionMultithreaded: getting TM");
+			log.finer("*** Starting testSharedConnectionMultithreaded: getting TM");
 		}
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
 		tm.setTransactionTimeout(120);
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin");
+			log.finer("*** before begin");
 		}
 		tm.begin();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** after begin");
+			log.finer("*** after begin");
 		}
 
 		Transaction suspended = tm.suspend();
@@ -60,9 +59,9 @@ public class JdbcSharedConnectionTest
 			                            try
 			                            {
 				                            tm.resume(suspended);
-				                            if (log.isDebugEnabled())
+				                            if (LogDebugCheck.isDebugEnabled())
 				                            {
-					                            log.debug("*** getting connection from DS1");
+					                            log.finer("*** getting connection from DS1");
 				                            }
 				                            Connection connection = poolingDataSource1.getConnection();
 				                            connection.createStatement();
@@ -82,9 +81,9 @@ public class JdbcSharedConnectionTest
 			                            try
 			                            {
 				                            tm.resume(suspended);
-				                            if (log.isDebugEnabled())
+				                            if (LogDebugCheck.isDebugEnabled())
 				                            {
-					                            log.debug("*** getting connection from DS1");
+					                            log.finer("*** getting connection from DS1");
 				                            }
 				                            Connection connection = poolingDataSource1.getConnection();
 				                            connection.createStatement();
@@ -108,34 +107,34 @@ public class JdbcSharedConnectionTest
 
 	public void testUnSharedConnection() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testUnSharedConnection: getting TM");
+			log.finer("*** Starting testUnSharedConnection: getting TM");
 		}
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
 		tm.setTransactionTimeout(120);
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin");
+			log.finer("*** before begin");
 		}
 		tm.begin();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** after begin");
+			log.finer("*** after begin");
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting connection from DS2");
+			log.finer("*** getting connection from DS2");
 		}
 		Connection connection1 = poolingDataSource2.getConnection();
 		// createStatement causes enlistment
 		connection1.createStatement();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting second connection from DS2");
+			log.finer("*** getting second connection from DS2");
 		}
 		Connection connection2 = poolingDataSource2.getConnection();
 
@@ -152,17 +151,17 @@ public class JdbcSharedConnectionTest
 	public void testSharedConnectionInLocalTransaction() throws Exception
 	{
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testSharedConnectionInLocalTransaction: getting connection from DS1");
+			log.finer("*** Starting testSharedConnectionInLocalTransaction: getting connection from DS1");
 		}
 		Connection connection1 = poolingDataSource1.getConnection();
 		// createStatement causes enlistment
 		connection1.createStatement();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting second connection from DS1");
+			log.finer("*** getting second connection from DS1");
 		}
 		Connection connection2 = poolingDataSource1.getConnection();
 
@@ -177,17 +176,17 @@ public class JdbcSharedConnectionTest
 	public void testUnSharedConnectionInLocalTransaction() throws Exception
 	{
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** Starting testUnSharedConnectionInLocalTransaction: getting connection from DS2");
+			log.finer("*** Starting testUnSharedConnectionInLocalTransaction: getting connection from DS2");
 		}
 		Connection connection1 = poolingDataSource2.getConnection();
 		// createStatement causes enlistment
 		connection1.createStatement();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting second connection from DS2");
+			log.finer("*** getting second connection from DS2");
 		}
 		Connection connection2 = poolingDataSource2.getConnection();
 
@@ -201,32 +200,32 @@ public class JdbcSharedConnectionTest
 
 	public void testSharedConnectionInGlobal() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** testSharedConnectionInGlobal: Starting getting TM");
+			log.finer("*** testSharedConnectionInGlobal: Starting getting TM");
 		}
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
 		tm.setTransactionTimeout(120);
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin");
+			log.finer("*** before begin");
 		}
 		tm.begin();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** after begin");
+			log.finer("*** after begin");
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting connection from DS1");
+			log.finer("*** getting connection from DS1");
 		}
 		Connection connection1 = poolingDataSource1.getConnection();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting second connection from DS1");
+			log.finer("*** getting second connection from DS1");
 		}
 		Connection connection2 = poolingDataSource1.getConnection();
 

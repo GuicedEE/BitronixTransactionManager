@@ -15,9 +15,8 @@
  */
 package bitronix.tm.journal;
 
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.utils.Uid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,7 +34,7 @@ import java.util.Set;
 public class TransactionLogCursor
 {
 
-	private final static Logger log = LoggerFactory.getLogger(TransactionLogCursor.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogCursor.class.toString());
 
 	// private final RandomAccessFile randomAccessFile;
 	private final FileInputStream fis;
@@ -97,9 +96,9 @@ public class TransactionLogCursor
 	{
 		if (currentPosition >= endPosition)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("end of transaction log file reached at " + currentPosition);
+				log.finer("end of transaction log file reached at " + currentPosition);
 			}
 			return null;
 		}

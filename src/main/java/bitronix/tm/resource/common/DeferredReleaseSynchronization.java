@@ -15,9 +15,8 @@
  */
 package bitronix.tm.resource.common;
 
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.resource.common.XAStatefulHolder.State;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.transaction.Synchronization;
 
@@ -26,36 +25,49 @@ import javax.transaction.Synchronization;
  *
  * @author Ludovic Orban
  */
-public class DeferredReleaseSynchronization implements Synchronization {
+public class DeferredReleaseSynchronization
+		implements Synchronization
+{
 
-    private final static Logger log = LoggerFactory.getLogger(DeferredReleaseSynchronization.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(DeferredReleaseSynchronization.class.toString());
 
-    private final XAStatefulHolder xaStatefulHolder;
+	private final XAStatefulHolder xaStatefulHolder;
 
-    public DeferredReleaseSynchronization(XAStatefulHolder xaStatefulHolder) {
-        this.xaStatefulHolder = xaStatefulHolder;
-    }
+	public DeferredReleaseSynchronization(XAStatefulHolder xaStatefulHolder)
+	{
+		this.xaStatefulHolder = xaStatefulHolder;
+	}
 
-    public XAStatefulHolder getXAStatefulHolder() {
-        return xaStatefulHolder;
-    }
+	public XAStatefulHolder getXAStatefulHolder()
+	{
+		return xaStatefulHolder;
+	}
 
-    @Override
-    public void afterCompletion(int status) {
-        if (log.isDebugEnabled()) { log.debug("DeferredReleaseSynchronization requeuing " + xaStatefulHolder); }
+	@Override
+	public void beforeCompletion()
+	{
+	}
 
-        // set this connection's state back to IN_POOL
-        xaStatefulHolder.setState(State.IN_POOL);
+	@Override
+	public void afterCompletion(int status)
+	{
+		if (LogDebugCheck.isDebugEnabled())
+		{
+			log.finer("DeferredReleaseSynchronization requeuing " + xaStatefulHolder);
+		}
 
-        if (log.isDebugEnabled()) { log.debug("DeferredReleaseSynchronization requeued " + xaStatefulHolder); }
-    }
+		// set this connection's state back to IN_POOL
+		xaStatefulHolder.setState(State.IN_POOL);
 
-    @Override
-    public void beforeCompletion() {
-    }
+		if (LogDebugCheck.isDebugEnabled())
+		{
+			log.finer("DeferredReleaseSynchronization requeued " + xaStatefulHolder);
+		}
+	}
 
-    @Override
-    public String toString() {
-        return "a DeferredReleaseSynchronization of " + xaStatefulHolder;
-    }
+	@Override
+	public String toString()
+	{
+		return "a DeferredReleaseSynchronization of " + xaStatefulHolder;
+	}
 }

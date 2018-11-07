@@ -17,13 +17,12 @@ package bitronix.tm.recovery;
 
 import bitronix.tm.BitronixXid;
 import bitronix.tm.TransactionManagerServices;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.internal.XAResourceHolderState;
 import bitronix.tm.journal.JournalRecord;
 import bitronix.tm.resource.common.XAResourceProducer;
 import bitronix.tm.utils.Decoder;
 import bitronix.tm.utils.Uid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.transaction.Status;
 import javax.transaction.xa.XAException;
@@ -40,7 +39,7 @@ import java.util.Set;
 public class IncrementalRecoverer
 {
 
-	private final static Logger log = LoggerFactory.getLogger(IncrementalRecoverer.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(IncrementalRecoverer.class.toString());
 
 	/**
 	 * Run incremental recovery on the specified resource.
@@ -54,9 +53,9 @@ public class IncrementalRecoverer
 	public static void recover(XAResourceProducer xaResourceProducer) throws RecoveryException
 	{
 		String uniqueName = xaResourceProducer.getUniqueName();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("start of incremental recovery on resource " + uniqueName);
+			log.finer("start of incremental recovery on resource " + uniqueName);
 		}
 
 		try
@@ -64,15 +63,15 @@ public class IncrementalRecoverer
 			XAResourceHolderState xaResourceHolderState = xaResourceProducer.startRecovery();
 			boolean success = true;
 			Set<BitronixXid> xids = RecoveryHelper.recover(xaResourceHolderState);
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug(xids.size() + " dangling transaction(s) found on resource");
+				log.finer(xids.size() + " dangling transaction(s) found on resource");
 			}
 			Map<?, ?> danglingRecords = TransactionManagerServices.getJournal()
 			                                                      .collectDanglingRecords();
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug(danglingRecords.size() + " dangling transaction(s) found in journal");
+				log.finer(danglingRecords.size() + " dangling transaction(s) found in journal");
 			}
 
 			int commitCount = 0;
@@ -84,9 +83,9 @@ public class IncrementalRecoverer
 				JournalRecord tlog = (JournalRecord) danglingRecords.get(gtrid);
 				if (tlog != null)
 				{
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("committing " + xid);
+						log.finer("committing " + xid);
 					}
 					success &= RecoveryHelper.commit(xaResourceHolderState, xid);
 					updateJournal(xid.getGlobalTransactionIdUid(), uniqueName, Status.STATUS_COMMITTED);
@@ -94,9 +93,9 @@ public class IncrementalRecoverer
 				}
 				else
 				{
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("rolling back " + xid);
+						log.finer("rolling back " + xid);
 					}
 					success &= RecoveryHelper.rollback(xaResourceHolderState, xid);
 					updateJournal(xid.getGlobalTransactionIdUid(), uniqueName, Status.STATUS_ROLLEDBACK);
@@ -143,18 +142,18 @@ public class IncrementalRecoverer
 		finally
 		{
 			xaResourceProducer.endRecovery();
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("end of incremental recovery on resource " + uniqueName);
+				log.finer("end of incremental recovery on resource " + uniqueName);
 			}
 		}
 	}
 
 	private static void updateJournal(Uid gtrid, String uniqueName, int status) throws IOException
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("updating journal, adding " + Decoder.decodeStatus(status) + " entry for [" + uniqueName + "] on GTRID [" + gtrid + "]");
+			log.finer("updating journal, adding " + Decoder.decodeStatus(status) + " entry for [" + uniqueName + "] on GTRID [" + gtrid + "]");
 		}
 		Set<String> participatingUniqueNames = new HashSet<>();
 		participatingUniqueNames.add(uniqueName);

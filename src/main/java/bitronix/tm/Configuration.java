@@ -15,9 +15,8 @@
  */
 package bitronix.tm;
 
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.utils.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,6 +25,7 @@ import java.net.InetAddress;
 import java.nio.charset.Charset;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
 
 /**
  * Configuration repository of the transaction manager. You can set configurable values either via the properties file
@@ -44,7 +44,7 @@ public class Configuration
 		implements Service
 {
 
-	private final static Logger log = LoggerFactory.getLogger(Configuration.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(Configuration.class.toString());
 
 	private final static int MAX_SERVER_ID_LENGTH = 51;
 	private final static Charset SERVER_ID_CHARSET = Charset.forName("US-ASCII");
@@ -86,17 +86,17 @@ public class Configuration
 				String configurationFilename = System.getProperty("bitronix.tm.configuration");
 				if (configurationFilename != null)
 				{
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("loading configuration file " + configurationFilename);
+						log.finer("loading configuration file " + configurationFilename);
 					}
 					in = new FileInputStream(configurationFilename);
 				}
 				else
 				{
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("loading default configuration");
+						log.finer("loading default configuration");
 					}
 					in = ClassLoaderUtils.getResourceAsStream("bitronix-default-config.properties");
 				}
@@ -105,9 +105,9 @@ public class Configuration
 				{
 					properties.load(in);
 				}
-				else if (log.isDebugEnabled())
+				else if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("no configuration file found, using default settings");
+					log.finer("no configuration file found, using default settings");
 				}
 			}
 			finally
@@ -350,7 +350,7 @@ public class Configuration
 	public Configuration setForceBatchingEnabled(boolean forceBatchingEnabled)
 	{
 		checkNotStarted();
-		log.warn("forceBatchingEnabled is not longer used");
+		log.warning("forceBatchingEnabled is not longer used");
 		this.forceBatchingEnabled = forceBatchingEnabled;
 		return this;
 	}
@@ -624,7 +624,7 @@ public class Configuration
 	@Deprecated
 	public Configuration setBackgroundRecoveryInterval(int backgroundRecoveryInterval)
 	{
-		log.warn("setBackgroundRecoveryInterval() is deprecated, consider using setBackgroundRecoveryIntervalSeconds() instead.");
+		log.warning("setBackgroundRecoveryInterval() is deprecated, consider using setBackgroundRecoveryIntervalSeconds() instead.");
 		setBackgroundRecoveryIntervalSeconds(backgroundRecoveryInterval * 60);
 		return this;
 	}
@@ -989,7 +989,7 @@ public class Configuration
 						String transcodedId = new String(id, SERVER_ID_CHARSET);
 						if (!transcodedId.equals(serverId))
 						{
-							log.warn(
+							log.warning(
 									"The given server ID '" + serverId + "' is not compatible with the ID charset '" + SERVER_ID_CHARSET.displayName() + "' as it transcodes to '" +
 									transcodedId + "'. " +
 									"It is highly recommended that you specify a compatible server ID using only characters that are allowed in the ID charset.");
@@ -997,9 +997,9 @@ public class Configuration
 					}
 					catch (Exception ex)
 					{
-						log.warn("Cannot get the unique server ID for this JVM ('bitronix.tm.serverId'). Make sure it is configured and you use only " +
-						         SERVER_ID_CHARSET.displayName() + " characters. " +
-						         "Will use IP address instead (unsafe for production usage!).");
+						log.warning("Cannot get the unique server ID for this JVM ('bitronix.tm.serverId'). Make sure it is configured and you use only " +
+						            SERVER_ID_CHARSET.displayName() + " characters. " +
+						            "Will use IP address instead (unsafe for production usage!).");
 						try
 						{
 							id = InetAddress.getLocalHost()
@@ -1009,8 +1009,8 @@ public class Configuration
 						catch (Exception ex2)
 						{
 							String unknownServerId = "unknown-server-id";
-							log.warn("Cannot get the local IP address. Please verify your network configuration. Will use the constant '" + unknownServerId +
-							         "' as server ID (highly unsafe!).", ex2);
+							log.log(Level.WARNING, "Cannot get the local IP address. Please verify your network configuration. Will use the constant '" + unknownServerId +
+							                       "' as server ID (highly unsafe!).", ex2);
 							id = unknownServerId.getBytes();
 						}
 					}
@@ -1019,8 +1019,8 @@ public class Configuration
 					{
 						byte[] truncatedServerId = new byte[MAX_SERVER_ID_LENGTH];
 						System.arraycopy(id, 0, truncatedServerId, 0, MAX_SERVER_ID_LENGTH);
-						log.warn("The applied server ID '" + new String(id) + "' has to be truncated to " + MAX_SERVER_ID_LENGTH +
-						         " chars (builtin hard limit) resulting in " + new String(truncatedServerId) + ". This may be highly unsafe if IDs differ with suffixes only!");
+						log.warning("The applied server ID '" + new String(id) + "' has to be truncated to " + MAX_SERVER_ID_LENGTH +
+						            " chars (builtin hard limit) resulting in " + new String(truncatedServerId) + ". This may be highly unsafe if IDs differ with suffixes only!");
 						id = truncatedServerId;
 					}
 
@@ -1059,9 +1059,9 @@ public class Configuration
 		catch (PropertyException ex)
 		{
 			sb.append("???");
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("error accessing properties of Configuration object", ex);
+				log.log(Level.FINER, "error accessing properties of Configuration object", ex);
 			}
 		}
 

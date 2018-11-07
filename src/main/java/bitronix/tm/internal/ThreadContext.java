@@ -17,8 +17,6 @@ package bitronix.tm.internal;
 
 import bitronix.tm.BitronixTransaction;
 import bitronix.tm.TransactionManagerServices;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Transactional context of a thread. It contains both the active transaction (if any) and all default parameters
@@ -29,10 +27,9 @@ import org.slf4j.LoggerFactory;
 public class ThreadContext
 {
 
-	private final static Logger log = LoggerFactory.getLogger(ThreadContext.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ThreadContext.class.toString());
 	private static final ThreadLocal<ThreadContext> threadContext = ThreadLocal.withInitial(() -> new ThreadContext());
 	private volatile BitronixTransaction transaction;
-	;
 	private volatile int timeout = TransactionManagerServices.getConfiguration()
 	                                                         .getDefaultTransactionTimeout();
 
@@ -79,9 +76,9 @@ public class ThreadContext
 		{
 			throw new IllegalArgumentException("transaction parameter cannot be null");
 		}
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("assigning <" + transaction + "> to <" + this + ">");
+			log.finer("assigning <" + transaction + "> to <" + this + ">");
 		}
 		this.transaction = transaction;
 	}
@@ -118,17 +115,17 @@ public class ThreadContext
 		{
 			int defaultValue = TransactionManagerServices.getConfiguration()
 			                                             .getDefaultTransactionTimeout();
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("resetting default timeout of thread context to default value of " + defaultValue + "s");
+				log.finer("resetting default timeout of thread context to default value of " + defaultValue + "s");
 			}
 			this.timeout = defaultValue;
 		}
 		else
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("changing default timeout of thread context to " + timeout + "s");
+				log.finer("changing default timeout of thread context to " + timeout + "s");
 			}
 			this.timeout = timeout;
 		}

@@ -19,14 +19,13 @@ import bitronix.tm.BitronixTransaction;
 import bitronix.tm.BitronixXid;
 import bitronix.tm.TransactionManagerServices;
 import bitronix.tm.internal.BitronixRuntimeException;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.internal.XAResourceHolderState;
 import bitronix.tm.recovery.IncrementalRecoverer;
 import bitronix.tm.recovery.RecoveryException;
 import bitronix.tm.resource.common.XAStatefulHolder.State;
 import bitronix.tm.utils.MonotonicClock;
 import bitronix.tm.utils.Uid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.transaction.Synchronization;
 import java.util.*;
@@ -37,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
 
 /**
  * Generic XA pool. {@link XAStatefulHolder} instances are created by the {@link XAPool} out of a
@@ -50,7 +50,7 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		implements StateChangeListener<T>
 {
 
-	private final static Logger log = LoggerFactory.getLogger(XAPool.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(XAPool.class.toString());
 
 	/**
 	 * The stateTransitionLock makes sure that transitions of XAStatefulHolders from one state to another
@@ -104,7 +104,7 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 
 		if (bean.getIgnoreRecoveryFailures())
 		{
-			log.warn("resource '" + bean.getUniqueName() + "' is configured to ignore recovery failures, make sure this setting is not enabled on a production system!");
+			log.warning("resource '" + bean.getUniqueName() + "' is configured to ignore recovery failures, make sure this setting is not enabled on a production system!");
 		}
 	}
 
@@ -123,9 +123,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 	{
 		synchronized (poolGrowthShrinkLock)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("growing " + this + " to minimum pool size " + bean.getMinPoolSize());
+				log.finer("growing " + this + " to minimum pool size " + bean.getMinPoolSize());
 			}
 			for (int i = totalPoolSize(); i < bean.getMinPoolSize(); i++)
 			{
@@ -166,9 +166,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 	{
 		synchronized (poolGrowthShrinkLock)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("closing all connections of " + this);
+				log.finer("closing all connections of " + this);
 			}
 
 			for (T xaStatefulHolder : getXAResourceHolders())
@@ -179,9 +179,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 				}
 				catch (Exception ex)
 				{
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("ignoring exception while closing connection " + xaStatefulHolder, ex);
+						log.log(Level.FINER, "ignoring exception while closing connection " + xaStatefulHolder, ex);
 					}
 				}
 			}
@@ -208,23 +208,6 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 			}
 		}
 	}
-
-	/**
-	 * Get a connection handle from this pool.
-	 *
-	 * @return a connection handle
-	 *
-	 * @throws Exception
-	 * 		throw in the pool is unrecoverable or a timeout occurs getting a connection
-	 */
-	public Object getConnectionHandle() throws Exception
-	{
-		return getConnectionHandle(true);
-	}
-
-	/* ------------------------------------------------------------------------
-	 * Methods to obtain a connection from one of the internal pools.
-	 * ------------------------------------------------------------------------*/
 
 	/**
 	 * Get a connection handle from this pool.
@@ -269,9 +252,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 				xaStatefulHolder = getInPool(remainingTimeMs);
 			}
 
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("found " + xaStatefulHolder.getState() + " connection " + xaStatefulHolder + " from " + this);
+				log.finer("found " + xaStatefulHolder.getState() + " connection " + xaStatefulHolder + " from " + this);
 			}
 
 			try
@@ -288,9 +271,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 			}
 			catch (Exception ex)
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("connection is invalid, trying to close it", ex);
+					log.log(Level.FINER, "connection is invalid, trying to close it", ex);
 				}
 				try
 				{
@@ -298,25 +281,25 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 				}
 				catch (Exception ex2)
 				{
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("exception while trying to close invalid connection, ignoring it", ex2);
+						log.log(Level.FINER, "exception while trying to close invalid connection, ignoring it", ex2);
 					}
 				}
 				finally
 				{
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("removed invalid connection " + xaStatefulHolder + " from " + this);
+						log.finer("removed invalid connection " + xaStatefulHolder + " from " + this);
 					}
 					if (xaStatefulHolder.getState() != State.CLOSED)
 					{
 						stateChanged(xaStatefulHolder, xaStatefulHolder.getState(), State.CLOSED);
 					}
 
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("waiting " + bean.getAcquisitionInterval() + "s before trying to acquire a connection again from " + this);
+						log.finer("waiting " + bean.getAcquisitionInterval() + "s before trying to acquire a connection again from " + this);
 					}
 					long waitTime = TimeUnit.SECONDS.toMillis(bean.getAcquisitionInterval());
 					if (waitTime > 0)
@@ -335,13 +318,29 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 				// check for timeout
 				long now = MonotonicClock.currentTimeMillis();
 				remainingTimeMs -= (now - before);
-				before = now;
 				if (remainingTimeMs <= 0)
 				{
 					throw new BitronixRuntimeException("cannot get valid connection from " + this + " after trying for " + bean.getAcquisitionTimeout() + "s", ex);
 				}
 			}
 		} // while true
+	}
+
+	/* ------------------------------------------------------------------------
+	 * Methods to obtain a connection from one of the internal pools.
+	 * ------------------------------------------------------------------------*/
+
+	/**
+	 * Get a connection handle from this pool.
+	 *
+	 * @return a connection handle
+	 *
+	 * @throws Exception
+	 * 		throw in the pool is unrecoverable or a timeout occurs getting a connection
+	 */
+	public Object getConnectionHandle() throws Exception
+	{
+		return getConnectionHandle(true);
 	}
 
 	@Override
@@ -354,23 +353,23 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 			switch (newState)
 			{
 				case IN_POOL:
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("added " + source + " to the available pool");
+						log.finer("added " + source + " to the available pool");
 					}
 					availablePool.addFirst(source);
 					break;
 				case ACCESSIBLE:
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("added " + source + " to the accessible pool");
+						log.finer("added " + source + " to the accessible pool");
 					}
 					accessiblePool.add(source);
 					break;
 				case NOT_ACCESSIBLE:
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("added " + source + " to the inaccessible pool");
+						log.finer("added " + source + " to the inaccessible pool");
 					}
 					inaccessiblePool.add(source);
 					break;
@@ -401,16 +400,16 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 					// already removed when availablePool.poll() was called.
 					break;
 				case ACCESSIBLE:
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("removed " + source + " from the accessible pool");
+						log.finer("removed " + source + " from the accessible pool");
 					}
 					accessiblePool.remove(source);
 					break;
 				case NOT_ACCESSIBLE:
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("removed " + source + " from the inaccessible pool");
+						log.finer("removed " + source + " from the inaccessible pool");
 					}
 					inaccessiblePool.remove(source);
 					break;
@@ -443,16 +442,16 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 	{
 		if (inPoolSize() == 0)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("no more free connections in " + this + ", trying to grow it");
+				log.finer("no more free connections in " + this + ", trying to grow it");
 			}
 			grow();
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("getting IN_POOL connection from " + this + ", waiting if necessary");
+			log.finer("getting IN_POOL connection from " + this + ", waiting if necessary");
 		}
 
 		try
@@ -495,24 +494,24 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 	 */
 	private T getNotAccessible()
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("trying to recycle a NOT_ACCESSIBLE connection of " + this);
+			log.finer("trying to recycle a NOT_ACCESSIBLE connection of " + this);
 		}
 		BitronixTransaction transaction = TransactionContextHelper.currentTransaction();
 		if (transaction == null)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("no current transaction, no connection can be in state NOT_ACCESSIBLE when there is no global transaction context");
+				log.finer("no current transaction, no connection can be in state NOT_ACCESSIBLE when there is no global transaction context");
 			}
 			return null;
 		}
 		Uid currentTxGtrid = transaction.getResourceManager()
 		                                .getGtrid();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("current transaction GTRID is [" + currentTxGtrid + "]");
+			log.finer("current transaction GTRID is [" + currentTxGtrid + "]");
 		}
 
 		stateTransitionLock.readLock()
@@ -521,9 +520,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		{
 			for (T xaStatefulHolder : inaccessiblePool)
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("found a connection in NOT_ACCESSIBLE state: " + xaStatefulHolder);
+					log.finer("found a connection in NOT_ACCESSIBLE state: " + xaStatefulHolder);
 				}
 				if (containsXAResourceHolderMatchingGtrid(xaStatefulHolder, currentTxGtrid))
 				{
@@ -531,9 +530,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 				}
 			}
 
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("no NOT_ACCESSIBLE connection enlisted in this transaction");
+				log.finer("no NOT_ACCESSIBLE connection enlisted in this transaction");
 			}
 			return null;
 		}
@@ -558,9 +557,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		BitronixTransaction transaction = TransactionContextHelper.currentTransaction();
 		if (transaction == null)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("no current transaction, shared connection map will not be used");
+				log.finer("no current transaction, shared connection map will not be used");
 			}
 			return null;
 		}
@@ -577,9 +576,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 			    xaStatefulHolder.getState() != State.CLOSED)
 			{
 
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("sharing connection " + xaStatefulHolder + " in transaction " + currentTxGtrid);
+					log.finer("sharing connection " + xaStatefulHolder + " in transaction " + currentTxGtrid);
 				}
 				return xaStatefulHolder;
 			}
@@ -591,9 +590,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 	private boolean containsXAResourceHolderMatchingGtrid(T xaStatefulHolder, Uid currentTxGtrid)
 	{
 		List<? extends XAResourceHolder<? extends XAResourceHolder>> xaResourceHolders = xaStatefulHolder.getXAResourceHolders();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug(xaResourceHolders.size() + " xa resource(s) created by connection in NOT_ACCESSIBLE state: " + xaStatefulHolder);
+			log.finer(xaResourceHolders.size() + " xa resource(s) created by connection in NOT_ACCESSIBLE state: " + xaStatefulHolder);
 		}
 
 		class LocalVisitor
@@ -607,15 +606,15 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 				// compare GTRIDs
 				BitronixXid bitronixXid = xaResourceHolderState.getXid();
 				Uid resourceGtrid = bitronixXid.getGlobalTransactionIdUid();
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("NOT_ACCESSIBLE xa resource GTRID: " + resourceGtrid);
+					log.finer("NOT_ACCESSIBLE xa resource GTRID: " + resourceGtrid);
 				}
 				if (currentTxGtrid.equals(resourceGtrid))
 				{
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("NOT_ACCESSIBLE xa resource's GTRID matched this transaction's GTRID, recycling it");
+						log.finer("NOT_ACCESSIBLE xa resource's GTRID matched this transaction's GTRID, recycling it");
 					}
 					found = true;
 				}
@@ -658,9 +657,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 					increment = bean.getMaxPoolSize() - totalPoolSize;
 				}
 
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("incrementing " + bean.getUniqueName() + " pool size by " + increment + " unit(s) to reach " + (totalPoolSize() + increment) + " connection(s)");
+					log.finer("incrementing " + bean.getUniqueName() + " pool size by " + increment + " unit(s) to reach " + (totalPoolSize() + increment) + " connection(s)");
 				}
 				for (int i = 0; i < increment; i++)
 				{
@@ -669,9 +668,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 			}
 			else
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("pool " + bean.getUniqueName() + " already at max size of " + totalPoolSize() + " connection(s), not growing it");
+					log.finer("pool " + bean.getUniqueName() + " already at max size of " + totalPoolSize() + " connection(s), not growing it");
 				}
 			}
 
@@ -682,23 +681,18 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		}
 	}
 
-	public Date getNextShrinkDate()
-	{
-		return new Date(MonotonicClock.currentTimeMillis() + TimeUnit.SECONDS.toMillis(bean.getMaxIdleTime()));
-	}
-
 	public void shrink() throws Exception
 	{
 		synchronized (poolGrowthShrinkLock)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("shrinking " + this);
+				log.finer("shrinking " + this);
 			}
 			expireOrCloseStatefulHolders(false);
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("shrunk " + this);
+				log.finer("shrunk " + this);
 			}
 		}
 	}
@@ -725,9 +719,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 			}
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("closed " + closed + (forceClose ? " " : " idle ") + "connection(s)");
+			log.finer("closed " + closed + (forceClose ? " " : " idle ") + "connection(s)");
 		}
 
 		growUntilMinPoolSize();
@@ -750,9 +744,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		}
 
 		long now = MonotonicClock.currentTimeMillis();
-		if (!forceClose && log.isDebugEnabled())
+		if (!forceClose && LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("checking if connection can be closed: " + xaStatefulHolder + " - closing time: " + expirationTime + ", now time: " + now);
+			log.finer("checking if connection can be closed: " + xaStatefulHolder + " - closing time: " + expirationTime + ", now time: " + now);
 		}
 		if (expirationTime <= now || forceClose)
 		{
@@ -762,25 +756,30 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 			}
 			catch (Exception ex)
 			{
-				log.warn("error closing " + xaStatefulHolder, ex);
+				log.log(Level.WARNING, "error closing " + xaStatefulHolder, ex);
 			}
 			return true;
 		}
 		return false;
 	}
 
+	public Date getNextShrinkDate()
+	{
+		return new Date(MonotonicClock.currentTimeMillis() + TimeUnit.SECONDS.toMillis(bean.getMaxIdleTime()));
+	}
+
 	public void reset() throws Exception
 	{
 		synchronized (poolGrowthShrinkLock)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("resetting " + this);
+				log.finer("resetting " + this);
 			}
 			expireOrCloseStatefulHolders(true);
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("reset " + this);
+				log.finer("reset " + this);
 			}
 		}
 	}
@@ -793,9 +792,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 	{
 		try
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("resource '" + bean.getUniqueName() + "' is marked as failed, resetting and recovering it before trying connection acquisition");
+				log.finer("resource '" + bean.getUniqueName() + "' is marked as failed, resetting and recovering it before trying connection acquisition");
 			}
 			close();
 			init();
@@ -900,9 +899,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		BitronixTransaction transaction = TransactionContextHelper.currentTransaction();
 		if (transaction == null)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("no current transaction, not adding " + xaStatefulHolder + " to shared connection map");
+				log.finer("no current transaction, not adding " + xaStatefulHolder + " to shared connection map");
 			}
 			return;
 		}
@@ -926,9 +925,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 
 			threadLocal = new StatefulHolderThreadLocal<>();
 			statefulHolderTransactionMap.put(currentTxGtrid, threadLocal);
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("added shared connection mapping for " + currentTxGtrid + " holder " + xaStatefulHolder);
+				log.finer("added shared connection mapping for " + currentTxGtrid + " holder " + xaStatefulHolder);
 			}
 		}
 
@@ -972,9 +971,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		public void afterCompletion(int status)
 		{
 			statefulHolderTransactionMap.remove(gtrid);
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("deleted shared connection mappings for " + gtrid);
+				log.finer("deleted shared connection mappings for " + gtrid);
 			}
 		}
 

@@ -20,8 +20,6 @@ import bitronix.tm.resource.jdbc.PoolingDataSource;
 import bitronix.tm.resource.jdbc.lrc.LrcXADataSource;
 import bitronix.tm.utils.DefaultExceptionAnalyzer;
 import junit.framework.TestCase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
@@ -36,7 +34,7 @@ public class JtaTest
 		extends TestCase
 {
 
-	private final static Logger log = LoggerFactory.getLogger(JtaTest.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(JtaTest.class.toString());
 
 	private BitronixTransactionManager btm;
 

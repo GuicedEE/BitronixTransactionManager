@@ -21,8 +21,6 @@ import bitronix.tm.resource.common.XAResourceHolder;
 import bitronix.tm.utils.Scheduler;
 import bitronix.tm.utils.Uid;
 import bitronix.tm.utils.UidGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
@@ -37,7 +35,7 @@ import java.util.*;
 public class XAResourceManager
 {
 
-	private final static Logger log = LoggerFactory.getLogger(XAResourceManager.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(XAResourceManager.class.toString());
 
 	private final Uid gtrid;
 	private final Scheduler<XAResourceHolderState> resources = new Scheduler<>();
@@ -72,15 +70,15 @@ public class XAResourceManager
 	{
 		if (findXAResourceHolderState(xaResourceHolderState.getXAResource()) != null)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("delisting resource " + xaResourceHolderState);
+				log.finer("delisting resource " + xaResourceHolderState);
 			}
 			xaResourceHolderState.end(flag);
 			return true;
 		}
 
-		log.warn("trying to delist resource that has not been previously enlisted: " + xaResourceHolderState);
+		log.warning("trying to delist resource that has not been previously enlisted: " + xaResourceHolderState);
 		return false;
 	}
 
@@ -121,9 +119,9 @@ public class XAResourceManager
 		{
 			if (!xaResourceHolderState.isEnded())
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("suspending " + xaResourceHolderState);
+					log.finer("suspending " + xaResourceHolderState);
 				}
 				xaResourceHolderState.end(XAResource.TMSUCCESS);
 			}
@@ -145,9 +143,9 @@ public class XAResourceManager
 
 		for (XAResourceHolderState xaResourceHolderState : resources)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("resuming " + xaResourceHolderState);
+				log.finer("resuming " + xaResourceHolderState);
 			}
 
 			// If a prepared statement is (re-)used after suspend/resume is performed its XAResource needs to be
@@ -155,15 +153,15 @@ public class XAResourceManager
 			toBeReEnlisted.add(new XAResourceHolderState(xaResourceHolderState));
 		}
 
-		if (toBeReEnlisted.size() > 0 && log.isDebugEnabled())
+		if (toBeReEnlisted.size() > 0 && LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("re-enlisting " + toBeReEnlisted.size() + " resource(s)");
+			log.finer("re-enlisting " + toBeReEnlisted.size() + " resource(s)");
 		}
 		for (XAResourceHolderState xaResourceHolderState : toBeReEnlisted)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("re-enlisting resource " + xaResourceHolderState);
+				log.finer("re-enlisting resource " + xaResourceHolderState);
 			}
 			try
 			{
@@ -204,16 +202,16 @@ public class XAResourceManager
 		if (alreadyEnlistedHolder != null && !alreadyEnlistedHolder.isEnded())
 		{
 			xaResourceHolderState.setXid(alreadyEnlistedHolder.getXid());
-			log.warn("ignoring enlistment of already enlisted but not ended resource " + xaResourceHolderState);
+			log.warning("ignoring enlistment of already enlisted but not ended resource " + xaResourceHolderState);
 			return;
 		}
 
 		XAResourceHolderState toBeJoinedHolderState = null;
 		if (alreadyEnlistedHolder != null)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("resource already enlisted but has been ended eligible for join: " + alreadyEnlistedHolder);
+				log.finer("resource already enlisted but has been ended eligible for join: " + alreadyEnlistedHolder);
 			}
 			toBeJoinedHolderState = getManagedResourceWithSameRM(xaResourceHolderState);
 		}
@@ -223,9 +221,9 @@ public class XAResourceManager
 
 		if (toBeJoinedHolderState != null)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("joining " + xaResourceHolderState + " with " + toBeJoinedHolderState);
+				log.finer("joining " + xaResourceHolderState + " with " + toBeJoinedHolderState);
 			}
 			xid = toBeJoinedHolderState.getXid();
 			flag = XAResource.TMJOIN;
@@ -233,9 +231,9 @@ public class XAResourceManager
 		else
 		{
 			xid = UidGenerator.generateXid(gtrid);
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("creating new branch with " + xid);
+				log.finer("creating new branch with " + xid);
 			}
 			flag = XAResource.TMNOFLAGS;
 		}
@@ -284,39 +282,39 @@ public class XAResourceManager
 	{
 		if (!xaResourceHolderState.getUseTmJoin())
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("join disabled on resource " + xaResourceHolderState);
+				log.finer("join disabled on resource " + xaResourceHolderState);
 			}
 			return null;
 		}
 
 		for (XAResourceHolderState alreadyEnlistedHolderState : resources)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("checking joinability of " + xaResourceHolderState + " with " + alreadyEnlistedHolderState);
+				log.finer("checking joinability of " + xaResourceHolderState + " with " + alreadyEnlistedHolderState);
 			}
 			if (alreadyEnlistedHolderState.isEnded() &&
 			    !alreadyEnlistedHolderState.isSuspended() &&
 			    xaResourceHolderState.getXAResource()
 			                         .isSameRM(alreadyEnlistedHolderState.getXAResource()))
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("resources are joinable");
+					log.finer("resources are joinable");
 				}
 				return alreadyEnlistedHolderState;
 			}
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("resources are not joinable");
+				log.finer("resources are not joinable");
 			}
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("no joinable resource found for " + xaResourceHolderState);
+			log.finer("no joinable resource found for " + xaResourceHolderState);
 		}
 		return null;
 	}
@@ -327,9 +325,9 @@ public class XAResourceManager
 	 */
 	public void clearXAResourceHolderStates()
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("clearing XAResourceHolder states on " + resources.size() + " resource(s)");
+			log.finer("clearing XAResourceHolder states on " + resources.size() + " resource(s)");
 		}
 		Iterator<XAResourceHolderState> it = resources.iterator();
 		while (it.hasNext())
@@ -343,12 +341,12 @@ public class XAResourceManager
 			boolean stillExists = resourceHolder.isExistXAResourceHolderStatesForGtrid(gtrid);
 			if (stillExists)
 			{
-				log.warn("resource " + resourceHolder + " did not clean up " + resourceHolder.getXAResourceHolderStateCountForGtrid(gtrid) + "transaction states for GTRID [" +
-				         gtrid + "]");
+				log.warning("resource " + resourceHolder + " did not clean up " + resourceHolder.getXAResourceHolderStateCountForGtrid(gtrid) + "transaction states for GTRID [" +
+				            gtrid + "]");
 			}
-			else if (log.isDebugEnabled())
+			else if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("resource " + resourceHolder + " cleaned up all transaction states for GTRID [" + gtrid + "]");
+				log.finer("resource " + resourceHolder + " cleaned up all transaction states for GTRID [" + gtrid + "]");
 			}
 
 			it.remove();

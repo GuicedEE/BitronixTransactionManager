@@ -15,28 +15,9 @@
  */
 package bitronix.tm.resource.jms.lrc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import bitronix.tm.internal.LogDebugCheck;
 
-import javax.jms.BytesMessage;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MapMessage;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
-import javax.jms.MessageProducer;
-import javax.jms.ObjectMessage;
-import javax.jms.Queue;
-import javax.jms.QueueBrowser;
-import javax.jms.Session;
-import javax.jms.StreamMessage;
-import javax.jms.TemporaryQueue;
-import javax.jms.TemporaryTopic;
-import javax.jms.TextMessage;
-import javax.jms.Topic;
-import javax.jms.TopicSubscriber;
-import javax.jms.XASession;
+import javax.jms.*;
 import javax.transaction.xa.XAResource;
 import java.io.Serializable;
 
@@ -45,181 +26,220 @@ import java.io.Serializable;
  *
  * @author Ludovic Orban
  */
-public class LrcXASession implements XASession {
+public class LrcXASession
+		implements XASession
+{
 
-    private final static Logger log = LoggerFactory.getLogger(LrcXASession.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(LrcXASession.class.toString());
 
-    private final Session nonXaSession;
-    private final XAResource xaResource;
+	private final Session nonXaSession;
+	private final XAResource xaResource;
 
-    public LrcXASession(Session session) {
-        this.nonXaSession = session;
-        this.xaResource = new LrcXAResource(session);
-        if (log.isDebugEnabled()) { log.debug("creating new LrcXASession with " + xaResource); }
-    }
+	public LrcXASession(Session session)
+	{
+		this.nonXaSession = session;
+		this.xaResource = new LrcXAResource(session);
+		if (LogDebugCheck.isDebugEnabled())
+		{
+			log.finer("creating new LrcXASession with " + xaResource);
+		}
+	}
 
-    @Override
-    public Session getSession() throws JMSException {
-        return nonXaSession;
-    }
+	@Override
+	public Session getSession() throws JMSException
+	{
+		return nonXaSession;
+	}
 
-    @Override
-    public XAResource getXAResource() {
-        return xaResource;
-    }
+	@Override
+	public XAResource getXAResource()
+	{
+		return xaResource;
+	}
 
-    @Override
-    public BytesMessage createBytesMessage() throws JMSException {
-        return nonXaSession.createBytesMessage();
-    }
+	@Override
+	public boolean getTransacted() throws JMSException
+	{
+		return nonXaSession.getTransacted();
+	}
 
-    @Override
-    public MapMessage createMapMessage() throws JMSException {
-        return nonXaSession.createMapMessage();
-    }
+	@Override
+	public void commit() throws JMSException
+	{
+		nonXaSession.commit();
+	}
 
-    @Override
-    public Message createMessage() throws JMSException {
-        return nonXaSession.createMessage();
-    }
+	@Override
+	public void rollback() throws JMSException
+	{
+		nonXaSession.rollback();
+	}
 
-    @Override
-    public ObjectMessage createObjectMessage() throws JMSException {
-        return nonXaSession.createObjectMessage();
-    }
+	@Override
+	public BytesMessage createBytesMessage() throws JMSException
+	{
+		return nonXaSession.createBytesMessage();
+	}
 
-    @Override
-    public ObjectMessage createObjectMessage(Serializable serializable) throws JMSException {
-        return nonXaSession.createObjectMessage(serializable);
-    }
+	@Override
+	public MapMessage createMapMessage() throws JMSException
+	{
+		return nonXaSession.createMapMessage();
+	}
 
-    @Override
-    public StreamMessage createStreamMessage() throws JMSException {
-        return nonXaSession.createStreamMessage();
-    }
+	@Override
+	public Message createMessage() throws JMSException
+	{
+		return nonXaSession.createMessage();
+	}
 
-    @Override
-    public TextMessage createTextMessage() throws JMSException {
-        return nonXaSession.createTextMessage();
-    }
+	@Override
+	public ObjectMessage createObjectMessage() throws JMSException
+	{
+		return nonXaSession.createObjectMessage();
+	}
 
-    @Override
-    public TextMessage createTextMessage(String text) throws JMSException {
-        return nonXaSession.createTextMessage(text);
-    }
+	@Override
+	public ObjectMessage createObjectMessage(Serializable serializable) throws JMSException
+	{
+		return nonXaSession.createObjectMessage(serializable);
+	}
 
-    @Override
-    public boolean getTransacted() throws JMSException {
-        return nonXaSession.getTransacted();
-    }
+	@Override
+	public StreamMessage createStreamMessage() throws JMSException
+	{
+		return nonXaSession.createStreamMessage();
+	}
 
-    @Override
-    public int getAcknowledgeMode() throws JMSException {
-        return nonXaSession.getAcknowledgeMode();
-    }
+	@Override
+	public TextMessage createTextMessage() throws JMSException
+	{
+		return nonXaSession.createTextMessage();
+	}
 
-    @Override
-    public void commit() throws JMSException {
-        nonXaSession.commit();
-    }
+	@Override
+	public TextMessage createTextMessage(String text) throws JMSException
+	{
+		return nonXaSession.createTextMessage(text);
+	}
 
-    @Override
-    public void rollback() throws JMSException {
-        nonXaSession.rollback();
-    }
+	@Override
+	public int getAcknowledgeMode() throws JMSException
+	{
+		return nonXaSession.getAcknowledgeMode();
+	}
 
-    @Override
-    public void close() throws JMSException {
-        nonXaSession.close();
-    }
+	@Override
+	public void close() throws JMSException
+	{
+		nonXaSession.close();
+	}
 
-    @Override
-    public void recover() throws JMSException {
-        nonXaSession.recover();
-    }
+	@Override
+	public void recover() throws JMSException
+	{
+		nonXaSession.recover();
+	}
 
-    @Override
-    public MessageListener getMessageListener() throws JMSException {
-        return nonXaSession.getMessageListener();
-    }
+	@Override
+	public MessageListener getMessageListener() throws JMSException
+	{
+		return nonXaSession.getMessageListener();
+	}
 
-    @Override
-    public void setMessageListener(MessageListener messageListener) throws JMSException {
-        nonXaSession.setMessageListener(messageListener);
-    }
+	@Override
+	public void setMessageListener(MessageListener messageListener) throws JMSException
+	{
+		nonXaSession.setMessageListener(messageListener);
+	}
 
-    @Override
-    public void run() {
-        nonXaSession.run();
-    }
+	@Override
+	public void run()
+	{
+		nonXaSession.run();
+	}
 
-    @Override
-    public MessageProducer createProducer(Destination destination) throws JMSException {
-        return nonXaSession.createProducer(destination);
-    }
+	@Override
+	public MessageProducer createProducer(Destination destination) throws JMSException
+	{
+		return nonXaSession.createProducer(destination);
+	}
 
-    @Override
-    public MessageConsumer createConsumer(Destination destination) throws JMSException {
-        return nonXaSession.createConsumer(destination);
-    }
+	@Override
+	public MessageConsumer createConsumer(Destination destination) throws JMSException
+	{
+		return nonXaSession.createConsumer(destination);
+	}
 
-    @Override
-    public MessageConsumer createConsumer(Destination destination, String messageSelector) throws JMSException {
-        return nonXaSession.createConsumer(destination, messageSelector);
-    }
+	@Override
+	public MessageConsumer createConsumer(Destination destination, String messageSelector) throws JMSException
+	{
+		return nonXaSession.createConsumer(destination, messageSelector);
+	}
 
-    @Override
-    public MessageConsumer createConsumer(Destination destination, String messageSelector, boolean noLocal) throws JMSException {
-        return nonXaSession.createConsumer(destination, messageSelector, noLocal);
-    }
+	@Override
+	public MessageConsumer createConsumer(Destination destination, String messageSelector, boolean noLocal) throws JMSException
+	{
+		return nonXaSession.createConsumer(destination, messageSelector, noLocal);
+	}
 
-    @Override
-    public Queue createQueue(String queueName) throws JMSException {
-        return nonXaSession.createQueue(queueName);
-    }
+	@Override
+	public Queue createQueue(String queueName) throws JMSException
+	{
+		return nonXaSession.createQueue(queueName);
+	}
 
-    @Override
-    public Topic createTopic(String topicName) throws JMSException {
-        return nonXaSession.createTopic(topicName);
-    }
+	@Override
+	public Topic createTopic(String topicName) throws JMSException
+	{
+		return nonXaSession.createTopic(topicName);
+	}
 
-    @Override
-    public TopicSubscriber createDurableSubscriber(Topic topic, String name) throws JMSException {
-        return nonXaSession.createDurableSubscriber(topic, name);
-    }
+	@Override
+	public TopicSubscriber createDurableSubscriber(Topic topic, String name) throws JMSException
+	{
+		return nonXaSession.createDurableSubscriber(topic, name);
+	}
 
-    @Override
-    public TopicSubscriber createDurableSubscriber(Topic topic, String name, String messageSelector, boolean noLocal) throws JMSException {
-        return nonXaSession.createDurableSubscriber(topic, name, messageSelector, noLocal);
-    }
+	@Override
+	public TopicSubscriber createDurableSubscriber(Topic topic, String name, String messageSelector, boolean noLocal) throws JMSException
+	{
+		return nonXaSession.createDurableSubscriber(topic, name, messageSelector, noLocal);
+	}
 
-    @Override
-    public QueueBrowser createBrowser(Queue queue) throws JMSException {
-        return nonXaSession.createBrowser(queue);
-    }
+	@Override
+	public QueueBrowser createBrowser(Queue queue) throws JMSException
+	{
+		return nonXaSession.createBrowser(queue);
+	}
 
-    @Override
-    public QueueBrowser createBrowser(Queue queue, String messageSelector) throws JMSException {
-        return nonXaSession.createBrowser(queue, messageSelector);
-    }
+	@Override
+	public QueueBrowser createBrowser(Queue queue, String messageSelector) throws JMSException
+	{
+		return nonXaSession.createBrowser(queue, messageSelector);
+	}
 
-    @Override
-    public TemporaryQueue createTemporaryQueue() throws JMSException {
-        return nonXaSession.createTemporaryQueue();
-    }
+	@Override
+	public TemporaryQueue createTemporaryQueue() throws JMSException
+	{
+		return nonXaSession.createTemporaryQueue();
+	}
 
-    @Override
-    public TemporaryTopic createTemporaryTopic() throws JMSException {
-        return nonXaSession.createTemporaryTopic();
-    }
+	@Override
+	public TemporaryTopic createTemporaryTopic() throws JMSException
+	{
+		return nonXaSession.createTemporaryTopic();
+	}
 
-    @Override
-    public void unsubscribe(String name) throws JMSException {
-        nonXaSession.unsubscribe(name);
-    }
+	@Override
+	public void unsubscribe(String name) throws JMSException
+	{
+		nonXaSession.unsubscribe(name);
+	}
 
-    @Override
-    public String toString() {
-        return "a JMS LrcXASession on " + nonXaSession;
-    }
+	@Override
+	public String toString()
+	{
+		return "a JMS LrcXASession on " + nonXaSession;
+	}
 }

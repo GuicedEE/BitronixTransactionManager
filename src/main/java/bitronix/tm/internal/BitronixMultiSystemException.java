@@ -19,7 +19,6 @@ import bitronix.tm.TransactionManagerServices;
 import bitronix.tm.utils.Decoder;
 
 import javax.transaction.xa.XAException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,8 +30,8 @@ public class BitronixMultiSystemException
 		extends BitronixSystemException
 {
 
-	private List<? extends Exception> exceptions = new ArrayList<>();
-	private List<XAResourceHolderState> resourceStates = new ArrayList<>();
+	private List<? extends Exception> exceptions;
+	private List<XAResourceHolderState> resourceStates;
 
 	public BitronixMultiSystemException(String string, List<? extends Exception> exceptions, List<XAResourceHolderState> resourceStates)
 	{

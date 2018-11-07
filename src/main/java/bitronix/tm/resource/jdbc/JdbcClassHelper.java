@@ -15,8 +15,7 @@
  */
 package bitronix.tm.resource.jdbc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import bitronix.tm.internal.LogDebugCheck;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -26,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class JdbcClassHelper
 {
 
-	private final static Logger log = LoggerFactory.getLogger(JdbcClassHelper.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(JdbcClassHelper.class.toString());
 
 	private final static int DETECTION_TIMEOUT = 5; // seconds
 
@@ -63,9 +62,9 @@ public class JdbcClassHelper
 		}
 
 		connectionClassVersions.put(connectionClass, jdbcVersionDetected);
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("detected JDBC connection class '" + connectionClass + "' is version " + jdbcVersionDetected + " type");
+			log.finer("detected JDBC connection class '" + connectionClass + "' is version " + jdbcVersionDetected + " type");
 		}
 
 		return jdbcVersionDetected;

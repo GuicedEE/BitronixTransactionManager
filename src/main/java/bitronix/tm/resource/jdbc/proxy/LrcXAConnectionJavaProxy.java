@@ -15,9 +15,8 @@
  */
 package bitronix.tm.resource.jdbc.proxy;
 
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.resource.jdbc.lrc.LrcXAResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.ConnectionEvent;
 import javax.sql.ConnectionEventListener;
@@ -37,7 +36,7 @@ public class LrcXAConnectionJavaProxy
 		extends JavaProxyBase<Connection>
 {
 
-	private final static Logger log = LoggerFactory.getLogger(LrcXAConnectionJavaProxy.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(LrcXAConnectionJavaProxy.class.toString());
 
 	private final static Map<String, Method> selfMethodMap = createMethodMap(LrcXAConnectionJavaProxy.class);
 
@@ -63,9 +62,9 @@ public class LrcXAConnectionJavaProxy
 
 	private void fireCloseEvent()
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("notifying " + connectionEventListeners.size() + " connectionEventListeners(s) about closing of " + this);
+			log.finer("notifying " + connectionEventListeners.size() + " connectionEventListeners(s) about closing of " + this);
 		}
 		for (ConnectionEventListener connectionEventListener : connectionEventListeners)
 		{

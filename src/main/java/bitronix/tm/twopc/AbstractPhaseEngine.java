@@ -16,17 +16,17 @@
 package bitronix.tm.twopc;
 
 import bitronix.tm.TransactionManagerServices;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.internal.XAResourceHolderState;
 import bitronix.tm.internal.XAResourceManager;
 import bitronix.tm.twopc.executor.Executor;
 import bitronix.tm.twopc.executor.Job;
 import bitronix.tm.utils.CollectionUtils;
 import bitronix.tm.utils.Decoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.transaction.xa.XAException;
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Abstract phase execution engine.
@@ -36,7 +36,7 @@ import java.util.*;
 public abstract class AbstractPhaseEngine
 {
 
-	private final static Logger log = LoggerFactory.getLogger(AbstractPhaseEngine.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(AbstractPhaseEngine.class.toString());
 
 	private final Executor executor;
 
@@ -94,17 +94,17 @@ public abstract class AbstractPhaseEngine
 		if (reverse)
 		{
 			positions = resourceManager.getReverseOrderPositions();
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("executing phase on " + resourceManager.size() + " resource(s) enlisted in " + positions.size() + " position(s) in reverse position order");
+				log.finer("executing phase on " + resourceManager.size() + " resource(s) enlisted in " + positions.size() + " position(s) in reverse position order");
 			}
 		}
 		else
 		{
 			positions = resourceManager.getNaturalOrderPositions();
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("executing phase on " + resourceManager.size() + " resource(s) enlisted in " + positions.size() + " position(s) in natural position order");
+				log.finer("executing phase on " + resourceManager.size() + " resource(s) enlisted in " + positions.size() + " position(s) in natural position order");
 			}
 		}
 
@@ -122,25 +122,25 @@ public abstract class AbstractPhaseEngine
 				resources = resourceManager.getNaturalOrderResourcesForPosition(positionKey);
 			}
 
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("running " + resources.size() + " job(s) for position '" + positionKey + "'");
+				log.finer("running " + resources.size() + " job(s) for position '" + positionKey + "'");
 			}
 			JobsExecutionReport report = runJobsForPosition(resources);
 			if (report.getExceptions()
 			          .size() > 0)
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug(report.getExceptions()
+					log.finer(report.getExceptions()
 					                .size() + " error(s) happened during execution of position '" + positionKey + "'");
 				}
 				positionErrorReports.add(report);
 				break;
 			}
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("ran " + resources.size() + " job(s) for position '" + positionKey + "'");
+				log.finer("ran " + resources.size() + " job(s) for position '" + positionKey + "'");
 			}
 		}
 
@@ -171,9 +171,9 @@ public abstract class AbstractPhaseEngine
 		{
 			if (!isParticipating(resource))
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("skipping not participating resource " + resource);
+					log.finer("skipping not participating resource " + resource);
 				}
 				continue;
 			}
@@ -200,9 +200,9 @@ public abstract class AbstractPhaseEngine
 			{
 				String extraErrorDetails = TransactionManagerServices.getExceptionAnalyzer()
 				                                                     .extractExtraXAExceptionDetails(xaException);
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("error executing " + job + ", errorCode=" + Decoder.decodeXAExceptionErrorCode(xaException) +
+					log.finer("error executing " + job + ", errorCode=" + Decoder.decodeXAExceptionErrorCode(xaException) +
 					          (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails));
 				}
 				exceptions.add(xaException);
@@ -210,18 +210,18 @@ public abstract class AbstractPhaseEngine
 			}
 			else if (runtimeException != null)
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("error executing " + job);
+					log.finer("error executing " + job);
 				}
 				exceptions.add(runtimeException);
 				errorResources.add(job.getResource());
 			}
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("phase executed with " + exceptions.size() + " exception(s)");
+			log.finer("phase executed with " + exceptions.size() + " exception(s)");
 		}
 		return new JobsExecutionReport(exceptions, errorResources);
 	}
@@ -262,7 +262,7 @@ public abstract class AbstractPhaseEngine
 		{
 			Exception e = exceptions.get(i);
 			XAResourceHolderState holderState = resources.get(i);
-			log.error("resource " + holderState.getUniqueName() + " failed on " + holderState.getXid(), e);
+			log.log(Level.SEVERE, "resource " + holderState.getUniqueName() + " failed on " + holderState.getXid(), e);
 		}
 	}
 

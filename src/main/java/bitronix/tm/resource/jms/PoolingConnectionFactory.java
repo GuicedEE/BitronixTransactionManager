@@ -15,6 +15,7 @@
  */
 package bitronix.tm.resource.jms;
 
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.internal.XAResourceHolderState;
 import bitronix.tm.recovery.RecoveryException;
 import bitronix.tm.resource.ResourceConfigurationException;
@@ -25,8 +26,6 @@ import bitronix.tm.resource.common.ResourceBean;
 import bitronix.tm.resource.common.XAPool;
 import bitronix.tm.resource.common.XAResourceProducer;
 import bitronix.tm.utils.ManagementRegistrar;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.jms.*;
 import javax.naming.NamingException;
@@ -48,7 +47,7 @@ public class PoolingConnectionFactory
 				           PoolingConnectionFactoryMBean
 {
 
-	private final static Logger log = LoggerFactory.getLogger(PoolingConnectionFactory.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(PoolingConnectionFactory.class.toString());
 	private final transient List<JmsPooledConnection> xaStatefulHolders;
 	private volatile transient XAPool<DualSessionWrapper, JmsPooledConnection> pool;
 	private volatile transient XAConnectionFactory xaConnectionFactory;
@@ -167,9 +166,9 @@ public class PoolingConnectionFactory
 			return;
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("building JMS XA pool for " + getUniqueName() + " with " + getMinPoolSize() + " connection(s)");
+			log.finer("building JMS XA pool for " + getUniqueName() + " with " + getMinPoolSize() + " connection(s)");
 		}
 		pool = new XAPool<>(this, this, xaConnectionFactory);
 		boolean builtXaFactory = false;
@@ -207,9 +206,9 @@ public class PoolingConnectionFactory
 			{
 				try
 				{
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("recovery connection handle is being closed: " + recoveryConnectionHandle);
+						log.finer("recovery connection handle is being closed: " + recoveryConnectionHandle);
 					}
 					recoveryConnectionHandle.close();
 				}
@@ -223,9 +222,9 @@ public class PoolingConnectionFactory
 			{
 				try
 				{
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("recovery xa resource is being closed: " + recoveryXAResourceHolder);
+						log.finer("recovery xa resource is being closed: " + recoveryXAResourceHolder);
 					}
 					recoveryXAResourceHolder.close();
 				}
@@ -241,26 +240,6 @@ public class PoolingConnectionFactory
 			recoveryXAResourceHolder = null;
 			recoveryPooledConnection = null;
 		}
-	}
-
-	/**
-	 * {@link PoolingConnectionFactory} must alway have a unique name so this method builds a reference to this object
-	 * using the unique name as {@link javax.naming.RefAddr}.
-	 *
-	 * @return a reference to this {@link PoolingConnectionFactory}.
-	 */
-	@Override
-	public Reference getReference() throws NamingException
-	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("creating new JNDI reference of " + this);
-		}
-		return new Reference(
-				PoolingConnectionFactory.class.getName(),
-				new StringRefAddr("uniqueName", getUniqueName()),
-				ResourceObjectFactory.class.getName(),
-				null);
 	}
 
 	@Override
@@ -335,9 +314,9 @@ public class PoolingConnectionFactory
 			return;
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("closing " + pool);
+			log.finer("closing " + pool);
 		}
 		pool.close();
 		pool = null;
@@ -361,17 +340,17 @@ public class PoolingConnectionFactory
 		XAConnection xaConnection;
 		if (user == null || password == null)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("creating new JMS XAConnection with no credentials");
+				log.finer("creating new JMS XAConnection with no credentials");
 			}
 			xaConnection = xaConnectionFactory.createXAConnection();
 		}
 		else
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("creating new JMS XAConnection with user <" + user + "> and password <" + password + ">");
+				log.finer("creating new JMS XAConnection with user <" + user + "> and password <" + password + ">");
 			}
 			xaConnection = xaConnectionFactory.createXAConnection(user, password);
 		}
@@ -385,6 +364,26 @@ public class PoolingConnectionFactory
 	public void reset() throws Exception
 	{
 		pool.reset();
+	}
+
+	/**
+	 * {@link PoolingConnectionFactory} must alway have a unique name so this method builds a reference to this object
+	 * using the unique name as {@link javax.naming.RefAddr}.
+	 *
+	 * @return a reference to this {@link PoolingConnectionFactory}.
+	 */
+	@Override
+	public Reference getReference() throws NamingException
+	{
+		if (LogDebugCheck.isDebugEnabled())
+		{
+			log.finer("creating new JNDI reference of " + this);
+		}
+		return new Reference(
+				PoolingConnectionFactory.class.getName(),
+				new StringRefAddr("uniqueName", getUniqueName()),
+				ResourceObjectFactory.class.getName(),
+				null);
 	}
 
 	@Override
@@ -406,13 +405,12 @@ public class PoolingConnectionFactory
 		}
 	}
 
-
 	@Override
 	public Connection createConnection(String userName, String password) throws JMSException
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("JMS connections are pooled, username and password ignored");
+			log.finer("JMS connections are pooled, username and password ignored");
 		}
 		return createConnection();
 	}

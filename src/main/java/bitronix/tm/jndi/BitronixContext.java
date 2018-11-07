@@ -16,9 +16,8 @@
 package bitronix.tm.jndi;
 
 import bitronix.tm.TransactionManagerServices;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.resource.ResourceRegistrar;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.naming.*;
 import java.util.Hashtable;
@@ -36,7 +35,7 @@ public class BitronixContext
 		implements Context
 {
 
-	private final static Logger log = LoggerFactory.getLogger(BitronixContext.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixContext.class.toString());
 	private final String userTransactionName;
 	private final String synchronizationRegistryName;
 	private boolean closed = false;
@@ -45,16 +44,16 @@ public class BitronixContext
 	{
 		userTransactionName = TransactionManagerServices.getConfiguration()
 		                                                .getJndiUserTransactionName();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("binding transaction manager at name '" + userTransactionName + "'");
+			log.finer("binding transaction manager at name '" + userTransactionName + "'");
 		}
 
 		synchronizationRegistryName = TransactionManagerServices.getConfiguration()
 		                                                        .getJndiTransactionSynchronizationRegistryName();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("binding synchronization registry at name '" + synchronizationRegistryName + "'");
+			log.finer("binding synchronization registry at name '" + synchronizationRegistryName + "'");
 		}
 	}
 
@@ -76,9 +75,9 @@ public class BitronixContext
 	public Object lookup(String s) throws NamingException
 	{
 		checkClosed();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("looking up '" + s + "'");
+			log.finer("looking up '" + s + "'");
 		}
 
 		Object o;

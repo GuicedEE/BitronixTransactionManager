@@ -15,6 +15,7 @@
  */
 package bitronix.tm;
 
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.journal.DiskJournal;
 import bitronix.tm.journal.Journal;
 import bitronix.tm.journal.NullJournal;
@@ -28,12 +29,11 @@ import bitronix.tm.utils.ClassLoaderUtils;
 import bitronix.tm.utils.DefaultExceptionAnalyzer;
 import bitronix.tm.utils.ExceptionAnalyzer;
 import bitronix.tm.utils.InitializationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 
 /**
  * Container for all BTM services.
@@ -46,7 +46,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class TransactionManagerServices
 {
 
-	private final static Logger log = LoggerFactory.getLogger(TransactionManagerServices.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionManagerServices.class.toString());
 
 	private static final Lock transactionManagerLock = new ReentrantLock();
 	private static final AtomicReference<BitronixTransactionSynchronizationRegistry> transactionSynchronizationRegistryRef = new AtomicReference<>();
@@ -132,9 +132,9 @@ public class TransactionManagerServices
 					throw new InitializationException("invalid journal implementation '" + configuredJournal + "'", ex);
 				}
 			}
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("using journal " + configuredJournal);
+				log.finer("using journal " + configuredJournal);
 			}
 
 			if (!journalRef.compareAndSet(null, journal))
@@ -237,17 +237,17 @@ public class TransactionManagerServices
 		{
 			if (getConfiguration().isAsynchronous2Pc())
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("using AsyncExecutor");
+					log.finer("using AsyncExecutor");
 				}
 				executor = new AsyncExecutor();
 			}
 			else
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("using SyncExecutor");
+					log.finer("using SyncExecutor");
 				}
 				executor = new SyncExecutor();
 			}
@@ -283,7 +283,7 @@ public class TransactionManagerServices
 				}
 				catch (Exception ex)
 				{
-					log.warn("failed to initialize custom exception analyzer, using default one instead", ex);
+					log.log(Level.WARNING, "failed to initialize custom exception analyzer, using default one instead", ex);
 				}
 			}
 			if (!exceptionAnalyzerRef.compareAndSet(null, analyzer))

@@ -17,15 +17,10 @@ package bitronix.tm.twopc;
 
 import bitronix.tm.BitronixTransaction;
 import bitronix.tm.TransactionManagerServices;
-import bitronix.tm.internal.BitronixRollbackException;
-import bitronix.tm.internal.BitronixSystemException;
-import bitronix.tm.internal.XAResourceHolderState;
-import bitronix.tm.internal.XAResourceManager;
+import bitronix.tm.internal.*;
 import bitronix.tm.twopc.executor.Executor;
 import bitronix.tm.twopc.executor.Job;
 import bitronix.tm.utils.Decoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
@@ -44,7 +39,7 @@ public final class Preparer
 		extends AbstractPhaseEngine
 {
 
-	private final static Logger log = LoggerFactory.getLogger(Preparer.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(Preparer.class.toString());
 
 	// this list has to be thread-safe as the PrepareJobs can be executed in parallel (when async 2PC is configured)
 	private final List<XAResourceHolderState> preparedResources = Collections.synchronizedList(new ArrayList<>());
@@ -79,11 +74,11 @@ public final class Preparer
 			if (TransactionManagerServices.getConfiguration()
 			                              .isWarnAboutZeroResourceTransaction())
 			{
-				log.warn("executing transaction with 0 enlisted resource");
+				log.warning("executing transaction with 0 enlisted resource");
 			}
-			else if (log.isDebugEnabled())
+			else if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("0 resource enlisted, no prepare needed");
+				log.finer("0 resource enlisted, no prepare needed");
 			}
 
 			transaction.setStatus(Status.STATUS_PREPARED);
@@ -97,9 +92,9 @@ public final class Preparer
 			                                                      .get(0);
 
 			preparedResources.add(resourceHolder);
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("1 resource enlisted, no prepare needed (1PC)");
+				log.finer("1 resource enlisted, no prepare needed (1PC)");
 			}
 			transaction.setStatus(Status.STATUS_PREPARED);
 			return preparedResources;
@@ -116,9 +111,9 @@ public final class Preparer
 		}
 
 		transaction.setStatus(Status.STATUS_PREPARED);
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("successfully prepared " + preparedResources.size() + " resource(s)");
+			log.finer("successfully prepared " + preparedResources.size() + " resource(s)");
 		}
 		return Collections.unmodifiableList(preparedResources);
 	}
@@ -198,9 +193,9 @@ public final class Preparer
 			try
 			{
 				XAResourceHolderState resourceHolder = getResource();
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("preparing resource " + resourceHolder);
+					log.finer("preparing resource " + resourceHolder);
 				}
 
 				int vote = resourceHolder.getXAResource()
@@ -210,9 +205,9 @@ public final class Preparer
 					preparedResources.add(resourceHolder);
 				}
 
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("prepared resource " + resourceHolder + " voted " + Decoder.decodePrepareVote(vote));
+					log.finer("prepared resource " + resourceHolder + " voted " + Decoder.decodePrepareVote(vote));
 				}
 			}
 			catch (RuntimeException ex)

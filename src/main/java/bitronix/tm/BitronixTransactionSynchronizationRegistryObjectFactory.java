@@ -15,8 +15,7 @@
  */
 package bitronix.tm;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import bitronix.tm.internal.LogDebugCheck;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -28,22 +27,31 @@ import java.util.Hashtable;
  *
  * @author Ludovic Orban
  */
-public class BitronixTransactionSynchronizationRegistryObjectFactory implements ObjectFactory {
+public class BitronixTransactionSynchronizationRegistryObjectFactory
+		implements ObjectFactory
+{
 
-    private final static Logger log = LoggerFactory.getLogger(BitronixTransactionSynchronizationRegistryObjectFactory.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixTransactionSynchronizationRegistryObjectFactory.class.toString());
 
-    /**
-     * Since there can be only one synchronization registry per VM instance, this method always returns a reference
-     * to the unique BitronixTransactionSynchronizationRegistry object.
-     * @throws java.lang.Exception throw if an instance cannot be created
-     * @see bitronix.tm.BitronixTransactionSynchronizationRegistry
-     * @return the unique synchronization registry instance.
-     */
-    @Override
-    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?,?> environment) throws Exception {
-        if (log.isDebugEnabled()) { log.debug("returning the unique synchronization registry instance"); }
-        return TransactionManagerServices.getTransactionSynchronizationRegistry();
-    }
+	/**
+	 * Since there can be only one synchronization registry per VM instance, this method always returns a reference
+	 * to the unique BitronixTransactionSynchronizationRegistry object.
+	 *
+	 * @return the unique synchronization registry instance.
+	 *
+	 * @throws java.lang.Exception
+	 * 		throw if an instance cannot be created
+	 * @see bitronix.tm.BitronixTransactionSynchronizationRegistry
+	 */
+	@Override
+	public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment) throws Exception
+	{
+		if (LogDebugCheck.isDebugEnabled())
+		{
+			log.finer("returning the unique synchronization registry instance");
+		}
+		return TransactionManagerServices.getTransactionSynchronizationRegistry();
+	}
 
 
 }

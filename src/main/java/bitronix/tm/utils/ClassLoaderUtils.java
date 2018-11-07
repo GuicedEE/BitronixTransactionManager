@@ -15,8 +15,7 @@
  */
 package bitronix.tm.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import bitronix.tm.internal.LogDebugCheck;
 
 import java.io.InputStream;
 import java.util.HashSet;
@@ -28,7 +27,7 @@ import java.util.Set;
 public class ClassLoaderUtils
 {
 
-	private final static Logger log = LoggerFactory.getLogger(ClassLoaderUtils.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ClassLoaderUtils.class.toString());
 
 	public static Set<Class<?>> getAllInterfaces(Class<?> clazz)
 	{
@@ -93,9 +92,9 @@ public class ClassLoaderUtils
 			}
 			catch (ClassNotFoundException ex)
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("context classloader could not find class '" + className + "', trying Class.forName() instead");
+					log.finer("context classloader could not find class '" + className + "', trying Class.forName() instead");
 				}
 			}
 		}

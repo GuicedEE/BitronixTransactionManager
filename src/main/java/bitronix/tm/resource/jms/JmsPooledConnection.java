@@ -16,6 +16,7 @@
 package bitronix.tm.resource.jms;
 
 import bitronix.tm.internal.BitronixSystemException;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.resource.common.AbstractXAStatefulHolder;
 import bitronix.tm.resource.common.RecoveryXAResourceHolder;
 import bitronix.tm.resource.common.StateChangeListener;
@@ -24,12 +25,11 @@ import bitronix.tm.resource.jms.lrc.LrcXAConnectionFactory;
 import bitronix.tm.utils.ManagementRegistrar;
 import bitronix.tm.utils.MonotonicClock;
 import bitronix.tm.utils.Scheduler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.jms.*;
 import javax.transaction.xa.XAResource;
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Implementation of a JMS pooled connection wrapping vendor's {@link XAConnection} implementation.
@@ -42,7 +42,7 @@ public class JmsPooledConnection
 		implements JmsPooledConnectionMBean
 {
 
-	private final static Logger log = LoggerFactory.getLogger(JmsPooledConnection.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(JmsPooledConnection.class.toString());
 	private final PoolingConnectionFactory poolingConnectionFactory;
 	private final Set<DualSessionWrapper> sessions = Collections.synchronizedSet(new HashSet<>());
 	/* management */
@@ -61,19 +61,19 @@ public class JmsPooledConnection
 		if (LrcXAConnectionFactory.class.getName()
 		                                .equals(poolingConnectionFactory.getClassName()))
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("emulating XA for resource " + poolingConnectionFactory.getUniqueName() + " - changing twoPcOrderingPosition to ALWAYS_LAST_POSITION");
+				log.finer("emulating XA for resource " + poolingConnectionFactory.getUniqueName() + " - changing twoPcOrderingPosition to ALWAYS_LAST_POSITION");
 			}
 			poolingConnectionFactory.setTwoPcOrderingPosition(Scheduler.ALWAYS_LAST_POSITION);
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("emulating XA for resource " + poolingConnectionFactory.getUniqueName() + " - changing deferConnectionRelease to true");
+				log.finer("emulating XA for resource " + poolingConnectionFactory.getUniqueName() + " - changing deferConnectionRelease to true");
 			}
 			poolingConnectionFactory.setDeferConnectionRelease(true);
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("emulating XA for resource " + poolingConnectionFactory.getUniqueName() + " - changing useTmJoin to true");
+				log.finer("emulating XA for resource " + poolingConnectionFactory.getUniqueName() + " - changing useTmJoin to true");
 			}
 			poolingConnectionFactory.setUseTmJoin(true);
 		}
@@ -112,9 +112,9 @@ public class JmsPooledConnection
 	@Override
 	public Object getConnectionHandle() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("getting connection handle from " + this);
+			log.finer("getting connection handle from " + this);
 		}
 		State oldState = getState();
 
@@ -122,23 +122,23 @@ public class JmsPooledConnection
 
 		if (oldState == State.IN_POOL)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("connection " + xaConnection + " was in state IN_POOL, testing it");
+				log.finer("connection " + xaConnection + " was in state IN_POOL, testing it");
 			}
 			testXAConnection();
 		}
 		else
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("connection " + xaConnection + " was in state " + oldState + ", no need to test it");
+				log.finer("connection " + xaConnection + " was in state " + oldState + ", no need to test it");
 			}
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("got connection handle from " + this);
+			log.finer("got connection handle from " + this);
 		}
 		return new JmsConnectionHandle(this, xaConnection);
 	}
@@ -171,16 +171,16 @@ public class JmsPooledConnection
 	{
 		if (!poolingConnectionFactory.getTestConnections())
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("not testing connection of " + this);
+				log.finer("not testing connection of " + this);
 			}
 			return;
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("testing connection of " + this);
+			log.finer("testing connection of " + this);
 		}
 		XASession xaSession = xaConnection.createXASession();
 		try
@@ -196,9 +196,9 @@ public class JmsPooledConnection
 
 	protected void release() throws JMSException
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("releasing to pool " + this);
+			log.finer("releasing to pool " + this);
 		}
 		closePendingSessions();
 
@@ -212,9 +212,9 @@ public class JmsPooledConnection
 			throw (JMSException) new JMSException("error requeueing " + this).initCause(ex);
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("released to pool " + this);
+			log.finer("released to pool " + this);
 		}
 	}
 
@@ -231,15 +231,15 @@ public class JmsPooledConnection
 
 				try
 				{
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("trying to close pending session " + dualSessionWrapper);
+						log.finer("trying to close pending session " + dualSessionWrapper);
 					}
 					dualSessionWrapper.close();
 				}
 				catch (JMSException ex)
 				{
-					log.warn("error closing pending session " + dualSessionWrapper, ex);
+					log.log(Level.WARNING, "error closing pending session " + dualSessionWrapper, ex);
 				}
 			}
 		}
@@ -253,9 +253,9 @@ public class JmsPooledConnection
 
 			if (sessionHandle == null)
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("no session handle found in NOT_ACCESSIBLE state, creating new session");
+					log.finer("no session handle found in NOT_ACCESSIBLE state, creating new session");
 				}
 				sessionHandle = new DualSessionWrapper(this, transacted, acknowledgeMode);
 				sessionHandle.addStateChangeEventListener(new JmsConnectionHandleStateChangeListener());
@@ -263,9 +263,9 @@ public class JmsPooledConnection
 			}
 			else
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("found session handle in NOT_ACCESSIBLE state, recycling it: " + sessionHandle);
+					log.finer("found session handle in NOT_ACCESSIBLE state, recycling it: " + sessionHandle);
 				}
 				sessionHandle.setState(State.ACCESSIBLE);
 			}
@@ -278,9 +278,9 @@ public class JmsPooledConnection
 	{
 		synchronized (sessions)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug(sessions.size() + " session(s) open from " + this);
+				log.finer(sessions.size() + " session(s) open from " + this);
 			}
 			for (DualSessionWrapper sessionHandle : sessions)
 			{
@@ -356,9 +356,9 @@ public class JmsPooledConnection
 		{
 			if (newState == State.IN_POOL)
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("requeued JMS connection of " + poolingConnectionFactory);
+					log.finer("requeued JMS connection of " + poolingConnectionFactory);
 				}
 				lastReleaseDate = new Date(MonotonicClock.currentTimeMillis());
 			}
@@ -393,9 +393,9 @@ public class JmsPooledConnection
 				synchronized (sessions)
 				{
 					sessions.remove(source);
-					if (log.isDebugEnabled())
+					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.debug("DualSessionWrapper has been closed, " + sessions.size() + " session(s) left open in pooled connection");
+						log.finer("DualSessionWrapper has been closed, " + sessions.size() + " session(s) left open in pooled connection");
 					}
 				}
 			}

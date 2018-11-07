@@ -15,8 +15,7 @@
  */
 package bitronix.tm.resource.common;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import bitronix.tm.internal.LogDebugCheck;
 
 import java.util.Date;
 import java.util.List;
@@ -31,7 +30,7 @@ public abstract class AbstractXAStatefulHolder<T extends XAStatefulHolder<T>>
 		implements XAStatefulHolder<T>
 {
 
-	private final static Logger log = LoggerFactory.getLogger(AbstractXAStatefulHolder.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(AbstractXAStatefulHolder.class.toString());
 	private final List<StateChangeListener<T>> stateChangeEventListeners = new CopyOnWriteArrayList<>();
 	private final Date creationDate = new Date();
 	private volatile State state = State.IN_POOL;
@@ -54,9 +53,9 @@ public abstract class AbstractXAStatefulHolder<T extends XAStatefulHolder<T>>
 			                                   " to " + state);
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("state changing from " + oldState +
+			log.finer("state changing from " + oldState +
 			          " to " + state + " in " + this);
 		}
 
@@ -86,9 +85,9 @@ public abstract class AbstractXAStatefulHolder<T extends XAStatefulHolder<T>>
 	@SuppressWarnings("unchecked")
 	private void fireStateChanging(State currentState, State futureState)
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("notifying " + stateChangeEventListeners.size() +
+			log.finer("notifying " + stateChangeEventListeners.size() +
 			          " stateChangeEventListener(s) about state changing from " + currentState +
 			          " to " + futureState + " in " + this);
 		}
@@ -102,9 +101,9 @@ public abstract class AbstractXAStatefulHolder<T extends XAStatefulHolder<T>>
 	@SuppressWarnings("unchecked")
 	private void fireStateChanged(State oldState, State newState)
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("notifying " + stateChangeEventListeners.size() +
+			log.finer("notifying " + stateChangeEventListeners.size() +
 			          " stateChangeEventListener(s) about state changed from " + oldState +
 			          " to " + newState + " in " + this);
 		}

@@ -27,8 +27,6 @@ import bitronix.tm.resource.ResourceRegistrar;
 import bitronix.tm.resource.jdbc.PooledConnectionProxy;
 import bitronix.tm.resource.jdbc.PoolingDataSource;
 import junit.framework.TestCase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.XAConnection;
 import javax.transaction.RollbackException;
@@ -44,7 +42,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DelistmentTest
 		extends TestCase
 {
-	private final static Logger log = LoggerFactory.getLogger(DelistmentTest.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(DelistmentTest.class.toString());
 
 	private PoolingDataSource poolingDataSource1;
 	private PoolingDataSource poolingDataSource2;

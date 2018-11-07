@@ -18,8 +18,6 @@ package bitronix.tm.journal;
 import bitronix.tm.utils.Decoder;
 import bitronix.tm.utils.MonotonicClock;
 import bitronix.tm.utils.Uid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -67,7 +65,7 @@ public class TransactionLogRecord
 		implements JournalRecord
 {
 
-	private final static Logger log = LoggerFactory.getLogger(TransactionLogRecord.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogRecord.class.toString());
 
 	// status + record length + record header length + current time + sequence number + checksum
 	private final static int RECORD_HEADER_LENGTH = 4 + 4 + 4 + 8 + 4 + 4;
@@ -146,7 +144,7 @@ public class TransactionLogRecord
 	}
 
 	/**
-	 * Recalculate and store the dynamic values of this record: {@link #getRecordLength()}, {@link #getRecordHeaderLength()}
+	 * Recalculate and store the dynamic values of this record: {@link #getRecordLength()},
 	 * and {@link #calculateCrc32()}. This method must be called each time after the set of contained unique names is updated.
 	 */
 	private void refresh()

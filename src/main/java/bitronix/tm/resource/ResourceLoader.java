@@ -16,13 +16,12 @@
 package bitronix.tm.resource;
 
 import bitronix.tm.TransactionManagerServices;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.resource.common.XAResourceProducer;
 import bitronix.tm.utils.ClassLoaderUtils;
 import bitronix.tm.utils.InitializationException;
 import bitronix.tm.utils.PropertyUtils;
 import bitronix.tm.utils.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.jms.XAConnectionFactory;
 import javax.sql.XADataSource;
@@ -31,6 +30,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * XA resources pools configurator &amp; loader.
@@ -46,7 +46,7 @@ public class ResourceLoader
 		implements Service
 {
 
-	private final static Logger log = LoggerFactory.getLogger(ResourceLoader.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ResourceLoader.class.toString());
 
 	private final static String JDBC_RESOURCE_CLASSNAME = "bitronix.tm.resource.jdbc.PoolingDataSource";
 	private final static String JMS_RESOURCE_CLASSNAME = "bitronix.tm.resource.jms.PoolingConnectionFactory";
@@ -89,9 +89,9 @@ public class ResourceLoader
 		}
 		else
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("no resource configuration file specified");
+				log.finer("no resource configuration file specified");
 			}
 			return 0;
 		}
@@ -158,16 +158,16 @@ public class ResourceLoader
 
 			if (ResourceRegistrar.get(producer.getUniqueName()) != null)
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("resource already registered, skipping it:" + producer.getUniqueName());
+					log.finer("resource already registered, skipping it:" + producer.getUniqueName());
 				}
 				continue;
 			}
 
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("creating resource " + producer);
+				log.finer("creating resource " + producer);
 			}
 			try
 			{
@@ -175,7 +175,7 @@ public class ResourceLoader
 			}
 			catch (ResourceConfigurationException ex)
 			{
-				log.warn("unable to create resource with unique name " + producer.getUniqueName(), ex);
+				log.log(Level.WARNING, "unable to create resource with unique name " + producer.getUniqueName(), ex);
 				producer.close();
 				errorCount++;
 			}
@@ -207,7 +207,7 @@ public class ResourceLoader
 				String[] keyParts = key.split("\\.");
 				if (keyParts.length < 3)
 				{
-					log.warn("ignoring invalid entry in configuration file: " + key);
+					log.warning("ignoring invalid entry in configuration file: " + key);
 					continue;
 				}
 				String configuredName = keyParts[1];
@@ -361,17 +361,17 @@ public class ResourceLoader
 	@Override
 	public synchronized void shutdown()
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("resource loader has registered " + resourcesByUniqueName.entrySet()
+			log.finer("resource loader has registered " + resourcesByUniqueName.entrySet()
 			                                                                   .size() + " resource(s), unregistering them now");
 		}
 		for (Map.Entry<String, XAResourceProducer> entry : resourcesByUniqueName.entrySet())
 		{
 			XAResourceProducer producer = entry.getValue();
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("closing " + producer);
+				log.finer("closing " + producer);
 			}
 			try
 			{
@@ -379,7 +379,7 @@ public class ResourceLoader
 			}
 			catch (Exception ex)
 			{
-				log.warn("error closing resource " + producer, ex);
+				log.log(Level.WARNING, "error closing resource " + producer, ex);
 			}
 		}
 		resourcesByUniqueName.clear();

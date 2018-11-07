@@ -16,9 +16,8 @@
 package bitronix.tm.timer;
 
 import bitronix.tm.TransactionManagerServices;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.recovery.Recoverer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
@@ -31,7 +30,7 @@ public class RecoveryTask
 		extends Task
 {
 
-	private final static Logger log = LoggerFactory.getLogger(RecoveryTask.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(RecoveryTask.class.toString());
 
 	private final Recoverer recoverer;
 
@@ -50,9 +49,9 @@ public class RecoveryTask
 	@Override
 	public void execute()
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("running recovery");
+			log.finer("running recovery");
 		}
 		Thread recovery = new Thread(recoverer);
 		recovery.setName("bitronix-recovery-thread");
@@ -62,9 +61,9 @@ public class RecoveryTask
 
 		Date nextExecutionDate = new Date(getExecutionTime().getTime() + (TransactionManagerServices.getConfiguration()
 		                                                                                            .getBackgroundRecoveryIntervalSeconds() * 1000L));
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("rescheduling recovery for " + nextExecutionDate);
+			log.finer("rescheduling recovery for " + nextExecutionDate);
 		}
 		getTaskScheduler().scheduleRecovery(recoverer, nextExecutionDate);
 	}

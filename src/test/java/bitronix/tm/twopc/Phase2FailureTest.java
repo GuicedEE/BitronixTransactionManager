@@ -27,8 +27,6 @@ import bitronix.tm.resource.ResourceRegistrar;
 import bitronix.tm.resource.jdbc.PooledConnectionProxy;
 import bitronix.tm.resource.jdbc.PoolingDataSource;
 import junit.framework.TestCase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.XAConnection;
 import javax.transaction.HeuristicMixedException;
@@ -47,7 +45,7 @@ public class Phase2FailureTest
 		extends TestCase
 {
 
-	private final static Logger log = LoggerFactory.getLogger(Phase2FailureTest.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(Phase2FailureTest.class.toString());
 
 	private PoolingDataSource poolingDataSource1;
 	private PoolingDataSource poolingDataSource2;

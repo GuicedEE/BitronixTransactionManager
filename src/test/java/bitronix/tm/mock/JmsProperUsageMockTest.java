@@ -17,10 +17,9 @@ package bitronix.tm.mock;
 
 import bitronix.tm.BitronixTransactionManager;
 import bitronix.tm.TransactionManagerServices;
+import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.mock.events.*;
 import bitronix.tm.resource.jms.PoolingConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.jms.Connection;
 import javax.jms.MessageProducer;
@@ -41,71 +40,71 @@ public class JmsProperUsageMockTest
 		extends AbstractMockJmsTest
 {
 
-	private final static Logger log = LoggerFactory.getLogger(JmsProperUsageMockTest.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(JmsProperUsageMockTest.class.toString());
 
 	public void testSimpleWorkingCase() throws Exception
 	{
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting TM");
+			log.finer("*** getting TM");
 		}
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** before begin");
+			log.finer("*** before begin");
 		}
 		tm.setTransactionTimeout(10);
 		tm.begin();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** after begin");
+			log.finer("*** after begin");
 		}
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** getting connection from CF1");
+			log.finer("*** getting connection from CF1");
 		}
 		Connection connection1 = poolingConnectionFactory1.createConnection();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** creating session 1 on connection 1");
+			log.finer("*** creating session 1 on connection 1");
 		}
 		Session session1 = connection1.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** creating queue 1 on session 1");
+			log.finer("*** creating queue 1 on session 1");
 		}
 		Queue queue1 = session1.createQueue("queue");
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** creating producer1 on session 1");
+			log.finer("*** creating producer1 on session 1");
 		}
 		MessageProducer producer1 = session1.createProducer(queue1);
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** sending message on producer1");
+			log.finer("*** sending message on producer1");
 		}
 		producer1.send(session1.createTextMessage("testSimpleWorkingCase"));
 
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** closing connection 1");
+			log.finer("*** closing connection 1");
 		}
 		connection1.close();
 
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** committing");
+			log.finer("*** committing");
 		}
 		tm.commit();
-		if (log.isDebugEnabled())
+		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.debug("*** TX is done");
+			log.finer("*** TX is done");
 		}
 
 		// check flow

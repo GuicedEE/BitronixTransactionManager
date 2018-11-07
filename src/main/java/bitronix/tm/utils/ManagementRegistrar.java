@@ -17,8 +17,7 @@ package bitronix.tm.utils;
 
 import bitronix.tm.Configuration;
 import bitronix.tm.TransactionManagerServices;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import bitronix.tm.internal.LogDebugCheck;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
@@ -29,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.logging.Level;
 
 /**
  * JMX facade used to (un)register any JMX enabled instances.
@@ -44,7 +44,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 public final class ManagementRegistrar
 {
 
-	private final static Logger log = LoggerFactory.getLogger(ManagementRegistrar.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ManagementRegistrar.class.toString());
 	private final static MBeanServer mbeanServer;
 	private final static Queue<ManagementCommand> commandQueue;
 
@@ -94,7 +94,7 @@ public final class ManagementRegistrar
 						}
 						catch (Exception ex)
 						{
-							log.error("an unexpected error occurred in JMX asynchronous registration code", ex);
+							log.log(Level.SEVERE, "an unexpected error occurred in JMX asynchronous registration code", ex);
 						}
 					}
 				}
@@ -106,16 +106,16 @@ public final class ManagementRegistrar
 	{
 		if (mbeanServer != null)
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("Enabled JMX with MBeanServer " + mbeanServer + "; MBean registration is '" + (commandQueue == null ? "synchronous" : "asynchronous") + "'.");
+				log.finer("Enabled JMX with MBeanServer " + mbeanServer + "; MBean registration is '" + (commandQueue == null ? "synchronous" : "asynchronous") + "'.");
 			}
 		}
 		else
 		{
-			if (log.isDebugEnabled())
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.debug("JMX support is disabled.");
+				log.finer("JMX support is disabled.");
 			}
 		}
 	}
@@ -299,9 +299,9 @@ public final class ManagementRegistrar
 			}
 			catch (InstanceNotFoundException e)
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("Failed to unregister the JMX instance of name '" + name + "' as it doesn't exist.");
+					log.finer("Failed to unregister the JMX instance of name '" + name + "' as it doesn't exist.");
 				}
 			}
 		}
@@ -332,15 +332,15 @@ public final class ManagementRegistrar
 		{
 			try
 			{
-				if (log.isDebugEnabled())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.debug("Calling " + getClass().getSimpleName() + " on object with name " + name);
+					log.finer("Calling " + getClass().getSimpleName() + " on object with name " + name);
 				}
 				runCommand();
 			}
 			catch (Exception ex)
 			{
-				log.warn("Cannot execute " + getClass().getSimpleName() + " on object with name " + name, ex);
+				log.log(Level.WARNING, "Cannot execute " + getClass().getSimpleName() + " on object with name " + name, ex);
 			}
 		}
 

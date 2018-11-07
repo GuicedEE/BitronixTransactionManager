@@ -31,8 +31,6 @@ import bitronix.tm.resource.jdbc.PooledConnectionProxy;
 import bitronix.tm.resource.jdbc.PoolingDataSource;
 import junit.framework.TestCase;
 import oracle.jdbc.xa.OracleXAException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.XAConnection;
 import javax.transaction.RollbackException;
@@ -51,7 +49,7 @@ public class OnePcFailureTest
 		extends TestCase
 {
 
-	private final static Logger log = LoggerFactory.getLogger(OnePcFailureTest.class);
+	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(OnePcFailureTest.class.toString());
 
 	private PoolingDataSource poolingDataSource1;
 	private BitronixTransactionManager tm;
