@@ -28,8 +28,8 @@ public class CryptoEngineTest
 	{
 		String textToCrypt = "java";
 
-		String cypherText = CryptoEngine.crypt("DES", textToCrypt);
-		String decryptedText = CryptoEngine.decrypt("DES", cypherText);
+		String cypherText = CryptoEngine.crypt(textToCrypt);
+		String decryptedText = CryptoEngine.decrypt(cypherText);
 
 		assertEquals(textToCrypt, decryptedText);
 	}

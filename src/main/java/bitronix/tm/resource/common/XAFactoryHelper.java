@@ -82,6 +82,12 @@ final class XAFactoryHelper
 		{
 			log.finer("resource password is encrypted, decrypting " + resourcePassword);
 		}
-		return CryptoEngine.decrypt(cipher, resourcePassword.substring(endIdx + 1));
+		String toScan = resourcePassword.substring(endIdx + 1);
+		String returned = CryptoEngine.decrypt(toScan);
+		if (returned.charAt(0) == '\u0000')
+		{
+			returned = returned.substring(8);
+		}
+		return returned;
 	}
 }
