@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Ludovic Orban
@@ -390,18 +389,17 @@ public class DiskJournalTest
 		for (int i = 0; i < 4; i++)
 		{
 			runners[i] = new Runner(i);
+			runners[i].run();
 			service.execute(runners[i]);
 		}
-
+/*
 		service.shutdownNow();
 		service.awaitTermination(5, TimeUnit.MINUTES);
-/*
+*/
 		for (int i = 0; i < 4; i++)
 		{
 			runners[i].join();
 		}
-*/
-
 		journal.shutdown();
 	}
 
