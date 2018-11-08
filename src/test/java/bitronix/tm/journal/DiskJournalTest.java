@@ -24,8 +24,6 @@ import javax.transaction.Status;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author Ludovic Orban
@@ -346,10 +344,6 @@ public class DiskJournalTest
 		DiskJournal journal = new DiskJournal();
 		journal.open();
 
-		ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime()
-		                                                              .availableProcessors());
-		System.out.println("Running pool of " + Runtime.getRuntime()
-		                                               .availableProcessors());
 		class Runner
 				extends Thread
 		{
@@ -390,7 +384,6 @@ public class DiskJournalTest
 		{
 			runners[i] = new Runner(i);
 			runners[i].run();
-			service.execute(runners[i]);
 		}
 /*
 		service.shutdownNow();
