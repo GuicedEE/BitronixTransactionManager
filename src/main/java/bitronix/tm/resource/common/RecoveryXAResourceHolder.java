@@ -25,41 +25,96 @@ import java.util.List;
  *
  * @author Ludovic Orban
  */
-public class RecoveryXAResourceHolder extends AbstractXAResourceHolder<RecoveryXAResourceHolder> {
+public class RecoveryXAResourceHolder
+		extends AbstractXAResourceHolder<RecoveryXAResourceHolder>
+{
 
-    private final XAResourceHolder<? extends XAResourceHolder> xaResourceHolder;
+	private final XAResourceHolder<? extends XAResourceHolder> xaResourceHolder;
 
-    public RecoveryXAResourceHolder(XAResourceHolder<? extends XAResourceHolder> xaResourceHolder) {
-        this.xaResourceHolder = xaResourceHolder;
-    }
+	/**
+	 * Constructor RecoveryXAResourceHolder creates a new RecoveryXAResourceHolder instance.
+	 *
+	 * @param xaResourceHolder
+	 * 		of type XAResourceHolder<? extends XAResourceHolder>
+	 */
+	public RecoveryXAResourceHolder(XAResourceHolder<? extends XAResourceHolder> xaResourceHolder)
+	{
+		this.xaResourceHolder = xaResourceHolder;
+	}
 
-    @Override
-    public void close() throws Exception {
-        xaResourceHolder.setState(State.IN_POOL);
-    }
+	/**
+	 * Get the vendor's {@link javax.transaction.xa.XAResource} implementation of the wrapped resource.
+	 *
+	 * @return the vendor's XAResource implementation.
+	 */
+	@Override
+	public XAResource getXAResource()
+	{
+		return xaResourceHolder.getXAResource();
+	}
 
-    @Override
-    public Date getLastReleaseDate() {
-        return null;
-    }
+	/**
+	 * Get the ResourceBean which created this XAResourceHolder.
+	 *
+	 * @return the ResourceBean which created this XAResourceHolder.
+	 */
+	@Override
+	public ResourceBean getResourceBean()
+	{
+		return null;
+	}
 
-    @Override
-    public XAResource getXAResource() {
-        return xaResourceHolder.getXAResource();
-    }
+	/**
+	 * Get the list of {@link XAResourceHolder}s created by this
+	 * {@link XAStatefulHolder} that are still open.
+	 * <p>This method is thread-safe.</p>
+	 *
+	 * @return the list of {@link bitronix.tm.resource.common.XAResourceHolder}s created by this
+	 * 		{@link XAStatefulHolder} that are still open.
+	 */
+	@Override
+	public List<RecoveryXAResourceHolder> getXAResourceHolders()
+	{
+		return null;
+	}
 
-    @Override
-    public ResourceBean getResourceBean() {
-        return null;
-    }
+	/**
+	 * Create a disposable handler used to drive a pooled instance of
+	 * {@link XAStatefulHolder}.
+	 * <p>This method is thread-safe.</p>
+	 *
+	 * @return a resource-specific disposable connection object.
+	 *
+	 * @throws Exception
+	 * 		a resource-specific exception thrown when the disposable connection cannot be created.
+	 */
+	@Override
+	public Object getConnectionHandle() throws Exception
+	{
+		throw new UnsupportedOperationException("illegal connection creation attempt out of " + this);
+	}
 
-    @Override
-    public List<RecoveryXAResourceHolder> getXAResourceHolders() {
-        return null;
-    }
+	/**
+	 * Close the physical connection that this {@link XAStatefulHolder} represents.
+	 *
+	 * @throws Exception
+	 * 		a resource-specific exception thrown when there is an error closing the physical connection.
+	 */
+	@Override
+	public void close() throws Exception
+	{
+		xaResourceHolder.setState(State.IN_POOL);
+	}
 
-    @Override
-    public Object getConnectionHandle() throws Exception {
-        throw new UnsupportedOperationException("illegal connection creation attempt out of " + this);
-    }
+	/**
+	 * Get the date at which this object was last released to the pool. This is required to check if it is eligible
+	 * for discard when the containing pool needs to shrink.
+	 *
+	 * @return the date at which this object was last released to the pool or null if it never left the pool.
+	 */
+	@Override
+	public Date getLastReleaseDate()
+	{
+		return null;
+	}
 }

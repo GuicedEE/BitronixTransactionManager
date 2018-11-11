@@ -32,12 +32,28 @@ public class JdbcClassHelper
 	private static final Map<Class<Connection>, Integer> connectionClassVersions = new ConcurrentHashMap<>();
 	private static final Map<Class<? extends Connection>, Method> isValidMethods = new ConcurrentHashMap<>();
 
+	/**
+	 * Method getIsValidMethod ...
+	 *
+	 * @param connection
+	 * 		of type Connection
+	 *
+	 * @return Method
+	 */
 	public static Method getIsValidMethod(Connection connection)
 	{
 		detectJdbcVersion(connection);
 		return isValidMethods.get(connection.getClass());
 	}
 
+	/**
+	 * Method detectJdbcVersion ...
+	 *
+	 * @param connection
+	 * 		of type Connection
+	 *
+	 * @return int
+	 */
 	public static int detectJdbcVersion(Connection connection)
 	{
 		@SuppressWarnings("unchecked")

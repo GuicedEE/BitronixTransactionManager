@@ -25,51 +25,104 @@ import javax.transaction.xa.XAException;
  *
  * @author Ludovic Orban
  */
-public abstract class Job implements Runnable {
-    private final XAResourceHolderState resourceHolder;
+public abstract class Job
+		implements Runnable
+{
+	private final XAResourceHolderState resourceHolder;
+	protected volatile XAException xaException;
+	protected volatile RuntimeException runtimeException;
+	private volatile Object future;
 
-    private volatile Object future;
-    protected volatile XAException xaException;
-    protected volatile RuntimeException runtimeException;
+	/**
+	 * Constructor Job creates a new Job instance.
+	 *
+	 * @param resourceHolder
+	 * 		of type XAResourceHolderState
+	 */
+	public Job(XAResourceHolderState resourceHolder)
+	{
+		this.resourceHolder = resourceHolder;
+	}
 
-    public Job(XAResourceHolderState resourceHolder) {
-        this.resourceHolder = resourceHolder;
-    }
+	/**
+	 * Method getResource returns the resource of this Job object.
+	 *
+	 * @return the resource (type XAResourceHolderState) of this Job object.
+	 */
+	public XAResourceHolderState getResource()
+	{
+		return resourceHolder;
+	}
 
-    public XAResourceHolderState getResource() {
-        return resourceHolder;
-    }
+	/**
+	 * Method getXAException returns the XAException of this Job object.
+	 *
+	 * @return the XAException (type XAException) of this Job object.
+	 */
+	public XAException getXAException()
+	{
+		return xaException;
+	}
 
-    public XAException getXAException() {
-        return xaException;
-    }
+	/**
+	 * Method getRuntimeException returns the runtimeException of this Job object.
+	 *
+	 * @return the runtimeException (type RuntimeException) of this Job object.
+	 */
+	public RuntimeException getRuntimeException()
+	{
+		return runtimeException;
+	}
 
-    public RuntimeException getRuntimeException() {
-        return runtimeException;
-    }
+	/**
+	 * Method getFuture returns the future of this Job object.
+	 *
+	 * @return the future (type Object) of this Job object.
+	 */
+	public Object getFuture()
+	{
+		return future;
+	}
 
-    public void setFuture(Object future) {
-        this.future = future;
-    }
+	/**
+	 * Method setFuture sets the future of this Job object.
+	 *
+	 * @param future
+	 * 		the future of this Job object.
+	 */
+	public void setFuture(Object future)
+	{
+		this.future = future;
+	}
 
-    public Object getFuture() {
-        return future;
-    }
+	/**
+	 * Method run ...
+	 */
+	@Override
+	public final void run()
+	{
+		String oldThreadName = null;
+		if (TransactionManagerServices.getConfiguration()
+		                              .isAsynchronous2Pc())
+		{
+			oldThreadName = Thread.currentThread()
+			                      .getName();
+			Thread.currentThread()
+			      .setName("bitronix-2pc [ " +
+			               resourceHolder.getXid()
+			                             .toString() +
+			               " ]");
+		}
+		execute();
+		if (oldThreadName != null)
+		{
+			Thread.currentThread()
+			      .setName(oldThreadName);
+		}
+	}
 
-    @Override
-    public final void run() {
-        String oldThreadName = null;
-        if (TransactionManagerServices.getConfiguration().isAsynchronous2Pc()) {
-            oldThreadName = Thread.currentThread().getName();
-            Thread.currentThread().setName("bitronix-2pc [ " +
-                    resourceHolder.getXid().toString() +
-                    " ]");
-        }
-        execute();
-        if (oldThreadName != null) {
-            Thread.currentThread().setName(oldThreadName);
-        }
-    }
-
-    protected abstract void execute();
+	/**
+	 * Method execute ...
+	 */
+	protected abstract void execute();
 }

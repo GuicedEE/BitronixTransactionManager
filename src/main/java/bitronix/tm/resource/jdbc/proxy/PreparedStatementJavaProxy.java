@@ -38,11 +38,31 @@ public class PreparedStatementJavaProxy
 	private CacheKey cacheKey;
 	private boolean pretendClosed;
 
+	/**
+	 * Constructor PreparedStatementJavaProxy creates a new PreparedStatementJavaProxy instance.
+	 *
+	 * @param jdbcPooledConnection
+	 * 		of type JdbcPooledConnection
+	 * @param statement
+	 * 		of type PreparedStatement
+	 * @param cacheKey
+	 * 		of type CacheKey
+	 */
 	public PreparedStatementJavaProxy(JdbcPooledConnection jdbcPooledConnection, PreparedStatement statement, CacheKey cacheKey)
 	{
 		initialize(jdbcPooledConnection, statement, cacheKey);
 	}
 
+	/**
+	 * Method initialize ...
+	 *
+	 * @param jdbcPooledConnection
+	 * 		of type JdbcPooledConnection
+	 * @param statement
+	 * 		of type PreparedStatement
+	 * @param cacheKey
+	 * 		of type CacheKey
+	 */
 	void initialize(JdbcPooledConnection jdbcPooledConnection, PreparedStatement statement, CacheKey cacheKey)
 	{
 		this.proxy = this;
@@ -52,11 +72,19 @@ public class PreparedStatementJavaProxy
 		this.pretendClosed = false;
 	}
 
+	/**
+	 * Constructor PreparedStatementJavaProxy creates a new PreparedStatementJavaProxy instance.
+	 */
 	public PreparedStatementJavaProxy()
 	{
 		// Default constructor
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{
@@ -65,6 +93,12 @@ public class PreparedStatementJavaProxy
 
 	/* Overridden methods of java.sql.PreparedStatement */
 
+	/**
+	 * Method close ...
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	public void close() throws SQLException
 	{
 		if (pretendClosed || delegate == null)
@@ -99,29 +133,72 @@ public class PreparedStatementJavaProxy
 		}
 	}
 
+	/**
+	 * Method isClosed returns the closed of this PreparedStatementJavaProxy object.
+	 *
+	 * @return the closed (type boolean) of this PreparedStatementJavaProxy object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	public boolean isClosed() throws SQLException
 	{
 		return pretendClosed;
 	}
 
+	/**
+	 * Method getResultSet returns the resultSet of this PreparedStatementJavaProxy object.
+	 *
+	 * @return the resultSet (type ResultSet) of this PreparedStatementJavaProxy object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	public ResultSet getResultSet() throws SQLException
 	{
 		ResultSet resultSet = delegate.getResultSet();
 		return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), resultSet);
 	}
 
+	/**
+	 * Method executeQuery ...
+	 *
+	 * @return ResultSet
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	public ResultSet executeQuery() throws SQLException
 	{
 		ResultSet resultSet = delegate.executeQuery();
 		return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), resultSet);
 	}
 
+	/**
+	 * Method executeQuery ...
+	 *
+	 * @param sql
+	 * 		of type String
+	 *
+	 * @return ResultSet
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	public ResultSet executeQuery(String sql) throws SQLException
 	{
 		ResultSet resultSet = delegate.executeQuery(sql);
 		return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), resultSet);
 	}
 
+	/**
+	 * Method getGeneratedKeys returns the generatedKeys of this PreparedStatementJavaProxy object.
+	 *
+	 * @return the generatedKeys (type ResultSet) of this PreparedStatementJavaProxy object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	public ResultSet getGeneratedKeys() throws SQLException
 	{
 		ResultSet generatedKeys = delegate.getGeneratedKeys();
@@ -130,6 +207,17 @@ public class PreparedStatementJavaProxy
 
 	/* java.sql.Wrapper implementation */
 
+	/**
+	 * Method unwrap ...
+	 *
+	 * @param iface
+	 * 		of type Class<T>
+	 *
+	 * @return T
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T unwrap(Class<T> iface) throws SQLException
 	{
@@ -144,6 +232,14 @@ public class PreparedStatementJavaProxy
 		throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
 	}
 
+	/**
+	 * Method isWrapperFor ...
+	 *
+	 * @param iface
+	 * 		of type Class<?>
+	 *
+	 * @return boolean
+	 */
 	public boolean isWrapperFor(Class<?> iface)
 	{
 		return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
@@ -151,6 +247,11 @@ public class PreparedStatementJavaProxy
 
 	/* Overridden methods of JavaProxyBase */
 
+	/**
+	 * Method getMethodMap returns the methodMap of this PreparedStatementJavaProxy object.
+	 *
+	 * @return the methodMap (type Map<String, Method>) of this PreparedStatementJavaProxy object.
+	 */
 	@Override
 	protected Map<String, Method> getMethodMap()
 	{

@@ -12,6 +12,12 @@ public class PoolingDataSourceTest
 		extends TestCase
 {
 
+	/**
+	 * Method testInjectedXaFactory ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testInjectedXaFactory() throws Exception
 	{
 		PoolingDataSource pds = new PoolingDataSource();
@@ -34,6 +40,9 @@ public class PoolingDataSourceTest
 		}
 	}
 
+	/**
+	 * Method testEffectiveConnectionTimeoutWhenSet ...
+	 */
 	public void testEffectiveConnectionTimeoutWhenSet()
 	{
 		PoolingDataSource pds = new PoolingDataSource();
@@ -41,6 +50,9 @@ public class PoolingDataSourceTest
 		assertEquals(10, pds.getEffectiveConnectionTestTimeout());
 	}
 
+	/**
+	 * Method testEffectiveConnectionTimeoutWhenAcquisitionTimeoutSet ...
+	 */
 	public void testEffectiveConnectionTimeoutWhenAcquisitionTimeoutSet()
 	{
 		PoolingDataSource pds = new PoolingDataSource();
@@ -48,6 +60,9 @@ public class PoolingDataSourceTest
 		assertEquals(10, pds.getEffectiveConnectionTestTimeout());
 	}
 
+	/**
+	 * Method testEffectiveConnectionTimeoutIsMinimumValue ...
+	 */
 	public void testEffectiveConnectionTimeoutIsMinimumValue()
 	{
 		PoolingDataSource pds = new PoolingDataSource();
@@ -61,6 +76,9 @@ public class PoolingDataSourceTest
 		assertEquals(15, pds.getEffectiveConnectionTestTimeout());
 	}
 
+	/**
+	 * Method testDefaultEffectiveAcquisitionTimeout ...
+	 */
 	public void testDefaultEffectiveAcquisitionTimeout()
 	{
 		PoolingDataSource pds = new PoolingDataSource();

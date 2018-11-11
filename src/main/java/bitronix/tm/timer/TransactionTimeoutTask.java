@@ -34,18 +34,39 @@ public class TransactionTimeoutTask
 
 	private final BitronixTransaction transaction;
 
+	/**
+	 * Constructor TransactionTimeoutTask creates a new TransactionTimeoutTask instance.
+	 *
+	 * @param transaction
+	 * 		of type BitronixTransaction
+	 * @param executionTime
+	 * 		of type Date
+	 * @param scheduler
+	 * 		of type TaskScheduler
+	 */
 	public TransactionTimeoutTask(BitronixTransaction transaction, Date executionTime, TaskScheduler scheduler)
 	{
 		super(executionTime, scheduler);
 		this.transaction = transaction;
 	}
 
+	/**
+	 * Method getObject returns the object of this TransactionTimeoutTask object.
+	 *
+	 * @return the object (type Object) of this TransactionTimeoutTask object.
+	 */
 	@Override
 	public Object getObject()
 	{
 		return transaction;
 	}
 
+	/**
+	 * Method execute ...
+	 *
+	 * @throws TaskException
+	 * 		when
+	 */
 	@Override
 	public void execute() throws TaskException
 	{
@@ -63,6 +84,11 @@ public class TransactionTimeoutTask
 		}
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

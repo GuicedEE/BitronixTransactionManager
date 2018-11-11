@@ -62,6 +62,17 @@ public class JdbcPooledConnection
 
 	private volatile int jdbcVersionDetected;
 
+	/**
+	 * Constructor JdbcPooledConnection creates a new JdbcPooledConnection instance.
+	 *
+	 * @param poolingDataSource
+	 * 		of type PoolingDataSource
+	 * @param xaConnection
+	 * 		of type XAConnection
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	public JdbcPooledConnection(PoolingDataSource poolingDataSource, XAConnection xaConnection) throws SQLException
 	{
 		this.poolingDataSource = poolingDataSource;
@@ -113,11 +124,24 @@ public class JdbcPooledConnection
 		poolingDataSource.fireOnAcquire(connection);
 	}
 
+	/**
+	 * Method createRecoveryXAResourceHolder ...
+	 *
+	 * @return RecoveryXAResourceHolder
+	 */
 	public RecoveryXAResourceHolder createRecoveryXAResourceHolder()
 	{
 		return new RecoveryXAResourceHolder(this);
 	}
 
+	/**
+	 * Method release ...
+	 *
+	 * @return boolean
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	public boolean release() throws SQLException
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -181,29 +205,62 @@ public class JdbcPooledConnection
 		return usageCount == 0;
 	}
 
+	/**
+	 * Get the vendor's {@link javax.transaction.xa.XAResource} implementation of the wrapped resource.
+	 *
+	 * @return the vendor's XAResource implementation.
+	 */
 	@Override
 	public XAResource getXAResource()
 	{
 		return xaResource;
 	}
 
+	/**
+	 * Get the ResourceBean which created this XAResourceHolder.
+	 *
+	 * @return the ResourceBean which created this XAResourceHolder.
+	 */
 	@Override
 	public ResourceBean getResourceBean()
 	{
 		return getPoolingDataSource();
 	}
 
+	/**
+	 * Method getPoolingDataSource returns the poolingDataSource of this JdbcPooledConnection object.
+	 *
+	 * @return the poolingDataSource (type PoolingDataSource) of this JdbcPooledConnection object.
+	 */
 	public PoolingDataSource getPoolingDataSource()
 	{
 		return poolingDataSource;
 	}
 
+	/**
+	 * Get the list of {@link bitronix.tm.resource.common.XAResourceHolder}s created by this
+	 * {@link bitronix.tm.resource.common.XAStatefulHolder} that are still open.
+	 * <p>This method is thread-safe.</p>
+	 *
+	 * @return the list of {@link bitronix.tm.resource.common.XAResourceHolder}s created by this
+	 * 		{@link bitronix.tm.resource.common.XAStatefulHolder} that are still open.
+	 */
 	@Override
 	public List<JdbcPooledConnection> getXAResourceHolders()
 	{
 		return Collections.singletonList(this);
 	}
 
+	/**
+	 * Create a disposable handler used to drive a pooled instance of
+	 * {@link bitronix.tm.resource.common.XAStatefulHolder}.
+	 * <p>This method is thread-safe.</p>
+	 *
+	 * @return a resource-specific disposable connection object.
+	 *
+	 * @throws Exception
+	 * 		a resource-specific exception thrown when the disposable connection cannot be created.
+	 */
 	@Override
 	public Object getConnectionHandle() throws Exception
 	{
@@ -261,6 +318,12 @@ public class JdbcPooledConnection
 		return getConnectionHandle(connection);
 	}
 
+	/**
+	 * Close the physical connection that this {@link bitronix.tm.resource.common.XAStatefulHolder} represents.
+	 *
+	 * @throws Exception
+	 * 		a resource-specific exception thrown when there is an error closing the physical connection.
+	 */
 	@Override
 	public void close() throws SQLException
 	{
@@ -296,12 +359,27 @@ public class JdbcPooledConnection
 		}
 	}
 
+	/**
+	 * Get the date at which this object was last released to the pool. This is required to check if it is eligible
+	 * for discard when the containing pool needs to shrink.
+	 *
+	 * @return the date at which this object was last released to the pool or null if it never left the pool.
+	 */
 	@Override
 	public Date getLastReleaseDate()
 	{
 		return lastReleaseDate;
 	}
 
+	/**
+	 * Method testConnection ...
+	 *
+	 * @param connection
+	 * 		of type Connection
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	private void testConnection(Connection connection) throws SQLException
 	{
 		int connectionTestTimeout = poolingDataSource.getEffectiveConnectionTestTimeout();
@@ -371,6 +449,12 @@ public class JdbcPooledConnection
 		}
 	}
 
+	/**
+	 * Method applyIsolationLevel ...
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	private void applyIsolationLevel() throws SQLException
 	{
 		String isolationLevel = getPoolingDataSource().getIsolationLevel();
@@ -392,6 +476,12 @@ public class JdbcPooledConnection
 		}
 	}
 
+	/**
+	 * Method applyCursorHoldabilty ...
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	private void applyCursorHoldabilty() throws SQLException
 	{
 		String cursorHoldability = getPoolingDataSource().getCursorHoldability();
@@ -413,6 +503,12 @@ public class JdbcPooledConnection
 		}
 	}
 
+	/**
+	 * Method applyLocalAutoCommit ...
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	private void applyLocalAutoCommit() throws SQLException
 	{
 		String localAutoCommit = getPoolingDataSource().getLocalAutoCommit();
@@ -441,11 +537,30 @@ public class JdbcPooledConnection
 		}
 	}
 
+	/**
+	 * Method getConnectionHandle ...
+	 *
+	 * @param connection
+	 * 		of type Connection
+	 *
+	 * @return Object
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	private Object getConnectionHandle(Connection connection) throws SQLException
 	{
 		return JdbcProxyFactory.INSTANCE.getProxyConnection(this, connection);
 	}
 
+	/**
+	 * Method translateIsolationLevel ...
+	 *
+	 * @param isolationLevelGuarantee
+	 * 		of type String
+	 *
+	 * @return int
+	 */
 	private static int translateIsolationLevel(String isolationLevelGuarantee)
 	{
 		if ("READ_COMMITTED".equals(isolationLevelGuarantee))
@@ -475,6 +590,14 @@ public class JdbcPooledConnection
 		return -1;
 	}
 
+	/**
+	 * Method translateCursorHoldability ...
+	 *
+	 * @param cursorHoldability
+	 * 		of type String
+	 *
+	 * @return int
+	 */
 	private static int translateCursorHoldability(String cursorHoldability)
 	{
 		if ("CLOSE_CURSORS_AT_COMMIT".equals(cursorHoldability))
@@ -488,11 +611,26 @@ public class JdbcPooledConnection
 		return -1;
 	}
 
+	/**
+	 * Method getJdbcVersion returns the jdbcVersion of this JdbcPooledConnection object.
+	 *
+	 * @return the jdbcVersion (type int) of this JdbcPooledConnection object.
+	 */
 	public int getJdbcVersion()
 	{
 		return jdbcVersionDetected;
 	}
 
+	/**
+	 * Method stateChanged ...
+	 *
+	 * @param source
+	 * 		of type JdbcPooledConnection
+	 * @param oldState
+	 * 		of type State
+	 * @param newState
+	 * 		of type State
+	 */
 	@Override
 	public void stateChanged(JdbcPooledConnection source, State oldState, State newState)
 	{
@@ -510,6 +648,16 @@ public class JdbcPooledConnection
 		}
 	}
 
+	/**
+	 * Method stateChanging ...
+	 *
+	 * @param source
+	 * 		of type JdbcPooledConnection
+	 * @param currentState
+	 * 		of type State
+	 * @param futureState
+	 * 		of type State
+	 */
 	@Override
 	public void stateChanging(JdbcPooledConnection source, State currentState, State futureState)
 	{
@@ -598,6 +746,12 @@ public class JdbcPooledConnection
 		return stmt;
 	}
 
+	/**
+	 * Method unregisterUncachedStatement ...
+	 *
+	 * @param stmt
+	 * 		of type Statement
+	 */
 	public void unregisterUncachedStatement(Statement stmt)
 	{
 		uncachedStatements.remove(stmt);
@@ -605,6 +759,11 @@ public class JdbcPooledConnection
 
 	/* management */
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{
@@ -612,18 +771,33 @@ public class JdbcPooledConnection
 		       xaConnection;
 	}
 
+	/**
+	 * Method getStateDescription returns the stateDescription of this JdbcPooledConnection object.
+	 *
+	 * @return the stateDescription (type String) of this JdbcPooledConnection object.
+	 */
 	@Override
 	public String getStateDescription()
 	{
 		return getState().toString();
 	}
 
+	/**
+	 * Method getAcquisitionDate returns the acquisitionDate of this JdbcPooledConnection object.
+	 *
+	 * @return the acquisitionDate (type Date) of this JdbcPooledConnection object.
+	 */
 	@Override
 	public Date getAcquisitionDate()
 	{
 		return acquisitionDate;
 	}
 
+	/**
+	 * Method getTransactionGtridsCurrentlyHoldingThis returns the transactionGtridsCurrentlyHoldingThis of this JdbcPooledConnection object.
+	 *
+	 * @return the transactionGtridsCurrentlyHoldingThis (type Collection<String>) of this JdbcPooledConnection object.
+	 */
 	@Override
 	public Collection<String> getTransactionGtridsCurrentlyHoldingThis()
 	{

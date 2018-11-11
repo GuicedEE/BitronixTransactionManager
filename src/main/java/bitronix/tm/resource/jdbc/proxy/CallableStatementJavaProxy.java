@@ -26,68 +26,162 @@ import java.util.Map;
 /**
  * @author Brett Wooldridge
  */
-public class CallableStatementJavaProxy extends JavaProxyBase<CallableStatement> {
+public class CallableStatementJavaProxy
+		extends JavaProxyBase<CallableStatement>
+{
 
-    private final static Map<String, Method> selfMethodMap = createMethodMap(CallableStatementJavaProxy.class);
+	private final static Map<String, Method> selfMethodMap = createMethodMap(CallableStatementJavaProxy.class);
 
-    private JdbcPooledConnection jdbcPooledConnection;
-    
-    public CallableStatementJavaProxy() {
-        // Default constructor
-    }
+	private JdbcPooledConnection jdbcPooledConnection;
 
-    public CallableStatementJavaProxy(JdbcPooledConnection jdbcPooledConnection, CallableStatement statement) {
-        initialize(jdbcPooledConnection, statement);
-    }
+	/**
+	 * Constructor CallableStatementJavaProxy creates a new CallableStatementJavaProxy instance.
+	 */
+	public CallableStatementJavaProxy()
+	{
+		// Default constructor
+	}
 
-    void initialize(JdbcPooledConnection jdbcPooledConnection, CallableStatement statement) {
-    	this.proxy = this;
-        this.jdbcPooledConnection = jdbcPooledConnection;
-        this.delegate = statement;
-    }
+	/**
+	 * Constructor CallableStatementJavaProxy creates a new CallableStatementJavaProxy instance.
+	 *
+	 * @param jdbcPooledConnection
+	 * 		of type JdbcPooledConnection
+	 * @param statement
+	 * 		of type CallableStatement
+	 */
+	public CallableStatementJavaProxy(JdbcPooledConnection jdbcPooledConnection, CallableStatement statement)
+	{
+		initialize(jdbcPooledConnection, statement);
+	}
 
-    /* Overridden methods of java.sql.CallableStatement */
+	/**
+	 * Method initialize ...
+	 *
+	 * @param jdbcPooledConnection
+	 * 		of type JdbcPooledConnection
+	 * @param statement
+	 * 		of type CallableStatement
+	 */
+	void initialize(JdbcPooledConnection jdbcPooledConnection, CallableStatement statement)
+	{
+		this.proxy = this;
+		this.jdbcPooledConnection = jdbcPooledConnection;
+		this.delegate = statement;
+	}
 
-    public void close() throws SQLException {
-        if (delegate == null) {
-            return;
-        }
+	/* Overridden methods of java.sql.CallableStatement */
 
-        jdbcPooledConnection.unregisterUncachedStatement(delegate);
-        delegate.close();
-    }
+	/**
+	 * Method close ...
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	public void close() throws SQLException
+	{
+		if (delegate == null)
+		{
+			return;
+		}
 
-    public ResultSet executeQuery() throws SQLException {
-    	return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), delegate.executeQuery());
-    }
+		jdbcPooledConnection.unregisterUncachedStatement(delegate);
+		delegate.close();
+	}
 
-    public ResultSet executeQuery(String sql) throws SQLException {
-    	return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), delegate.executeQuery(sql));
-    }
+	/**
+	 * Method executeQuery ...
+	 *
+	 * @return ResultSet
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	public ResultSet executeQuery() throws SQLException
+	{
+		return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), delegate.executeQuery());
+	}
 
-    public ResultSet getGeneratedKeys() throws SQLException {
-    	return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), delegate.getGeneratedKeys());
-    }
+	/**
+	 * Method executeQuery ...
+	 *
+	 * @param sql
+	 * 		of type String
+	 *
+	 * @return ResultSet
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	public ResultSet executeQuery(String sql) throws SQLException
+	{
+		return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), delegate.executeQuery(sql));
+	}
 
-    /* java.sql.Wrapper implementation */
+	/**
+	 * Method getGeneratedKeys returns the generatedKeys of this CallableStatementJavaProxy object.
+	 *
+	 * @return the generatedKeys (type ResultSet) of this CallableStatementJavaProxy object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	public ResultSet getGeneratedKeys() throws SQLException
+	{
+		return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), delegate.getGeneratedKeys());
+	}
 
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
-    }
+	/* java.sql.Wrapper implementation */
 
-    @SuppressWarnings("unchecked")
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        if (iface.isAssignableFrom(delegate.getClass())) {
-            return (T) delegate;
-        }
-        if (isWrapperFor(iface)) {
-            return unwrap(delegate, iface);
-        }
-        throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
-    }
+	/**
+	 * Method unwrap ...
+	 *
+	 * @param iface
+	 * 		of type Class<T>
+	 *
+	 * @return T
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T unwrap(Class<T> iface) throws SQLException
+	{
+		if (iface.isAssignableFrom(delegate.getClass()))
+		{
+			return (T) delegate;
+		}
+		if (isWrapperFor(iface))
+		{
+			return unwrap(delegate, iface);
+		}
+		throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
+	}
 
-    @Override
-    protected Map<String, Method> getMethodMap() {
-        return selfMethodMap;
-    }
+	/**
+	 * Method isWrapperFor ...
+	 *
+	 * @param iface
+	 * 		of type Class<?>
+	 *
+	 * @return boolean
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	public boolean isWrapperFor(Class<?> iface) throws SQLException
+	{
+		return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
+	}
+
+	/**
+	 * Method getMethodMap returns the methodMap of this CallableStatementJavaProxy object.
+	 *
+	 * @return the methodMap (type Map<String, Method>) of this CallableStatementJavaProxy object.
+	 */
+	@Override
+	protected Map<String, Method> getMethodMap()
+	{
+		return selfMethodMap;
+	}
 }

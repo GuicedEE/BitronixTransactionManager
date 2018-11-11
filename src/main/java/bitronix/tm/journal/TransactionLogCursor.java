@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,11 +33,12 @@ import java.util.Set;
  * @author Ludovic Orban
  */
 public class TransactionLogCursor
+		implements AutoCloseable
 {
 
 	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogCursor.class.toString());
+	private static final String CORRUPTED_LOGS = "corrupted log found at position ";
 
-	// private final RandomAccessFile randomAccessFile;
 	private final FileInputStream fis;
 	private final FileChannel fileChannel;
 	private final long endPosition;
@@ -53,7 +55,7 @@ public class TransactionLogCursor
 	 * @throws IOException
 	 * 		if an I/O error occurs.
 	 */
-	public TransactionLogCursor(File file) throws IOException
+	TransactionLogCursor(File file) throws IOException
 	{
 		this.fis = new FileInputStream(file);
 		this.fileChannel = fis.getChannel();
@@ -75,7 +77,7 @@ public class TransactionLogCursor
 	 * @throws IOException
 	 * 		if an I/O error occurs.
 	 */
-	public TransactionLogRecord readLog() throws IOException
+	TransactionLogRecord readLog() throws IOException
 	{
 		return readLog(false);
 	}
@@ -92,7 +94,7 @@ public class TransactionLogCursor
 	 * @throws IOException
 	 * 		if an I/O error occurs.
 	 */
-	public TransactionLogRecord readLog(boolean skipCrcCheck) throws IOException
+	TransactionLogRecord readLog(boolean skipCrcCheck) throws IOException
 	{
 		if (currentPosition >= endPosition)
 		{
@@ -104,9 +106,9 @@ public class TransactionLogCursor
 		}
 
 		int status = page.getInt();
-		// currentPosition += 4;
+
 		int recordLength = page.getInt();
-		// currentPosition += 4;
+
 		currentPosition += 8;
 
 		if (page.position() + recordLength + 8 > page.limit())
@@ -121,21 +123,21 @@ public class TransactionLogCursor
 		{
 			page.position(page.position() + recordLength);
 			currentPosition += recordLength;
-			throw new CorruptedTransactionLogException("corrupted log found at position " + currentPosition
+			throw new CorruptedTransactionLogException(CORRUPTED_LOGS + currentPosition
 			                                           + " (record terminator outside of file bounds: " + currentPosition + recordLength + " of "
 			                                           + endPosition + ", recordLength: " + recordLength + ")");
 		}
 
 		int headerLength = page.getInt();
-		// currentPosition += 4;
+
 		long time = page.getLong();
-		// currentPosition += 8;
+
 		int sequenceNumber = page.getInt();
-		// currentPosition += 4;
+
 		int crc32 = page.getInt();
-		// currentPosition += 4;
+
 		byte gtridSize = page.get();
-		// currentPosition += 1;
+
 		currentPosition += 21;
 
 		// check for log terminator
@@ -145,14 +147,14 @@ public class TransactionLogCursor
 		page.reset();
 		if (endCode != TransactionLogAppender.END_RECORD)
 		{
-			throw new CorruptedTransactionLogException("corrupted log found at position " + currentPosition + " (no record terminator found)");
+			throw new CorruptedTransactionLogException(CORRUPTED_LOGS + currentPosition + " (no record terminator found)");
 		}
 
 		// check that GTRID is not too long
 		if (4 + 8 + 4 + 4 + 1 + gtridSize > recordLength)
 		{
 			page.position(endOfRecordPosition);
-			throw new CorruptedTransactionLogException("corrupted log found at position " + currentPosition
+			throw new CorruptedTransactionLogException(CORRUPTED_LOGS + currentPosition
 			                                           + " (GTRID size too long)");
 		}
 
@@ -175,7 +177,7 @@ public class TransactionLogCursor
 			if (currentReadCount > recordLength)
 			{
 				page.position(endOfRecordPosition);
-				throw new CorruptedTransactionLogException("corrupted log found at position " + currentPosition
+				throw new CorruptedTransactionLogException(CORRUPTED_LOGS + currentPosition
 				                                           + " (unique names too long, " + (i + 1) + " out of " + uniqueNamesCount + ", length: " + length
 				                                           + ", currentReadCount: " + currentReadCount + ", recordLength: " + recordLength + ")");
 			}
@@ -183,7 +185,7 @@ public class TransactionLogCursor
 			byte[] nameBytes = new byte[length];
 			page.get(nameBytes);
 			currentPosition += length;
-			uniqueNames.add(new String(nameBytes, "US-ASCII"));
+			uniqueNames.add(new String(nameBytes, StandardCharsets.US_ASCII));
 		}
 		int cEndRecord = page.getInt();
 		currentPosition += 4;
@@ -195,7 +197,7 @@ public class TransactionLogCursor
 		if (!skipCrcCheck && !tlog.isCrc32Correct())
 		{
 			page.position(endOfRecordPosition);
-			throw new CorruptedTransactionLogException("corrupted log found at position " + currentPosition
+			throw new CorruptedTransactionLogException(CORRUPTED_LOGS + currentPosition
 			                                           + "(invalid CRC, recorded: " + tlog.getCrc32() + ", calculated: " + tlog.calculateCrc32() + ")");
 		}
 
@@ -208,6 +210,7 @@ public class TransactionLogCursor
 	 * @throws IOException
 	 * 		if an I/O error occurs.
 	 */
+	@Override
 	public void close() throws IOException
 	{
 		fis.close();

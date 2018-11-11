@@ -66,6 +66,9 @@ public class BitronixTransaction
 	private volatile StackTrace activationStackTrace;
 
 
+	/**
+	 * Constructor BitronixTransaction creates a new BitronixTransaction instance.
+	 */
 	public BitronixTransaction()
 	{
 		Uid gtrid = UidGenerator.generateUid();
@@ -79,6 +82,16 @@ public class BitronixTransaction
 		                        .getName();
 	}
 
+	/**
+	 * Method buildZeroTransactionDebugMessage ...
+	 *
+	 * @param activationStackTrace
+	 * 		of type StackTrace
+	 * @param commitStackTrace
+	 * 		of type StackTrace
+	 *
+	 * @return String
+	 */
 	static String buildZeroTransactionDebugMessage(StackTrace activationStackTrace, StackTrace commitStackTrace)
 	{
 		String lineSeparator = System.getProperty("line.separator");
@@ -96,11 +109,28 @@ public class BitronixTransaction
 		return sb.toString();
 	}
 
+	/**
+	 * Method getSynchronizationScheduler returns the synchronizationScheduler of this BitronixTransaction object.
+	 *
+	 * @return the synchronizationScheduler (type Scheduler<Synchronization>) of this BitronixTransaction object.
+	 */
 	public Scheduler<Synchronization> getSynchronizationScheduler()
 	{
 		return synchronizationScheduler;
 	}
 
+	/**
+	 * Method commit ...
+	 *
+	 * @throws RollbackException
+	 * 		when
+	 * @throws HeuristicMixedException
+	 * 		when
+	 * @throws HeuristicRollbackException
+	 * 		when
+	 * @throws SystemException
+	 * 		when
+	 */
 	@Override
 	public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SystemException
 	{
@@ -222,8 +252,21 @@ public class BitronixTransaction
 		}
 	}
 
+	/**
+	 * Method delistResource ...
+	 *
+	 * @param xaResource
+	 * 		of type XAResource
+	 * @param flag
+	 * 		of type int
+	 *
+	 * @return boolean
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	@Override
-	public boolean delistResource(XAResource xaResource, int flag) throws IllegalStateException, SystemException
+	public boolean delistResource(XAResource xaResource, int flag) throws SystemException
 	{
 		if (status == Status.STATUS_NO_TRANSACTION)
 		{
@@ -251,6 +294,11 @@ public class BitronixTransaction
 			private final List<XAResourceHolderState> resourceStates = new ArrayList<>();
 			private boolean result = true;
 
+			/**
+			 * Called when visiting all {@link bitronix.tm.internal.XAResourceHolderState}s.
+			 * @param xaResourceHolderState the currently visited {@link bitronix.tm.internal.XAResourceHolderState}
+			 * @return return <code>true</code> to continue visitation, <code>false</code> to stop visitation
+			 */
 			@Override
 			public boolean visit(XAResourceHolderState xaResourceHolderState)
 			{
@@ -293,6 +341,21 @@ public class BitronixTransaction
 		return xaResourceHolderStateVisitor.result;
 	}
 
+	/**
+	 * Method enlistResource ...
+	 *
+	 * @param xaResource
+	 * 		of type XAResource
+	 *
+	 * @return boolean
+	 *
+	 * @throws RollbackException
+	 * 		when
+	 * @throws IllegalStateException
+	 * 		when
+	 * @throws SystemException
+	 * 		when
+	 */
 	@Override
 	public boolean enlistResource(XAResource xaResource) throws RollbackException, IllegalStateException, SystemException
 	{
@@ -343,12 +406,29 @@ public class BitronixTransaction
 		return true;
 	}
 
+	/**
+	 * Method getStatus returns the status of this BitronixTransaction object.
+	 *
+	 * @return the status (type int) of this BitronixTransaction object.
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	@Override
 	public int getStatus() throws SystemException
 	{
 		return status;
 	}
 
+	/**
+	 * Method registerSynchronization ...
+	 *
+	 * @param synchronization
+	 * 		of type Synchronization
+	 *
+	 * @throws RollbackException
+	 * 		when
+	 */
 	@Override
 	public void registerSynchronization(Synchronization synchronization) throws RollbackException
 	{
@@ -372,6 +452,12 @@ public class BitronixTransaction
 		synchronizationScheduler.add(synchronization, Scheduler.DEFAULT_POSITION);
 	}
 
+	/**
+	 * Method rollback ...
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	@Override
 	public void rollback() throws SystemException
 	{
@@ -400,47 +486,51 @@ public class BitronixTransaction
 
 		try
 		{
-			try
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				if (LogDebugCheck.isDebugEnabled())
-				{
-					log.finer("rolling back, " + resourceManager.size() + " enlisted resource(s)");
-				}
+				log.finer("rolling back, " + resourceManager.size() + " enlisted resource(s)");
+			}
 
-				List<XAResourceHolderState> resourcesToRollback = new ArrayList<>();
-				List<XAResourceHolderState> allResources = resourceManager.getAllResources();
-				for (XAResourceHolderState resource : allResources)
+			List<XAResourceHolderState> resourcesToRollback = new ArrayList<>();
+			List<XAResourceHolderState> allResources = resourceManager.getAllResources();
+			for (XAResourceHolderState resource : allResources)
+			{
+				if (!resource.isFailed())
 				{
-					if (!resource.isFailed())
-					{
-						resourcesToRollback.add(resource);
-					}
-				}
-
-				rollbacker.rollback(this, resourcesToRollback);
-
-				if (LogDebugCheck.isDebugEnabled())
-				{
-					log.finer("successfully rolled back " + this);
+					resourcesToRollback.add(resource);
 				}
 			}
-			catch (HeuristicMixedException ex)
+
+			rollbacker.rollback(this, resourcesToRollback);
+
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				throw new BitronixSystemException("transaction partly committed and partly rolled back. Resources are now inconsistent !", ex);
+				log.finer("successfully rolled back " + this);
 			}
-			catch (HeuristicCommitException ex)
-			{
-				throw new BitronixSystemException("transaction committed instead of rolled back. Resources are now inconsistent !", ex);
-			}
+		}
+		catch (HeuristicMixedException ex)
+		{
+			throw new BitronixSystemException("transaction partly committed and partly rolled back. Resources are now inconsistent !", ex);
+		}
+		catch (HeuristicCommitException ex)
+		{
+			throw new BitronixSystemException("transaction committed instead of rolled back. Resources are now inconsistent !", ex);
 		}
 		finally
 		{
 			fireAfterCompletionEvent();
 		}
+
 	}
 
+	/**
+	 * Method setRollbackOnly ...
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	@Override
-	public void setRollbackOnly() throws IllegalStateException, SystemException
+	public void setRollbackOnly() throws SystemException
 	{
 		if (status == Status.STATUS_NO_TRANSACTION)
 		{
@@ -454,11 +544,25 @@ public class BitronixTransaction
 		setStatus(Status.STATUS_MARKED_ROLLBACK);
 	}
 
+	/**
+	 * Method setStatus sets the status of this BitronixTransaction object.
+	 *
+	 * @param status
+	 * 		the status of this BitronixTransaction object.
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	public void setStatus(int status) throws SystemException
 	{
 		setStatus(status, resourceManager.collectUniqueNames());
 	}
 
+	/**
+	 * Method isDone returns the done of this BitronixTransaction object.
+	 *
+	 * @return the done (type boolean) of this BitronixTransaction object.
+	 */
 	private boolean isDone()
 	{
 		switch (status)
@@ -475,6 +579,11 @@ public class BitronixTransaction
 		}
 	}
 
+	/**
+	 * Method isWorking returns the working of this BitronixTransaction object.
+	 *
+	 * @return the working (type boolean) of this BitronixTransaction object.
+	 */
 	private boolean isWorking()
 	{
 		switch (status)
@@ -489,6 +598,19 @@ public class BitronixTransaction
 		}
 	}
 
+	/**
+	 * Method delistResource ...
+	 *
+	 * @param resourceHolderState
+	 * 		of type XAResourceHolderState
+	 * @param flag
+	 * 		of type int
+	 *
+	 * @return boolean
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	private boolean delistResource(XAResourceHolderState resourceHolderState, int flag) throws SystemException
 	{
 		try
@@ -520,6 +642,17 @@ public class BitronixTransaction
 		}
 	}
 
+	/**
+	 * Method setStatus ...
+	 *
+	 * @param status
+	 * 		of type int
+	 * @param uniqueNames
+	 * 		of type Set<String>
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	public void setStatus(int status, Set<String> uniqueNames) throws SystemException
 	{
 		try
@@ -553,6 +686,14 @@ public class BitronixTransaction
 		}
 	}
 
+	/**
+	 * Method fireTransactionStatusChangedEvent ...
+	 *
+	 * @param oldStatus
+	 * 		of type int
+	 * @param newStatus
+	 * 		of type int
+	 */
 	private void fireTransactionStatusChangedEvent(int oldStatus, int newStatus)
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -613,16 +754,32 @@ public class BitronixTransaction
 		}
 	}
 
+	/**
+	 * Method getResourceManager returns the resourceManager of this BitronixTransaction object.
+	 *
+	 * @return the resourceManager (type XAResourceManager) of this BitronixTransaction object.
+	 */
 	public XAResourceManager getResourceManager()
 	{
 		return resourceManager;
 	}
 
+	/**
+	 * Method timedOut ...
+	 *
+	 * @return boolean
+	 */
 	public boolean timedOut()
 	{
 		return timeout;
 	}
 
+	/**
+	 * Method timeout ...
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	public void timeout() throws SystemException
 	{
 		this.timeout = true;
@@ -630,6 +787,12 @@ public class BitronixTransaction
 		log.warning("transaction timed out: " + this);
 	}
 
+	/**
+	 * Method addTransactionStatusChangeListener ...
+	 *
+	 * @param listener
+	 * 		of type TransactionStatusChangeListener
+	 */
 	public void addTransactionStatusChangeListener(TransactionStatusChangeListener listener)
 	{
 		transactionStatusListeners.add(listener);
@@ -640,6 +803,11 @@ public class BitronixTransaction
 	 * Internal impl
 	 */
 
+	/**
+	 * Method hashCode ...
+	 *
+	 * @return int
+	 */
 	@Override
 	public int hashCode()
 	{
@@ -647,6 +815,14 @@ public class BitronixTransaction
 		                      .hashCode();
 	}
 
+	/**
+	 * Method equals ...
+	 *
+	 * @param obj
+	 * 		of type Object
+	 *
+	 * @return boolean
+	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -659,6 +835,11 @@ public class BitronixTransaction
 		return false;
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{
@@ -779,6 +960,15 @@ public class BitronixTransaction
 		}
 	}
 
+	/**
+	 * Method setActive sets the active of this BitronixTransaction object.
+	 *
+	 * @param timeout
+	 * 		the active of this BitronixTransaction object.
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	public void setActive(int timeout) throws SystemException
 	{
 		if (status != Status.STATUS_NO_TRANSACTION)
@@ -798,6 +988,9 @@ public class BitronixTransaction
 		taskScheduler.scheduleTransactionTimeout(this, timeoutDate);
 	}
 
+	/**
+	 * Method fireAfterCompletionEvent ...
+	 */
 	private void fireAfterCompletionEvent()
 	{
 		// this TX is no longer in-flight -> remove this transaction's state from all XAResourceHolders
@@ -828,6 +1021,11 @@ public class BitronixTransaction
 
 	/* management */
 
+	/**
+	 * Method getGtrid returns the gtrid of this BitronixTransaction object.
+	 *
+	 * @return the gtrid (type String) of this BitronixTransaction object.
+	 */
 	@Override
 	public String getGtrid()
 	{
@@ -835,24 +1033,44 @@ public class BitronixTransaction
 		                      .toString();
 	}
 
+	/**
+	 * Method getStatusDescription returns the statusDescription of this BitronixTransaction object.
+	 *
+	 * @return the statusDescription (type String) of this BitronixTransaction object.
+	 */
 	@Override
 	public String getStatusDescription()
 	{
 		return Decoder.decodeStatus(status);
 	}
 
+	/**
+	 * Method getThreadName returns the threadName of this BitronixTransaction object.
+	 *
+	 * @return the threadName (type String) of this BitronixTransaction object.
+	 */
 	@Override
 	public String getThreadName()
 	{
 		return threadName;
 	}
 
+	/**
+	 * Method getStartDate returns the startDate of this BitronixTransaction object.
+	 *
+	 * @return the startDate (type Date) of this BitronixTransaction object.
+	 */
 	@Override
 	public Date getStartDate()
 	{
 		return startDate;
 	}
 
+	/**
+	 * Method getEnlistedResourcesUniqueNames returns the enlistedResourcesUniqueNames of this BitronixTransaction object.
+	 *
+	 * @return the enlistedResourcesUniqueNames (type Collection<String>) of this BitronixTransaction object.
+	 */
 	@Override
 	public Collection<String> getEnlistedResourcesUniqueNames()
 	{

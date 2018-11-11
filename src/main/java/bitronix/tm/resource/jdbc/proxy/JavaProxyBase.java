@@ -36,6 +36,16 @@ public abstract class JavaProxyBase<T>
 
 	protected T delegate;
 
+	/**
+	 * Method createMethodMap ...
+	 *
+	 * @param clazz
+	 * 		of type Class<?>
+	 *
+	 * @return Map<String
+                       *       	   	   ,
+                       *       	   	   Method>
+	 */
 	protected static Map<String, Method> createMethodMap(Class<?> clazz)
 	{
 		HashMap<String, Method> selfMethodMap = new HashMap<>();
@@ -46,6 +56,14 @@ public abstract class JavaProxyBase<T>
 		return selfMethodMap;
 	}
 
+	/**
+	 * Method getMethodKey ...
+	 *
+	 * @param method
+	 * 		of type Method
+	 *
+	 * @return String
+	 */
 	protected static String getMethodKey(Method method)
 	{
 		String key = methodKeyMap.get(method);
@@ -67,6 +85,16 @@ public abstract class JavaProxyBase<T>
 		return key;
 	}
 
+	/**
+	 * Method isWrapperFor ...
+	 *
+	 * @param obj
+	 * 		of type Object
+	 * @param param
+	 * 		of type Class<?>
+	 *
+	 * @return boolean
+	 */
 	protected static boolean isWrapperFor(Object obj, Class<?> param)
 	{
 		try
@@ -81,6 +109,16 @@ public abstract class JavaProxyBase<T>
 		}
 	}
 
+	/**
+	 * Method unwrap ...
+	 *
+	 * @param obj
+	 * 		of type Object
+	 * @param param
+	 * 		of type Class<T>
+	 *
+	 * @return T
+	 */
 	@SuppressWarnings("unchecked")
 	protected static <T> T unwrap(Object obj, Class<T> param)
 	{
@@ -96,19 +134,39 @@ public abstract class JavaProxyBase<T>
 		}
 	}
 
+	/**
+	 * Method getProxy returns the proxy of this JavaProxyBase object.
+	 *
+	 * @return the proxy (type T) of this JavaProxyBase object.
+	 */
 	@SuppressWarnings("unchecked")
 	protected T getProxy()
 	{
 		return (T) proxy;
 	}
 
+	/**
+	 * Method invoke ...
+	 *
+	 * @param proxy
+	 * 		of type Object
+	 * @param method
+	 * 		of type Method
+	 * @param args
+	 * 		of type Object[]
+	 *
+	 * @return Object
+	 *
+	 * @throws Throwable
+	 * 		when
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
 	{
 		if (Proxy.isProxyClass(proxy.getClass()))
 		{
-			this.proxy = (T) proxy;
+			this.proxy = proxy;
 		}
 
 		try
@@ -127,6 +185,11 @@ public abstract class JavaProxyBase<T>
 		}
 	}
 
+	/**
+	 * Method getMethodMap returns the methodMap of this JavaProxyBase object.
+	 *
+	 * @return the methodMap (type Map<String, Method>) of this JavaProxyBase object.
+	 */
 	protected abstract Map<String, Method> getMethodMap();
 
 }

@@ -23,17 +23,36 @@ public class OracleXAException
 
 	private int oracleError;
 
+	/**
+	 * Constructor OracleXAException creates a new OracleXAException instance.
+	 *
+	 * @param msg
+	 * 		of type String
+	 * @param oracleError
+	 * 		of type int
+	 */
 	public OracleXAException(String msg, int oracleError)
 	{
 		super(msg);
 		this.oracleError = oracleError;
 	}
 
+	/**
+	 * Constructor OracleXAException creates a new OracleXAException instance.
+	 *
+	 * @param oracleError
+	 * 		of type int
+	 */
 	public OracleXAException(int oracleError)
 	{
 		this.oracleError = oracleError;
 	}
 
+	/**
+	 * Method getOracleError returns the oracleError of this OracleXAException object.
+	 *
+	 * @return the oracleError (type int) of this OracleXAException object.
+	 */
 	public int getOracleError()
 	{
 		return oracleError;

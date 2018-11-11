@@ -20,11 +20,30 @@ package bitronix.tm.internal;
  *
  * @author Ludovic Orban
  */
-public class BitronixRuntimeException extends RuntimeException {
-    public BitronixRuntimeException(String message, Throwable cause) {
-        super(message, cause);
-    }
-    public BitronixRuntimeException(String message) {
-        super(message);
-    }
+public class BitronixRuntimeException
+		extends RuntimeException
+{
+	/**
+	 * Constructor BitronixRuntimeException creates a new BitronixRuntimeException instance.
+	 *
+	 * @param message
+	 * 		of type String
+	 * @param cause
+	 * 		of type Throwable
+	 */
+	public BitronixRuntimeException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
+
+	/**
+	 * Constructor BitronixRuntimeException creates a new BitronixRuntimeException instance.
+	 *
+	 * @param message
+	 * 		of type String
+	 */
+	public BitronixRuntimeException(String message)
+	{
+		super(message);
+	}
 }

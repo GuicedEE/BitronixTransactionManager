@@ -49,6 +49,19 @@ public abstract class AbstractMockJdbcTest
 	protected PoolingDataSource poolingDataSource1;
 	protected PoolingDataSource poolingDataSource2;
 
+	/**
+	 * Method getWrappedXAConnectionOf ...
+	 *
+	 * @param pc1
+	 * 		of type Object
+	 *
+	 * @return Object
+	 *
+	 * @throws NoSuchFieldException
+	 * 		when
+	 * @throws IllegalAccessException
+	 * 		when
+	 */
 	public static Object getWrappedXAConnectionOf(Object pc1) throws NoSuchFieldException, IllegalAccessException
 	{
 		Field f = pc1.getClass()
@@ -57,6 +70,12 @@ public abstract class AbstractMockJdbcTest
 		return f.get(pc1);
 	}
 
+	/**
+	 * Method setUp ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -111,6 +130,21 @@ public abstract class AbstractMockJdbcTest
 		EventRecorder.clear();
 	}
 
+	/**
+	 * Method getPool ...
+	 *
+	 * @param poolingDataSource
+	 * 		of type PoolingDataSource
+	 *
+	 * @return XAPool<JdbcPooledConnection
+                                               *               	       	       ,
+                                               *               	       	       JdbcPooledConnection>
+	 *
+	 * @throws NoSuchFieldException
+	 * 		when
+	 * @throws IllegalAccessException
+	 * 		when
+	 */
 	@SuppressWarnings("unchecked")
 	protected XAPool<JdbcPooledConnection, JdbcPooledConnection> getPool(PoolingDataSource poolingDataSource) throws NoSuchFieldException, IllegalAccessException
 	{
@@ -119,6 +153,12 @@ public abstract class AbstractMockJdbcTest
 		return (XAPool<JdbcPooledConnection, JdbcPooledConnection>) poolField.get(poolingDataSource);
 	}
 
+	/**
+	 * Method registerPoolEventListener ...
+	 *
+	 * @param pool
+	 * 		of type XAPool<JdbcPooledConnection, JdbcPooledConnection>
+	 */
 	private void registerPoolEventListener(XAPool<JdbcPooledConnection, JdbcPooledConnection> pool)
 	{
 		Iterator<JdbcPooledConnection> iterator = pool.getXAResourceHolders()
@@ -129,6 +169,13 @@ public abstract class AbstractMockJdbcTest
 			//noinspection Convert2Diamond
 			jdbcPooledConnection.addStateChangeEventListener(new StateChangeListener<JdbcPooledConnection>()
 			{
+				/**
+				 * Method stateChanged ...
+				 *
+				 * @param source of type JdbcPooledConnection
+				 * @param oldState of type State
+				 * @param newState of type State
+				 */
 				@Override
 				public void stateChanged(JdbcPooledConnection source, State oldState, State newState)
 				{
@@ -144,6 +191,13 @@ public abstract class AbstractMockJdbcTest
 					}
 				}
 
+				/**
+				 * Method stateChanging ...
+				 *
+				 * @param source of type JdbcPooledConnection
+				 * @param currentState of type State
+				 * @param futureState of type State
+				 */
 				@Override
 				public void stateChanging(JdbcPooledConnection source, State currentState, State futureState)
 				{
@@ -152,6 +206,9 @@ public abstract class AbstractMockJdbcTest
 		}
 	}
 
+	/**
+	 * Method tearDown ...
+	 */
 	@Override
 	protected void tearDown()
 	{

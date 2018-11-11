@@ -29,6 +29,16 @@ public class ClassLoaderUtils
 
 	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ClassLoaderUtils.class.toString());
 
+	/**
+	 * Method getAllInterfaces ...
+	 *
+	 * @param clazz
+	 * 		of type Class<?>
+	 *
+	 * @return Set<Class
+                       *       	   	   <
+                       *       	   	   ?>>
+	 */
 	public static Set<Class<?>> getAllInterfaces(Class<?> clazz)
 	{
 		Set<Class<?>> interfaces = new HashSet<>();
@@ -130,11 +140,28 @@ public class ClassLoaderUtils
 
 		private final ClassLoader contextLoader;
 
+		/**
+		 * Constructor CascadingClassLoader creates a new CascadingClassLoader instance.
+		 *
+		 * @param contextLoader
+		 * 		of type ClassLoader
+		 */
 		CascadingClassLoader(ClassLoader contextLoader)
 		{
 			this.contextLoader = contextLoader;
 		}
 
+		/**
+		 * Method findClass ...
+		 *
+		 * @param name
+		 * 		of type String
+		 *
+		 * @return Class<?>
+		 *
+		 * @throws ClassNotFoundException
+		 * 		when
+		 */
 		@Override
 		protected Class<?> findClass(String name) throws ClassNotFoundException
 		{

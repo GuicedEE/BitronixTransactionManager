@@ -34,6 +34,9 @@ public class TaskSchedulerTest
 
 	private TaskScheduler ts;
 
+	/**
+	 * Method setUp ...
+	 */
 	@Override
 	protected void setUp()
 	{
@@ -41,6 +44,9 @@ public class TaskSchedulerTest
 		ts.start();
 	}
 
+	/**
+	 * Method tearDown ...
+	 */
 	@Override
 	protected void tearDown()
 	{
@@ -49,6 +55,12 @@ public class TaskSchedulerTest
 	}
 
 
+	/**
+	 * Method testRecoveryTask ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testRecoveryTask() throws Exception
 	{
 		Recoverer recoverer = new Recoverer();
@@ -63,6 +75,12 @@ public class TaskSchedulerTest
 		assertEquals(0, ts.countTasksQueued());
 	}
 
+	/**
+	 * Method testTaskOrdering ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testTaskOrdering() throws Exception
 	{
 		List<SimpleTask> result = Collections.synchronizedList(new ArrayList<>());
@@ -81,6 +99,12 @@ public class TaskSchedulerTest
 		                      .getObject());
 	}
 
+	/**
+	 * Method testIdenticalScheduleTimestamp ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testIdenticalScheduleTimestamp() throws Exception
 	{
 		List<SimpleTask> result = Collections.synchronizedList(new ArrayList<>());
@@ -106,6 +130,18 @@ public class TaskSchedulerTest
 		private final Object obj;
 		private final List<SimpleTask> result;
 
+		/**
+		 * Constructor SimpleTask creates a new SimpleTask instance.
+		 *
+		 * @param executionTime
+		 * 		of type Date
+		 * @param scheduler
+		 * 		of type TaskScheduler
+		 * @param obj
+		 * 		of type Object
+		 * @param result
+		 * 		of type List<SimpleTask>
+		 */
 		protected SimpleTask(Date executionTime, TaskScheduler scheduler, Object obj, List<SimpleTask> result)
 		{
 			super(executionTime, scheduler);
@@ -113,12 +149,20 @@ public class TaskSchedulerTest
 			this.result = result;
 		}
 
+		/**
+		 * Method getObject returns the object of this SimpleTask object.
+		 *
+		 * @return the object (type Object) of this SimpleTask object.
+		 */
 		@Override
 		public Object getObject()
 		{
 			return obj;
 		}
 
+		/**
+		 * Method execute ...
+		 */
 		@Override
 		public void execute()
 		{

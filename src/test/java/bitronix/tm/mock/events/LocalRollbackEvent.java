@@ -22,11 +22,24 @@ public class LocalRollbackEvent
 		extends Event
 {
 
+	/**
+	 * Constructor LocalRollbackEvent creates a new LocalRollbackEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param ex
+	 * 		of type Exception
+	 */
 	public LocalRollbackEvent(Object source, Exception ex)
 	{
 		super(source, ex);
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

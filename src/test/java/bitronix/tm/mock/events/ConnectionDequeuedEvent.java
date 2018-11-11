@@ -26,22 +26,48 @@ public class ConnectionDequeuedEvent
 
 	private JdbcPooledConnection jdbcPooledConnection;
 
+	/**
+	 * Constructor ConnectionDequeuedEvent creates a new ConnectionDequeuedEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param jdbcPooledConnection
+	 * 		of type JdbcPooledConnection
+	 */
 	public ConnectionDequeuedEvent(Object source, JdbcPooledConnection jdbcPooledConnection)
 	{
 		super(source, null);
 		this.jdbcPooledConnection = jdbcPooledConnection;
 	}
 
+	/**
+	 * Constructor ConnectionDequeuedEvent creates a new ConnectionDequeuedEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param ex
+	 * 		of type Exception
+	 */
 	public ConnectionDequeuedEvent(Object source, Exception ex)
 	{
 		super(source, ex);
 	}
 
+	/**
+	 * Method getPooledConnectionImpl returns the pooledConnectionImpl of this ConnectionDequeuedEvent object.
+	 *
+	 * @return the pooledConnectionImpl (type JdbcPooledConnection) of this ConnectionDequeuedEvent object.
+	 */
 	public JdbcPooledConnection getPooledConnectionImpl()
 	{
 		return jdbcPooledConnection;
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

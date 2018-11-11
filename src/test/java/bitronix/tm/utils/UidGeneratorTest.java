@@ -30,6 +30,9 @@ public class UidGeneratorTest
 {
 
 
+	/**
+	 * Method testHexaStringEncoder ...
+	 */
 	public void testHexaStringEncoder()
 	{
 		byte[] result = Encoder.intToBytes(0x80);
@@ -46,6 +49,9 @@ public class UidGeneratorTest
 	}
 
 
+	/**
+	 * Method testUniqueness ...
+	 */
 	public void testUniqueness()
 	{
 		int count = 10000;
@@ -58,6 +64,12 @@ public class UidGeneratorTest
 		}
 	}
 
+	/**
+	 * Method testMultiThreadedUniqueness ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testMultiThreadedUniqueness() throws Exception
 	{
 		int concurrency = 128, callsPerThread = 1000;
@@ -92,6 +104,9 @@ public class UidGeneratorTest
 		assertEquals(concurrency * callsPerThread, allIds.size());
 	}
 
+	/**
+	 * Method testEquals ...
+	 */
 	public void testEquals()
 	{
 		Uid uid1 = UidGenerator.generateUid();
@@ -103,6 +118,9 @@ public class UidGeneratorTest
 		assertTrue(uid2.equals(uid2));
 	}
 
+	/**
+	 * Method testExtracts ...
+	 */
 	public void testExtracts()
 	{
 		byte[] timestamp = Encoder.longToBytes(System.currentTimeMillis());

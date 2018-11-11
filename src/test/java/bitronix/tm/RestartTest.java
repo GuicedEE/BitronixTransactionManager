@@ -30,6 +30,9 @@ public class RestartTest
 		extends TestCase
 {
 
+	/**
+	 * Method setUp ...
+	 */
 	@Override
 	protected void setUp()
 	{
@@ -42,6 +45,12 @@ public class RestartTest
 		}
 	}
 
+	/**
+	 * Method testRestartWithoutLoaderNoReuseResource ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testRestartWithoutLoaderNoReuseResource() throws Exception
 	{
 		for (int i = 0; i < 3; i++)
@@ -73,6 +82,12 @@ public class RestartTest
 		}
 	}
 
+	/**
+	 * Method testRestartWithoutLoaderReuseResource ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testRestartWithoutLoaderReuseResource() throws Exception
 	{
 		PoolingDataSource pds = new PoolingDataSource();
@@ -104,6 +119,12 @@ public class RestartTest
 		pds.close();
 	}
 
+	/**
+	 * Method testRestartWithLoader ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testRestartWithLoader() throws Exception
 	{
 		for (int i = 0; i < 3; i++)

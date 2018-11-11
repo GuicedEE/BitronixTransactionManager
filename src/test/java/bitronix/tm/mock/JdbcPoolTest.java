@@ -42,6 +42,9 @@ public class JdbcPoolTest
 	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(JdbcPoolTest.class.toString());
 	private PoolingDataSource pds;
 
+	/**
+	 * Method setUp ...
+	 */
 	@Override
 	protected void setUp()
 	{
@@ -64,6 +67,9 @@ public class JdbcPoolTest
 		pds.init();
 	}
 
+	/**
+	 * Method tearDown ...
+	 */
 	@Override
 	protected void tearDown()
 	{
@@ -73,6 +79,9 @@ public class JdbcPoolTest
 		                          .shutdown();
 	}
 
+	/**
+	 * Method testObjectProperties ...
+	 */
 	public void testObjectProperties()
 	{
 		pds.close();
@@ -87,6 +96,12 @@ public class JdbcPoolTest
 		pds.init();
 	}
 
+	/**
+	 * Method testInitFailure ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testInitFailure() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -131,6 +146,12 @@ public class JdbcPoolTest
 		                          .commit();
 	}
 
+	/**
+	 * Method testReEnteringRecovery ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testReEnteringRecovery() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -154,6 +175,12 @@ public class JdbcPoolTest
 		pds.endRecovery();
 	}
 
+	/**
+	 * Method testPoolGrowth ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPoolGrowth() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -193,6 +220,12 @@ public class JdbcPoolTest
 		assertEquals(2, pool.totalPoolSize());
 	}
 
+	/**
+	 * Method testPoolShrink ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPoolShrink() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -231,6 +264,12 @@ public class JdbcPoolTest
 		assertEquals(1, pool.totalPoolSize());
 	}
 
+	/**
+	 * Method testPoolShrinkErrorHandling ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPoolShrinkErrorHandling() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -271,6 +310,12 @@ public class JdbcPoolTest
 		assertEquals(1, pool.inPoolSize());
 	}
 
+	/**
+	 * Method testPoolReset ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPoolReset() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -303,6 +348,12 @@ public class JdbcPoolTest
 		assertEquals(1, pool.totalPoolSize());
 	}
 
+	/**
+	 * Method testPoolResetErrorHandling ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPoolResetErrorHandling() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -340,6 +391,12 @@ public class JdbcPoolTest
 		assertEquals(1, pool.inPoolSize());
 	}
 
+	/**
+	 * Method testCloseLocalContext ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testCloseLocalContext() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -363,6 +420,12 @@ public class JdbcPoolTest
 		}
 	}
 
+	/**
+	 * Method testCloseGlobalContextRecycle ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testCloseGlobalContextRecycle() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -427,6 +490,12 @@ public class JdbcPoolTest
 		}
 	}
 
+	/**
+	 * Method testCloseGlobalContextNoRecycle ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testCloseGlobalContextNoRecycle() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -491,6 +560,12 @@ public class JdbcPoolTest
 		}
 	}
 
+	/**
+	 * Method testPoolNotStartingTransactionManager ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPoolNotStartingTransactionManager() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -525,6 +600,12 @@ public class JdbcPoolTest
 		assertFalse(TransactionManagerServices.isTransactionManagerRunning());
 	}
 
+	/**
+	 * Method testWrappers ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testWrappers() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -580,6 +661,23 @@ public class JdbcPoolTest
 		                                                                                  .contains("EnhancerByMockito"));
 	}
 
+	/**
+	 * Method isWrapperFor ...
+	 *
+	 * @param obj
+	 * 		of type Object
+	 * @param param
+	 * 		of type Class
+	 *
+	 * @return boolean
+	 *
+	 * @throws NoSuchMethodException
+	 * 		when
+	 * @throws InvocationTargetException
+	 * 		when
+	 * @throws IllegalAccessException
+	 * 		when
+	 */
 	private static boolean isWrapperFor(Object obj, Class param) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
 	{
 		Method isWrapperForMethod = obj.getClass()
@@ -587,6 +685,23 @@ public class JdbcPoolTest
 		return (Boolean) isWrapperForMethod.invoke(obj, param);
 	}
 
+	/**
+	 * Method unwrap ...
+	 *
+	 * @param obj
+	 * 		of type Object
+	 * @param param
+	 * 		of type Class
+	 *
+	 * @return Object
+	 *
+	 * @throws NoSuchMethodException
+	 * 		when
+	 * @throws InvocationTargetException
+	 * 		when
+	 * @throws IllegalAccessException
+	 * 		when
+	 */
 	private static Object unwrap(Object obj, Class param) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
 	{
 		Method unwrapMethod = obj.getClass()

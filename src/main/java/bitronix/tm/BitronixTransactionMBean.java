@@ -23,11 +23,41 @@ import java.util.Date;
  *
  * @author Ludovic Orban
  */
-public interface BitronixTransactionMBean {
+public interface BitronixTransactionMBean
+{
 
-    String getGtrid();
-    String getStatusDescription();
-    String getThreadName();
-    Date getStartDate();
-    Collection<String> getEnlistedResourcesUniqueNames();
+	/**
+	 * Method getGtrid returns the gtrid of this BitronixTransactionMBean object.
+	 *
+	 * @return the gtrid (type String) of this BitronixTransactionMBean object.
+	 */
+	String getGtrid();
+
+	/**
+	 * Method getStatusDescription returns the statusDescription of this BitronixTransactionMBean object.
+	 *
+	 * @return the statusDescription (type String) of this BitronixTransactionMBean object.
+	 */
+	String getStatusDescription();
+
+	/**
+	 * Method getThreadName returns the threadName of this BitronixTransactionMBean object.
+	 *
+	 * @return the threadName (type String) of this BitronixTransactionMBean object.
+	 */
+	String getThreadName();
+
+	/**
+	 * Method getStartDate returns the startDate of this BitronixTransactionMBean object.
+	 *
+	 * @return the startDate (type Date) of this BitronixTransactionMBean object.
+	 */
+	Date getStartDate();
+
+	/**
+	 * Method getEnlistedResourcesUniqueNames returns the enlistedResourcesUniqueNames of this BitronixTransactionMBean object.
+	 *
+	 * @return the enlistedResourcesUniqueNames (type Collection<String>) of this BitronixTransactionMBean object.
+	 */
+	Collection<String> getEnlistedResourcesUniqueNames();
 }

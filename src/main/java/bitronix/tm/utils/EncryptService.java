@@ -18,6 +18,23 @@ class EncryptService
 	private Cipher ecipher;
 	private Cipher dcipher;
 
+	/**
+	 * Constructor EncryptService creates a new EncryptService instance.
+	 *
+	 * @param keyPass
+	 * 		of type String
+	 * @param encrypt
+	 * 		of type boolean
+	 *
+	 * @throws InvalidKeySpecException
+	 * 		when
+	 * @throws NoSuchAlgorithmException
+	 * 		when
+	 * @throws InvalidKeyException
+	 * 		when
+	 * @throws NoSuchPaddingException
+	 * 		when
+	 */
 	public EncryptService(String keyPass, boolean encrypt) throws InvalidKeySpecException, NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException
 	{
 		DESKeySpec desKeySpec = new DESKeySpec(keyPass.getBytes());
@@ -41,6 +58,21 @@ class EncryptService
 		}
 	}
 
+	/**
+	 * Method encrypt ...
+	 *
+	 * @param message
+	 * 		of type String
+	 *
+	 * @return String
+	 *
+	 * @throws UnsupportedEncodingException
+	 * 		when
+	 * @throws BadPaddingException
+	 * 		when
+	 * @throws IllegalBlockSizeException
+	 * 		when
+	 */
 	public String encrypt(String message) throws UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException
 	{
 		byte[] utf8 = message.getBytes(EncryptService.utf8);
@@ -49,6 +81,21 @@ class EncryptService
 		             .encodeToString(enc);
 	}
 
+	/**
+	 * Method decrypt ...
+	 *
+	 * @param message
+	 * 		of type String
+	 *
+	 * @return String
+	 *
+	 * @throws BadPaddingException
+	 * 		when
+	 * @throws IllegalBlockSizeException
+	 * 		when
+	 * @throws UnsupportedEncodingException
+	 * 		when
+	 */
 	public String decrypt(String message) throws BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException
 	{
 		byte[] dec = Base64.getDecoder()

@@ -13,6 +13,9 @@ import java.security.spec.InvalidKeySpecException;
 public class EncryptServiceTest
 {
 
+	/**
+	 * Method encrypt ...
+	 */
 	@Test
 	public void encrypt()
 	{
@@ -51,6 +54,9 @@ public class EncryptServiceTest
 		}
 	}
 
+	/**
+	 * Method decrypt ...
+	 */
 	@Test
 	public void decrypt()
 	{

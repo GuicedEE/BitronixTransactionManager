@@ -22,16 +22,35 @@ public class XAConnectionCloseEvent
 		extends Event
 {
 
+	/**
+	 * Constructor XAConnectionCloseEvent creates a new XAConnectionCloseEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 */
 	public XAConnectionCloseEvent(Object source)
 	{
 		super(source, null);
 	}
 
+	/**
+	 * Constructor XAConnectionCloseEvent creates a new XAConnectionCloseEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param ex
+	 * 		of type Exception
+	 */
 	public XAConnectionCloseEvent(Object source, Exception ex)
 	{
 		super(source, ex);
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

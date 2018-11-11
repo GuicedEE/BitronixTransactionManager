@@ -145,6 +145,16 @@ public class OnePcFailureTest
 		assertEquals("TM haven't properly tried to commit", 1, commitEventCount);
 	}
 
+	/**
+	 * Method createXAException ...
+	 *
+	 * @param msg
+	 * 		of type String
+	 * @param errorCode
+	 * 		of type int
+	 *
+	 * @return XAException
+	 */
 	private XAException createXAException(String msg, int errorCode)
 	{
 		XAException prepareException = new OracleXAException(msg, 9876);
@@ -152,6 +162,12 @@ public class OnePcFailureTest
 		return prepareException;
 	}
 
+	/**
+	 * Method setUp ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -184,6 +200,9 @@ public class OnePcFailureTest
 		tm = TransactionManagerServices.getTransactionManager();
 	}
 
+	/**
+	 * Method tearDown ...
+	 */
 	@Override
 	protected void tearDown()
 	{

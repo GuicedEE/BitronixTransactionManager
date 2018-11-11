@@ -31,6 +31,9 @@ import java.util.TreeMap;
 public final class PropertyUtils
 {
 
+	/**
+	 * Constructor PropertyUtils creates a new PropertyUtils instance.
+	 */
 	private PropertyUtils()
 	{
 	}
@@ -132,6 +135,19 @@ public final class PropertyUtils
 		}
 	}
 
+	/**
+	 * Method callGetter ...
+	 *
+	 * @param target
+	 * 		of type Object
+	 * @param propertyName
+	 * 		of type String
+	 *
+	 * @return Object
+	 *
+	 * @throws PropertyException
+	 * 		when
+	 */
 	private static Object callGetter(Object target, String propertyName) throws PropertyException
 	{
 		Method getter = getGetter(target, propertyName);
@@ -149,6 +165,16 @@ public final class PropertyUtils
 		}
 	}
 
+	/**
+	 * Method getPropertyType ...
+	 *
+	 * @param target
+	 * 		of type Object
+	 * @param propertyName
+	 * 		of type String
+	 *
+	 * @return Class<?>
+	 */
 	private static Class<?> getPropertyType(Object target, String propertyName)
 	{
 		String getterName = "get" + propertyName.substring(0, 1)
@@ -171,6 +197,19 @@ public final class PropertyUtils
 		                                                                                    .getName() + "'");
 	}
 
+	/**
+	 * Method callSetter ...
+	 *
+	 * @param target
+	 * 		of type Object
+	 * @param propertyName
+	 * 		of type String
+	 * @param parameter
+	 * 		of type Object
+	 *
+	 * @throws PropertyException
+	 * 		when
+	 */
 	private static void callSetter(Object target, String propertyName, Object parameter) throws PropertyException
 	{
 		Method setter = getSetter(target, propertyName);
@@ -228,6 +267,16 @@ public final class PropertyUtils
 		}
 	}
 
+	/**
+	 * Method getGetter ...
+	 *
+	 * @param target
+	 * 		of type Object
+	 * @param propertyName
+	 * 		of type String
+	 *
+	 * @return Method
+	 */
 	private static Method getGetter(Object target, String propertyName)
 	{
 		String getterName = "get" + propertyName.substring(0, 1)
@@ -250,6 +299,16 @@ public final class PropertyUtils
 		                                                                                             .getName() + "'");
 	}
 
+	/**
+	 * Method getSetter ...
+	 *
+	 * @param target
+	 * 		of type Object
+	 * @param propertyName
+	 * 		of type String
+	 *
+	 * @return Method
+	 */
 	private static Method getSetter(Object target, String propertyName)
 	{
 		if (propertyName == null || "".equals(propertyName))
@@ -273,6 +332,16 @@ public final class PropertyUtils
 		                                                                                              .getName() + "'");
 	}
 
+	/**
+	 * Method transform ...
+	 *
+	 * @param value
+	 * 		of type Object
+	 * @param destinationClass
+	 * 		of type Class<?>
+	 *
+	 * @return Object
+	 */
 	private static Object transform(Object value, Class<?> destinationClass)
 	{
 		if (value.getClass() == destinationClass)
@@ -447,6 +516,16 @@ public final class PropertyUtils
 		return currentTarget;
 	}
 
+	/**
+	 * Method containsSetterForGetter ...
+	 *
+	 * @param clazz
+	 * 		of type Class<?>
+	 * @param method
+	 * 		of type Method
+	 *
+	 * @return boolean
+	 */
 	private static boolean containsSetterForGetter(Class<?> clazz, Method method)
 	{
 		String methodName = method.getName();
@@ -477,6 +556,18 @@ public final class PropertyUtils
 		return false;
 	}
 
+	/**
+	 * Method getNestedProperties ...
+	 *
+	 * @param prefix
+	 * 		of type String
+	 * @param properties
+	 * 		of type Map<String, Object>
+	 *
+	 * @return Map<String
+                                               *               	       	       ,
+                                               *               	       	       Object>
+	 */
 	private static Map<String, Object> getNestedProperties(String prefix, Map<String, Object> properties)
 	{
 		Map<String, Object> result = new HashMap<>();

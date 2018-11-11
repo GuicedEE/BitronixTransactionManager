@@ -78,6 +78,9 @@ public final class ManagementRegistrar
 					setDaemon(true);
 				}
 
+				/**
+				 * Method run ...
+				 */
 				@Override
 				public void run()
 				{
@@ -120,6 +123,9 @@ public final class ManagementRegistrar
 		}
 	}
 
+	/**
+	 * Constructor ManagementRegistrar creates a new ManagementRegistrar instance.
+	 */
 	private ManagementRegistrar()
 	{
 	}
@@ -155,6 +161,12 @@ public final class ManagementRegistrar
 		runOrEnqueueCommand(new ManagementRegisterCommand(name, obj));
 	}
 
+	/**
+	 * Method runOrEnqueueCommand ...
+	 *
+	 * @param command
+	 * 		of type ManagementCommand
+	 */
 	private static void runOrEnqueueCommand(ManagementCommand command)
 	{
 		if (commandQueue == null)
@@ -173,6 +185,9 @@ public final class ManagementRegistrar
 		}
 	}
 
+	/**
+	 * Method normalizeAndRunQueuedCommands ...
+	 */
 	static void normalizeAndRunQueuedCommands()
 	{
 		if (commandQueue == null)
@@ -245,6 +260,14 @@ public final class ManagementRegistrar
 		private final WeakReference<Object> instance;
 		private boolean replace;
 
+		/**
+		 * Constructor ManagementRegisterCommand creates a new ManagementRegisterCommand instance.
+		 *
+		 * @param name
+		 * 		of type String
+		 * @param instance
+		 * 		of type Object
+		 */
 		ManagementRegisterCommand(String name, Object instance)
 		{
 			super(name);
@@ -252,16 +275,33 @@ public final class ManagementRegistrar
 			this.instance = new WeakReference<>(instance);
 		}
 
+		/**
+		 * Method isReplace returns the replace of this ManagementRegisterCommand object.
+		 *
+		 * @return the replace (type boolean) of this ManagementRegisterCommand object.
+		 */
 		boolean isReplace()
 		{
 			return replace;
 		}
 
+		/**
+		 * Method setReplace sets the replace of this ManagementRegisterCommand object.
+		 *
+		 * @param replace
+		 * 		the replace of this ManagementRegisterCommand object.
+		 */
 		void setReplace(boolean replace)
 		{
 			this.replace = replace;
 		}
 
+		/**
+		 * Method runCommand ...
+		 *
+		 * @throws Exception
+		 * 		when
+		 */
 		@Override
 		protected void runCommand() throws Exception
 		{
@@ -285,11 +325,23 @@ public final class ManagementRegistrar
 	private static class ManagementUnregisterCommand
 			extends ManagementCommand
 	{
+		/**
+		 * Constructor ManagementUnregisterCommand creates a new ManagementUnregisterCommand instance.
+		 *
+		 * @param name
+		 * 		of type String
+		 */
 		ManagementUnregisterCommand(String name)
 		{
 			super(name);
 		}
 
+		/**
+		 * Method runCommand ...
+		 *
+		 * @throws Exception
+		 * 		when
+		 */
 		@Override
 		protected void runCommand() throws Exception
 		{
@@ -317,16 +369,30 @@ public final class ManagementRegistrar
 
 		final String name;
 
+		/**
+		 * Constructor ManagementCommand creates a new ManagementCommand instance.
+		 *
+		 * @param name
+		 * 		of type String
+		 */
 		protected ManagementCommand(String name)
 		{
 			this.name = name;
 		}
 
+		/**
+		 * Method getName returns the name of this ManagementCommand object.
+		 *
+		 * @return the name (type String) of this ManagementCommand object.
+		 */
 		public String getName()
 		{
 			return name;
 		}
 
+		/**
+		 * Method run ...
+		 */
 		@Override
 		public final void run()
 		{
@@ -344,8 +410,19 @@ public final class ManagementRegistrar
 			}
 		}
 
+		/**
+		 * Method runCommand ...
+		 *
+		 * @throws Exception
+		 * 		when
+		 */
 		protected abstract void runCommand() throws Exception;
 
+		/**
+		 * Method toString ...
+		 *
+		 * @return String
+		 */
 		@Override
 		public String toString()
 		{

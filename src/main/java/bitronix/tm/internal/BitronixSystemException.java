@@ -22,19 +22,44 @@ import javax.transaction.SystemException;
  *
  * @author Ludovic Orban
  */
-public class BitronixSystemException extends SystemException {
+public class BitronixSystemException
+		extends SystemException
+{
 
-    public BitronixSystemException(int errorCode) {
-        super(errorCode);
-    }
+	/**
+	 * Constructor BitronixSystemException creates a new BitronixSystemException instance.
+	 *
+	 * @param errorCode
+	 * 		of type int
+	 */
+	public BitronixSystemException(int errorCode)
+	{
+		super(errorCode);
+	}
 
-    public BitronixSystemException(String string) {
-        super(string);
-    }
+	/**
+	 * Constructor BitronixSystemException creates a new BitronixSystemException instance.
+	 *
+	 * @param string
+	 * 		of type String
+	 */
+	public BitronixSystemException(String string)
+	{
+		super(string);
+	}
 
-    public BitronixSystemException(String string, Throwable t) {
-        super(string);
-        initCause(t);
-    }
+	/**
+	 * Constructor BitronixSystemException creates a new BitronixSystemException instance.
+	 *
+	 * @param string
+	 * 		of type String
+	 * @param t
+	 * 		of type Throwable
+	 */
+	public BitronixSystemException(String string, Throwable t)
+	{
+		super(string);
+		initCause(t);
+	}
 
 }

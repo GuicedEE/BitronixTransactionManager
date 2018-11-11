@@ -33,106 +33,258 @@ import java.util.Properties;
  * @author Ludovic Orban
  * @author Brett Wooldridge
  */
-public class LrcXADataSource implements XADataSource {
+public class LrcXADataSource
+		implements XADataSource
+{
 
-    private volatile int loginTimeout;
-    private volatile String driverClassName;
-    private volatile String url;
-    private volatile String user;
-    private volatile String password;
+	private volatile int loginTimeout;
+	private volatile String driverClassName;
+	private volatile String url;
+	private volatile String user;
+	private volatile String password;
 
-    public LrcXADataSource() {
-    }
+	/**
+	 * Constructor LrcXADataSource creates a new LrcXADataSource instance.
+	 */
+	public LrcXADataSource()
+	{
+	}
 
-    @Override
-    public int getLoginTimeout() throws SQLException {
-        return loginTimeout;
-    }
+	/**
+	 * Method getDriverClassName returns the driverClassName of this LrcXADataSource object.
+	 *
+	 * @return the driverClassName (type String) of this LrcXADataSource object.
+	 */
+	public String getDriverClassName()
+	{
+		return driverClassName;
+	}
 
-    @Override
-    public void setLoginTimeout(int seconds) throws SQLException {
-        this.loginTimeout = seconds;
-    }
+	/**
+	 * Method setDriverClassName sets the driverClassName of this LrcXADataSource object.
+	 *
+	 * @param driverClassName
+	 * 		the driverClassName of this LrcXADataSource object.
+	 */
+	public void setDriverClassName(String driverClassName)
+	{
+		this.driverClassName = driverClassName;
+	}
 
-    public String getDriverClassName() {
-        return driverClassName;
-    }
+	/**
+	 * Method getUrl returns the url of this LrcXADataSource object.
+	 *
+	 * @return the url (type String) of this LrcXADataSource object.
+	 */
+	public String getUrl()
+	{
+		return url;
+	}
 
-    public void setDriverClassName(String driverClassName) {
-        this.driverClassName = driverClassName;
-    }
+	/**
+	 * Method setUrl sets the url of this LrcXADataSource object.
+	 *
+	 * @param url
+	 * 		the url of this LrcXADataSource object.
+	 */
+	public void setUrl(String url)
+	{
+		this.url = url;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	/**
+	 * Method getUser returns the user of this LrcXADataSource object.
+	 *
+	 * @return the user (type String) of this LrcXADataSource object.
+	 */
+	public String getUser()
+	{
+		return user;
+	}
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	/**
+	 * Method setUser sets the user of this LrcXADataSource object.
+	 *
+	 * @param user
+	 * 		the user of this LrcXADataSource object.
+	 */
+	public void setUser(String user)
+	{
+		this.user = user;
+	}
 
-    public String getUser() {
-        return user;
-    }
+	/**
+	 * Method getPassword returns the password of this LrcXADataSource object.
+	 *
+	 * @return the password (type String) of this LrcXADataSource object.
+	 */
+	public String getPassword()
+	{
+		return password;
+	}
 
-    public void setUser(String user) {
-        this.user = user;
-    }
+	/**
+	 * Method setPassword sets the password of this LrcXADataSource object.
+	 *
+	 * @param password
+	 * 		the password of this LrcXADataSource object.
+	 */
+	public void setPassword(String password)
+	{
+		this.password = password;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	/**
+	 * Method getXAConnection returns the XAConnection of this LrcXADataSource object.
+	 *
+	 * @return the XAConnection (type XAConnection) of this LrcXADataSource object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	@Override
+	public XAConnection getXAConnection() throws SQLException
+	{
+		try
+		{
+			Class<?> driverClazz = ClassLoaderUtils.loadClass(driverClassName);
+			Driver driver = (Driver) driverClazz.getDeclaredConstructor()
+			                                    .newInstance();
+			Properties props = new Properties();
+			if (user != null)
+			{
+				props.setProperty("user", user);
+			}
+			if (password != null)
+			{
+				props.setProperty("password", password);
+			}
+			Connection connection = driver.connect(url, props);
+			XAConnection xaConnection = JdbcProxyFactory.INSTANCE.getProxyXaConnection(connection);
+			return xaConnection;
+		}
+		catch (Exception ex)
+		{
+			throw new SQLException("unable to connect to non-XA resource " + driverClassName, ex);
+		}
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	/**
+	 * Method getXAConnection ...
+	 *
+	 * @param user
+	 * 		of type String
+	 * @param password
+	 * 		of type String
+	 *
+	 * @return XAConnection
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	@Override
+	public XAConnection getXAConnection(String user, String password) throws SQLException
+	{
+		try
+		{
+			Class<?> driverClazz = ClassLoaderUtils.loadClass(driverClassName);
+			Driver driver = (Driver) driverClazz.getDeclaredConstructor()
+			                                    .newInstance();
+			Properties props = new Properties();
+			props.setProperty("user", user);
+			props.setProperty("password", password);
+			Connection connection = driver.connect(url, props);
+			XAConnection xaConnection = JdbcProxyFactory.INSTANCE.getProxyXaConnection(connection);
+			return xaConnection;
+		}
+		catch (Exception ex)
+		{
+			throw new SQLException("unable to connect to non-XA resource " + driverClassName, ex);
+		}
+	}
 
-    @Override
-    public PrintWriter getLogWriter() throws SQLException {
-        return null;
-    }
+	/**
+	 * Method getLogWriter returns the logWriter of this LrcXADataSource object.
+	 *
+	 * @return the logWriter (type PrintWriter) of this LrcXADataSource object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	@Override
+	public PrintWriter getLogWriter() throws SQLException
+	{
+		return null;
+	}
 
-    @Override
-    public void setLogWriter(PrintWriter out) throws SQLException {
-    }
+	/**
+	 * Method setLogWriter sets the logWriter of this LrcXADataSource object.
+	 *
+	 * @param out
+	 * 		the logWriter of this LrcXADataSource object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	@Override
+	public void setLogWriter(PrintWriter out) throws SQLException
+	{
+	}
 
-    @Override
-    public XAConnection getXAConnection() throws SQLException {
-        try {
-            Class<?> driverClazz = ClassLoaderUtils.loadClass(driverClassName);
-            Driver driver = (Driver) driverClazz.getDeclaredConstructor().newInstance();
-            Properties props = new Properties();
-            if (user != null) props.setProperty("user", user);
-            if (password != null) props.setProperty("password", password);
-            Connection connection = driver.connect(url, props);
-            XAConnection xaConnection = JdbcProxyFactory.INSTANCE.getProxyXaConnection(connection);
-            return xaConnection;
-        } catch (Exception ex) {
-            throw new SQLException("unable to connect to non-XA resource " + driverClassName, ex);
-        }
-    }
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
+	@Override
+	public String toString()
+	{
+		return "a JDBC LrcXADataSource on " + driverClassName + " with URL " + url;
+	}
 
-    @Override
-    public XAConnection getXAConnection(String user, String password) throws SQLException {
-        try {
-            Class<?> driverClazz = ClassLoaderUtils.loadClass(driverClassName);
-            Driver driver = (Driver) driverClazz.getDeclaredConstructor().newInstance();
-            Properties props = new Properties();
-            props.setProperty("user", user);
-            props.setProperty("password", password);
-            Connection connection = driver.connect(url, props);
-            XAConnection xaConnection = JdbcProxyFactory.INSTANCE.getProxyXaConnection(connection);
-            return xaConnection;
-        } catch (Exception ex) {
-            throw new SQLException("unable to connect to non-XA resource " + driverClassName, ex);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "a JDBC LrcXADataSource on " + driverClassName + " with URL " + url;
-    }
-
-	public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
+	/**
+	 * Method getParentLogger returns the parentLogger of this LrcXADataSource object.
+	 *
+	 * @return the parentLogger (type Logger) of this LrcXADataSource object.
+	 *
+	 * @throws SQLFeatureNotSupportedException
+	 * 		when
+	 */
+	@Override
+	public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException
+	{
 		throw new SQLFeatureNotSupportedException();
 	}
+
+	/**
+	 * Method getLoginTimeout returns the loginTimeout of this LrcXADataSource object.
+	 *
+	 * @return the loginTimeout (type int) of this LrcXADataSource object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	@Override
+	public int getLoginTimeout() throws SQLException
+	{
+		return loginTimeout;
+	}
+
+
+	/**
+	 * Method setLoginTimeout sets the loginTimeout of this LrcXADataSource object.
+	 *
+	 * @param seconds
+	 * 		the loginTimeout of this LrcXADataSource object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	@Override
+	public void setLoginTimeout(int seconds) throws SQLException
+	{
+		this.loginTimeout = seconds;
+	}
+
+
 }

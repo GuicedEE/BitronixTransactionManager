@@ -53,6 +53,9 @@ public class ResourceLoader
 
 	private final Map<String, XAResourceProducer> resourcesByUniqueName = new HashMap<>();
 
+	/**
+	 * Constructor ResourceLoader creates a new ResourceLoader instance.
+	 */
 	public ResourceLoader()
 	{
 	}
@@ -358,6 +361,9 @@ public class ResourceLoader
 		}
 	}
 
+	/**
+	 * Shutdown the service and free all held resources.
+	 */
 	@Override
 	public synchronized void shutdown()
 	{
@@ -390,22 +396,45 @@ public class ResourceLoader
 		private final String name;
 		private final String value;
 
+		/**
+		 * Constructor PropertyPair creates a new PropertyPair instance.
+		 *
+		 * @param key
+		 * 		of type String
+		 * @param value
+		 * 		of type String
+		 */
 		public PropertyPair(String key, String value)
 		{
 			this.name = key;
 			this.value = value;
 		}
 
+		/**
+		 * Method getName returns the name of this PropertyPair object.
+		 *
+		 * @return the name (type String) of this PropertyPair object.
+		 */
 		public String getName()
 		{
 			return name;
 		}
 
+		/**
+		 * Method getValue returns the value of this PropertyPair object.
+		 *
+		 * @return the value (type String) of this PropertyPair object.
+		 */
 		public String getValue()
 		{
 			return value;
 		}
 
+		/**
+		 * Method toString ...
+		 *
+		 * @return String
+		 */
 		@Override
 		public String toString()
 		{

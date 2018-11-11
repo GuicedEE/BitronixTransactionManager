@@ -26,18 +26,41 @@ public abstract class XAEvent
 
 	private Xid xid;
 
+	/**
+	 * Constructor XAEvent creates a new XAEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param xid
+	 * 		of type Xid
+	 */
 	protected XAEvent(Object source, Xid xid)
 	{
 		super(source, null);
 		this.xid = xid;
 	}
 
+	/**
+	 * Constructor XAEvent creates a new XAEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param ex
+	 * 		of type Exception
+	 * @param xid
+	 * 		of type Xid
+	 */
 	protected XAEvent(Object source, Exception ex, Xid xid)
 	{
 		super(source, ex);
 		this.xid = xid;
 	}
 
+	/**
+	 * Method getXid returns the xid of this XAEvent object.
+	 *
+	 * @return the xid (type Xid) of this XAEvent object.
+	 */
 	public Xid getXid()
 	{
 		return xid;

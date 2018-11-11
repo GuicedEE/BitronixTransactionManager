@@ -34,18 +34,30 @@ public class JndiTest
 
 	private BitronixTransactionManager transactionManager;
 
+	/**
+	 * Method setUp ...
+	 */
 	@Override
 	protected void setUp()
 	{
 		transactionManager = TransactionManagerServices.getTransactionManager();
 	}
 
+	/**
+	 * Method tearDown ...
+	 */
 	@Override
 	protected void tearDown()
 	{
 		transactionManager.shutdown();
 	}
 
+	/**
+	 * Method testNameParser ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testNameParser() throws Exception
 	{
 		BitronixContext bitronixContext = new BitronixContext();
@@ -62,6 +74,12 @@ public class JndiTest
 		                                                            .getClass());
 	}
 
+	/**
+	 * Method testDefaultUserTransactionAndResources ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testDefaultUserTransactionAndResources() throws Exception
 	{
 		PoolingDataSource pds = new PoolingDataSource();
@@ -93,6 +111,12 @@ public class JndiTest
 		pds.close();
 	}
 
+	/**
+	 * Method testSpecialUserTransactionName ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSpecialUserTransactionName() throws Exception
 	{
 		transactionManager.shutdown();

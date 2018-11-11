@@ -53,6 +53,12 @@ public class NewJdbcProperUsageMockTest
 	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(NewJdbcProperUsageMockTest.class.toString());
 	private static final int LOOPS = 2;
 
+	/**
+	 * Method testSimpleWorkingCase ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSimpleWorkingCase() throws Exception
 	{
 		Thread.currentThread()
@@ -158,6 +164,12 @@ public class NewJdbcProperUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testOrderedCommitResources ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testOrderedCommitResources() throws Exception
 	{
 		Thread.currentThread()
@@ -272,6 +284,12 @@ public class NewJdbcProperUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testReversePhase2Order ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testReversePhase2Order() throws Exception
 	{
 		Thread.currentThread()
@@ -387,6 +405,12 @@ public class NewJdbcProperUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testLrc ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testLrc() throws Exception
 	{
 		Thread.currentThread()
@@ -502,6 +526,12 @@ public class NewJdbcProperUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testStatementTimeout ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testStatementTimeout() throws Exception
 	{
 		Thread.currentThread()
@@ -588,6 +618,12 @@ public class NewJdbcProperUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testCommitTimeout ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testCommitTimeout() throws Exception
 	{
 		Thread.currentThread()
@@ -667,6 +703,12 @@ public class NewJdbcProperUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testGlobalAfterLocal ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testGlobalAfterLocal() throws Exception
 	{
 		Thread.currentThread()
@@ -793,6 +835,12 @@ public class NewJdbcProperUsageMockTest
 	}
 
 
+	/**
+	 * Method testDeferredReleaseAfterMarkedRollback ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testDeferredReleaseAfterMarkedRollback() throws Exception
 	{
 		Thread.currentThread()
@@ -864,6 +912,12 @@ public class NewJdbcProperUsageMockTest
 	}
 
 
+	/**
+	 * Method testRollingBackSynchronization ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testRollingBackSynchronization() throws Exception
 	{
 		Thread.currentThread()
@@ -886,6 +940,9 @@ public class NewJdbcProperUsageMockTest
 		tm.getTransaction()
 		  .registerSynchronization(new Synchronization()
 		  {
+			  /**
+			   * Method beforeCompletion ...
+			   */
 			  @Override
 			  public void beforeCompletion()
 			  {
@@ -907,6 +964,11 @@ public class NewJdbcProperUsageMockTest
 				  }
 			  }
 
+			  /**
+			   * Method afterCompletion ...
+			   *
+			   * @param status of type int
+			   */
 			  @Override
 			  public void afterCompletion(int status)
 			  {
@@ -991,6 +1053,12 @@ public class NewJdbcProperUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testSuspendResume ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSuspendResume() throws Exception
 	{
 		Thread.currentThread()
@@ -1094,6 +1162,12 @@ public class NewJdbcProperUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testLooseWorkingCaseOutsideOutside ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testLooseWorkingCaseOutsideOutside() throws Exception
 	{
 		Thread.currentThread()
@@ -1181,6 +1255,12 @@ public class NewJdbcProperUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testLooseWorkingCaseOutsideInside ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testLooseWorkingCaseOutsideInside() throws Exception
 	{
 		Thread.currentThread()
@@ -1268,6 +1348,12 @@ public class NewJdbcProperUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testLooseWorkingCaseInsideOutside ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testLooseWorkingCaseInsideOutside() throws Exception
 	{
 		Thread.currentThread()
@@ -1355,6 +1441,12 @@ public class NewJdbcProperUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testHeuristicCommitWorkingCase ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testHeuristicCommitWorkingCase() throws Exception
 	{
 		Thread.currentThread()
@@ -1427,6 +1519,12 @@ public class NewJdbcProperUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testHeuristicRollbackWorkingCase ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testHeuristicRollbackWorkingCase() throws Exception
 	{
 		Thread.currentThread()
@@ -1493,6 +1591,12 @@ public class NewJdbcProperUsageMockTest
 	}
 
 
+	/**
+	 * Method testNonXaPool ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testNonXaPool() throws Exception
 	{
 		Thread.currentThread()
@@ -1569,6 +1673,12 @@ public class NewJdbcProperUsageMockTest
 	}
 
 
+	/**
+	 * Method testDuplicateClose ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testDuplicateClose() throws Exception
 	{
 		Thread.currentThread()
@@ -1624,6 +1734,12 @@ public class NewJdbcProperUsageMockTest
 		}
 	}
 
+	/**
+	 * Method testPoolBoundsWithLooseEnlistment ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPoolBoundsWithLooseEnlistment() throws Exception
 	{
 		Thread.currentThread()
@@ -1655,6 +1771,12 @@ public class NewJdbcProperUsageMockTest
 		assertTrue(thread.isSuccesful());
 	}
 
+	/**
+	 * Method testNonEnlistingMethodInTxContext ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testNonEnlistingMethodInTxContext() throws Exception
 	{
 		Thread.currentThread()
@@ -1672,6 +1794,12 @@ public class NewJdbcProperUsageMockTest
 		tm.shutdown();
 	}
 
+	/**
+	 * Method testAutoCommitFalseWhenEnlisted ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testAutoCommitFalseWhenEnlisted() throws Exception
 	{
 		Thread.currentThread()
@@ -1690,6 +1818,12 @@ public class NewJdbcProperUsageMockTest
 		tm.shutdown();
 	}
 
+	/**
+	 * Method testAutoCommitTrueWhenEnlistedButSuspended ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testAutoCommitTrueWhenEnlistedButSuspended() throws Exception
 	{
 		Thread.currentThread()
@@ -1714,6 +1848,12 @@ public class NewJdbcProperUsageMockTest
 		tm.shutdown();
 	}
 
+	/**
+	 * Method testSerialization ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSerialization() throws Exception
 	{
 		Thread.currentThread()
@@ -1740,12 +1880,23 @@ public class NewJdbcProperUsageMockTest
 		private final PoolingDataSource poolingDataSource;
 		private boolean succesful = false;
 
+		/**
+		 * Constructor LooseTransactionThread creates a new LooseTransactionThread instance.
+		 *
+		 * @param number
+		 * 		of type int
+		 * @param poolingDataSource
+		 * 		of type PoolingDataSource
+		 */
 		public LooseTransactionThread(int number, PoolingDataSource poolingDataSource)
 		{
 			this.number = number;
 			this.poolingDataSource = poolingDataSource;
 		}
 
+		/**
+		 * Method run ...
+		 */
 		@Override
 		public void run()
 		{
@@ -1813,11 +1964,21 @@ public class NewJdbcProperUsageMockTest
 			}
 		} // run
 
+		/**
+		 * Method getNumber returns the number of this LooseTransactionThread object.
+		 *
+		 * @return the number (type int) of this LooseTransactionThread object.
+		 */
 		public int getNumber()
 		{
 			return number;
 		}
 
+		/**
+		 * Method isSuccesful returns the succesful of this LooseTransactionThread object.
+		 *
+		 * @return the succesful (type boolean) of this LooseTransactionThread object.
+		 */
 		public boolean isSuccesful()
 		{
 			return succesful;

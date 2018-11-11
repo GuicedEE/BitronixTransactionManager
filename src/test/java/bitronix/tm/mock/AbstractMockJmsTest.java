@@ -43,6 +43,12 @@ public abstract class AbstractMockJmsTest
 	protected PoolingConnectionFactory poolingConnectionFactory1;
 	protected PoolingConnectionFactory poolingConnectionFactory2;
 
+	/**
+	 * Method setUp ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -87,6 +93,9 @@ public abstract class AbstractMockJmsTest
 		EventRecorder.clear();
 	}
 
+	/**
+	 * Method tearDown ...
+	 */
 	@Override
 	protected void tearDown()
 	{

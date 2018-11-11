@@ -28,6 +28,9 @@ public class ExceptionAnalyzerTest
 		extends TestCase
 {
 
+	/**
+	 * Method testExceptionAnalyzer ...
+	 */
 	public void testExceptionAnalyzer()
 	{
 		assertEquals(DefaultExceptionAnalyzer.class, TransactionManagerServices.getExceptionAnalyzer()
@@ -52,12 +55,23 @@ public class ExceptionAnalyzerTest
 			implements ExceptionAnalyzer
 	{
 
+		/**
+		 * Extract information from a vendor's XAException that isn't available through standard APIs.
+		 *
+		 * @param ex
+		 * 		the {@link javax.transaction.xa.XAException} to analyze.
+		 *
+		 * @return extra error details as a human-readable string, or null if nothing extra was found.
+		 */
 		@Override
 		public String extractExtraXAExceptionDetails(XAException ex)
 		{
 			return "";
 		}
 
+		/**
+		 * Shutdown the service and free all held resources.
+		 */
 		@Override
 		public void shutdown()
 		{

@@ -8,11 +8,19 @@ import java.util.logging.Logger;
 
 public class Version
 {
+	/**
+	 * Constructor Version creates a new Version instance.
+	 */
 	private Version()
 	{
 		//No config
 	}
 
+	/**
+	 * Method getVersion returns the version of this Version object.
+	 *
+	 * @return the version (type String) of this Version object.
+	 */
 	public static String getVersion()
 	{
 		ClassLoader cl = Version.class.getClassLoader();

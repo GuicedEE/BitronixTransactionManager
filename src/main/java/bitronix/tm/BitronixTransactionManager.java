@@ -115,6 +115,22 @@ public class BitronixTransactionManager
 		}
 	}
 
+	/**
+	 * Method createInFlightTransactionsMap ...
+	 *
+	 * @return SortedMap<BitronixTransaction
+                       *       	   	   ,
+                       *       	   	   ClearContextSynchronization>
+	 *
+	 * @throws InstantiationException
+	 * 		when
+	 * @throws IllegalAccessException
+	 * 		when
+	 * @throws InvocationTargetException
+	 * 		when
+	 * @throws NoSuchMethodException
+	 * 		when
+	 */
 	private SortedMap<BitronixTransaction, ClearContextSynchronization> createInFlightTransactionsMap()
 			throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
 	{
@@ -225,6 +241,18 @@ public class BitronixTransactionManager
 		}
 	}
 
+	/**
+	 * Method commit ...
+	 *
+	 * @throws RollbackException
+	 * 		when
+	 * @throws HeuristicMixedException
+	 * 		when
+	 * @throws HeuristicRollbackException
+	 * 		when
+	 * @throws SystemException
+	 * 		when
+	 */
 	@Override
 	public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SystemException
 	{
@@ -241,6 +269,14 @@ public class BitronixTransactionManager
 		currentTx.commit();
 	}
 
+	/**
+	 * Method getStatus returns the status of this BitronixTransactionManager object.
+	 *
+	 * @return the status (type int) of this BitronixTransactionManager object.
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	@Override
 	public int getStatus() throws SystemException
 	{
@@ -253,12 +289,31 @@ public class BitronixTransactionManager
 		return currentTx.getStatus();
 	}
 
+	/**
+	 * Method getTransaction returns the transaction of this BitronixTransactionManager object.
+	 *
+	 * @return the transaction (type Transaction) of this BitronixTransactionManager object.
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	@Override
 	public Transaction getTransaction() throws SystemException
 	{
 		return getCurrentTransaction();
 	}
 
+	/**
+	 * Method resume ...
+	 *
+	 * @param transaction
+	 * 		of type Transaction
+	 *
+	 * @throws InvalidTransactionException
+	 * 		when
+	 * @throws SystemException
+	 * 		when
+	 */
 	@Override
 	public void resume(Transaction transaction) throws InvalidTransactionException, SystemException
 	{
@@ -299,6 +354,12 @@ public class BitronixTransactionManager
 		}
 	}
 
+	/**
+	 * Method rollback ...
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	@Override
 	public void rollback() throws SystemException
 	{
@@ -315,6 +376,12 @@ public class BitronixTransactionManager
 		currentTx.rollback();
 	}
 
+	/**
+	 * Method setRollbackOnly ...
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	@Override
 	public void setRollbackOnly() throws SystemException
 	{
@@ -331,6 +398,15 @@ public class BitronixTransactionManager
 		currentTx.setRollbackOnly();
 	}
 
+	/**
+	 * Method setTransactionTimeout sets the transactionTimeout of this BitronixTransactionManager object.
+	 *
+	 * @param seconds
+	 * 		the transactionTimeout of this BitronixTransactionManager object.
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	@Override
 	public void setTransactionTimeout(int seconds) throws SystemException
 	{
@@ -342,6 +418,14 @@ public class BitronixTransactionManager
 		             .setTimeout(seconds);
 	}
 
+	/**
+	 * Method suspend ...
+	 *
+	 * @return Transaction
+	 *
+	 * @throws SystemException
+	 * 		when
+	 */
 	@Override
 	public Transaction suspend() throws SystemException
 	{
@@ -582,6 +666,9 @@ public class BitronixTransactionManager
 		}
 	}
 
+	/**
+	 * Method internalShutdown ...
+	 */
 	private void internalShutdown()
 	{
 		shuttingDown = true;
@@ -633,6 +720,11 @@ public class BitronixTransactionManager
 		}
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{
@@ -645,6 +737,14 @@ public class BitronixTransactionManager
 		private final BitronixTransaction currentTx;
 		private final AtomicReference<ThreadContext> threadContext;
 
+		/**
+		 * Constructor ClearContextSynchronization creates a new ClearContextSynchronization instance.
+		 *
+		 * @param currentTx
+		 * 		of type BitronixTransaction
+		 * @param threadContext
+		 * 		of type ThreadContext
+		 */
 		@SuppressWarnings("WeakerAccess")
 		public ClearContextSynchronization(BitronixTransaction currentTx, ThreadContext threadContext)
 		{
@@ -652,12 +752,21 @@ public class BitronixTransactionManager
 			this.threadContext = new AtomicReference<>(threadContext);
 		}
 
+		/**
+		 * Method beforeCompletion ...
+		 */
 		@Override
 		public void beforeCompletion()
 		{
 			//Nothing to do
 		}
 
+		/**
+		 * Method afterCompletion ...
+		 *
+		 * @param status
+		 * 		of type int
+		 */
 		@Override
 		public void afterCompletion(int status)
 		{
@@ -684,12 +793,23 @@ public class BitronixTransactionManager
 			inFlightTransactions.remove(currentTx);
 		}
 
+		/**
+		 * Method setThreadContext sets the threadContext of this ClearContextSynchronization object.
+		 *
+		 * @param threadContext
+		 * 		the threadContext of this ClearContextSynchronization object.
+		 */
 		@SuppressWarnings("WeakerAccess")
 		public void setThreadContext(ThreadContext threadContext)
 		{
 			this.threadContext.set(threadContext);
 		}
 
+		/**
+		 * Method toString ...
+		 *
+		 * @return String
+		 */
 		@Override
 		public String toString()
 		{

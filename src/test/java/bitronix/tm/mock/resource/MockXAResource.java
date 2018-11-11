@@ -42,26 +42,61 @@ public class MockXAResource
 	private XAException recoverException;
 	private long recoveryDelay;
 
+	/**
+	 * Constructor MockXAResource creates a new MockXAResource instance.
+	 *
+	 * @param xads
+	 * 		of type MockitoXADataSource
+	 */
 	public MockXAResource(MockitoXADataSource xads)
 	{
 		this.xads = xads;
 	}
 
+	/**
+	 * Method setRecoveryDelay sets the recoveryDelay of this MockXAResource object.
+	 *
+	 * @param recoveryDelay
+	 * 		the recoveryDelay of this MockXAResource object.
+	 */
 	public void setRecoveryDelay(long recoveryDelay)
 	{
 		this.recoveryDelay = recoveryDelay;
 	}
 
+	/**
+	 * Method setPrepareRc sets the prepareRc of this MockXAResource object.
+	 *
+	 * @param prepareRc
+	 * 		the prepareRc of this MockXAResource object.
+	 */
 	public void setPrepareRc(int prepareRc)
 	{
 		this.prepareRc = prepareRc;
 	}
 
+	/**
+	 * Method addInDoubtXid ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 */
 	public void addInDoubtXid(Xid xid)
 	{
 		xads.addInDoubtXid(xid);
 	}
 
+	/**
+	 * Method commit ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 * @param b
+	 * 		of type boolean
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public void commit(Xid xid, boolean b) throws XAException
 	{
@@ -80,6 +115,17 @@ public class MockXAResource
     Interface implementation
     */
 
+	/**
+	 * Method end ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 * @param flag
+	 * 		of type int
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public void end(Xid xid, int flag) throws XAException
 	{
@@ -90,6 +136,15 @@ public class MockXAResource
 		}
 	}
 
+	/**
+	 * Method forget ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public void forget(Xid xid) throws XAException
 	{
@@ -101,12 +156,25 @@ public class MockXAResource
 		}
 	}
 
+	/**
+	 * Method getTransactionTimeout returns the transactionTimeout of this MockXAResource object.
+	 *
+	 * @return the transactionTimeout (type int) of this MockXAResource object.
+	 */
 	@Override
 	public int getTransactionTimeout()
 	{
 		return transactiontimeout;
 	}
 
+	/**
+	 * Method isSameRM ...
+	 *
+	 * @param xaResource
+	 * 		of type XAResource
+	 *
+	 * @return boolean
+	 */
 	@Override
 	public boolean isSameRM(XAResource xaResource)
 	{
@@ -115,6 +183,17 @@ public class MockXAResource
 		return result;
 	}
 
+	/**
+	 * Method prepare ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 *
+	 * @return int
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public int prepare(Xid xid) throws XAException
 	{
@@ -134,6 +213,17 @@ public class MockXAResource
 		return prepareRc;
 	}
 
+	/**
+	 * Method recover ...
+	 *
+	 * @param flag
+	 * 		of type int
+	 *
+	 * @return Xid[]
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public Xid[] recover(int flag) throws XAException
 	{
@@ -160,6 +250,15 @@ public class MockXAResource
 		return xads.getInDoubtXids();
 	}
 
+	/**
+	 * Method rollback ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public void rollback(Xid xid) throws XAException
 	{
@@ -174,6 +273,14 @@ public class MockXAResource
 		}
 	}
 
+	/**
+	 * Method setTransactionTimeout ...
+	 *
+	 * @param i
+	 * 		of type int
+	 *
+	 * @return boolean
+	 */
 	@Override
 	public boolean setTransactionTimeout(int i)
 	{
@@ -181,42 +288,91 @@ public class MockXAResource
 		return true;
 	}
 
+	/**
+	 * Method start ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 * @param flag
+	 * 		of type int
+	 */
 	@Override
 	public void start(Xid xid, int flag)
 	{
 		getEventRecorder().addEvent(new XAResourceStartEvent(this, xid, flag));
 	}
 
+	/**
+	 * Method getEventRecorder returns the eventRecorder of this MockXAResource object.
+	 *
+	 * @return the eventRecorder (type EventRecorder) of this MockXAResource object.
+	 */
 	private EventRecorder getEventRecorder()
 	{
 		return EventRecorder.getEventRecorder(this);
 	}
 
+	/**
+	 * Method setEndException sets the endException of this MockXAResource object.
+	 *
+	 * @param endException
+	 * 		the endException of this MockXAResource object.
+	 */
 	public void setEndException(XAException endException)
 	{
 		this.endException = endException;
 	}
 
+	/**
+	 * Method setPrepareException sets the prepareException of this MockXAResource object.
+	 *
+	 * @param prepareException
+	 * 		the prepareException of this MockXAResource object.
+	 */
 	public void setPrepareException(XAException prepareException)
 	{
 		this.prepareException = prepareException;
 	}
 
+	/**
+	 * Method setPrepareException sets the prepareException of this MockXAResource object.
+	 *
+	 * @param prepareException
+	 * 		the prepareException of this MockXAResource object.
+	 */
 	public void setPrepareException(RuntimeException prepareException)
 	{
 		prepareRuntimeException = prepareException;
 	}
 
+	/**
+	 * Method setCommitException sets the commitException of this MockXAResource object.
+	 *
+	 * @param commitException
+	 * 		the commitException of this MockXAResource object.
+	 */
 	public void setCommitException(XAException commitException)
 	{
 		this.commitException = commitException;
 	}
 
+	/**
+	 * Method setRollbackException sets the rollbackException of this MockXAResource object.
+	 *
+	 * @param rollbackException
+	 * 		the rollbackException of this MockXAResource object.
+	 */
 	public void setRollbackException(XAException rollbackException)
 	{
 		this.rollbackException = rollbackException;
 	}
 
+	/**
+	 * Method setRecoverException sets the recoverException of this MockXAResource object.
+	 *
+	 * @param recoverException
+	 * 		the recoverException of this MockXAResource object.
+	 */
 	public void setRecoverException(XAException recoverException)
 	{
 		this.recoverException = recoverException;

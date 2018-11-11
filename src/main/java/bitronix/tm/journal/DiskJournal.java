@@ -107,17 +107,15 @@ public class DiskJournal
 			throw new IOException("cannot write log, disk logger is not open");
 		}
 
-		if (configuration.isFilterLogStatus())
+		if (configuration.isFilterLogStatus() && (status != Status.STATUS_COMMITTING && status != Status.STATUS_COMMITTED && status != Status.STATUS_UNKNOWN))
 		{
-			if (status != Status.STATUS_COMMITTING && status != Status.STATUS_COMMITTED && status != Status.STATUS_UNKNOWN)
+			if (LogDebugCheck.isDebugEnabled())
 			{
-				if (LogDebugCheck.isDebugEnabled())
-				{
-					log.finer("filtered out write to log for status " + Decoder.decodeStatus(status));
-				}
-				return;
+				log.finer("filtered out write to log for status " + Decoder.decodeStatus(status));
 			}
+			return;
 		}
+
 
 		TransactionLogRecord tlog = new TransactionLogRecord(status, gtrid, uniqueNames);
 
@@ -349,29 +347,19 @@ public class DiskJournal
 			       .mkdirs();
 		}
 
-		RandomAccessFile raf = null;
-		try
+		try (RandomAccessFile raf = new RandomAccessFile(logfile, "rw"))
 		{
-			raf = new RandomAccessFile(logfile, "rw");
-
 			raf.seek(TransactionLogHeader.FORMAT_ID_HEADER);
 			raf.writeInt(BitronixXid.FORMAT_ID);
 			raf.writeLong(MonotonicClock.currentTimeMillis());
 			raf.writeByte(TransactionLogHeader.CLEAN_LOG_STATE);
-			raf.writeLong((long) TransactionLogHeader.HEADER_LENGTH);
+			raf.writeLong(TransactionLogHeader.HEADER_LENGTH);
 
 			byte[] buffer = new byte[4096];
 			int length = (maxLogSizeInMb * 1024 * 1024) / 4096;
 			for (int i = 0; i < length; i++)
 			{
 				raf.write(buffer);
-			}
-		}
-		finally
-		{
-			if (raf != null)
-			{
-				raf.close();
 			}
 		}
 	}
@@ -521,7 +509,7 @@ public class DiskJournal
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void migrateTo(Journal other) throws IOException, IllegalArgumentException
+	public void migrateTo(Journal other) throws IOException
 	{
 		if (other == this)
 		{
@@ -559,7 +547,7 @@ public class DiskJournal
 		try
 		{
 			int committing = 0;
-			int committed = 0;
+			Integer committed = 0;
 
 			while (true)
 			{
@@ -596,21 +584,7 @@ public class DiskJournal
 				// ROLLEDBACK is when a 1PC transaction rolled back during commit
 				if (status == Status.STATUS_COMMITTED || status == Status.STATUS_UNKNOWN || status == Status.STATUS_ROLLEDBACK)
 				{
-					JournalRecord rec = danglingRecords.get(tlog.getGtrid());
-					if (rec != null)
-					{
-						Set<String> recUniqueNames = new HashSet<>(rec.getUniqueNames());
-						recUniqueNames.removeAll(tlog.getUniqueNames());
-						if (recUniqueNames.isEmpty())
-						{
-							danglingRecords.remove(tlog.getGtrid());
-							committed++;
-						}
-						else
-						{
-							danglingRecords.put(tlog.getGtrid(), new TransactionLogRecord(rec.getStatus(), rec.getGtrid(), recUniqueNames));
-						}
-					}
+					committed = processTransaction(danglingRecords, tlog, committed);
 				}
 			}
 
@@ -627,6 +601,38 @@ public class DiskJournal
 	}
 
 	/**
+	 * Method processTransaction ...
+	 *
+	 * @param danglingRecords
+	 * 		of type Map<Uid, JournalRecord>
+	 * @param tlog
+	 * 		of type TransactionLogRecord
+	 * @param committed
+	 * 		of type int
+	 *
+	 * @return int
+	 */
+	private static int processTransaction(Map<Uid, JournalRecord> danglingRecords, TransactionLogRecord tlog, int committed)
+	{
+		JournalRecord rec = danglingRecords.get(tlog.getGtrid());
+		if (rec != null)
+		{
+			Set<String> recUniqueNames = new HashSet<>(rec.getUniqueNames());
+			recUniqueNames.removeAll(tlog.getUniqueNames());
+			if (recUniqueNames.isEmpty())
+			{
+				danglingRecords.remove(tlog.getGtrid());
+				committed++;
+			}
+			else
+			{
+				danglingRecords.put(tlog.getGtrid(), new TransactionLogRecord(rec.getStatus(), rec.getGtrid(), recUniqueNames));
+			}
+		}
+		return committed;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -637,7 +643,7 @@ public class DiskJournal
 			throw new IOException("cannot read records, disk logger is not open");
 		}
 
-		for (Iterator<TransactionLogRecord> i = iterateRecords(activeTla.get(), includeInvalid); i.hasNext(); )
+		for (Iterator<TransactionLogRecord> i = iterateRecords(activeTla.get(), includeInvalid); i != null && i.hasNext(); )
 		{
 			target.add(i.next());
 		}
@@ -659,69 +665,7 @@ public class DiskJournal
 	private static Iterator<TransactionLogRecord> iterateRecords(TransactionLogAppender tla, boolean skipCrcCheck) throws IOException
 	{
 		TransactionLogCursor tlc = tla.getCursor();
-		Iterator it = new Iterator()
-		{
-			TransactionLogRecord tlog;
-
-			@Override
-			public boolean hasNext()
-			{
-				while (tlog == null)
-				{
-					try
-					{
-						try
-						{
-							tlog = tlc.readLog(skipCrcCheck);
-							if (tlog == null)
-							{
-								break;
-							}
-						}
-						catch (CorruptedTransactionLogException ex)
-						{
-							if (TransactionManagerServices.getConfiguration()
-							                              .isSkipCorruptedLogs())
-							{
-								log.log(Level.SEVERE, "skipping corrupted log", ex);
-								continue;
-							}
-							throw ex;
-						}
-					}
-					catch (IOException e)
-					{
-						throw new RuntimeException(e);
-					}
-				}
-
-				return tlog != null;
-			}
-
-			@Override
-			public TransactionLogRecord next()
-			{
-				if (!hasNext())
-				{
-					throw new NoSuchElementException();
-				}
-				try
-				{
-					return tlog;
-				}
-				finally
-				{
-					tlog = null;
-				}
-			}
-
-			@Override
-			public void remove()
-			{
-				throw new UnsupportedOperationException();
-			}
-		};
-
+		Iterator it = new TransactionLogIterator(tlc, skipCrcCheck);
 		try
 		{
 			if (it.hasNext())
@@ -743,6 +687,9 @@ public class DiskJournal
 		}
 	}
 
+	/**
+	 * Shutdown the service and free all held resources.
+	 */
 	@Override
 	public void shutdown()
 	{

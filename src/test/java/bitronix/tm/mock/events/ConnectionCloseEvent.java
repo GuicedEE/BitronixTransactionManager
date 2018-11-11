@@ -22,16 +22,35 @@ public class ConnectionCloseEvent
 		extends Event
 {
 
+	/**
+	 * Constructor ConnectionCloseEvent creates a new ConnectionCloseEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 */
 	public ConnectionCloseEvent(Object source)
 	{
 		super(source, null);
 	}
 
+	/**
+	 * Constructor ConnectionCloseEvent creates a new ConnectionCloseEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param ex
+	 * 		of type Exception
+	 */
 	public ConnectionCloseEvent(Object source, Exception ex)
 	{
 		super(source, ex);
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

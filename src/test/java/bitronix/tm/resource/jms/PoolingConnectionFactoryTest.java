@@ -13,6 +13,12 @@ public class PoolingConnectionFactoryTest
 		extends TestCase
 {
 
+	/**
+	 * Method testInjectedXaFactory ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testInjectedXaFactory() throws Exception
 	{
 		PoolingConnectionFactory pcf = new PoolingConnectionFactory();

@@ -31,6 +31,14 @@ public class MockConnectionFactory
 		implements ConnectionFactory
 {
 
+	/**
+	 * Method createConnection ...
+	 *
+	 * @return Connection
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public Connection createConnection() throws JMSException
 	{
@@ -47,6 +55,19 @@ public class MockConnectionFactory
 		return connection;
 	}
 
+	/**
+	 * Method createConnection ...
+	 *
+	 * @param jndiName
+	 * 		of type String
+	 * @param jndiName1
+	 * 		of type String
+	 *
+	 * @return Connection
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public Connection createConnection(String jndiName, String jndiName1) throws JMSException
 	{

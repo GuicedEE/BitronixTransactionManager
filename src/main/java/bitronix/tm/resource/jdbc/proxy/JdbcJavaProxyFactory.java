@@ -47,6 +47,9 @@ public class JdbcJavaProxyFactory
 	private final ProxyFactory<PreparedStatement> proxyPreparedStatementFactory;
 	private final ProxyFactory<ResultSet> proxyResultSetFactory;
 
+	/**
+	 * Constructor JdbcJavaProxyFactory creates a new JdbcJavaProxyFactory instance.
+	 */
 	JdbcJavaProxyFactory()
 	{
 		proxyConnectionFactory = createProxyConnectionFactory();
@@ -57,6 +60,11 @@ public class JdbcJavaProxyFactory
 		proxyResultSetFactory = createProxyResultSetFactory();
 	}
 
+	/**
+	 * Method createProxyConnectionFactory ...
+	 *
+	 * @return ProxyFactory<Connection>
+	 */
 	private ProxyFactory<Connection> createProxyConnectionFactory()
 	{
 
@@ -66,6 +74,11 @@ public class JdbcJavaProxyFactory
 		return new ProxyFactory<>(interfaces.toArray(new Class<?>[0]));
 	}
 
+	/**
+	 * Method createProxyXAConnectionFactory ...
+	 *
+	 * @return ProxyFactory<XAConnection>
+	 */
 	private ProxyFactory<XAConnection> createProxyXAConnectionFactory()
 	{
 
@@ -75,6 +88,11 @@ public class JdbcJavaProxyFactory
 		return new ProxyFactory<>(interfaces.toArray(new Class<?>[0]));
 	}
 
+	/**
+	 * Method createProxyStatementFactory ...
+	 *
+	 * @return ProxyFactory<Statement>
+	 */
 	private ProxyFactory<Statement> createProxyStatementFactory()
 	{
 
@@ -83,6 +101,11 @@ public class JdbcJavaProxyFactory
 		return new ProxyFactory<>(interfaces.toArray(new Class<?>[0]));
 	}
 
+	/**
+	 * Method createProxyCallableStatementFactory ...
+	 *
+	 * @return ProxyFactory<CallableStatement>
+	 */
 	private ProxyFactory<CallableStatement> createProxyCallableStatementFactory()
 	{
 
@@ -91,6 +114,11 @@ public class JdbcJavaProxyFactory
 		return new ProxyFactory<>(interfaces.toArray(new Class<?>[0]));
 	}
 
+	/**
+	 * Method createProxyPreparedStatementFactory ...
+	 *
+	 * @return ProxyFactory<PreparedStatement>
+	 */
 	private ProxyFactory<PreparedStatement> createProxyPreparedStatementFactory()
 	{
 
@@ -99,6 +127,11 @@ public class JdbcJavaProxyFactory
 		return new ProxyFactory<>(interfaces.toArray(new Class<?>[0]));
 	}
 
+	/**
+	 * Method createProxyResultSetFactory ...
+	 *
+	 * @return ProxyFactory<ResultSet>
+	 */
 	private ProxyFactory<ResultSet> createProxyResultSetFactory()
 	{
 		Set<Class<?>> interfaces = ClassLoaderUtils.getAllInterfaces(ResultSet.class);
@@ -241,11 +274,25 @@ public class JdbcJavaProxyFactory
 		private final Class<?>[] interfaces;
 		private Reference<Constructor<T>> ctorRef;
 
+		/**
+		 * Constructor ProxyFactory creates a new ProxyFactory instance.
+		 *
+		 * @param interfaces
+		 * 		of type Class<?>[]
+		 */
 		public ProxyFactory(Class<?>[] interfaces)
 		{
 			this.interfaces = interfaces;
 		}
 
+		/**
+		 * Method newInstance ...
+		 *
+		 * @param handler
+		 * 		of type InvocationHandler
+		 *
+		 * @return T
+		 */
 		public T newInstance(InvocationHandler handler)
 		{
 			if (handler == null)
@@ -263,6 +310,11 @@ public class JdbcJavaProxyFactory
 			}
 		}
 
+		/**
+		 * Method getConstructor returns the constructor of this ProxyFactory object.
+		 *
+		 * @return the constructor (type Constructor<T>) of this ProxyFactory object.
+		 */
 		@SuppressWarnings("unchecked")
 		private synchronized Constructor<T> getConstructor()
 		{

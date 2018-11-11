@@ -46,6 +46,9 @@ public class TaskScheduler
 	private final Lock tasksLock;
 	private final AtomicBoolean active = new AtomicBoolean(true);
 
+	/**
+	 * Constructor TaskScheduler creates a new TaskScheduler instance.
+	 */
 	public TaskScheduler()
 	{
 		// it is up to the ShutdownHandler to control the lifespan of the JVM and give some time for this thread
@@ -80,6 +83,9 @@ public class TaskScheduler
 		this.tasksLock = tasksLock;
 	}
 
+	/**
+	 * Shutdown the service and free all held resources.
+	 */
 	@Override
 	public void shutdown()
 	{
@@ -105,6 +111,14 @@ public class TaskScheduler
 		}
 	}
 
+	/**
+	 * Method setActive ...
+	 *
+	 * @param active
+	 * 		of type boolean
+	 *
+	 * @return boolean
+	 */
 	boolean setActive(boolean active)
 	{
 		return this.active.getAndSet(active);
@@ -142,6 +156,12 @@ public class TaskScheduler
 		}
 	}
 
+	/**
+	 * Method addTask ...
+	 *
+	 * @param task
+	 * 		of type Task
+	 */
 	void addTask(Task task)
 	{
 		lock();
@@ -174,6 +194,9 @@ public class TaskScheduler
 		}
 	}
 
+	/**
+	 * Method lock ...
+	 */
 	private void lock()
 	{
 		if (tasksLock != null)
@@ -182,6 +205,14 @@ public class TaskScheduler
 		}
 	}
 
+	/**
+	 * Method removeTaskByObject ...
+	 *
+	 * @param obj
+	 * 		of type Object
+	 *
+	 * @return boolean
+	 */
 	boolean removeTaskByObject(Object obj)
 	{
 		lock();
@@ -212,6 +243,9 @@ public class TaskScheduler
 		}
 	}
 
+	/**
+	 * Method unlock ...
+	 */
 	private void unlock()
 	{
 		if (tasksLock != null)
@@ -352,6 +386,9 @@ public class TaskScheduler
 		}
 	}
 
+	/**
+	 * Method run ...
+	 */
 	@Override
 	public void run()
 	{
@@ -369,11 +406,19 @@ public class TaskScheduler
 		}
 	}
 
+	/**
+	 * Method isActive returns the active of this TaskScheduler object.
+	 *
+	 * @return the active (type boolean) of this TaskScheduler object.
+	 */
 	private boolean isActive()
 	{
 		return active.get();
 	}
 
+	/**
+	 * Method executeElapsedTasks ...
+	 */
 	private void executeElapsedTasks()
 	{
 		lock();
@@ -425,6 +470,11 @@ public class TaskScheduler
 		}
 	}
 
+	/**
+	 * Method getSafeIterableTasks returns the safeIterableTasks of this TaskScheduler object.
+	 *
+	 * @return the safeIterableTasks (type SortedSet<Task>) of this TaskScheduler object.
+	 */
 	private SortedSet<Task> getSafeIterableTasks()
 	{
 		if (tasksLock != null)

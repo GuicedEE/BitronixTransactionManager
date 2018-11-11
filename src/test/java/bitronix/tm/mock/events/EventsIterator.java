@@ -28,6 +28,12 @@ public class EventsIterator
 	private final Iterator[] eventRecorderIterators;
 	private final Event[] nextEvents;
 
+	/**
+	 * Constructor EventsIterator creates a new EventsIterator instance.
+	 *
+	 * @param eventRecorders
+	 * 		of type Map<Object, EventRecorder>
+	 */
 	public EventsIterator(Map<Object, EventRecorder> eventRecorders)
 	{
 		int size = eventRecorders.size();
@@ -51,6 +57,11 @@ public class EventsIterator
 		}
 	}
 
+	/**
+	 * Method hasNext ...
+	 *
+	 * @return boolean
+	 */
 	@Override
 	public boolean hasNext()
 	{
@@ -65,6 +76,11 @@ public class EventsIterator
 		return false;
 	}
 
+	/**
+	 * Method next ...
+	 *
+	 * @return Event
+	 */
 	@Override
 	public Event next()
 	{
@@ -105,6 +121,9 @@ public class EventsIterator
 		return current;
 	}
 
+	/**
+	 * Method remove ...
+	 */
 	@Override
 	public void remove()
 	{

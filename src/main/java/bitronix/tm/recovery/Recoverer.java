@@ -95,6 +95,9 @@ public class Recoverer
 	private volatile int executionsCount;
 
 
+	/**
+	 * Constructor Recoverer creates a new Recoverer instance.
+	 */
 	public Recoverer()
 	{
 		String serverId = TransactionManagerServices.getConfiguration()
@@ -105,12 +108,6 @@ public class Recoverer
 		}
 		this.jmxName = "bitronix.tm:type=Recoverer,ServerId=" + ManagementRegistrar.makeValidName(serverId);
 		ManagementRegistrar.register(jmxName, this);
-	}
-
-	@Override
-	public void shutdown()
-	{
-		ManagementRegistrar.unregister(jmxName);
 	}
 
 	/**
@@ -503,6 +500,14 @@ public class Recoverer
 		}
 	}
 
+	/**
+	 * Method filterParticipatingUniqueNamesInRecoveredXids ...
+	 *
+	 * @param uniqueNames
+	 * 		of type Set<String>
+	 *
+	 * @return Set<String>
+	 */
 	private Set<String> filterParticipatingUniqueNamesInRecoveredXids(Set<String> uniqueNames)
 	{
 		Set<String> recoveredUniqueNames = new HashSet<>();
@@ -530,6 +535,14 @@ public class Recoverer
 		return recoveredUniqueNames;
 	}
 
+	/**
+	 * Method buildUniqueNamesString ...
+	 *
+	 * @param uniqueNames
+	 * 		of type Set<String>
+	 *
+	 * @return String
+	 */
 	private static String buildUniqueNamesString(Set<String> uniqueNames)
 	{
 		StringBuilder resourcesUniqueNames = new StringBuilder();
@@ -669,6 +682,15 @@ public class Recoverer
 		{
 			producer.endRecovery();
 		}
+	}
+
+	/**
+	 * Shutdown the service and free all held resources.
+	 */
+	@Override
+	public void shutdown()
+	{
+		ManagementRegistrar.unregister(jmxName);
 	}
 
 	/**

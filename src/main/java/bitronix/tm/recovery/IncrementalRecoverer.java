@@ -39,7 +39,13 @@ import java.util.Set;
 public class IncrementalRecoverer
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(IncrementalRecoverer.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(IncrementalRecoverer.class.toString());
+	private static final String FAILED_RESOURCE_STRING = "failed recovering resource ";
+
+	private IncrementalRecoverer()
+	{
+		//No config required
+	}
 
 	/**
 	 * Run incremental recovery on the specified resource.
@@ -119,20 +125,10 @@ public class IncrementalRecoverer
 			                                                                                                                              .getServerId() + "')" : ""));
 
 		}
-		catch (XAException ex)
+		catch (XAException | IOException | RuntimeException ex)
 		{
 			xaResourceProducer.setFailed(true);
-			throw new RecoveryException("failed recovering resource " + uniqueName, ex);
-		}
-		catch (IOException ex)
-		{
-			xaResourceProducer.setFailed(true);
-			throw new RecoveryException("failed recovering resource " + uniqueName, ex);
-		}
-		catch (RuntimeException ex)
-		{
-			xaResourceProducer.setFailed(true);
-			throw new RecoveryException("failed recovering resource " + uniqueName, ex);
+			throw new RecoveryException(FAILED_RESOURCE_STRING + uniqueName, ex);
 		}
 		catch (RecoveryException ex)
 		{
@@ -149,6 +145,19 @@ public class IncrementalRecoverer
 		}
 	}
 
+	/**
+	 * Method updateJournal ...
+	 *
+	 * @param gtrid
+	 * 		of type Uid
+	 * @param uniqueName
+	 * 		of type String
+	 * @param status
+	 * 		of type int
+	 *
+	 * @throws IOException
+	 * 		when
+	 */
 	private static void updateJournal(Uid gtrid, String uniqueName, int status) throws IOException
 	{
 		if (LogDebugCheck.isDebugEnabled())

@@ -28,17 +28,37 @@ public class XAResourceEndEvent
 
 	private int flag;
 
+	/**
+	 * Constructor XAResourceEndEvent creates a new XAResourceEndEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param xid
+	 * 		of type Xid
+	 * @param flag
+	 * 		of type int
+	 */
 	public XAResourceEndEvent(Object source, Xid xid, int flag)
 	{
 		super(source, xid);
 		this.flag = flag;
 	}
 
+	/**
+	 * Method getFlag returns the flag of this XAResourceEndEvent object.
+	 *
+	 * @return the flag (type int) of this XAResourceEndEvent object.
+	 */
 	public int getFlag()
 	{
 		return flag;
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

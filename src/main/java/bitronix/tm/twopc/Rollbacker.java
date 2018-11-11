@@ -45,6 +45,12 @@ public final class Rollbacker
 	// this list has to be thread-safe as the RollbackJobs can be executed in parallel (when async 2PC is configured)
 	private final List<XAResourceHolderState> rolledbackResources = Collections.synchronizedList(new ArrayList<>());
 
+	/**
+	 * Constructor Rollbacker creates a new Rollbacker instance.
+	 *
+	 * @param executor
+	 * 		of type Executor
+	 */
 	public Rollbacker(Executor executor)
 	{
 		super(executor);
@@ -111,6 +117,21 @@ public final class Rollbacker
 		transaction.setStatus(Status.STATUS_ROLLEDBACK, rolledbackAndNotInterestedUniqueNames);
 	}
 
+	/**
+	 * Method throwException ...
+	 *
+	 * @param message
+	 * 		of type String
+	 * @param phaseException
+	 * 		of type PhaseException
+	 * @param totalResourceCount
+	 * 		of type int
+	 *
+	 * @throws HeuristicMixedException
+	 * 		when
+	 * @throws HeuristicCommitException
+	 * 		when
+	 */
 	private void throwException(String message, PhaseException phaseException, int totalResourceCount) throws HeuristicMixedException, HeuristicCommitException
 	{
 		List<Exception> exceptions = phaseException.getExceptions();
@@ -166,6 +187,15 @@ public final class Rollbacker
 		}
 	}
 
+	/**
+	 * Determine if a resource is participating in the phase or not. A participating resource gets
+	 * a job created to execute the phase's command on it.
+	 *
+	 * @param xaResourceHolderState
+	 * 		the resource to check for its participation.
+	 *
+	 * @return true if the resource must participate in the phase.
+	 */
 	@Override
 	protected boolean isParticipating(XAResourceHolderState xaResourceHolderState)
 	{
@@ -179,6 +209,14 @@ public final class Rollbacker
 		return false;
 	}
 
+	/**
+	 * Create a {@link bitronix.tm.twopc.executor.Job} that is going to execute the phase command on the given resource.
+	 *
+	 * @param xaResourceHolderState
+	 * 		the resource that is going to receive a command.
+	 *
+	 * @return the {@link bitronix.tm.twopc.executor.Job} that is going to execute the command.
+	 */
 	@Override
 	protected Job createJob(XAResourceHolderState resourceHolder)
 	{
@@ -189,11 +227,20 @@ public final class Rollbacker
 			extends Job
 	{
 
+		/**
+		 * Constructor RollbackJob creates a new RollbackJob instance.
+		 *
+		 * @param resourceHolder
+		 * 		of type XAResourceHolderState
+		 */
 		public RollbackJob(XAResourceHolderState resourceHolder)
 		{
 			super(resourceHolder);
 		}
 
+		/**
+		 * Method execute ...
+		 */
 		@Override
 		public void execute()
 		{
@@ -211,6 +258,15 @@ public final class Rollbacker
 			}
 		}
 
+		/**
+		 * Method rollbackResource ...
+		 *
+		 * @param resourceHolder
+		 * 		of type XAResourceHolderState
+		 *
+		 * @throws XAException
+		 * 		when
+		 */
 		private void rollbackResource(XAResourceHolderState resourceHolder) throws XAException
 		{
 			try
@@ -233,6 +289,17 @@ public final class Rollbacker
 			}
 		}
 
+		/**
+		 * Method handleXAException ...
+		 *
+		 * @param failedResourceHolder
+		 * 		of type XAResourceHolderState
+		 * @param xaException
+		 * 		of type XAException
+		 *
+		 * @throws XAException
+		 * 		when
+		 */
 		private void handleXAException(XAResourceHolderState failedResourceHolder, XAException xaException) throws XAException
 		{
 			switch (xaException.errorCode)
@@ -256,6 +323,12 @@ public final class Rollbacker
 			}
 		}
 
+		/**
+		 * Method forgetHeuristicRollback ...
+		 *
+		 * @param resourceHolder
+		 * 		of type XAResourceHolderState
+		 */
 		private void forgetHeuristicRollback(XAResourceHolderState resourceHolder)
 		{
 			try
@@ -280,6 +353,11 @@ public final class Rollbacker
 			}
 		}
 
+		/**
+		 * Method toString ...
+		 *
+		 * @return String
+		 */
 		@Override
 		public String toString()
 		{

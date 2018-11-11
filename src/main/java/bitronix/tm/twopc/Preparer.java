@@ -48,6 +48,12 @@ public final class Preparer
 	// this list has to be thread-safe as the PrepareJobs can be executed in parallel (when async 2PC is configured)
 	private final List<XAResourceHolderState> preparedResources = Collections.synchronizedList(new ArrayList<>());
 
+	/**
+	 * Constructor Preparer creates a new Preparer instance.
+	 *
+	 * @param executor
+	 * 		of type Executor
+	 */
 	public Preparer(Executor executor)
 	{
 		super(executor);
@@ -122,6 +128,17 @@ public final class Preparer
 		return Collections.unmodifiableList(preparedResources);
 	}
 
+	/**
+	 * Method throwException ...
+	 *
+	 * @param message
+	 * 		of type String
+	 * @param phaseException
+	 * 		of type PhaseException
+	 *
+	 * @throws BitronixRollbackException
+	 * 		when
+	 */
 	private void throwException(String message, PhaseException phaseException) throws BitronixRollbackException
 	{
 		List<Exception> exceptions = phaseException.getExceptions();
@@ -171,12 +188,29 @@ public final class Preparer
 		}
 	}
 
+	/**
+	 * Determine if a resource is participating in the phase or not. A participating resource gets
+	 * a job created to execute the phase's command on it.
+	 *
+	 * @param xaResourceHolderState
+	 * 		the resource to check for its participation.
+	 *
+	 * @return true if the resource must participate in the phase.
+	 */
 	@Override
 	protected boolean isParticipating(XAResourceHolderState xaResourceHolderState)
 	{
 		return true;
 	}
 
+	/**
+	 * Create a {@link bitronix.tm.twopc.executor.Job} that is going to execute the phase command on the given resource.
+	 *
+	 * @param xaResourceHolderState
+	 * 		the resource that is going to receive a command.
+	 *
+	 * @return the {@link bitronix.tm.twopc.executor.Job} that is going to execute the command.
+	 */
 	@Override
 	protected Job createJob(XAResourceHolderState xaResourceHolderState)
 	{
@@ -186,11 +220,20 @@ public final class Preparer
 	private final class PrepareJob
 			extends Job
 	{
+		/**
+		 * Constructor PrepareJob creates a new PrepareJob instance.
+		 *
+		 * @param resourceHolder
+		 * 		of type XAResourceHolderState
+		 */
 		public PrepareJob(XAResourceHolderState resourceHolder)
 		{
 			super(resourceHolder);
 		}
 
+		/**
+		 * Method execute ...
+		 */
 		@Override
 		public void execute()
 		{
@@ -224,6 +267,11 @@ public final class Preparer
 			}
 		}
 
+		/**
+		 * Method toString ...
+		 *
+		 * @return String
+		 */
 		@Override
 		public String toString()
 		{

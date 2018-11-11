@@ -33,34 +33,34 @@ public class TransactionLogHeader
 {
 
 	/**
-	 * Position of the format ID in the header (see {@link bitronix.tm.BitronixXid#FORMAT_ID}).
-	 */
-	public final static long FORMAT_ID_HEADER = 0;
-	/**
-	 * Position of the timestamp in the header.
-	 */
-	public final static long TIMESTAMP_HEADER = FORMAT_ID_HEADER + 4;
-	/**
-	 * Position of the log file state in the header.
-	 */
-	public final static long STATE_HEADER = TIMESTAMP_HEADER + 8;
-	/**
-	 * Position of the current log position in the header.
-	 */
-	public final static long CURRENT_POSITION_HEADER = STATE_HEADER + 1;
-	/**
-	 * Total length of the header.
-	 */
-	public final static long HEADER_LENGTH = CURRENT_POSITION_HEADER + 8;
-	/**
 	 * State of the log file when it has been closed properly.
 	 */
-	public final static byte CLEAN_LOG_STATE = 0;
+	public static final byte CLEAN_LOG_STATE = 0;
 	/**
 	 * State of the log file when it hasn't been closed properly or it is still open.
 	 */
-	public final static byte UNCLEAN_LOG_STATE = -1;
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogHeader.class.toString());
+	public static final byte UNCLEAN_LOG_STATE = -1;
+	/**
+	 * Position of the format ID in the header (see {@link bitronix.tm.BitronixXid#FORMAT_ID}).
+	 */
+	static final long FORMAT_ID_HEADER = 0;
+	/**
+	 * Position of the timestamp in the header.
+	 */
+	static final long TIMESTAMP_HEADER = FORMAT_ID_HEADER + 4;
+	/**
+	 * Position of the log file state in the header.
+	 */
+	static final long STATE_HEADER = TIMESTAMP_HEADER + 8;
+	/**
+	 * Position of the current log position in the header.
+	 */
+	static final long CURRENT_POSITION_HEADER = STATE_HEADER + 1;
+	/**
+	 * Total length of the header.
+	 */
+	static final long HEADER_LENGTH = CURRENT_POSITION_HEADER + 8;
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogHeader.class.toString());
 	private final FileChannel fc;
 	private final long maxFileLength;
 
@@ -102,40 +102,6 @@ public class TransactionLogHeader
 		{
 			log.finer("read header " + this);
 		}
-	}
-
-	/**
-	 * Get FORMAT_ID_HEADER.
-	 *
-	 * @return the FORMAT_ID_HEADER value.
-	 *
-	 * @see #FORMAT_ID_HEADER
-	 */
-	public int getFormatId()
-	{
-		return formatId;
-	}
-
-	/**
-	 * Set FORMAT_ID_HEADER.
-	 *
-	 * @param formatId
-	 * 		the FORMAT_ID_HEADER value.
-	 *
-	 * @throws IOException
-	 * 		if an I/O error occurs.
-	 * @see #FORMAT_ID_HEADER
-	 */
-	public void setFormatId(int formatId) throws IOException
-	{
-		ByteBuffer buf = ByteBuffer.allocate(8);
-		buf.putInt(formatId);
-		buf.flip();
-		while (buf.hasRemaining())
-		{
-			fc.write(buf, FORMAT_ID_HEADER + buf.position());
-		}
-		this.formatId = formatId;
 	}
 
 	/**
@@ -258,7 +224,7 @@ public class TransactionLogHeader
 	 * 		if an I/O error occurs.
 	 * @see #setPosition
 	 */
-	public void rewind() throws IOException
+	void rewind() throws IOException
 	{
 		setPosition(HEADER_LENGTH);
 	}

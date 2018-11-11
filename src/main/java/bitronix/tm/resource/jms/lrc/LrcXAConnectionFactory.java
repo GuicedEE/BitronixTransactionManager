@@ -37,30 +37,63 @@ public class LrcXAConnectionFactory
 	private volatile String connectionFactoryClassName;
 	private volatile Map<String, Object> properties = new HashMap<>();
 
+	/**
+	 * Constructor LrcXAConnectionFactory creates a new LrcXAConnectionFactory instance.
+	 */
 	public LrcXAConnectionFactory()
 	{
 	}
 
+	/**
+	 * Method getConnectionFactoryClassName returns the connectionFactoryClassName of this LrcXAConnectionFactory object.
+	 *
+	 * @return the connectionFactoryClassName (type String) of this LrcXAConnectionFactory object.
+	 */
 	public String getConnectionFactoryClassName()
 	{
 		return connectionFactoryClassName;
 	}
 
+	/**
+	 * Method setConnectionFactoryClassName sets the connectionFactoryClassName of this LrcXAConnectionFactory object.
+	 *
+	 * @param connectionFactoryClassName
+	 * 		the connectionFactoryClassName of this LrcXAConnectionFactory object.
+	 */
 	public void setConnectionFactoryClassName(String connectionFactoryClassName)
 	{
 		this.connectionFactoryClassName = connectionFactoryClassName;
 	}
 
+	/**
+	 * Method getProperties returns the properties of this LrcXAConnectionFactory object.
+	 *
+	 * @return the properties (type Map<String, Object>) of this LrcXAConnectionFactory object.
+	 */
 	public Map<String, Object> getProperties()
 	{
 		return properties;
 	}
 
+	/**
+	 * Method setProperties sets the properties of this LrcXAConnectionFactory object.
+	 *
+	 * @param properties
+	 * 		the properties of this LrcXAConnectionFactory object.
+	 */
 	public void setProperties(Map<String, Object> properties)
 	{
 		this.properties = properties;
 	}
 
+	/**
+	 * Method createXAConnection ...
+	 *
+	 * @return XAConnection
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public XAConnection createXAConnection() throws JMSException
 	{
@@ -79,6 +112,19 @@ public class LrcXAConnectionFactory
 		}
 	}
 
+	/**
+	 * Method createXAConnection ...
+	 *
+	 * @param user
+	 * 		of type String
+	 * @param password
+	 * 		of type String
+	 *
+	 * @return XAConnection
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public XAConnection createXAConnection(String user, String password) throws JMSException
 	{
@@ -97,6 +143,11 @@ public class LrcXAConnectionFactory
 		}
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

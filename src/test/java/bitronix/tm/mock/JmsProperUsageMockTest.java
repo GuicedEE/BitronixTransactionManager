@@ -42,6 +42,12 @@ public class JmsProperUsageMockTest
 
 	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(JmsProperUsageMockTest.class.toString());
 
+	/**
+	 * Method testSimpleWorkingCase ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSimpleWorkingCase() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -123,6 +129,12 @@ public class JmsProperUsageMockTest
 		assertEquals(Status.STATUS_COMMITTED, ((JournalLogEvent) orderedEvents.get(i++)).getStatus());
 	}
 
+	/**
+	 * Method testSerialization ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSerialization() throws Exception
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

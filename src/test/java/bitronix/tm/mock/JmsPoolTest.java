@@ -34,6 +34,9 @@ public class JmsPoolTest
 
 	private PoolingConnectionFactory pcf;
 
+	/**
+	 * Method setUp ...
+	 */
 	@Override
 	protected void setUp()
 	{
@@ -56,6 +59,9 @@ public class JmsPoolTest
 		pcf.init();
 	}
 
+	/**
+	 * Method tearDown ...
+	 */
 	@Override
 	protected void tearDown()
 	{
@@ -65,6 +71,12 @@ public class JmsPoolTest
 		                          .shutdown();
 	}
 
+	/**
+	 * Method testInitFailure ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testInitFailure() throws Exception
 	{
 		pcf.close();
@@ -103,6 +115,12 @@ public class JmsPoolTest
 		                          .commit();
 	}
 
+	/**
+	 * Method testReEnteringRecovery ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testReEnteringRecovery() throws Exception
 	{
 		pcf.startRecovery();
@@ -123,6 +141,12 @@ public class JmsPoolTest
 	}
 
 
+	/**
+	 * Method testPoolNotStartingTransactionManager ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPoolNotStartingTransactionManager() throws Exception
 	{
 		// make sure TM is not running
@@ -157,6 +181,12 @@ public class JmsPoolTest
 		assertFalse(TransactionManagerServices.isTransactionManagerRunning());
 	}
 
+	/**
+	 * Method testPoolShrink ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPoolShrink() throws Exception
 	{
 		Field poolField = pcf.getClass()
@@ -187,6 +217,12 @@ public class JmsPoolTest
 		assertEquals(1, pool.totalPoolSize());
 	}
 
+	/**
+	 * Method testPoolShrinkErrorHandling ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPoolShrinkErrorHandling() throws Exception
 	{
 		Field poolField = pcf.getClass()
@@ -222,6 +258,12 @@ public class JmsPoolTest
 		assertEquals(1, pool.inPoolSize());
 	}
 
+	/**
+	 * Method testPoolReset ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPoolReset() throws Exception
 	{
 		Field poolField = pcf.getClass()
@@ -249,6 +291,12 @@ public class JmsPoolTest
 		assertEquals(1, pool.totalPoolSize());
 	}
 
+	/**
+	 * Method testPoolResetErrorHandling ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPoolResetErrorHandling() throws Exception
 	{
 		Field poolField = pcf.getClass()

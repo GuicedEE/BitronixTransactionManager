@@ -68,17 +68,39 @@ public class LrcXAResource
 	private volatile boolean autocommitActiveBeforeStart;
 	private volatile int state = NO_TX;
 
+	/**
+	 * Constructor LrcXAResource creates a new LrcXAResource instance.
+	 *
+	 * @param connection
+	 * 		of type Connection
+	 */
 	public LrcXAResource(Connection connection)
 	{
 		this.connection = connection;
 	}
 
 
+	/**
+	 * Method getState returns the state of this LrcXAResource object.
+	 *
+	 * @return the state (type int) of this LrcXAResource object.
+	 */
 	public int getState()
 	{
 		return state;
 	}
 
+	/**
+	 * Method commit ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 * @param onePhase
+	 * 		of type boolean
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public void commit(Xid xid, boolean onePhase) throws XAException
 	{
@@ -159,6 +181,17 @@ public class LrcXAResource
 		}
 	}
 
+	/**
+	 * Method end ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 * @param flag
+	 * 		of type int
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public void end(Xid xid, int flag) throws XAException
 	{
@@ -216,23 +249,62 @@ public class LrcXAResource
 		this.state = ENDED;
 	}
 
+	/**
+	 * Method forget ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public void forget(Xid xid) throws XAException
 	{
 	}
 
+	/**
+	 * Method getTransactionTimeout returns the transactionTimeout of this LrcXAResource object.
+	 *
+	 * @return the transactionTimeout (type int) of this LrcXAResource object.
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public int getTransactionTimeout() throws XAException
 	{
 		return 0;
 	}
 
+	/**
+	 * Method isSameRM ...
+	 *
+	 * @param xaResource
+	 * 		of type XAResource
+	 *
+	 * @return boolean
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public boolean isSameRM(XAResource xaResource) throws XAException
 	{
 		return xaResource == this;
 	}
 
+	/**
+	 * Method prepare ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 *
+	 * @return int
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public int prepare(Xid xid) throws XAException
 	{
@@ -280,12 +352,32 @@ public class LrcXAResource
 		}
 	}
 
+	/**
+	 * Method recover ...
+	 *
+	 * @param flags
+	 * 		of type int
+	 *
+	 * @return Xid[]
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public Xid[] recover(int flags) throws XAException
 	{
 		return new Xid[0];
 	}
 
+	/**
+	 * Method rollback ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public void rollback(Xid xid) throws XAException
 	{
@@ -353,12 +445,34 @@ public class LrcXAResource
 		}
 	}
 
+	/**
+	 * Method setTransactionTimeout ...
+	 *
+	 * @param seconds
+	 * 		of type int
+	 *
+	 * @return boolean
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public boolean setTransactionTimeout(int seconds) throws XAException
 	{
 		return false;
 	}
 
+	/**
+	 * Method start ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 * @param flag
+	 * 		of type int
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	@Override
 	public void start(Xid xid, int flag) throws XAException
 	{
@@ -442,6 +556,11 @@ public class LrcXAResource
 		}
 	}
 
+	/**
+	 * Method xlatedState ...
+	 *
+	 * @return String
+	 */
 	private String xlatedState()
 	{
 		switch (state)
@@ -459,6 +578,11 @@ public class LrcXAResource
 		}
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

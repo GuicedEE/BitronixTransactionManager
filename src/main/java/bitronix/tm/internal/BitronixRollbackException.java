@@ -22,15 +22,33 @@ import javax.transaction.RollbackException;
  *
  * @author Ludovic Orban
  */
-public class BitronixRollbackException extends RollbackException {
+public class BitronixRollbackException
+		extends RollbackException
+{
 
-    public BitronixRollbackException(String string) {
-        super(string);
-    }
+	/**
+	 * Constructor BitronixRollbackException creates a new BitronixRollbackException instance.
+	 *
+	 * @param string
+	 * 		of type String
+	 */
+	public BitronixRollbackException(String string)
+	{
+		super(string);
+	}
 
-    public BitronixRollbackException(String string, Throwable t) {
-        super(string);
-        initCause(t);
-    }
+	/**
+	 * Constructor BitronixRollbackException creates a new BitronixRollbackException instance.
+	 *
+	 * @param string
+	 * 		of type String
+	 * @param t
+	 * 		of type Throwable
+	 */
+	public BitronixRollbackException(String string, Throwable t)
+	{
+		super(string);
+		initCause(t);
+	}
 
 }

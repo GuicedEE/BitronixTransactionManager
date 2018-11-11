@@ -33,6 +33,23 @@ public class ResourceObjectFactory
 
 	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ResourceObjectFactory.class.toString());
 
+	/**
+	 * Method getObjectInstance ...
+	 *
+	 * @param obj
+	 * 		of type Object
+	 * @param jndiNameObject
+	 * 		of type Name
+	 * @param nameCtx
+	 * 		of type Context
+	 * @param environment
+	 * 		of type Hashtable<?, ?>
+	 *
+	 * @return Object
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Override
 	public Object getObjectInstance(Object obj, Name jndiNameObject, Context nameCtx, Hashtable<?, ?> environment) throws Exception
 	{

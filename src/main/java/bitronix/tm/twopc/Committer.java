@@ -46,6 +46,12 @@ public final class Committer
 	private volatile boolean onePhase;
 
 
+	/**
+	 * Constructor Committer creates a new Committer instance.
+	 *
+	 * @param executor
+	 * 		of type Executor
+	 */
 	public Committer(Executor executor)
 	{
 		super(executor);
@@ -135,6 +141,21 @@ public final class Committer
 		transaction.setStatus(Status.STATUS_COMMITTED, committedAndNotInterestedUniqueNames);
 	}
 
+	/**
+	 * Method throwException ...
+	 *
+	 * @param message
+	 * 		of type String
+	 * @param phaseException
+	 * 		of type PhaseException
+	 * @param totalResourceCount
+	 * 		of type int
+	 *
+	 * @throws HeuristicMixedException
+	 * 		when
+	 * @throws HeuristicRollbackException
+	 * 		when
+	 */
 	private void throwException(String message, PhaseException phaseException, int totalResourceCount) throws HeuristicMixedException, HeuristicRollbackException
 	{
 		List<Exception> exceptions = phaseException.getExceptions();
@@ -190,6 +211,15 @@ public final class Committer
 		}
 	}
 
+	/**
+	 * Determine if a resource is participating in the phase or not. A participating resource gets
+	 * a job created to execute the phase's command on it.
+	 *
+	 * @param xaResourceHolderState
+	 * 		the resource to check for its participation.
+	 *
+	 * @return true if the resource must participate in the phase.
+	 */
 	@Override
 	protected boolean isParticipating(XAResourceHolderState xaResourceHolderState)
 	{
@@ -203,6 +233,14 @@ public final class Committer
 		return false;
 	}
 
+	/**
+	 * Create a {@link bitronix.tm.twopc.executor.Job} that is going to execute the phase command on the given resource.
+	 *
+	 * @param xaResourceHolderState
+	 * 		the resource that is going to receive a command.
+	 *
+	 * @return the {@link bitronix.tm.twopc.executor.Job} that is going to execute the command.
+	 */
 	@Override
 	protected Job createJob(XAResourceHolderState resourceHolder)
 	{
@@ -213,23 +251,42 @@ public final class Committer
 			extends Job
 	{
 
+		/**
+		 * Constructor CommitJob creates a new CommitJob instance.
+		 *
+		 * @param resourceHolder
+		 * 		of type XAResourceHolderState
+		 */
 		public CommitJob(XAResourceHolderState resourceHolder)
 		{
 			super(resourceHolder);
 		}
 
+		/**
+		 * Method getXAException returns the XAException of this CommitJob object.
+		 *
+		 * @return the XAException (type XAException) of this CommitJob object.
+		 */
 		@Override
 		public XAException getXAException()
 		{
 			return xaException;
 		}
 
+		/**
+		 * Method getRuntimeException returns the runtimeException of this CommitJob object.
+		 *
+		 * @return the runtimeException (type RuntimeException) of this CommitJob object.
+		 */
 		@Override
 		public RuntimeException getRuntimeException()
 		{
 			return runtimeException;
 		}
 
+		/**
+		 * Method execute ...
+		 */
 		@Override
 		public void execute()
 		{
@@ -247,6 +304,17 @@ public final class Committer
 			}
 		}
 
+		/**
+		 * Method commitResource ...
+		 *
+		 * @param resourceHolder
+		 * 		of type XAResourceHolderState
+		 * @param onePhase
+		 * 		of type boolean
+		 *
+		 * @throws XAException
+		 * 		when
+		 */
 		private void commitResource(XAResourceHolderState resourceHolder, boolean onePhase) throws XAException
 		{
 			try
@@ -269,6 +337,19 @@ public final class Committer
 			}
 		}
 
+		/**
+		 * Method handleXAException ...
+		 *
+		 * @param failedResourceHolder
+		 * 		of type XAResourceHolderState
+		 * @param xaException
+		 * 		of type XAException
+		 * @param onePhase
+		 * 		of type boolean
+		 *
+		 * @throws XAException
+		 * 		when
+		 */
 		private void handleXAException(XAResourceHolderState failedResourceHolder, XAException xaException, boolean onePhase) throws XAException
 		{
 			switch (xaException.errorCode)
@@ -312,6 +393,12 @@ public final class Committer
 			}
 		}
 
+		/**
+		 * Method forgetHeuristicCommit ...
+		 *
+		 * @param resourceHolder
+		 * 		of type XAResourceHolderState
+		 */
 		private void forgetHeuristicCommit(XAResourceHolderState resourceHolder)
 		{
 			try
@@ -336,6 +423,11 @@ public final class Committer
 			}
 		}
 
+		/**
+		 * Method toString ...
+		 *
+		 * @return String
+		 */
 		@Override
 		public String toString()
 		{

@@ -47,6 +47,9 @@ public class JdbcJavassistProxyFactory
 	private Constructor<PreparedStatement> proxyPreparedStatementConstructor;
 	private Constructor<ResultSet> proxyResultSetConstructor;
 
+	/**
+	 * Constructor JdbcJavassistProxyFactory creates a new JdbcJavassistProxyFactory instance.
+	 */
 	JdbcJavassistProxyFactory()
 	{
 		classMap = new ClassMap();
@@ -148,6 +151,25 @@ public class JdbcJavassistProxyFactory
 		}
 	}
 
+	/**
+	 * Method generateProxyClass ...
+	 *
+	 * @param primaryInterface
+	 * 		of type Class<T>
+	 * @param superClass
+	 * 		of type Class<?>
+	 *
+	 * @return Class<T>
+	 *
+	 * @throws NotFoundException
+	 * 		when
+	 * @throws CannotCompileException
+	 * 		when
+	 * @throws NoSuchMethodException
+	 * 		when
+	 * @throws SecurityException
+	 * 		when
+	 */
 	@SuppressWarnings("unchecked")
 	private <T> Class<T> generateProxyClass(Class<T> primaryInterface, Class<?> superClass)
 			throws NotFoundException, CannotCompileException, NoSuchMethodException, SecurityException

@@ -38,6 +38,9 @@ public class JtaTest
 
 	private BitronixTransactionManager btm;
 
+	/**
+	 * Method setUp ...
+	 */
 	@Override
 	protected void setUp()
 	{
@@ -48,12 +51,21 @@ public class JtaTest
 		btm = TransactionManagerServices.getTransactionManager();
 	}
 
+	/**
+	 * Method tearDown ...
+	 */
 	@Override
 	protected void tearDown()
 	{
 		btm.shutdown();
 	}
 
+	/**
+	 * Method testTransactionManagerGetTransaction ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testTransactionManagerGetTransaction() throws Exception
 	{
 		assertNull(btm.getTransaction());
@@ -70,6 +82,12 @@ public class JtaTest
 		btm.rollback();
 	}
 
+	/**
+	 * Method testSuspendResume ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	// this test also helps verifying MDC support but logs have to be manually checked
 	public void testSuspendResume() throws Exception
 	{
@@ -84,6 +102,12 @@ public class JtaTest
 		log.info("test over");
 	}
 
+	/**
+	 * Method testTimeout ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testTimeout() throws Exception
 	{
 		btm.setTransactionTimeout(1);
@@ -109,6 +133,12 @@ public class JtaTest
 		assertEquals(1, sync.afterCount);
 	}
 
+	/**
+	 * Method testMarkedRollback ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testMarkedRollback() throws Exception
 	{
 		btm.begin();
@@ -133,6 +163,12 @@ public class JtaTest
 		assertEquals(1, sync.afterCount);
 	}
 
+	/**
+	 * Method testRecycleAfterSuspend ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testRecycleAfterSuspend() throws Exception
 	{
 		PoolingDataSource pds = new PoolingDataSource();
@@ -171,6 +207,12 @@ public class JtaTest
 		pds.close();
 	}
 
+	/**
+	 * Method testTransactionContextCleanup ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testTransactionContextCleanup() throws Exception
 	{
 		assertEquals(Status.STATUS_NO_TRANSACTION, btm.getStatus());
@@ -200,6 +242,12 @@ public class JtaTest
 		assertNull(btm.getTransaction());
 	}
 
+	/**
+	 * Method testBeforeCompletionAddsExtraSynchronizationInDifferentPriority ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testBeforeCompletionAddsExtraSynchronizationInDifferentPriority() throws Exception
 	{
 		btm.begin();
@@ -211,6 +259,12 @@ public class JtaTest
 		btm.commit();
 	}
 
+	/**
+	 * Method testDebugZeroResourceTransactionDisabled ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testDebugZeroResourceTransactionDisabled() throws Exception
 	{
 		btm.begin();
@@ -219,6 +273,12 @@ public class JtaTest
 		btm.commit();
 	}
 
+	/**
+	 * Method testDebugZeroResourceTransaction ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testDebugZeroResourceTransaction() throws Exception
 	{
 		btm.shutdown(); // necessary to change the configuration
@@ -232,6 +292,12 @@ public class JtaTest
 		btm.commit();
 	}
 
+	/**
+	 * Method testBeforeCompletionRuntimeExceptionRethrown ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testBeforeCompletionRuntimeExceptionRethrown() throws Exception
 	{
 		btm.begin();
@@ -239,12 +305,20 @@ public class JtaTest
 		btm.getTransaction()
 		   .registerSynchronization(new Synchronization()
 		   {
+			   /**
+			    * Method beforeCompletion ...
+			    */
 			   @Override
 			   public void beforeCompletion()
 			   {
 				   throw new RuntimeException("beforeCompletion failure");
 			   }
 
+			   /**
+			    * Method afterCompletion ...
+			    *
+			    * @param i of type int
+			    */
 			   @Override
 			   public void afterCompletion(int i)
 			   {
@@ -274,11 +348,20 @@ public class JtaTest
 
 		private BitronixTransaction transaction;
 
+		/**
+		 * Constructor SynchronizationRegisteringSynchronization creates a new SynchronizationRegisteringSynchronization instance.
+		 *
+		 * @param transaction
+		 * 		of type BitronixTransaction
+		 */
 		public SynchronizationRegisteringSynchronization(BitronixTransaction transaction)
 		{
 			this.transaction = transaction;
 		}
 
+		/**
+		 * Method beforeCompletion ...
+		 */
 		@Override
 		public void beforeCompletion()
 		{
@@ -288,11 +371,19 @@ public class JtaTest
 				           .add(new Synchronization()
 				           {
 
+					           /**
+					            * Method beforeCompletion ...
+					            */
 					           @Override
 					           public void beforeCompletion()
 					           {
 					           }
 
+					           /**
+					            * Method afterCompletion ...
+					            *
+					            * @param i of type int
+					            */
 					           @Override
 					           public void afterCompletion(int i)
 					           {
@@ -305,6 +396,12 @@ public class JtaTest
 			}
 		}
 
+		/**
+		 * Method afterCompletion ...
+		 *
+		 * @param i
+		 * 		of type int
+		 */
 		@Override
 		public void afterCompletion(int i)
 		{
@@ -317,12 +414,21 @@ public class JtaTest
 		public int beforeCount = 0;
 		public int afterCount = 0;
 
+		/**
+		 * Method beforeCompletion ...
+		 */
 		@Override
 		public void beforeCompletion()
 		{
 			beforeCount++;
 		}
 
+		/**
+		 * Method afterCompletion ...
+		 *
+		 * @param i
+		 * 		of type int
+		 */
 		@Override
 		public void afterCompletion(int i)
 		{

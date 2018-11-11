@@ -23,10 +23,28 @@ import java.util.Date;
  *
  * @author Ludovic Orban
  */
-public interface JdbcPooledConnectionMBean {
+public interface JdbcPooledConnectionMBean
+{
 
-    String getStateDescription();
-    Date getAcquisitionDate();
-    Collection<String> getTransactionGtridsCurrentlyHoldingThis();
+	/**
+	 * Method getStateDescription returns the stateDescription of this JdbcPooledConnectionMBean object.
+	 *
+	 * @return the stateDescription (type String) of this JdbcPooledConnectionMBean object.
+	 */
+	String getStateDescription();
+
+	/**
+	 * Method getAcquisitionDate returns the acquisitionDate of this JdbcPooledConnectionMBean object.
+	 *
+	 * @return the acquisitionDate (type Date) of this JdbcPooledConnectionMBean object.
+	 */
+	Date getAcquisitionDate();
+
+	/**
+	 * Method getTransactionGtridsCurrentlyHoldingThis returns the transactionGtridsCurrentlyHoldingThis of this JdbcPooledConnectionMBean object.
+	 *
+	 * @return the transactionGtridsCurrentlyHoldingThis (type Collection<String>) of this JdbcPooledConnectionMBean object.
+	 */
+	Collection<String> getTransactionGtridsCurrentlyHoldingThis();
 
 }

@@ -40,10 +40,21 @@ public class Scheduler<T>
 	private int size = 0;
 
 
+	/**
+	 * Constructor Scheduler creates a new Scheduler instance.
+	 */
 	public Scheduler()
 	{
 	}
 
+	/**
+	 * Method add ...
+	 *
+	 * @param obj
+	 * 		of type T
+	 * @param position
+	 * 		of type Integer
+	 */
 	public synchronized void add(T obj, Integer position)
 	{
 		List<T> list = objects.get(position);
@@ -61,6 +72,12 @@ public class Scheduler<T>
 		size++;
 	}
 
+	/**
+	 * Method remove ...
+	 *
+	 * @param obj
+	 * 		of type T
+	 */
 	public synchronized void remove(T obj)
 	{
 		Iterator<T> it = iterator();
@@ -76,12 +93,22 @@ public class Scheduler<T>
 		throw new NoSuchElementException("no such element: " + obj);
 	}
 
+	/**
+	 * Method iterator ...
+	 *
+	 * @return Iterator<T>
+	 */
 	@Override
 	public Iterator<T> iterator()
 	{
 		return new SchedulerNaturalOrderIterator();
 	}
 
+	/**
+	 * Method getReverseOrderPositions returns the reverseOrderPositions of this Scheduler object.
+	 *
+	 * @return the reverseOrderPositions (type SortedSet<Integer>) of this Scheduler object.
+	 */
 	public synchronized SortedSet<Integer> getReverseOrderPositions()
 	{
 		TreeSet<Integer> result = new TreeSet<>(Collections.reverseOrder());
@@ -89,11 +116,24 @@ public class Scheduler<T>
 		return result;
 	}
 
+	/**
+	 * Method getNaturalOrderPositions returns the naturalOrderPositions of this Scheduler object.
+	 *
+	 * @return the naturalOrderPositions (type SortedSet<Integer>) of this Scheduler object.
+	 */
 	public synchronized SortedSet<Integer> getNaturalOrderPositions()
 	{
 		return new TreeSet<>(objects.keySet());
 	}
 
+	/**
+	 * Method getByReverseOrderForPosition ...
+	 *
+	 * @param position
+	 * 		of type Integer
+	 *
+	 * @return List<T>
+	 */
 	public synchronized List<T> getByReverseOrderForPosition(Integer position)
 	{
 		List<T> result = new ArrayList<>(getByNaturalOrderForPosition(position));
@@ -101,22 +141,45 @@ public class Scheduler<T>
 		return result;
 	}
 
+	/**
+	 * Method getByNaturalOrderForPosition ...
+	 *
+	 * @param position
+	 * 		of type Integer
+	 *
+	 * @return List<T>
+	 */
 	public synchronized List<T> getByNaturalOrderForPosition(Integer position)
 	{
 		return objects.get(position);
 	}
 
+	/**
+	 * Method reverseIterator ...
+	 *
+	 * @return Iterator<T>
+	 */
 	public Iterator<T> reverseIterator()
 	{
 		return new SchedulerReverseOrderIterator();
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{
 		return "a Scheduler with " + size() + " object(s) in " + getNaturalOrderPositions().size() + " position(s)";
 	}
 
+	/**
+	 * Method size ...
+	 *
+	 * @return int
+	 */
 	public synchronized int size()
 	{
 		return size;
@@ -132,11 +195,17 @@ public class Scheduler<T>
 		private List<T> objectsOfCurrentKey;
 		private int objectsOfCurrentKeyIndex;
 
+		/**
+		 * Constructor SchedulerNaturalOrderIterator creates a new SchedulerNaturalOrderIterator instance.
+		 */
 		private SchedulerNaturalOrderIterator()
 		{
 			this.nextKeyIndex = 0;
 		}
 
+		/**
+		 * Method remove ...
+		 */
 		@Override
 		public void remove()
 		{
@@ -162,6 +231,11 @@ public class Scheduler<T>
 			}
 		}
 
+		/**
+		 * Method hasNext ...
+		 *
+		 * @return boolean
+		 */
 		@Override
 		public boolean hasNext()
 		{
@@ -191,6 +265,11 @@ public class Scheduler<T>
 			}
 		}
 
+		/**
+		 * Method next ...
+		 *
+		 * @return T
+		 */
 		@Override
 		public T next()
 		{
@@ -215,6 +294,9 @@ public class Scheduler<T>
 		private List<T> objectsOfCurrentKey;
 		private int objectsOfCurrentKeyIndex;
 
+		/**
+		 * Constructor SchedulerReverseOrderIterator creates a new SchedulerReverseOrderIterator instance.
+		 */
 		private SchedulerReverseOrderIterator()
 		{
 			synchronized (Scheduler.this)
@@ -223,6 +305,9 @@ public class Scheduler<T>
 			}
 		}
 
+		/**
+		 * Method remove ...
+		 */
 		@Override
 		public void remove()
 		{
@@ -247,6 +332,11 @@ public class Scheduler<T>
 			}
 		}
 
+		/**
+		 * Method hasNext ...
+		 *
+		 * @return boolean
+		 */
 		@Override
 		public boolean hasNext()
 		{
@@ -276,6 +366,11 @@ public class Scheduler<T>
 			}
 		}
 
+		/**
+		 * Method next ...
+		 *
+		 * @return T
+		 */
 		@Override
 		public T next()
 		{

@@ -35,7 +35,7 @@ import java.util.*;
 public class XAResourceManager
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(XAResourceManager.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(XAResourceManager.class.toString());
 
 	private final Uid gtrid;
 	private final Scheduler<XAResourceHolderState> resources = new Scheduler<>();
@@ -94,7 +94,7 @@ public class XAResourceManager
 	 * @throws BitronixSystemException
 	 * 		if an internal error happens.
 	 */
-	public XAResourceHolderState findXAResourceHolderState(XAResource xaResource) throws BitronixSystemException
+	public XAResourceHolderState findXAResourceHolderState(XAResource xaResource)
 	{
 		for (XAResourceHolderState xaResourceHolderState : resources)
 		{
@@ -153,7 +153,7 @@ public class XAResourceManager
 			toBeReEnlisted.add(new XAResourceHolderState(xaResourceHolderState));
 		}
 
-		if (toBeReEnlisted.size() > 0 && LogDebugCheck.isDebugEnabled())
+		if (!toBeReEnlisted.isEmpty() && LogDebugCheck.isDebugEnabled())
 		{
 			log.finer("re-enlisting " + toBeReEnlisted.size() + " resource(s)");
 		}
@@ -368,26 +368,57 @@ public class XAResourceManager
 		return Collections.unmodifiableSet(names);
 	}
 
+	/**
+	 * Method getNaturalOrderPositions returns the naturalOrderPositions of this XAResourceManager object.
+	 *
+	 * @return the naturalOrderPositions (type SortedSet<Integer>) of this XAResourceManager object.
+	 */
 	public SortedSet<Integer> getNaturalOrderPositions()
 	{
 		return Collections.unmodifiableSortedSet(resources.getNaturalOrderPositions());
 	}
 
+	/**
+	 * Method getReverseOrderPositions returns the reverseOrderPositions of this XAResourceManager object.
+	 *
+	 * @return the reverseOrderPositions (type SortedSet<Integer>) of this XAResourceManager object.
+	 */
 	public SortedSet<Integer> getReverseOrderPositions()
 	{
 		return Collections.unmodifiableSortedSet(resources.getReverseOrderPositions());
 	}
 
+	/**
+	 * Method getNaturalOrderResourcesForPosition ...
+	 *
+	 * @param position
+	 * 		of type Integer
+	 *
+	 * @return List<XAResourceHolderState>
+	 */
 	public List<XAResourceHolderState> getNaturalOrderResourcesForPosition(Integer position)
 	{
 		return Collections.unmodifiableList(resources.getByNaturalOrderForPosition(position));
 	}
 
+	/**
+	 * Method getReverseOrderResourcesForPosition ...
+	 *
+	 * @param position
+	 * 		of type Integer
+	 *
+	 * @return List<XAResourceHolderState>
+	 */
 	public List<XAResourceHolderState> getReverseOrderResourcesForPosition(Integer position)
 	{
 		return Collections.unmodifiableList(resources.getByReverseOrderForPosition(position));
 	}
 
+	/**
+	 * Method getAllResources returns the allResources of this XAResourceManager object.
+	 *
+	 * @return the allResources (type List<XAResourceHolderState>) of this XAResourceManager object.
+	 */
 	public List<XAResourceHolderState> getAllResources()
 	{
 		List<XAResourceHolderState> result = new ArrayList<>(resources.size());

@@ -28,17 +28,37 @@ public class XAResourceStartEvent
 
 	private int flag;
 
+	/**
+	 * Constructor XAResourceStartEvent creates a new XAResourceStartEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param xid
+	 * 		of type Xid
+	 * @param flag
+	 * 		of type int
+	 */
 	public XAResourceStartEvent(Object source, Xid xid, int flag)
 	{
 		super(source, xid);
 		this.flag = flag;
 	}
 
+	/**
+	 * Method getFlag returns the flag of this XAResourceStartEvent object.
+	 *
+	 * @return the flag (type int) of this XAResourceStartEvent object.
+	 */
 	public int getFlag()
 	{
 		return flag;
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

@@ -22,22 +22,43 @@ import javax.transaction.xa.XAException;
  *
  * @author Ludovic Orban
  */
-public class DefaultExceptionAnalyzer implements ExceptionAnalyzer {
+public class DefaultExceptionAnalyzer
+		implements ExceptionAnalyzer
+{
 
-    @Override
-    public String extractExtraXAExceptionDetails(XAException ex) {
-        if (ex.getClass().getName().equals("oracle.jdbc.xa.OracleXAException")) {
-            try {
-                return "ORA-" + PropertyUtils.getProperty(ex, "oracleError");
-            } catch (PropertyException e) {
-                return null;
-            }
-        }
-        return null;
-    }
+	/**
+	 * Extract information from a vendor's XAException that isn't available through standard APIs.
+	 *
+	 * @param ex
+	 * 		the {@link javax.transaction.xa.XAException} to analyze.
+	 *
+	 * @return extra error details as a human-readable string, or null if nothing extra was found.
+	 */
+	@Override
+	public String extractExtraXAExceptionDetails(XAException ex)
+	{
+		if (ex.getClass()
+		      .getName()
+		      .equals("oracle.jdbc.xa.OracleXAException"))
+		{
+			try
+			{
+				return "ORA-" + PropertyUtils.getProperty(ex, "oracleError");
+			}
+			catch (PropertyException e)
+			{
+				return null;
+			}
+		}
+		return null;
+	}
 
-    @Override
-    public void shutdown() {
-    }
+	/**
+	 * Shutdown the service and free all held resources.
+	 */
+	@Override
+	public void shutdown()
+	{
+	}
 
 }

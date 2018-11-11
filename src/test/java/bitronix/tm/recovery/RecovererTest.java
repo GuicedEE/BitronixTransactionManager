@@ -57,6 +57,12 @@ public class RecovererTest
 	private PoolingDataSource pds;
 	private Journal journal;
 
+	/**
+	 * Method setUp ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -96,6 +102,12 @@ public class RecovererTest
 		journal.open();
 	}
 
+	/**
+	 * Method tearDown ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Override
 	protected void tearDown() throws Exception
 	{
@@ -221,6 +233,12 @@ public class RecovererTest
 		assertEquals(0, xaResource.recover(XAResource.TMSTARTRSCAN | XAResource.TMENDRSCAN).length);
 	}
 
+	/**
+	 * Method testSkipInFlightRollback ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSkipInFlightRollback() throws Exception
 	{
 		BitronixTransactionManager btm = TransactionManagerServices.getTransactionManager();
@@ -261,6 +279,12 @@ public class RecovererTest
 		assertEquals(0, xaResource.recover(XAResource.TMSTARTRSCAN | XAResource.TMENDRSCAN).length);
 	}
 
+	/**
+	 * Method testSkipInFlightCommit ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSkipInFlightCommit() throws Exception
 	{
 		BitronixTransactionManager btm = TransactionManagerServices.getTransactionManager();
@@ -300,6 +324,12 @@ public class RecovererTest
 		assertEquals(0, xaResource.recover(XAResource.TMSTARTRSCAN | XAResource.TMENDRSCAN).length);
 	}
 
+	/**
+	 * Method testRecoverMissingResource ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testRecoverMissingResource() throws Exception
 	{
 		Xid xid0 = new MockXid(0, UidGenerator.generateUid()
@@ -331,6 +361,14 @@ public class RecovererTest
 		// the TM is running, adding this resource will kick incremental recovery on it
 		PoolingDataSource pds = new PoolingDataSource()
 		{
+			/**
+			 * Method createPooledConnection ...
+			 *
+			 * @param xaFactory of type Object
+			 * @param bean of type ResourceBean
+			 * @return JdbcPooledConnection
+			 * @throws Exception when
+			 */
 			@Override
 			public JdbcPooledConnection createPooledConnection(Object xaFactory, ResourceBean bean) throws Exception
 			{
@@ -363,6 +401,12 @@ public class RecovererTest
 		                          .shutdown();
 	}
 
+	/**
+	 * Method testBackgroundRecovererSkippingInFlightTransactions ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testBackgroundRecovererSkippingInFlightTransactions() throws Exception
 	{
 		// change disk journal into mock journal
@@ -431,6 +475,12 @@ public class RecovererTest
 	}
 
 
+	/**
+	 * Method testReentrance ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testReentrance() throws Exception
 	{
 		log.finer("Start test RecovererTest.testReentrance()");

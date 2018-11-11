@@ -20,14 +20,32 @@ package bitronix.tm.utils;
  *
  * @author Ludovic Orban
  */
-public class PropertyException extends RuntimeException {
+public class PropertyException
+		extends RuntimeException
+{
 
-    public PropertyException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * Constructor PropertyException creates a new PropertyException instance.
+	 *
+	 * @param message
+	 * 		of type String
+	 * @param cause
+	 * 		of type Throwable
+	 */
+	public PropertyException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
 
-    public PropertyException(String message) {
-        super(message);
-    }
+	/**
+	 * Constructor PropertyException creates a new PropertyException instance.
+	 *
+	 * @param message
+	 * 		of type String
+	 */
+	public PropertyException(String message)
+	{
+		super(message);
+	}
 
 }

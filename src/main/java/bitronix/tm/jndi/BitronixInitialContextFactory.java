@@ -45,12 +45,25 @@ public class BitronixInitialContextFactory
 		implements InitialContextFactory
 {
 
+	/**
+	 * Method getInitialContext ...
+	 *
+	 * @param hashtable
+	 * 		of type Hashtable<?, ?>
+	 *
+	 * @return Context
+	 */
 	@Override
 	public Context getInitialContext(Hashtable<?, ?> hashtable)
 	{
 		return new BitronixContext();
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

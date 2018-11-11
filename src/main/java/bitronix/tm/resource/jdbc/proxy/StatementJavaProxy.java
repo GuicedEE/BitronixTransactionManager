@@ -34,11 +34,27 @@ public class StatementJavaProxy
 
 	private JdbcPooledConnection jdbcPooledConnection;
 
+	/**
+	 * Constructor StatementJavaProxy creates a new StatementJavaProxy instance.
+	 *
+	 * @param jdbcPooledConnection
+	 * 		of type JdbcPooledConnection
+	 * @param statement
+	 * 		of type Statement
+	 */
 	public StatementJavaProxy(JdbcPooledConnection jdbcPooledConnection, Statement statement)
 	{
 		initialize(jdbcPooledConnection, statement);
 	}
 
+	/**
+	 * Method initialize ...
+	 *
+	 * @param jdbcPooledConnection
+	 * 		of type JdbcPooledConnection
+	 * @param statement
+	 * 		of type Statement
+	 */
 	void initialize(JdbcPooledConnection jdbcPooledConnection, Statement statement)
 	{
 		this.proxy = this;
@@ -46,6 +62,9 @@ public class StatementJavaProxy
 		this.delegate = statement;
 	}
 
+	/**
+	 * Constructor StatementJavaProxy creates a new StatementJavaProxy instance.
+	 */
 	public StatementJavaProxy()
 	{
 		// Default constructor
@@ -53,6 +72,12 @@ public class StatementJavaProxy
 
 	/* Overridden methods of java.sql.Statement */
 
+	/**
+	 * Method close ...
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	public void close() throws SQLException
 	{
 		if (delegate == null)
@@ -64,12 +89,31 @@ public class StatementJavaProxy
 		delegate.close();
 	}
 
+	/**
+	 * Method executeQuery ...
+	 *
+	 * @param sql
+	 * 		of type String
+	 *
+	 * @return ResultSet
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	public ResultSet executeQuery(String sql) throws SQLException
 	{
 		ResultSet resultSet = delegate.executeQuery(sql);
 		return JdbcProxyFactory.INSTANCE.getProxyResultSet(this.getProxy(), resultSet);
 	}
 
+	/**
+	 * Method getGeneratedKeys returns the generatedKeys of this StatementJavaProxy object.
+	 *
+	 * @return the generatedKeys (type ResultSet) of this StatementJavaProxy object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	public ResultSet getGeneratedKeys() throws SQLException
 	{
 		ResultSet generatedKeys = delegate.getGeneratedKeys();
@@ -78,6 +122,17 @@ public class StatementJavaProxy
 
 	/* java.sql.Wrapper implementation */
 
+	/**
+	 * Method unwrap ...
+	 *
+	 * @param iface
+	 * 		of type Class<T>
+	 *
+	 * @return T
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T unwrap(Class<T> iface) throws SQLException
 	{
@@ -92,6 +147,17 @@ public class StatementJavaProxy
 		throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
 	}
 
+	/**
+	 * Method isWrapperFor ...
+	 *
+	 * @param iface
+	 * 		of type Class<?>
+	 *
+	 * @return boolean
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	public boolean isWrapperFor(Class<?> iface) throws SQLException
 	{
 		return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
@@ -99,6 +165,11 @@ public class StatementJavaProxy
 
 	/* Overridden methods of JavaProxyBase */
 
+	/**
+	 * Method getMethodMap returns the methodMap of this StatementJavaProxy object.
+	 *
+	 * @return the methodMap (type Map<String, Method>) of this StatementJavaProxy object.
+	 */
 	@Override
 	protected Map<String, Method> getMethodMap()
 	{

@@ -28,12 +28,21 @@ public class ConnectionCustomizerTest
 {
 	private ConnectionCustomizer customizer;
 
+	/**
+	 * Method setup ...
+	 */
 	@Before
 	public void setup()
 	{
 		customizer = mock(ConnectionCustomizer.class);
 	}
 
+	/**
+	 * Method testCustomizerCall ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test
 	public void testCustomizerCall() throws Exception
 	{

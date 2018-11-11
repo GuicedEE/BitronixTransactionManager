@@ -43,7 +43,8 @@ public class TransactionLogAppender
 	 * same size. Very useful when debugging and eventually restoring broken log files.
 	 */
 	public static final int END_RECORD = 0x786e7442;
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogAppender.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogAppender.class.toString());
+
 	private final File file;
 	private final RandomAccessFile randomeAccessFile;
 	private final FileChannel fc;
@@ -101,7 +102,7 @@ public class TransactionLogAppender
 	 * @throws IOException
 	 * 		if an I/O error occurs
 	 */
-	protected boolean setPositionAndAdvance(TransactionLogRecord tlog) throws IOException
+	protected boolean setPositionAndAdvance(TransactionLogRecord tlog)
 	{
 		int tlogSize = tlog.calculateTotalRecordSize();
 		if (position + tlogSize > maxFileLength)
@@ -200,12 +201,7 @@ public class TransactionLogAppender
 			{
 				synchronized (danglingRecords)
 				{
-					Set<String> outstanding = danglingRecords.get(gtrid);
-					if (outstanding == null)
-					{
-						outstanding = new TreeSet<>(uniqueNames);
-						danglingRecords.put(gtrid, outstanding);
-					}
+					Set<String> outstanding = danglingRecords.computeIfAbsent(gtrid, k -> new TreeSet<>(uniqueNames));
 					outstanding.addAll(uniqueNames);
 				}
 				break;
@@ -224,9 +220,18 @@ public class TransactionLogAppender
 				}
 				break;
 			}
+			default:
+			{
+				log.finest("Status Type not actioned : " + status);
+			}
 		}
 	}
 
+	/**
+	 * Method getDanglingLogs returns the danglingLogs of this TransactionLogAppender object.
+	 *
+	 * @return the danglingLogs (type List<TransactionLogRecord>) of this TransactionLogAppender object.
+	 */
 	protected List<TransactionLogRecord> getDanglingLogs()
 	{
 		synchronized (danglingRecords)
@@ -246,6 +251,9 @@ public class TransactionLogAppender
 		}
 	}
 
+	/**
+	 * Method clearDanglingLogs ...
+	 */
 	protected void clearDanglingLogs()
 	{
 		synchronized (danglingRecords)
@@ -377,6 +385,11 @@ public class TransactionLogAppender
 		}
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

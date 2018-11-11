@@ -33,11 +33,19 @@ public class SchedulerTest
 
 	private static int counter = 0;
 
+	/**
+	 * Method incCounter ...
+	 *
+	 * @return int
+	 */
 	private static int incCounter()
 	{
 		return counter++;
 	}
 
+	/**
+	 * Method testNaturalOrdering ...
+	 */
 	public void testNaturalOrdering()
 	{
 		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<>();
@@ -82,6 +90,9 @@ public class SchedulerTest
 		assertTrue(xarhs4 == list2.get(0));
 	}
 
+	/**
+	 * Method testReverseOrdering ...
+	 */
 	public void testReverseOrdering()
 	{
 		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<>();
@@ -124,6 +135,9 @@ public class SchedulerTest
 		assertTrue(xarhs3 == list2r.get(0));
 	}
 
+	/**
+	 * Method testIterator ...
+	 */
 	public void testIterator()
 	{
 		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<>();
@@ -167,6 +181,9 @@ public class SchedulerTest
 		assertEquals(0, resourceScheduler.size());
 	}
 
+	/**
+	 * Method testReverseIterator ...
+	 */
 	public void testReverseIterator()
 	{
 		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<>();
@@ -197,6 +214,9 @@ public class SchedulerTest
 		assertFalse(it.hasNext());
 	}
 
+	/**
+	 * Method testRemove ...
+	 */
 	public void testRemove()
 	{
 		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<>();
@@ -218,6 +238,9 @@ public class SchedulerTest
 		it.remove();
 	}
 
+	/**
+	 * Method testReverseRemove ...
+	 */
 	public void testReverseRemove()
 	{
 		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<>();
@@ -239,6 +262,9 @@ public class SchedulerTest
 		it.remove();
 	}
 
+	/**
+	 * Method testHasNext ...
+	 */
 	public void testHasNext()
 	{
 		Scheduler<XAResourceHolderState> resourceScheduler = new Scheduler<>();
@@ -285,6 +311,12 @@ public class SchedulerTest
 		private int number;
 		private int commitOrderingPosition;
 
+		/**
+		 * Constructor MockResourceBean creates a new MockResourceBean instance.
+		 *
+		 * @param commitOrderingPosition
+		 * 		of type int
+		 */
 		private MockResourceBean(int commitOrderingPosition)
 		{
 			number = incCounter();
@@ -292,12 +324,20 @@ public class SchedulerTest
 		}
 
 
+		/**
+		 * @return the position at which this resource should stand during 2PC commit.
+		 */
 		@Override
 		public int getTwoPcOrderingPosition()
 		{
 			return commitOrderingPosition;
 		}
 
+		/**
+		 * Method toString ...
+		 *
+		 * @return String
+		 */
 		@Override
 		public String toString()
 		{

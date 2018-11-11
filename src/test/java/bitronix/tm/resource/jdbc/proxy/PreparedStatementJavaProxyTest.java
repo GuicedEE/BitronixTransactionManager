@@ -35,6 +35,9 @@ public class PreparedStatementJavaProxyTest
 	private JdbcPooledConnection connection;
 	private PreparedStatement stmt;
 
+	/**
+	 * Method setup ...
+	 */
 	@Before
 	public void setup()
 	{
@@ -42,6 +45,12 @@ public class PreparedStatementJavaProxyTest
 		stmt = mock(PreparedStatement.class);
 	}
 
+	/**
+	 * Method testCachedStatementCanBeUnwrapped ...
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@Test
 	public void testCachedStatementCanBeUnwrapped() throws SQLException
 	{
@@ -51,6 +60,12 @@ public class PreparedStatementJavaProxyTest
 		assertSame(proxy.unwrap(PreparedStatement.class), stmt);
 	}
 
+	/**
+	 * Method testCachedStatementPretendsToClose ...
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@Test
 	public void testCachedStatementPretendsToClose() throws SQLException
 	{
@@ -67,6 +82,12 @@ public class PreparedStatementJavaProxyTest
 		verify(connection).putCachedStatement(key, stmt);
 	}
 
+	/**
+	 * Method testUncachedStatementCanBeUnwrapped ...
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@Test
 	public void testUncachedStatementCanBeUnwrapped() throws SQLException
 	{
@@ -75,6 +96,12 @@ public class PreparedStatementJavaProxyTest
 		assertSame(proxy.unwrap(PreparedStatement.class), stmt);
 	}
 
+	/**
+	 * Method testUncachedStatementReallyCloses ...
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@Test
 	public void testUncachedStatementReallyCloses() throws SQLException
 	{

@@ -27,6 +27,9 @@ public class PropertyUtilsTest
 		extends TestCase
 {
 
+	/**
+	 * Method testSetProperties ...
+	 */
 	public void testSetProperties()
 	{
 		Destination destination = new Destination();
@@ -59,6 +62,9 @@ public class PropertyUtilsTest
 		}
 	}
 
+	/**
+	 * Method testSetMultipleProperties ...
+	 */
 	public void testSetMultipleProperties()
 	{
 		Destination destination = new Destination();
@@ -71,6 +77,9 @@ public class PropertyUtilsTest
 		                                  .getProperty("key2"));
 	}
 
+	/**
+	 * Method testSetClonedProperties ...
+	 */
 	public void testSetClonedProperties()
 	{
 		Destination destination = new Destination();
@@ -80,6 +89,9 @@ public class PropertyUtilsTest
 		                                 .getProperty("key"));
 	}
 
+	/**
+	 * Method testSetMultipleClonedProperties ...
+	 */
 	public void testSetMultipleClonedProperties()
 	{
 		Destination destination = new Destination();
@@ -92,6 +104,9 @@ public class PropertyUtilsTest
 		                                  .getProperty("key2"));
 	}
 
+	/**
+	 * Method testSetPropertiesDirectly ...
+	 */
 	public void testSetPropertiesDirectly()
 	{
 		Destination destination = new Destination();
@@ -104,6 +119,9 @@ public class PropertyUtilsTest
 		                                 .getProperty("key"));
 	}
 
+	/**
+	 * Method testSetClonedPropertiesDirectly ...
+	 */
 	public void testSetClonedPropertiesDirectly()
 	{
 		Destination destination = new Destination();
@@ -116,6 +134,9 @@ public class PropertyUtilsTest
 		                                 .getProperty("key"));
 	}
 
+	/**
+	 * Method testSettingKeyForPropertiesObject ...
+	 */
 	public void testSettingKeyForPropertiesObject()
 	{
 		Properties p = new Properties();
@@ -123,6 +144,9 @@ public class PropertyUtilsTest
 		assertEquals("value", p.getProperty("key"));
 	}
 
+	/**
+	 * Method testSetPropertiesObjectLongKey ...
+	 */
 	public void testSetPropertiesObjectLongKey()
 	{
 		PrivateDestination destination = new PrivateDestination();
@@ -136,6 +160,9 @@ public class PropertyUtilsTest
 		                                  .get("a.dotted.key"));
 	}
 
+	/**
+	 * Method testSmartGetProperties ...
+	 */
 	public void testSmartGetProperties()
 	{
 		Destination destination = new Destination();
@@ -158,6 +185,9 @@ public class PropertyUtilsTest
 		assertNull(map.get("subDestination"));
 	}
 
+	/**
+	 * Method testSetPrimitiveTypes ...
+	 */
 	public void testSetPrimitiveTypes()
 	{
 		Destination destination = new Destination();
@@ -181,6 +211,9 @@ public class PropertyUtilsTest
 		assertEquals(0.654987, destination.getADouble(), 0.000001);
 	}
 
+	/**
+	 * Method testGetPrimitiveTypes ...
+	 */
 	public void testGetPrimitiveTypes()
 	{
 		Destination destination = new Destination();
@@ -219,126 +252,264 @@ public class PropertyUtilsTest
 		private float aFloat;
 		private double aDouble;
 
+		/**
+		 * Method getProps returns the props of this Destination object.
+		 *
+		 * @return the props (type Properties) of this Destination object.
+		 */
 		public Properties getProps()
 		{
 			return props;
 		}
 
+		/**
+		 * Method setProps sets the props of this Destination object.
+		 *
+		 * @param props
+		 * 		the props of this Destination object.
+		 */
 		public void setProps(Properties props)
 		{
 			this.props = props;
 		}
 
+		/**
+		 * Method getClonedProps returns the clonedProps of this Destination object.
+		 *
+		 * @return the clonedProps (type Properties) of this Destination object.
+		 */
 		public Properties getClonedProps()
 		{
 			return (clonedProps == null) ? null : (Properties) clonedProps.clone();
 		}
 
+		/**
+		 * Method setClonedProps sets the clonedProps of this Destination object.
+		 *
+		 * @param props
+		 * 		the clonedProps of this Destination object.
+		 */
 		public void setClonedProps(Properties props)
 		{
 			clonedProps = (props == null) ? null : (Properties) props.clone();
 		}
 
+		/**
+		 * Method getSubDestination returns the subDestination of this Destination object.
+		 *
+		 * @return the subDestination (type Destination) of this Destination object.
+		 */
 		public Destination getSubDestination()
 		{
 			return subDestination;
 		}
 
+		/**
+		 * Method setSubDestination sets the subDestination of this Destination object.
+		 *
+		 * @param subDestination
+		 * 		the subDestination of this Destination object.
+		 */
 		public void setSubDestination(Destination subDestination)
 		{
 			this.subDestination = subDestination;
 		}
 
+		/**
+		 * Method getAnInteger returns the anInteger of this Destination object.
+		 *
+		 * @return the anInteger (type int) of this Destination object.
+		 */
 		public int getAnInteger()
 		{
 			return anInteger;
 		}
 
+		/**
+		 * Method setAnInteger sets the anInteger of this Destination object.
+		 *
+		 * @param anInteger
+		 * 		the anInteger of this Destination object.
+		 */
 		public void setAnInteger(int anInteger)
 		{
 			this.anInteger = anInteger;
 		}
 
+		/**
+		 * Method setAWriteOnlyInt sets the AWriteOnlyInt of this Destination object.
+		 *
+		 * @param aWriteOnlyInt
+		 * 		the AWriteOnlyInt of this Destination object.
+		 */
 		public void setAWriteOnlyInt(int aWriteOnlyInt)
 		{
 			this.aWriteOnlyInt = aWriteOnlyInt;
 		}
 
+		/**
+		 * Method isABoolean returns the ABoolean of this Destination object.
+		 *
+		 * @return the ABoolean (type boolean) of this Destination object.
+		 */
 		public boolean isABoolean()
 		{
 			return aBoolean;
 		}
 
+		/**
+		 * Method setABoolean sets the ABoolean of this Destination object.
+		 *
+		 * @param aBoolean
+		 * 		the ABoolean of this Destination object.
+		 */
 		public void setABoolean(boolean aBoolean)
 		{
 			this.aBoolean = aBoolean;
 		}
 
+		/**
+		 * Method isAnotherBoolean returns the anotherBoolean of this Destination object.
+		 *
+		 * @return the anotherBoolean (type boolean) of this Destination object.
+		 */
 		public boolean isAnotherBoolean()
 		{
 			return anotherBoolean;
 		}
 
+		/**
+		 * Method setAnotherBoolean sets the anotherBoolean of this Destination object.
+		 *
+		 * @param anotherBoolean
+		 * 		the anotherBoolean of this Destination object.
+		 */
 		public void setAnotherBoolean(boolean anotherBoolean)
 		{
 			this.anotherBoolean = anotherBoolean;
 		}
 
+		/**
+		 * Method getAString returns the AString of this Destination object.
+		 *
+		 * @return the AString (type String) of this Destination object.
+		 */
 		public String getAString()
 		{
 			return aString;
 		}
 
+		/**
+		 * Method setAString sets the AString of this Destination object.
+		 *
+		 * @param aString
+		 * 		the AString of this Destination object.
+		 */
 		public void setAString(String aString)
 		{
 			this.aString = aString;
 		}
 
+		/**
+		 * Method getAByte returns the AByte of this Destination object.
+		 *
+		 * @return the AByte (type byte) of this Destination object.
+		 */
 		public byte getAByte()
 		{
 			return aByte;
 		}
 
+		/**
+		 * Method setAByte sets the AByte of this Destination object.
+		 *
+		 * @param aByte
+		 * 		the AByte of this Destination object.
+		 */
 		public void setAByte(byte aByte)
 		{
 			this.aByte = aByte;
 		}
 
+		/**
+		 * Method getAShort returns the AShort of this Destination object.
+		 *
+		 * @return the AShort (type short) of this Destination object.
+		 */
 		public short getAShort()
 		{
 			return aShort;
 		}
 
+		/**
+		 * Method setAShort sets the AShort of this Destination object.
+		 *
+		 * @param aShort
+		 * 		the AShort of this Destination object.
+		 */
 		public void setAShort(short aShort)
 		{
 			this.aShort = aShort;
 		}
 
+		/**
+		 * Method getALong returns the ALong of this Destination object.
+		 *
+		 * @return the ALong (type long) of this Destination object.
+		 */
 		public long getALong()
 		{
 			return aLong;
 		}
 
+		/**
+		 * Method setALong sets the ALong of this Destination object.
+		 *
+		 * @param aLong
+		 * 		the ALong of this Destination object.
+		 */
 		public void setALong(long aLong)
 		{
 			this.aLong = aLong;
 		}
 
+		/**
+		 * Method getAFloat returns the AFloat of this Destination object.
+		 *
+		 * @return the AFloat (type float) of this Destination object.
+		 */
 		public float getAFloat()
 		{
 			return aFloat;
 		}
 
+		/**
+		 * Method setAFloat sets the AFloat of this Destination object.
+		 *
+		 * @param aFloat
+		 * 		the AFloat of this Destination object.
+		 */
 		public void setAFloat(float aFloat)
 		{
 			this.aFloat = aFloat;
 		}
 
+		/**
+		 * Method getADouble returns the ADouble of this Destination object.
+		 *
+		 * @return the ADouble (type double) of this Destination object.
+		 */
 		public double getADouble()
 		{
 			return aDouble;
 		}
 
+		/**
+		 * Method setADouble sets the ADouble of this Destination object.
+		 *
+		 * @param aDouble
+		 * 		the ADouble of this Destination object.
+		 */
 		public void setADouble(double aDouble)
 		{
 			this.aDouble = aDouble;
@@ -350,21 +521,43 @@ public class PropertyUtilsTest
 		private Properties props;
 		private PrivateDestination subDestination;
 
+		/**
+		 * Method getProps returns the props of this PrivateDestination object.
+		 *
+		 * @return the props (type Properties) of this PrivateDestination object.
+		 */
 		public Properties getProps()
 		{
 			return props;
 		}
 
+		/**
+		 * Method setProps sets the props of this PrivateDestination object.
+		 *
+		 * @param props
+		 * 		the props of this PrivateDestination object.
+		 */
 		public void setProps(Properties props)
 		{
 			this.props = props;
 		}
 
+		/**
+		 * Method getSubDestination returns the subDestination of this PrivateDestination object.
+		 *
+		 * @return the subDestination (type PrivateDestination) of this PrivateDestination object.
+		 */
 		public PrivateDestination getSubDestination()
 		{
 			return subDestination;
 		}
 
+		/**
+		 * Method setSubDestination sets the subDestination of this PrivateDestination object.
+		 *
+		 * @param subDestination
+		 * 		the subDestination of this PrivateDestination object.
+		 */
 		public void setSubDestination(PrivateDestination subDestination)
 		{
 			this.subDestination = subDestination;

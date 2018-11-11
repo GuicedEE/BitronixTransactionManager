@@ -24,6 +24,11 @@ public class Chrono
 	private static long lastTime = 0;
 	private static long counter = 0;
 
+	/**
+	 * Method getTime returns the time of this Chrono object.
+	 *
+	 * @return the time (type long) of this Chrono object.
+	 */
 	public synchronized static long getTime()
 	{
 		long time = System.currentTimeMillis();

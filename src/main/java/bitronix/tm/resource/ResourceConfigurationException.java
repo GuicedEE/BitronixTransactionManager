@@ -20,12 +20,30 @@ package bitronix.tm.resource;
  *
  * @author Ludovic Orban
  */
-public class ResourceConfigurationException extends RuntimeException {
-    public ResourceConfigurationException(String message, Throwable cause) {
-        super(message, cause);
-    }
+public class ResourceConfigurationException
+		extends RuntimeException
+{
+	/**
+	 * Constructor ResourceConfigurationException creates a new ResourceConfigurationException instance.
+	 *
+	 * @param message
+	 * 		of type String
+	 * @param cause
+	 * 		of type Throwable
+	 */
+	public ResourceConfigurationException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
 
-    public ResourceConfigurationException(String s) {
-        super(s);
-    }
+	/**
+	 * Constructor ResourceConfigurationException creates a new ResourceConfigurationException instance.
+	 *
+	 * @param s
+	 * 		of type String
+	 */
+	public ResourceConfigurationException(String s)
+	{
+		super(s);
+	}
 }

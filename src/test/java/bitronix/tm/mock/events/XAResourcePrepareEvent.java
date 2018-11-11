@@ -28,23 +28,55 @@ public class XAResourcePrepareEvent
 
 	private int returnCode;
 
+	/**
+	 * Constructor XAResourcePrepareEvent creates a new XAResourcePrepareEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param xid
+	 * 		of type Xid
+	 * @param returnCode
+	 * 		of type int
+	 */
 	public XAResourcePrepareEvent(Object source, Xid xid, int returnCode)
 	{
 		super(source, xid);
 		this.returnCode = returnCode;
 	}
 
+	/**
+	 * Constructor XAResourcePrepareEvent creates a new XAResourcePrepareEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param ex
+	 * 		of type Exception
+	 * @param xid
+	 * 		of type Xid
+	 * @param returnCode
+	 * 		of type int
+	 */
 	public XAResourcePrepareEvent(Object source, Exception ex, Xid xid, int returnCode)
 	{
 		super(source, ex, xid);
 		this.returnCode = returnCode;
 	}
 
+	/**
+	 * Method getReturnCode returns the returnCode of this XAResourcePrepareEvent object.
+	 *
+	 * @return the returnCode (type int) of this XAResourcePrepareEvent object.
+	 */
 	public int getReturnCode()
 	{
 		return returnCode;
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

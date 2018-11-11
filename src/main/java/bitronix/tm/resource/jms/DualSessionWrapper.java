@@ -58,6 +58,16 @@ public class DualSessionWrapper
 	private XAResource xaResource;
 	private MessageListener listener;
 
+	/**
+	 * Constructor DualSessionWrapper creates a new DualSessionWrapper instance.
+	 *
+	 * @param pooledConnection
+	 * 		of type JmsPooledConnection
+	 * @param transacted
+	 * 		of type boolean
+	 * @param acknowledgeMode
+	 * 		of type int
+	 */
 	public DualSessionWrapper(JmsPooledConnection pooledConnection, boolean transacted, int acknowledgeMode)
 	{
 		this.pooledConnection = pooledConnection;
@@ -72,12 +82,27 @@ public class DualSessionWrapper
 		addStateChangeEventListener(this);
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{
 		return "a DualSessionWrapper in state " + getState() + " of " + pooledConnection;
 	}
 
+	/**
+	 * Method stateChanged ...
+	 *
+	 * @param source
+	 * 		of type DualSessionWrapper
+	 * @param oldState
+	 * 		of type State
+	 * @param newState
+	 * 		of type State
+	 */
 	/*
 	 * When the session is closed (directly or deferred) the action is to change its state to IN_POOL.
 	 * There is no such state for JMS sessions, this just means that it has been closed -> force a
@@ -161,24 +186,49 @@ public class DualSessionWrapper
 		} // if newState == State.CLOSED
 	}
 
+	/**
+	 * Method stateChanging ...
+	 *
+	 * @param source
+	 * 		of type DualSessionWrapper
+	 * @param currentState
+	 * 		of type State
+	 * @param futureState
+	 * 		of type State
+	 */
 	@Override
 	public void stateChanging(DualSessionWrapper source, State currentState, State futureState)
 	{
 		//No config required
 	}
 
+	/**
+	 * Get the vendor's {@link javax.transaction.xa.XAResource} implementation of the wrapped resource.
+	 *
+	 * @return the vendor's XAResource implementation.
+	 */
 	@Override
 	public XAResource getXAResource()
 	{
 		return xaResource;
 	}
 
+	/**
+	 * Get the ResourceBean which created this XAResourceHolder.
+	 *
+	 * @return the ResourceBean which created this XAResourceHolder.
+	 */
 	@Override
 	public ResourceBean getResourceBean()
 	{
 		return getPoolingConnectionFactory();
 	}
 
+	/**
+	 * Method getPoolingConnectionFactory returns the poolingConnectionFactory of this DualSessionWrapper object.
+	 *
+	 * @return the poolingConnectionFactory (type PoolingConnectionFactory) of this DualSessionWrapper object.
+	 */
 	public PoolingConnectionFactory getPoolingConnectionFactory()
 	{
 		return pooledConnection.getPoolingConnectionFactory();
@@ -187,18 +237,42 @@ public class DualSessionWrapper
 
 	/* wrapped Session methods that have special XA semantics */
 
+	/**
+	 * Get the list of {@link bitronix.tm.resource.common.XAResourceHolder}s created by this
+	 * {@link bitronix.tm.resource.common.XAStatefulHolder} that are still open.
+	 * <p>This method is thread-safe.</p>
+	 *
+	 * @return the list of {@link bitronix.tm.resource.common.XAResourceHolder}s created by this
+	 * 		{@link bitronix.tm.resource.common.XAStatefulHolder} that are still open.
+	 */
 	@Override
 	public List<DualSessionWrapper> getXAResourceHolders()
 	{
 		return Collections.singletonList(this);
 	}
 
+	/**
+	 * Create a disposable handler used to drive a pooled instance of
+	 * {@link bitronix.tm.resource.common.XAStatefulHolder}.
+	 * <p>This method is thread-safe.</p>
+	 *
+	 * @return a resource-specific disposable connection object.
+	 *
+	 * @throws Exception
+	 * 		a resource-specific exception thrown when the disposable connection cannot be created.
+	 */
 	@Override
 	public Object getConnectionHandle() throws Exception
 	{
 		return null;
 	}
 
+	/**
+	 * Close the physical connection that this {@link bitronix.tm.resource.common.XAStatefulHolder} represents.
+	 *
+	 * @throws Exception
+	 * 		a resource-specific exception thrown when there is an error closing the physical connection.
+	 */
 	@Override
 	public void close() throws JMSException
 	{
@@ -247,12 +321,26 @@ public class DualSessionWrapper
 
 	}
 
+	/**
+	 * Get the date at which this object was last released to the pool. This is required to check if it is eligible
+	 * for discard when the containing pool needs to shrink.
+	 *
+	 * @return the date at which this object was last released to the pool or null if it never left the pool.
+	 */
 	@Override
 	public Date getLastReleaseDate()
 	{
 		return null;
 	}
 
+	/**
+	 * Method getXAResourceHolderForXaResource ...
+	 *
+	 * @param xaResource
+	 * 		of type XAResource
+	 *
+	 * @return DualSessionWrapper
+	 */
 	public DualSessionWrapper getXAResourceHolderForXaResource(XAResource xaResource)
 	{
 		if (xaResource == this.xaResource)
@@ -262,48 +350,118 @@ public class DualSessionWrapper
 		return null;
 	}
 
+	/**
+	 * Method createBytesMessage ...
+	 *
+	 * @return BytesMessage
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public BytesMessage createBytesMessage() throws JMSException
 	{
 		return getSession().createBytesMessage();
 	}
 
+	/**
+	 * Method createMapMessage ...
+	 *
+	 * @return MapMessage
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public MapMessage createMapMessage() throws JMSException
 	{
 		return getSession().createMapMessage();
 	}
 
+	/**
+	 * Method createMessage ...
+	 *
+	 * @return Message
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public Message createMessage() throws JMSException
 	{
 		return getSession().createMessage();
 	}
 
+	/**
+	 * Method createObjectMessage ...
+	 *
+	 * @return ObjectMessage
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public ObjectMessage createObjectMessage() throws JMSException
 	{
 		return getSession().createObjectMessage();
 	}
 
+	/**
+	 * Method createObjectMessage ...
+	 *
+	 * @param serializable
+	 * 		of type Serializable
+	 *
+	 * @return ObjectMessage
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public ObjectMessage createObjectMessage(Serializable serializable) throws JMSException
 	{
 		return getSession().createObjectMessage(serializable);
 	}
 
+	/**
+	 * Method createStreamMessage ...
+	 *
+	 * @return StreamMessage
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public StreamMessage createStreamMessage() throws JMSException
 	{
 		return getSession().createStreamMessage();
 	}
 
+	/**
+	 * Method createTextMessage ...
+	 *
+	 * @return TextMessage
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public TextMessage createTextMessage() throws JMSException
 	{
 		return getSession().createTextMessage();
 	}
 
+	/**
+	 * Method createTextMessage ...
+	 *
+	 * @param text
+	 * 		of type String
+	 *
+	 * @return TextMessage
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public TextMessage createTextMessage(String text) throws JMSException
 	{
@@ -312,6 +470,14 @@ public class DualSessionWrapper
 
 	/* XAResourceHolder implementation */
 
+	/**
+	 * Method getTransacted returns the transacted of this DualSessionWrapper object.
+	 *
+	 * @return the transacted (type boolean) of this DualSessionWrapper object.
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public boolean getTransacted() throws JMSException
 	{
@@ -323,6 +489,14 @@ public class DualSessionWrapper
 		return getSession().getTransacted();
 	}
 
+	/**
+	 * Method getAcknowledgeMode returns the acknowledgeMode of this DualSessionWrapper object.
+	 *
+	 * @return the acknowledgeMode (type int) of this DualSessionWrapper object.
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public int getAcknowledgeMode() throws JMSException
 	{
@@ -336,6 +510,12 @@ public class DualSessionWrapper
 
 	/* XAStatefulHolder implementation */
 
+	/**
+	 * Method commit ...
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public void commit() throws JMSException
 	{
@@ -347,6 +527,12 @@ public class DualSessionWrapper
 		getSession().commit();
 	}
 
+	/**
+	 * Method rollback ...
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public void rollback() throws JMSException
 	{
@@ -358,6 +544,12 @@ public class DualSessionWrapper
 		getSession().rollback();
 	}
 
+	/**
+	 * Method recover ...
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public void recover() throws JMSException
 	{
@@ -371,12 +563,29 @@ public class DualSessionWrapper
 
 	/* XA-enhanced methods */
 
+	/**
+	 * Method getMessageListener returns the messageListener of this DualSessionWrapper object.
+	 *
+	 * @return the messageListener (type MessageListener) of this DualSessionWrapper object.
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public MessageListener getMessageListener() throws JMSException
 	{
 		return listener;
 	}
 
+	/**
+	 * Method setMessageListener sets the messageListener of this DualSessionWrapper object.
+	 *
+	 * @param listener
+	 * 		the messageListener of this DualSessionWrapper object.
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public void setMessageListener(MessageListener listener) throws JMSException
 	{
@@ -397,6 +606,9 @@ public class DualSessionWrapper
 		this.listener = listener;
 	}
 
+	/**
+	 * Method run ...
+	 */
 	@Override
 	public void run()
 	{
@@ -415,6 +627,17 @@ public class DualSessionWrapper
 		}
 	}
 
+	/**
+	 * Method createProducer ...
+	 *
+	 * @param destination
+	 * 		of type Destination
+	 *
+	 * @return MessageProducer
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public MessageProducer createProducer(Destination destination) throws JMSException
 	{
@@ -449,6 +672,17 @@ public class DualSessionWrapper
 		return messageProducer;
 	}
 
+	/**
+	 * Method createConsumer ...
+	 *
+	 * @param destination
+	 * 		of type Destination
+	 *
+	 * @return MessageConsumer
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public MessageConsumer createConsumer(Destination destination) throws JMSException
 	{
@@ -483,6 +717,19 @@ public class DualSessionWrapper
 		return messageConsumer;
 	}
 
+	/**
+	 * Method createConsumer ...
+	 *
+	 * @param destination
+	 * 		of type Destination
+	 * @param messageSelector
+	 * 		of type String
+	 *
+	 * @return MessageConsumer
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public MessageConsumer createConsumer(Destination destination, String messageSelector) throws JMSException
 	{
@@ -517,6 +764,21 @@ public class DualSessionWrapper
 		return messageConsumer;
 	}
 
+	/**
+	 * Method createConsumer ...
+	 *
+	 * @param destination
+	 * 		of type Destination
+	 * @param messageSelector
+	 * 		of type String
+	 * @param noLocal
+	 * 		of type boolean
+	 *
+	 * @return MessageConsumer
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public MessageConsumer createConsumer(Destination destination, String messageSelector, boolean noLocal) throws JMSException
 	{
@@ -553,18 +815,53 @@ public class DualSessionWrapper
 
 	/* dumb wrapping of Session methods */
 
+	/**
+	 * Method createQueue ...
+	 *
+	 * @param queueName
+	 * 		of type String
+	 *
+	 * @return Queue
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public javax.jms.Queue createQueue(String queueName) throws JMSException
 	{
 		return getSession().createQueue(queueName);
 	}
 
+	/**
+	 * Method createTopic ...
+	 *
+	 * @param topicName
+	 * 		of type String
+	 *
+	 * @return Topic
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public Topic createTopic(String topicName) throws JMSException
 	{
 		return getSession().createTopic(topicName);
 	}
 
+	/**
+	 * Method createDurableSubscriber ...
+	 *
+	 * @param topic
+	 * 		of type Topic
+	 * @param name
+	 * 		of type String
+	 *
+	 * @return TopicSubscriber
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public TopicSubscriber createDurableSubscriber(Topic topic, String name) throws JMSException
 	{
@@ -599,6 +896,23 @@ public class DualSessionWrapper
 		return topicSubscriber;
 	}
 
+	/**
+	 * Method createDurableSubscriber ...
+	 *
+	 * @param topic
+	 * 		of type Topic
+	 * @param name
+	 * 		of type String
+	 * @param messageSelector
+	 * 		of type String
+	 * @param noLocal
+	 * 		of type boolean
+	 *
+	 * @return TopicSubscriber
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public TopicSubscriber createDurableSubscriber(Topic topic, String name, String messageSelector, boolean noLocal) throws JMSException
 	{
@@ -634,6 +948,17 @@ public class DualSessionWrapper
 		return topicSubscriber;
 	}
 
+	/**
+	 * Method createBrowser ...
+	 *
+	 * @param queue
+	 * 		of type Queue
+	 *
+	 * @return QueueBrowser
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public QueueBrowser createBrowser(javax.jms.Queue queue) throws JMSException
 	{
@@ -641,6 +966,19 @@ public class DualSessionWrapper
 		return getSession().createBrowser(queue);
 	}
 
+	/**
+	 * Method createBrowser ...
+	 *
+	 * @param queue
+	 * 		of type Queue
+	 * @param messageSelector
+	 * 		of type String
+	 *
+	 * @return QueueBrowser
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public QueueBrowser createBrowser(javax.jms.Queue queue, String messageSelector) throws JMSException
 	{
@@ -648,29 +986,73 @@ public class DualSessionWrapper
 		return getSession().createBrowser(queue, messageSelector);
 	}
 
+	/**
+	 * Method createTemporaryQueue ...
+	 *
+	 * @return TemporaryQueue
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public TemporaryQueue createTemporaryQueue() throws JMSException
 	{
 		return getSession().createTemporaryQueue();
 	}
 
+	/**
+	 * Method createTemporaryTopic ...
+	 *
+	 * @return TemporaryTopic
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public TemporaryTopic createTemporaryTopic() throws JMSException
 	{
 		return getSession().createTemporaryTopic();
 	}
 
+	/**
+	 * Method unsubscribe ...
+	 *
+	 * @param name
+	 * 		of type String
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public void unsubscribe(String name) throws JMSException
 	{
 		getSession().unsubscribe(name);
 	}
 
+	/**
+	 * Method getSession returns the session of this DualSessionWrapper object.
+	 *
+	 * @return the session (type Session) of this DualSessionWrapper object.
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	public Session getSession() throws JMSException
 	{
 		return getSession(false);
 	}
 
+	/**
+	 * Method getSession ...
+	 *
+	 * @param forceXa
+	 * 		of type boolean
+	 *
+	 * @return Session
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	public Session getSession(boolean forceXa) throws JMSException
 	{
 		if (getState() == State.CLOSED)
@@ -705,6 +1087,14 @@ public class DualSessionWrapper
 		}
 	}
 
+	/**
+	 * Method createXASession ...
+	 *
+	 * @return Session
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	private Session createXASession() throws JMSException
 	{
 		// XA
@@ -725,6 +1115,14 @@ public class DualSessionWrapper
 		return xaSession.getSession();
 	}
 
+	/**
+	 * Method createNonXASession ...
+	 *
+	 * @return Session
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	private Session createNonXASession() throws JMSException
 	{
 		// non-XA

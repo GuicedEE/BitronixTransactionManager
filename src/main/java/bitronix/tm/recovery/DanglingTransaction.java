@@ -22,42 +22,84 @@ import javax.transaction.xa.Xid;
  *
  * @author Ludovic Orban
  */
-public final class DanglingTransaction {
+public final class DanglingTransaction
+{
 
-    private final String uniqueName;
-    private final Xid xid;
+	private final String uniqueName;
+	private final Xid xid;
 
-    public DanglingTransaction(String uniqueName, Xid xid) {
-        if (uniqueName == null)
-            throw new NullPointerException("uniqueName cannot be null");
-        if (xid == null)
-            throw new NullPointerException("xid cannot be null");
-        this.uniqueName = uniqueName;
-        this.xid = xid;
-    }
+	/**
+	 * Constructor DanglingTransaction creates a new DanglingTransaction instance.
+	 *
+	 * @param uniqueName
+	 * 		of type String
+	 * @param xid
+	 * 		of type Xid
+	 */
+	public DanglingTransaction(String uniqueName, Xid xid)
+	{
+		if (uniqueName == null)
+		{
+			throw new NullPointerException("uniqueName cannot be null");
+		}
+		if (xid == null)
+		{
+			throw new NullPointerException("xid cannot be null");
+		}
+		this.uniqueName = uniqueName;
+		this.xid = xid;
+	}
 
-    public String getUniqueName() {
-        return uniqueName;
-    }
+	/**
+	 * Method getUniqueName returns the uniqueName of this DanglingTransaction object.
+	 *
+	 * @return the uniqueName (type String) of this DanglingTransaction object.
+	 */
+	public String getUniqueName()
+	{
+		return uniqueName;
+	}
 
-    public Xid getXid() {
-        return xid;
-    }
+	/**
+	 * Method getXid returns the xid of this DanglingTransaction object.
+	 *
+	 * @return the xid (type Xid) of this DanglingTransaction object.
+	 */
+	public Xid getXid()
+	{
+		return xid;
+	}
 
-    @Override
-    public int hashCode() {
-        return uniqueName.hashCode() + xid.hashCode();
-    }
+	/**
+	 * Method hashCode ...
+	 *
+	 * @return int
+	 */
+	@Override
+	public int hashCode()
+	{
+		return uniqueName.hashCode() + xid.hashCode();
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof DanglingTransaction) {
-            DanglingTransaction otherDanglingTransaction = (DanglingTransaction) obj;
+	/**
+	 * Method equals ...
+	 *
+	 * @param obj
+	 * 		of type Object
+	 *
+	 * @return boolean
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof DanglingTransaction)
+		{
+			DanglingTransaction otherDanglingTransaction = (DanglingTransaction) obj;
 
-            return uniqueName.equals(otherDanglingTransaction.uniqueName) &&
-                    xid.equals(otherDanglingTransaction.xid);
-        }
-        return false;
-    }
+			return uniqueName.equals(otherDanglingTransaction.uniqueName) &&
+			       xid.equals(otherDanglingTransaction.xid);
+		}
+		return false;
+	}
 
 }

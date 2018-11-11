@@ -44,7 +44,7 @@ public class Configuration
 		implements Service
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(Configuration.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(Configuration.class.toString());
 
 	private static final int MAX_SERVER_ID_LENGTH = 51;
 	private static final Charset SERVER_ID_CHARSET = Charset.forName("US-ASCII");
@@ -75,6 +75,9 @@ public class Configuration
 	private volatile boolean conservativeJournaling;
 	private volatile String jdbcProxyFactoryClass;
 
+	/**
+	 * Constructor Configuration creates a new Configuration instance.
+	 */
 	protected Configuration()
 	{
 		try
@@ -151,6 +154,18 @@ public class Configuration
 		}
 	}
 
+	/**
+	 * Method getString ...
+	 *
+	 * @param properties
+	 * 		of type Properties
+	 * @param key
+	 * 		of type String
+	 * @param defaultValue
+	 * 		of type String
+	 *
+	 * @return String
+	 */
 	static String getString(Properties properties, String key, String defaultValue)
 	{
 		String value = System.getProperty(key);
@@ -165,16 +180,50 @@ public class Configuration
 		return evaluate(properties, value);
 	}
 
+	/**
+	 * Method getBoolean ...
+	 *
+	 * @param properties
+	 * 		of type Properties
+	 * @param key
+	 * 		of type String
+	 * @param defaultValue
+	 * 		of type boolean
+	 *
+	 * @return boolean
+	 */
 	static boolean getBoolean(Properties properties, String key, boolean defaultValue)
 	{
 		return Boolean.valueOf(getString(properties, key, "" + defaultValue));
 	}
 
+	/**
+	 * Method getInt ...
+	 *
+	 * @param properties
+	 * 		of type Properties
+	 * @param key
+	 * 		of type String
+	 * @param defaultValue
+	 * 		of type int
+	 *
+	 * @return int
+	 */
 	static int getInt(Properties properties, String key, int defaultValue)
 	{
 		return Integer.parseInt(getString(properties, key, "" + defaultValue));
 	}
 
+	/**
+	 * Method evaluate ...
+	 *
+	 * @param properties
+	 * 		of type Properties
+	 * @param value
+	 * 		of type String
+	 *
+	 * @return String
+	 */
 	private static String evaluate(Properties properties, String value)
 	{
 		String result = value;
@@ -232,6 +281,9 @@ public class Configuration
 		return this;
 	}
 
+	/**
+	 * Method checkNotStarted ...
+	 */
 	private void checkNotStarted()
 	{
 		if (TransactionManagerServices.isTransactionManagerRunning())
@@ -1041,12 +1093,20 @@ public class Configuration
 		return id;
 	}
 
+	/**
+	 * Shutdown the service and free all held resources.
+	 */
 	@Override
 	public void shutdown()
 	{
 		serverIdArray.set(null);
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

@@ -24,25 +24,63 @@ import javax.jms.TopicSubscriber;
  *
  * @author Ludovic Orban
  */
-public class TopicSubscriberWrapper extends MessageConsumerWrapper implements TopicSubscriber {
+public class TopicSubscriberWrapper
+		extends MessageConsumerWrapper
+		implements TopicSubscriber
+{
 
-    public TopicSubscriberWrapper(TopicSubscriber topicSubscriber, DualSessionWrapper session, PoolingConnectionFactory poolingConnectionFactory) {
-        super(topicSubscriber, session, poolingConnectionFactory);
-    }
+	/**
+	 * Constructor TopicSubscriberWrapper creates a new TopicSubscriberWrapper instance.
+	 *
+	 * @param topicSubscriber
+	 * 		of type TopicSubscriber
+	 * @param session
+	 * 		of type DualSessionWrapper
+	 * @param poolingConnectionFactory
+	 * 		of type PoolingConnectionFactory
+	 */
+	public TopicSubscriberWrapper(TopicSubscriber topicSubscriber, DualSessionWrapper session, PoolingConnectionFactory poolingConnectionFactory)
+	{
+		super(topicSubscriber, session, poolingConnectionFactory);
+	}
 
-    @Override
-    public Topic getTopic() throws JMSException {
-        return ((TopicSubscriber) getMessageConsumer()).getTopic();
-    }
+	/**
+	 * Method getTopic returns the topic of this TopicSubscriberWrapper object.
+	 *
+	 * @return the topic (type Topic) of this TopicSubscriberWrapper object.
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
+	@Override
+	public Topic getTopic() throws JMSException
+	{
+		return ((TopicSubscriber) getMessageConsumer()).getTopic();
+	}
 
-    @Override
-    public boolean getNoLocal() throws JMSException {
-        return ((TopicSubscriber) getMessageConsumer()).getNoLocal();
-    }
+	/**
+	 * Method getNoLocal returns the noLocal of this TopicSubscriberWrapper object.
+	 *
+	 * @return the noLocal (type boolean) of this TopicSubscriberWrapper object.
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
+	@Override
+	public boolean getNoLocal() throws JMSException
+	{
+		return ((TopicSubscriber) getMessageConsumer()).getNoLocal();
+	}
 
-    @Override
-    public String toString() {
-        return "a TopicSubscriberWrapper of " + session;
-    }
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
+	@Override
+	public String toString()
+	{
+		return "a TopicSubscriberWrapper of " + session;
+	}
 
 }

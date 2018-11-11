@@ -35,12 +35,25 @@ public abstract class AbstractXAStatefulHolder<T extends XAStatefulHolder<T>>
 	private final Date creationDate = new Date();
 	private volatile State state = State.IN_POOL;
 
+	/**
+	 * Get the current resource state.
+	 * <p>This method is thread-safe.</p>
+	 *
+	 * @return the current resource state.
+	 */
 	@Override
 	public State getState()
 	{
 		return state;
 	}
 
+	/**
+	 * Set the current resource state.
+	 * <p>This method is thread-safe.</p>
+	 *
+	 * @param state
+	 * 		the current resource state.
+	 */
 	@Override
 	public void setState(State state)
 	{
@@ -64,24 +77,49 @@ public abstract class AbstractXAStatefulHolder<T extends XAStatefulHolder<T>>
 		fireStateChanged(oldState, state);
 	}
 
+	/**
+	 * Method addStateChangeEventListener ...
+	 *
+	 * @param listener
+	 * 		of type StateChangeListener<T>
+	 */
 	@Override
 	public void addStateChangeEventListener(StateChangeListener<T> listener)
 	{
 		stateChangeEventListeners.add(listener);
 	}
 
+	/**
+	 * Method removeStateChangeEventListener ...
+	 *
+	 * @param listener
+	 * 		of type StateChangeListener<T>
+	 */
 	@Override
 	public void removeStateChangeEventListener(StateChangeListener<T> listener)
 	{
 		stateChangeEventListeners.remove(listener);
 	}
 
+	/**
+	 * Get the date at which this object was created in the pool.
+	 *
+	 * @return the date at which this object was created in the pool.
+	 */
 	@Override
 	public Date getCreationDate()
 	{
 		return creationDate;
 	}
 
+	/**
+	 * Method fireStateChanging ...
+	 *
+	 * @param currentState
+	 * 		of type State
+	 * @param futureState
+	 * 		of type State
+	 */
 	@SuppressWarnings("unchecked")
 	private void fireStateChanging(State currentState, State futureState)
 	{
@@ -98,6 +136,14 @@ public abstract class AbstractXAStatefulHolder<T extends XAStatefulHolder<T>>
 		}
 	}
 
+	/**
+	 * Method fireStateChanged ...
+	 *
+	 * @param oldState
+	 * 		of type State
+	 * @param newState
+	 * 		of type State
+	 */
 	@SuppressWarnings("unchecked")
 	private void fireStateChanged(State oldState, State newState)
 	{

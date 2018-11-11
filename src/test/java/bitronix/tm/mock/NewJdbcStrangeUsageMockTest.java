@@ -38,6 +38,12 @@ public class NewJdbcStrangeUsageMockTest
 	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(NewJdbcStrangeUsageMockTest.class.toString());
 
 
+	/**
+	 * Method testDeferredReuse ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testDeferredReuse() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -134,6 +140,12 @@ public class NewJdbcStrangeUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testDeferredCannotReuse ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testDeferredCannotReuse() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -236,6 +248,12 @@ public class NewJdbcStrangeUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testConnectionCloseInDifferentContext ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testConnectionCloseInDifferentContext() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -347,6 +365,12 @@ public class NewJdbcStrangeUsageMockTest
 	}
 
 
+	/**
+	 * Method testClosingSuspendedConnectionsInDifferentContext ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testClosingSuspendedConnectionsInDifferentContext() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())

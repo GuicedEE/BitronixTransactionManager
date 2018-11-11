@@ -79,6 +79,19 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 	private final AtomicBoolean failed = new AtomicBoolean();
 	private final Object poolGrowthShrinkLock = new Object();
 
+	/**
+	 * Constructor XAPool creates a new XAPool instance.
+	 *
+	 * @param xaResourceProducer
+	 * 		of type XAResourceProducer<R, T>
+	 * @param bean
+	 * 		of type ResourceBean
+	 * @param xaFactory
+	 * 		of type Object
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public XAPool(XAResourceProducer<R, T> xaResourceProducer, ResourceBean bean, Object xaFactory) throws Exception
 	{
 		this.xaResourceProducer = xaResourceProducer;
@@ -108,6 +121,12 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		}
 	}
 
+	/**
+	 * Method init ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	private void init() throws Exception
 	{
 		growUntilMinPoolSize();
@@ -119,6 +138,12 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		}
 	}
 
+	/**
+	 * Method growUntilMinPoolSize ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	private void growUntilMinPoolSize() throws Exception
 	{
 		synchronized (poolGrowthShrinkLock)
@@ -144,6 +169,15 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		return poolSize.get();
 	}
 
+	/**
+	 * Method createPooledObject ...
+	 *
+	 * @param xaFactory
+	 * 		of type Object
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	private void createPooledObject(Object xaFactory) throws Exception
 	{
 		T xaStatefulHolder = xaResourceProducer.createPooledConnection(xaFactory, bean);
@@ -343,6 +377,16 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		return getConnectionHandle(true);
 	}
 
+	/**
+	 * Method stateChanged ...
+	 *
+	 * @param source
+	 * 		of type T
+	 * @param oldState
+	 * 		of type State
+	 * @param newState
+	 * 		of type State
+	 */
 	@Override
 	public void stateChanged(T source, State oldState, State newState)
 	{
@@ -386,6 +430,16 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		}
 	}
 
+	/**
+	 * Method stateChanging ...
+	 *
+	 * @param source
+	 * 		of type T
+	 * @param currentState
+	 * 		of type State
+	 * @param futureState
+	 * 		of type State
+	 */
 	@Override
 	public void stateChanging(T source, State currentState, State futureState)
 	{
@@ -587,6 +641,16 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		return null;
 	}
 
+	/**
+	 * Method containsXAResourceHolderMatchingGtrid ...
+	 *
+	 * @param xaStatefulHolder
+	 * 		of type T
+	 * @param currentTxGtrid
+	 * 		of type Uid
+	 *
+	 * @return boolean
+	 */
 	private boolean containsXAResourceHolderMatchingGtrid(T xaStatefulHolder, Uid currentTxGtrid)
 	{
 		List<? extends XAResourceHolder<? extends XAResourceHolder>> xaResourceHolders = xaStatefulHolder.getXAResourceHolders();
@@ -600,6 +664,11 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		{
 			private boolean found;
 
+			/**
+			 * Called when visiting all {@link bitronix.tm.internal.XAResourceHolderState}s.
+			 * @param xaResourceHolderState the currently visited {@link bitronix.tm.internal.XAResourceHolderState}
+			 * @return return <code>true</code> to continue visitation, <code>false</code> to stop visitation
+			 */
 			@Override
 			public boolean visit(XAResourceHolderState xaResourceHolderState)
 			{
@@ -681,6 +750,12 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		}
 	}
 
+	/**
+	 * Method shrink ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void shrink() throws Exception
 	{
 		synchronized (poolGrowthShrinkLock)
@@ -697,6 +772,15 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		}
 	}
 
+	/**
+	 * Method expireOrCloseStatefulHolders ...
+	 *
+	 * @param forceClose
+	 * 		of type boolean
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	private void expireOrCloseStatefulHolders(boolean forceClose) throws Exception
 	{
 		int closed = 0;
@@ -727,6 +811,16 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		growUntilMinPoolSize();
 	}
 
+	/**
+	 * Method expireStatefulHolder ...
+	 *
+	 * @param xaStatefulHolder
+	 * 		of type T
+	 * @param forceClose
+	 * 		of type boolean
+	 *
+	 * @return boolean
+	 */
 	private boolean expireStatefulHolder(T xaStatefulHolder, boolean forceClose)
 	{
 		long expirationTime = Long.MAX_VALUE;
@@ -763,11 +857,22 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		return false;
 	}
 
+	/**
+	 * Method getNextShrinkDate returns the nextShrinkDate of this XAPool object.
+	 *
+	 * @return the nextShrinkDate (type Date) of this XAPool object.
+	 */
 	public Date getNextShrinkDate()
 	{
 		return new Date(MonotonicClock.currentTimeMillis() + TimeUnit.SECONDS.toMillis(bean.getMaxIdleTime()));
 	}
 
+	/**
+	 * Method reset ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void reset() throws Exception
 	{
 		synchronized (poolGrowthShrinkLock)
@@ -788,6 +893,9 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 	 * Miscellaneous public methods
 	 * ------------------------------------------------------------------------*/
 
+	/**
+	 * Method reinitializePool ...
+	 */
 	private void reinitializePool()
 	{
 		try
@@ -820,6 +928,11 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		return xaFactory;
 	}
 
+	/**
+	 * Method getXAResourceHolders returns the XAResourceHolders of this XAPool object.
+	 *
+	 * @return the XAResourceHolders (type List<T>) of this XAPool object.
+	 */
 	public List<T> getXAResourceHolders()
 	{
 		stateTransitionLock.readLock()
@@ -839,6 +952,11 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		}
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{
@@ -939,12 +1057,23 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 	private static final class StatefulHolderThreadLocal<T extends XAStatefulHolder>
 			extends ThreadLocal<T>
 	{
+		/**
+		 * Method get ...
+		 *
+		 * @return T
+		 */
 		@Override
 		public T get()
 		{
 			return super.get();
 		}
 
+		/**
+		 * Method set ...
+		 *
+		 * @param value
+		 * 		of type T
+		 */
 		@Override
 		public void set(T value)
 		{
@@ -957,16 +1086,31 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 	{
 		private final Uid gtrid;
 
+		/**
+		 * Constructor SharedStatefulHolderCleanupSynchronization creates a new SharedStatefulHolderCleanupSynchronization instance.
+		 *
+		 * @param gtrid
+		 * 		of type Uid
+		 */
 		private SharedStatefulHolderCleanupSynchronization(Uid gtrid)
 		{
 			this.gtrid = gtrid;
 		}
 
+		/**
+		 * Method beforeCompletion ...
+		 */
 		@Override
 		public void beforeCompletion()
 		{
 		}
 
+		/**
+		 * Method afterCompletion ...
+		 *
+		 * @param status
+		 * 		of type int
+		 */
 		@Override
 		public void afterCompletion(int status)
 		{
@@ -977,6 +1121,11 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 			}
 		}
 
+		/**
+		 * Method toString ...
+		 *
+		 * @return String
+		 */
 		@Override
 		public String toString()
 		{

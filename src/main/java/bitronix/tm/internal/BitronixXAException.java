@@ -22,21 +22,52 @@ import javax.transaction.xa.XAException;
  *
  * @author Ludovic Orban
  */
-public class BitronixXAException extends XAException {
+public class BitronixXAException
+		extends XAException
+{
 
-    public BitronixXAException(String message, int errorCode) {
-        super(message);
-        this.errorCode = errorCode;
-    }
+	/**
+	 * Constructor BitronixXAException creates a new BitronixXAException instance.
+	 *
+	 * @param message
+	 * 		of type String
+	 * @param errorCode
+	 * 		of type int
+	 */
+	public BitronixXAException(String message, int errorCode)
+	{
+		super(message);
+		this.errorCode = errorCode;
+	}
 
-    public BitronixXAException(String message, int errorCode, Throwable t) {
-        super(message);
-        this.errorCode = errorCode;
-        initCause(t);
-    }
+	/**
+	 * Constructor BitronixXAException creates a new BitronixXAException instance.
+	 *
+	 * @param message
+	 * 		of type String
+	 * @param errorCode
+	 * 		of type int
+	 * @param t
+	 * 		of type Throwable
+	 */
+	public BitronixXAException(String message, int errorCode, Throwable t)
+	{
+		super(message);
+		this.errorCode = errorCode;
+		initCause(t);
+	}
 
-    public static boolean isUnilateralRollback(XAException ex) {
-        return (ex.errorCode >= XAException.XA_RBBASE && ex.errorCode <= XAException.XA_RBEND) || ex.errorCode == XAException.XAER_NOTA;
-    }
-    
+	/**
+	 * Method isUnilateralRollback ...
+	 *
+	 * @param ex
+	 * 		of type XAException
+	 *
+	 * @return boolean
+	 */
+	public static boolean isUnilateralRollback(XAException ex)
+	{
+		return (ex.errorCode >= XAException.XA_RBBASE && ex.errorCode <= XAException.XA_RBEND) || ex.errorCode == XAException.XAER_NOTA;
+	}
+
 }

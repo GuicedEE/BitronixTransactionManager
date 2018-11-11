@@ -9,6 +9,12 @@ public class MonotonicClockTest
 		extends TestCase
 {
 
+	/**
+	 * Method testPrecision ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPrecision() throws Exception
 	{
 		for (int i = 0; i < 100; i++)

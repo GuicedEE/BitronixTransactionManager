@@ -37,6 +37,12 @@ public class NewJdbcSuspendResumeMockTest
 
 	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(NewJdbcSuspendResumeMockTest.class.toString());
 
+	/**
+	 * Method testSimpleAssertions ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSimpleAssertions() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -91,6 +97,12 @@ public class NewJdbcSuspendResumeMockTest
 		}
 	}
 
+	/**
+	 * Method testSimpleWorkingCase ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSimpleWorkingCase() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -170,6 +182,12 @@ public class NewJdbcSuspendResumeMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testNoTmJoin ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testNoTmJoin() throws Exception
 	{
 		poolingDataSource1.setUseTmJoin(false);
@@ -253,6 +271,12 @@ public class NewJdbcSuspendResumeMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testReEnlistmentAfterSuspend ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testReEnlistmentAfterSuspend() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -370,6 +394,12 @@ public class NewJdbcSuspendResumeMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testClosingSuspendedConnections ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testClosingSuspendedConnections() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -474,6 +504,12 @@ public class NewJdbcSuspendResumeMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testInterleavedLocalGlobalTransactions ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testInterleavedLocalGlobalTransactions() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -564,6 +600,12 @@ public class NewJdbcSuspendResumeMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testInterleavedGlobalGlobalTransactionsWithDifferentConnections ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testInterleavedGlobalGlobalTransactionsWithDifferentConnections() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -675,6 +717,12 @@ public class NewJdbcSuspendResumeMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testInterleavedGlobalGlobalTransactionsWithDifferentConnectionsLateSuspend ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testInterleavedGlobalGlobalTransactionsWithDifferentConnectionsLateSuspend() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -789,6 +837,12 @@ public class NewJdbcSuspendResumeMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testJoinAfterSuspend ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testJoinAfterSuspend() throws Exception
 	{
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
@@ -888,6 +942,12 @@ public class NewJdbcSuspendResumeMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testReusePreparedStatementAfterSuspendResume ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testReusePreparedStatementAfterSuspendResume() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -938,6 +998,12 @@ public class NewJdbcSuspendResumeMockTest
 		log.info(EventRecorder.dumpToString());
 	}
 
+	/**
+	 * Method testSuspendResumeSeparateThreads ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSuspendResumeSeparateThreads() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())

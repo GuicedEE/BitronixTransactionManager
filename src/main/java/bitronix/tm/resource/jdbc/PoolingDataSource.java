@@ -72,6 +72,9 @@ public class PoolingDataSource
 	private volatile String localAutoCommit;
 	private volatile String jmxName;
 
+	/**
+	 * Initialize all properties with their default values.
+	 */
 	public PoolingDataSource()
 	{
 		xaResourceHolderMap = new ConcurrentHashMap<>();
@@ -256,11 +259,23 @@ public class PoolingDataSource
 		this.localAutoCommit = localAutoCommit;
 	}
 
+	/**
+	 * Method addConnectionCustomizer ...
+	 *
+	 * @param connectionCustomizer
+	 * 		of type ConnectionCustomizer
+	 */
 	public void addConnectionCustomizer(ConnectionCustomizer connectionCustomizer)
 	{
 		connectionCustomizers.add(connectionCustomizer);
 	}
 
+	/**
+	 * Method removeConnectionCustomizer ...
+	 *
+	 * @param connectionCustomizer
+	 * 		of type ConnectionCustomizer
+	 */
 	public void removeConnectionCustomizer(ConnectionCustomizer connectionCustomizer)
 	{
 		Iterator<ConnectionCustomizer> it = connectionCustomizers.iterator();
@@ -275,6 +290,12 @@ public class PoolingDataSource
 		}
 	}
 
+	/**
+	 * Method fireOnAcquire ...
+	 *
+	 * @param connection
+	 * 		of type Connection
+	 */
 	void fireOnAcquire(Connection connection)
 	{
 		for (ConnectionCustomizer connectionCustomizer : connectionCustomizers)
@@ -290,6 +311,12 @@ public class PoolingDataSource
 		}
 	}
 
+	/**
+	 * Method fireOnLease ...
+	 *
+	 * @param connection
+	 * 		of type Connection
+	 */
 	void fireOnLease(Connection connection)
 	{
 		for (ConnectionCustomizer connectionCustomizer : connectionCustomizers)
@@ -305,6 +332,12 @@ public class PoolingDataSource
 		}
 	}
 
+	/**
+	 * Method fireOnRelease ...
+	 *
+	 * @param connection
+	 * 		of type Connection
+	 */
 	void fireOnRelease(Connection connection)
 	{
 		for (ConnectionCustomizer connectionCustomizer : connectionCustomizers)
@@ -320,6 +353,12 @@ public class PoolingDataSource
 		}
 	}
 
+	/**
+	 * Method fireOnDestroy ...
+	 *
+	 * @param connection
+	 * 		of type Connection
+	 */
 	void fireOnDestroy(Connection connection)
 	{
 		for (ConnectionCustomizer connectionCustomizer : connectionCustomizers)
@@ -335,12 +374,25 @@ public class PoolingDataSource
 		}
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{
 		return "a PoolingDataSource containing " + pool;
 	}
 
+	/**
+	 * Prepare the recoverable {@link javax.transaction.xa.XAResource} producer for recovery.
+	 *
+	 * @return a {@link bitronix.tm.internal.XAResourceHolderState} object that can be used to call <code>recover()</code>.
+	 *
+	 * @throws bitronix.tm.recovery.RecoveryException
+	 * 		thrown when a {@link bitronix.tm.internal.XAResourceHolderState} cannot be acquired.
+	 */
 	/* XAResourceProducer implementation */
 	@Override
 	public XAResourceHolderState startRecovery() throws RecoveryException
@@ -365,6 +417,48 @@ public class PoolingDataSource
 		}
 	}
 
+	/**
+	 * Release internal resources held after call to <code>startRecovery()</code>.
+	 *
+	 * @throws bitronix.tm.recovery.RecoveryException
+	 * 		thrown when an error occurred while releasing reserved resources.
+	 */
+	@Override
+	public void endRecovery() throws RecoveryException
+	{
+		if (recoveryConnectionHandle == null)
+		{
+			return;
+		}
+
+		try
+		{
+			if (LogDebugCheck.isDebugEnabled())
+			{
+				log.finer("recovery xa resource is being closed: " + recoveryXAResourceHolder);
+			}
+			recoveryConnectionHandle.close();
+		}
+		catch (Exception ex)
+		{
+			throw new RecoveryException("error ending recovery on " + this, ex);
+		}
+		finally
+		{
+			recoveryConnectionHandle = null;
+
+			// the recoveryXAResourceHolder actually wraps the recoveryConnectionHandle so closing it
+			// would close the recoveryConnectionHandle twice which must not happen
+			recoveryXAResourceHolder = null;
+		}
+	}    /* Implementation of DataSource interface */
+
+	/**
+	 * Method buildXAPool ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	private void buildXAPool() throws Exception
 	{
 		if (pool != null)
@@ -398,36 +492,17 @@ public class PoolingDataSource
 		}
 	}
 
-	@Override
-	public void endRecovery() throws RecoveryException
-	{
-		if (recoveryConnectionHandle == null)
-		{
-			return;
-		}
-
-		try
-		{
-			if (LogDebugCheck.isDebugEnabled())
-			{
-				log.finer("recovery xa resource is being closed: " + recoveryXAResourceHolder);
-			}
-			recoveryConnectionHandle.close();
-		}
-		catch (Exception ex)
-		{
-			throw new RecoveryException("error ending recovery on " + this, ex);
-		}
-		finally
-		{
-			recoveryConnectionHandle = null;
-
-			// the recoveryXAResourceHolder actually wraps the recoveryConnectionHandle so closing it
-			// would close the recoveryConnectionHandle twice which must not happen
-			recoveryXAResourceHolder = null;
-		}
-	}    /* Implementation of DataSource interface */
-
+	/**
+	 * Method unwrap ...
+	 *
+	 * @param iface
+	 * 		of type Class<T>
+	 *
+	 * @return T
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException
@@ -439,30 +514,62 @@ public class PoolingDataSource
 		throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
 	}
 
+	/**
+	 * Method isWrapperFor ...
+	 *
+	 * @param iface
+	 * 		of type Class<?>
+	 *
+	 * @return boolean
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException
 	{
 		return iface.isAssignableFrom(xaDataSource.getClass());
 	}
 
+	/**
+	 * Method getInPoolSize returns the inPoolSize of this PoolingDataSource object.
+	 *
+	 * @return the inPoolSize (type int) of this PoolingDataSource object.
+	 */
 	@Override
 	public int getInPoolSize()
 	{
 		return pool.inPoolSize();
 	}
 
+	/**
+	 * Method getTotalPoolSize returns the totalPoolSize of this PoolingDataSource object.
+	 *
+	 * @return the totalPoolSize (type int) of this PoolingDataSource object.
+	 */
 	@Override
 	public int getTotalPoolSize()
 	{
 		return pool.totalPoolSize();
 	}
 
+	/**
+	 * Method isFailed returns the failed of this PoolingDataSource object.
+	 *
+	 * @return the failed (type boolean) of this PoolingDataSource object.
+	 */
 	@Override
 	public boolean isFailed()
 	{
 		return (pool != null ? pool.isFailed() : false);
 	}
 
+	/**
+	 * Mark this resource producer as failed or not. A resource is considered failed if recovery fails to run on it.
+	 *
+	 * @param failed
+	 * 		true is the resource must be considered failed, false it it must be considered sane.
+	 */
 	@Override
 	public void setFailed(boolean failed)
 	{
@@ -472,6 +579,16 @@ public class PoolingDataSource
 		}
 	}
 
+	/**
+	 * Find in the {@link bitronix.tm.resource.common.XAResourceHolder}s created by this {@link bitronix.tm.resource.common.XAResourceProducer} the one which this
+	 * {@link javax.transaction.xa.XAResource} belongs to.
+	 *
+	 * @param xaResource
+	 * 		the {@link javax.transaction.xa.XAResource} to look for.
+	 *
+	 * @return the associated {@link bitronix.tm.resource.common.XAResourceHolder} or null if the {@link javax.transaction.xa.XAResource} does not belong to this
+	 * 		{@link bitronix.tm.resource.common.XAResourceProducer}.
+	 */
 	@Override
 	public JdbcPooledConnection findXAResourceHolder(XAResource xaResource)
 	{
@@ -501,6 +618,9 @@ public class PoolingDataSource
 		}
 	}
 
+	/**
+	 * Release this {@link bitronix.tm.resource.common.XAResourceProducer}'s internal resources.
+	 */
 	@Override
 	public void close()
 	{
@@ -530,6 +650,19 @@ public class PoolingDataSource
 		ResourceRegistrar.unregister(this);
 	}
 
+	/**
+	 * Create a {@link bitronix.tm.resource.common.XAStatefulHolder} that will be placed in an {@link bitronix.tm.resource.common.XAPool}.
+	 *
+	 * @param xaFactory
+	 * 		the vendor's resource-specific XA factory.
+	 * @param bean
+	 * 		the resource-specific bean describing the resource parameters.
+	 *
+	 * @return a {@link bitronix.tm.resource.common.XAStatefulHolder} that will be placed in an {@link bitronix.tm.resource.common.XAPool}.
+	 *
+	 * @throws Exception
+	 * 		thrown when the {@link bitronix.tm.resource.common.XAStatefulHolder} cannot be created.
+	 */
 	@Override
 	public JdbcPooledConnection createPooledConnection(Object xaFactory, ResourceBean bean) throws Exception
 	{
@@ -544,6 +677,12 @@ public class PoolingDataSource
 		return pooledConnection;
 	}
 
+	/**
+	 * Method reset ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Override
 	public void reset() throws Exception
 	{
@@ -570,18 +709,40 @@ public class PoolingDataSource
 				null);
 	}
 
+	/**
+	 * Method unregister ...
+	 *
+	 * @param xaResourceHolder
+	 * 		of type JdbcPooledConnection
+	 */
 	public void unregister(JdbcPooledConnection xaResourceHolder)
 	{
 		xaResourceHolderMap.remove(xaResourceHolder.getXAResource());
 
 	}
 
+	/**
+	 * Method getParentLogger returns the parentLogger of this PoolingDataSource object.
+	 *
+	 * @return the parentLogger (type Logger) of this PoolingDataSource object.
+	 *
+	 * @throws SQLFeatureNotSupportedException
+	 * 		when
+	 */
 	@Override
 	public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException
 	{
 		throw new SQLFeatureNotSupportedException();
 	}
 
+	/**
+	 * Method getConnection returns the connection of this PoolingDataSource object.
+	 *
+	 * @return the connection (type Connection) of this PoolingDataSource object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@Override
 	public Connection getConnection() throws SQLException
 	{
@@ -620,6 +781,19 @@ public class PoolingDataSource
 	}
 
 
+	/**
+	 * Method getConnection ...
+	 *
+	 * @param username
+	 * 		of type String
+	 * @param password
+	 * 		of type String
+	 *
+	 * @return Connection
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@Override
 	public Connection getConnection(String username, String password) throws SQLException
 	{
@@ -651,6 +825,14 @@ public class PoolingDataSource
 	/* DataSource implementation */
 
 
+	/**
+	 * Method getLoginTimeout returns the loginTimeout of this PoolingDataSource object.
+	 *
+	 * @return the loginTimeout (type int) of this PoolingDataSource object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@Override
 	public int getLoginTimeout() throws SQLException
 	{
@@ -658,6 +840,15 @@ public class PoolingDataSource
 	}
 
 
+	/**
+	 * Method setLoginTimeout sets the loginTimeout of this PoolingDataSource object.
+	 *
+	 * @param seconds
+	 * 		the loginTimeout of this PoolingDataSource object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@Override
 	public void setLoginTimeout(int seconds) throws SQLException
 	{
@@ -665,6 +856,14 @@ public class PoolingDataSource
 	}
 
 
+	/**
+	 * Method getLogWriter returns the logWriter of this PoolingDataSource object.
+	 *
+	 * @return the logWriter (type PrintWriter) of this PoolingDataSource object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@Override
 	public PrintWriter getLogWriter() throws SQLException
 	{
@@ -672,6 +871,15 @@ public class PoolingDataSource
 	}
 
 
+	/**
+	 * Method setLogWriter sets the logWriter of this PoolingDataSource object.
+	 *
+	 * @param out
+	 * 		the logWriter of this PoolingDataSource object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@Override
 	public void setLogWriter(PrintWriter out) throws SQLException
 	{

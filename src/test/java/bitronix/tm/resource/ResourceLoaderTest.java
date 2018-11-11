@@ -34,6 +34,12 @@ public class ResourceLoaderTest
 		extends TestCase
 {
 
+	/**
+	 * Method testBindOneJdbc ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testBindOneJdbc() throws Exception
 	{
 		ResourceLoader loader = new ResourceLoader();
@@ -78,6 +84,12 @@ public class ResourceLoaderTest
 	}
 
 
+	/**
+	 * Method testDecryptPassword ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testDecryptPassword() throws Exception
 	{
 		ResourceLoader loader = new ResourceLoader();
@@ -112,6 +124,19 @@ public class ResourceLoaderTest
 		assertEquals("java", decryptedPassword);
 	}
 
+	/**
+	 * Method getXADataSource ...
+	 *
+	 * @param poolingDataSource
+	 * 		of type PoolingDataSource
+	 *
+	 * @return XADataSource
+	 *
+	 * @throws NoSuchFieldException
+	 * 		when
+	 * @throws IllegalAccessException
+	 * 		when
+	 */
 	protected XADataSource getXADataSource(PoolingDataSource poolingDataSource) throws NoSuchFieldException, IllegalAccessException
 	{
 		Field field = PoolingDataSource.class.getDeclaredField("xaDataSource");
@@ -119,6 +144,9 @@ public class ResourceLoaderTest
 		return (XADataSource) field.get(poolingDataSource);
 	}
 
+	/**
+	 * Method testBindOneJms ...
+	 */
 	public void testBindOneJms()
 	{
 		ResourceLoader loader = new ResourceLoader();
@@ -150,6 +178,9 @@ public class ResourceLoaderTest
 
 	}
 
+	/**
+	 * Method testBind2WithSomeDefaults ...
+	 */
 	public void testBind2WithSomeDefaults()
 	{
 		ResourceLoader loader = new ResourceLoader();
@@ -191,6 +222,9 @@ public class ResourceLoaderTest
 		                   .size());
 	}
 
+	/**
+	 * Method testConfigErrors ...
+	 */
 	public void testConfigErrors()
 	{
 		ResourceLoader loader = new ResourceLoader();
@@ -246,6 +280,9 @@ public class ResourceLoaderTest
 		loader.initXAResourceProducers(p);
 	}
 
+	/**
+	 * Method testFormatErrors ...
+	 */
 	public void testFormatErrors()
 	{
 		ResourceLoader loader = new ResourceLoader();

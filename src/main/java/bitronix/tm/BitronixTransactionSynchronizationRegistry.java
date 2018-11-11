@@ -48,11 +48,19 @@ public class BitronixTransactionSynchronizationRegistry
 	private final BitronixTransactionManager transactionManager;
 
 
+	/**
+	 * Constructor BitronixTransactionSynchronizationRegistry creates a new BitronixTransactionSynchronizationRegistry instance.
+	 */
 	public BitronixTransactionSynchronizationRegistry()
 	{
 		transactionManager = TransactionManagerServices.getTransactionManager();
 	}
 
+	/**
+	 * Method getTransactionKey returns the transactionKey of this BitronixTransactionSynchronizationRegistry object.
+	 *
+	 * @return the transactionKey (type Object) of this BitronixTransactionSynchronizationRegistry object.
+	 */
 	@Override
 	public Object getTransactionKey()
 	{
@@ -71,6 +79,14 @@ public class BitronixTransactionSynchronizationRegistry
 		}
 	}
 
+	/**
+	 * Method putResource ...
+	 *
+	 * @param key
+	 * 		of type Object
+	 * @param value
+	 * 		of type Object
+	 */
 	@Override
 	public void putResource(Object key, Object value)
 	{
@@ -104,6 +120,14 @@ public class BitronixTransactionSynchronizationRegistry
 		}
 	}
 
+	/**
+	 * Method getResource ...
+	 *
+	 * @param key
+	 * 		of type Object
+	 *
+	 * @return Object
+	 */
 	@Override
 	public Object getResource(Object key)
 	{
@@ -126,6 +150,12 @@ public class BitronixTransactionSynchronizationRegistry
 		}
 	}
 
+	/**
+	 * Method registerInterposedSynchronization ...
+	 *
+	 * @param synchronization
+	 * 		of type Synchronization
+	 */
 	@Override
 	public void registerInterposedSynchronization(Synchronization synchronization)
 	{
@@ -155,6 +185,11 @@ public class BitronixTransactionSynchronizationRegistry
 		}
 	}
 
+	/**
+	 * Method getTransactionStatus returns the transactionStatus of this BitronixTransactionSynchronizationRegistry object.
+	 *
+	 * @return the transactionStatus (type int) of this BitronixTransactionSynchronizationRegistry object.
+	 */
 	@Override
 	public int getTransactionStatus()
 	{
@@ -173,6 +208,9 @@ public class BitronixTransactionSynchronizationRegistry
 		}
 	}
 
+	/**
+	 * Method setRollbackOnly ...
+	 */
 	@Override
 	public void setRollbackOnly()
 	{
@@ -191,6 +229,11 @@ public class BitronixTransactionSynchronizationRegistry
 		}
 	}
 
+	/**
+	 * Method getRollbackOnly returns the rollbackOnly of this BitronixTransactionSynchronizationRegistry object.
+	 *
+	 * @return the rollbackOnly (type boolean) of this BitronixTransactionSynchronizationRegistry object.
+	 */
 	@Override
 	public boolean getRollbackOnly()
 	{
@@ -205,20 +248,38 @@ public class BitronixTransactionSynchronizationRegistry
 		}
 		catch (SystemException e)
 		{
-			throw new BitronixRuntimeException(CANT_GET_TRANSACTION);
+			throw new BitronixRuntimeException(CANT_GET_TRANSACTION, e);
 		}
 	}
 
+	/**
+	 * Method getResources returns the resources of this BitronixTransactionSynchronizationRegistry object.
+	 *
+	 * @return the resources (type Map<Object, Object>) of this BitronixTransactionSynchronizationRegistry object.
+	 */
 	private Map<Object, Object> getResources()
 	{
 		return resourcesTl.get();
 	}
 
+	/**
+	 * Method currentTransaction ...
+	 *
+	 * @return BitronixTransaction
+	 */
 	private BitronixTransaction currentTransaction()
 	{
 		return transactionManager.getCurrentTransaction();
 	}
 
+	/**
+	 * Method getReference returns the reference of this BitronixTransactionSynchronizationRegistry object.
+	 *
+	 * @return the reference (type Reference) of this BitronixTransactionSynchronizationRegistry object.
+	 *
+	 * @throws NamingException
+	 * 		when
+	 */
 	@Override
 	public Reference getReference() throws NamingException
 	{
@@ -233,11 +294,21 @@ public class BitronixTransactionSynchronizationRegistry
 	private final class ClearRegistryResourcesSynchronization
 			implements Synchronization
 	{
+		/**
+		 * Method beforeCompletion ...
+		 */
 		@Override
 		public void beforeCompletion()
 		{
+			//Nothing required
 		}
 
+		/**
+		 * Method afterCompletion ...
+		 *
+		 * @param status
+		 * 		of type int
+		 */
 		@Override
 		public void afterCompletion(int status)
 		{

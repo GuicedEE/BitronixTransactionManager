@@ -43,6 +43,7 @@ public class XAResourceHolderState
 {
 
 	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(XAResourceHolderState.class.toString());
+	private static final String WITH_STRING = " with ";
 
 	private final ResourceBean bean;
 	private final XAResourceHolder xaResourceHolder;
@@ -55,6 +56,14 @@ public class XAResourceHolderState
 	private volatile boolean failed;
 	private volatile int hashCode;
 
+	/**
+	 * Constructor XAResourceHolderState creates a new XAResourceHolderState instance.
+	 *
+	 * @param resourceHolder
+	 * 		of type XAResourceHolder
+	 * @param bean
+	 * 		of type ResourceBean
+	 */
 	public XAResourceHolderState(XAResourceHolder resourceHolder, ResourceBean bean)
 	{
 		this.bean = bean;
@@ -68,6 +77,12 @@ public class XAResourceHolderState
 		hashCode = 17 * bean.hashCode();
 	}
 
+	/**
+	 * Constructor XAResourceHolderState creates a new XAResourceHolderState instance.
+	 *
+	 * @param resourceHolderState
+	 * 		of type XAResourceHolderState
+	 */
 	public XAResourceHolderState(XAResourceHolderState resourceHolderState)
 	{
 		this.bean = resourceHolderState.bean;
@@ -81,11 +96,25 @@ public class XAResourceHolderState
 		hashCode = 17 * bean.hashCode();
 	}
 
+	/**
+	 * Method getXid returns the xid of this XAResourceHolderState object.
+	 *
+	 * @return the xid (type BitronixXid) of this XAResourceHolderState object.
+	 */
 	public BitronixXid getXid()
 	{
 		return xid;
 	}
 
+	/**
+	 * Method setXid sets the xid of this XAResourceHolderState object.
+	 *
+	 * @param xid
+	 * 		the xid of this XAResourceHolderState object.
+	 *
+	 * @throws BitronixSystemException
+	 * 		when
+	 */
 	public void setXid(BitronixXid xid) throws BitronixSystemException
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -100,65 +129,130 @@ public class XAResourceHolderState
 		hashCode = 17 * (bean.hashCode() + (xid != null ? xid.hashCode() : 0));
 	}
 
+	/**
+	 * Method getXAResourceHolder returns the XAResourceHolder of this XAResourceHolderState object.
+	 *
+	 * @return the XAResourceHolder (type XAResourceHolder) of this XAResourceHolderState object.
+	 */
 	public XAResourceHolder getXAResourceHolder()
 	{
 		return xaResourceHolder;
 	}
 
+	/**
+	 * Method getTransactionTimeoutDate returns the transactionTimeoutDate of this XAResourceHolderState object.
+	 *
+	 * @return the transactionTimeoutDate (type Date) of this XAResourceHolderState object.
+	 */
 	public Date getTransactionTimeoutDate()
 	{
 		return transactionTimeoutDate;
 	}
 
+	/**
+	 * Method setTransactionTimeoutDate sets the transactionTimeoutDate of this XAResourceHolderState object.
+	 *
+	 * @param transactionTimeoutDate
+	 * 		the transactionTimeoutDate of this XAResourceHolderState object.
+	 */
 	public void setTransactionTimeoutDate(Date transactionTimeoutDate)
 	{
 		this.transactionTimeoutDate = transactionTimeoutDate;
 	}
 
+	/**
+	 * Method getUniqueName returns the uniqueName of this XAResourceHolderState object.
+	 *
+	 * @return the uniqueName (type String) of this XAResourceHolderState object.
+	 */
 	public String getUniqueName()
 	{
 		return bean.getUniqueName();
 	}
 
+	/**
+	 * Method getUseTmJoin returns the useTmJoin of this XAResourceHolderState object.
+	 *
+	 * @return the useTmJoin (type boolean) of this XAResourceHolderState object.
+	 */
 	public boolean getUseTmJoin()
 	{
 		return bean.getUseTmJoin();
 	}
 
+	/**
+	 * Method getTwoPcOrderingPosition returns the twoPcOrderingPosition of this XAResourceHolderState object.
+	 *
+	 * @return the twoPcOrderingPosition (type int) of this XAResourceHolderState object.
+	 */
 	public int getTwoPcOrderingPosition()
 	{
 		return bean.getTwoPcOrderingPosition();
 	}
 
+	/**
+	 * Method getIgnoreRecoveryFailures returns the ignoreRecoveryFailures of this XAResourceHolderState object.
+	 *
+	 * @return the ignoreRecoveryFailures (type boolean) of this XAResourceHolderState object.
+	 */
 	public boolean getIgnoreRecoveryFailures()
 	{
 		return bean.getIgnoreRecoveryFailures();
 	}
 
+	/**
+	 * Method isEnded returns the ended of this XAResourceHolderState object.
+	 *
+	 * @return the ended (type boolean) of this XAResourceHolderState object.
+	 */
 	public boolean isEnded()
 	{
 		return ended;
 	}
 
+	/**
+	 * Method isStarted returns the started of this XAResourceHolderState object.
+	 *
+	 * @return the started (type boolean) of this XAResourceHolderState object.
+	 */
 	public boolean isStarted()
 	{
 		return started;
 	}
 
+	/**
+	 * Method isSuspended returns the suspended of this XAResourceHolderState object.
+	 *
+	 * @return the suspended (type boolean) of this XAResourceHolderState object.
+	 */
 	public boolean isSuspended()
 	{
 		return suspended;
 	}
 
+	/**
+	 * Method isFailed returns the failed of this XAResourceHolderState object.
+	 *
+	 * @return the failed (type boolean) of this XAResourceHolderState object.
+	 */
 	public boolean isFailed()
 	{
 		return failed;
 	}
 
+	/**
+	 * Method end ...
+	 *
+	 * @param flags
+	 * 		of type int
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	public void end(int flags) throws XAException
 	{
-		boolean ended = this.ended;
-		boolean suspended = this.suspended;
+		boolean hasEnded = this.ended;
+		boolean isSuspended = this.suspended;
 
 		if (this.ended && (flags == XAResource.TMSUSPEND))
 		{
@@ -188,17 +282,17 @@ public class XAResourceHolderState
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("suspending " + this + " with " + Decoder.decodeXAResourceFlag(flags));
+				log.finer("suspending " + this + WITH_STRING + Decoder.decodeXAResourceFlag(flags));
 			}
-			suspended = true;
+			isSuspended = true;
 		}
 		else
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("ending " + this + " with " + Decoder.decodeXAResourceFlag(flags));
+				log.finer("ending " + this + WITH_STRING + Decoder.decodeXAResourceFlag(flags));
 			}
-			ended = true;
+			hasEnded = true;
 		}
 
 		try
@@ -206,7 +300,7 @@ public class XAResourceHolderState
 			getXAResource().end(xid, flags);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("ended " + this + " with " + Decoder.decodeXAResourceFlag(flags));
+				log.finer("ended " + this + WITH_STRING + Decoder.decodeXAResourceFlag(flags));
 			}
 		}
 		catch (XAException ex)
@@ -217,21 +311,35 @@ public class XAResourceHolderState
 		}
 		finally
 		{
-			this.suspended = suspended;
-			this.ended = ended;
+			this.suspended = isSuspended;
+			this.ended = hasEnded;
 			this.started = false;
 		}
 	}
 
+	/**
+	 * Method getXAResource returns the XAResource of this XAResourceHolderState object.
+	 *
+	 * @return the XAResource (type XAResource) of this XAResourceHolderState object.
+	 */
 	public XAResource getXAResource()
 	{
 		return xaResourceHolder.getXAResource();
 	}
 
+	/**
+	 * Method start ...
+	 *
+	 * @param flags
+	 * 		of type int
+	 *
+	 * @throws XAException
+	 * 		when
+	 */
 	public void start(int flags) throws XAException
 	{
-		boolean suspended = this.suspended;
-		boolean started = this.started;
+		boolean isSuspended = this.suspended;
+		boolean hasStarted = this.started;
 
 		if (this.ended && (flags == XAResource.TMRESUME))
 		{
@@ -256,9 +364,9 @@ public class XAResourceHolderState
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("resuming " + this + " with " + Decoder.decodeXAResourceFlag(flags));
+				log.finer("resuming " + this + WITH_STRING + Decoder.decodeXAResourceFlag(flags));
 			}
-			suspended = false;
+			isSuspended = false;
 		}
 		else
 		{
@@ -269,9 +377,9 @@ public class XAResourceHolderState
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("starting " + this + " with " + Decoder.decodeXAResourceFlag(flags));
+				log.finer("starting " + this + WITH_STRING + Decoder.decodeXAResourceFlag(flags));
 			}
-			started = true;
+			hasStarted = true;
 		}
 
 		if (!isTimeoutAlreadySet && transactionTimeoutDate != null && bean.getApplyTransactionTimeout())
@@ -287,21 +395,34 @@ public class XAResourceHolderState
 		}
 
 		getXAResource().start(xid, flags);
-		this.suspended = suspended;
-		this.started = started;
+		this.suspended = isSuspended;
+		this.started = hasStarted;
 		this.ended = false;
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("started " + this + " with " + Decoder.decodeXAResourceFlag(flags));
+			log.finer("started " + this + WITH_STRING + Decoder.decodeXAResourceFlag(flags));
 		}
 	}
 
+	/**
+	 * Method hashCode ...
+	 *
+	 * @return int
+	 */
 	@Override
 	public int hashCode()
 	{
 		return hashCode;
 	}
 
+	/**
+	 * Method equals ...
+	 *
+	 * @param obj
+	 * 		of type Object
+	 *
+	 * @return boolean
+	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -314,6 +435,16 @@ public class XAResourceHolderState
 		return equals(other.bean, bean) && equals(other.xid, xid);
 	}
 
+	/**
+	 * Method equals ...
+	 *
+	 * @param obj1
+	 * 		of type Object
+	 * @param obj2
+	 * 		of type Object
+	 *
+	 * @return boolean
+	 */
 	private boolean equals(Object obj1, Object obj2)
 	{
 		if (obj1 == obj2)
@@ -328,6 +459,11 @@ public class XAResourceHolderState
 		return obj1.equals(obj2);
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

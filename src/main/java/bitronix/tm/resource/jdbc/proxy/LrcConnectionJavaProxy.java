@@ -26,81 +26,189 @@ import java.util.Map;
 /**
  * @author Brett Wooldridge
  */
-public class LrcConnectionJavaProxy extends JavaProxyBase<Connection> {
+public class LrcConnectionJavaProxy
+		extends JavaProxyBase<Connection>
+{
 
-    private final static Map<String, Method> selfMethodMap = createMethodMap(LrcConnectionJavaProxy.class);
+	private final static Map<String, Method> selfMethodMap = createMethodMap(LrcConnectionJavaProxy.class);
 
-    private final LrcXAResource xaResource;
+	private final LrcXAResource xaResource;
 
-    public LrcConnectionJavaProxy(LrcXAResource xaResource, Connection connection) {
-        this.delegate = connection;
-        this.xaResource = xaResource;
-    }
+	/**
+	 * Constructor LrcConnectionJavaProxy creates a new LrcConnectionJavaProxy instance.
+	 *
+	 * @param xaResource
+	 * 		of type LrcXAResource
+	 * @param connection
+	 * 		of type Connection
+	 */
+	public LrcConnectionJavaProxy(LrcXAResource xaResource, Connection connection)
+	{
+		this.delegate = connection;
+		this.xaResource = xaResource;
+	}
 
-    @Override
-    public String toString() {
-        return "a JDBC LrcConnectionJavaProxy on " + delegate;
-    }
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
+	@Override
+	public String toString()
+	{
+		return "a JDBC LrcConnectionJavaProxy on " + delegate;
+	}
 
-    /* wrapped Connection methods that have special XA semantics */
+	/* wrapped Connection methods that have special XA semantics */
 
-    public void close() throws SQLException {
-        if (delegate != null) {
-            delegate.close();
-        }
+	/**
+	 * Method close ...
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	public void close() throws SQLException
+	{
+		if (delegate != null)
+		{
+			delegate.close();
+		}
 
-        delegate = null;
-    }
+		delegate = null;
+	}
 
-    public boolean isClosed() throws SQLException {
-        return delegate == null;
-    }
+	/**
+	 * Method isClosed returns the closed of this LrcConnectionJavaProxy object.
+	 *
+	 * @return the closed (type boolean) of this LrcConnectionJavaProxy object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	public boolean isClosed() throws SQLException
+	{
+		return delegate == null;
+	}
 
-    public void setAutoCommit(boolean autoCommit) throws SQLException {
-        if (xaResource.getState() != LrcXAResource.NO_TX && autoCommit)
-            throw new SQLException("XA transaction started, cannot enable autocommit mode");
-        delegate.setAutoCommit(autoCommit);
-    }
+	/**
+	 * Method setAutoCommit sets the autoCommit of this LrcConnectionJavaProxy object.
+	 *
+	 * @param autoCommit
+	 * 		the autoCommit of this LrcConnectionJavaProxy object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	public void setAutoCommit(boolean autoCommit) throws SQLException
+	{
+		if (xaResource.getState() != LrcXAResource.NO_TX && autoCommit)
+		{
+			throw new SQLException("XA transaction started, cannot enable autocommit mode");
+		}
+		delegate.setAutoCommit(autoCommit);
+	}
 
-    public void commit() throws SQLException {
-        if (xaResource.getState() != LrcXAResource.NO_TX)
-            throw new SQLException("XA transaction started, cannot call commit directly on connection");
-        delegate.commit();
-    }
+	/**
+	 * Method commit ...
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	public void commit() throws SQLException
+	{
+		if (xaResource.getState() != LrcXAResource.NO_TX)
+		{
+			throw new SQLException("XA transaction started, cannot call commit directly on connection");
+		}
+		delegate.commit();
+	}
 
-    public void rollback() throws SQLException {
-        if (xaResource.getState() != LrcXAResource.NO_TX)
-            throw new SQLException("XA transaction started, cannot call rollback directly on connection");
-        delegate.rollback();
-    }
+	/**
+	 * Method rollback ...
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	public void rollback() throws SQLException
+	{
+		if (xaResource.getState() != LrcXAResource.NO_TX)
+		{
+			throw new SQLException("XA transaction started, cannot call rollback directly on connection");
+		}
+		delegate.rollback();
+	}
 
-    public void rollback(Savepoint savepoint) throws SQLException {
-        if (xaResource.getState() != LrcXAResource.NO_TX)
-            throw new SQLException("XA transaction started, cannot call rollback directly on connection");
-        delegate.rollback(savepoint);
-    }
+	/**
+	 * Method rollback ...
+	 *
+	 * @param savepoint
+	 * 		of type Savepoint
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	public void rollback(Savepoint savepoint) throws SQLException
+	{
+		if (xaResource.getState() != LrcXAResource.NO_TX)
+		{
+			throw new SQLException("XA transaction started, cannot call rollback directly on connection");
+		}
+		delegate.rollback(savepoint);
+	}
 
-    /* java.sql.Wrapper implementation */
+	/* java.sql.Wrapper implementation */
 
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
-    }
+	/**
+	 * Method unwrap ...
+	 *
+	 * @param iface
+	 * 		of type Class<T>
+	 *
+	 * @return T
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T unwrap(Class<T> iface) throws SQLException
+	{
+		if (iface.isAssignableFrom(delegate.getClass()))
+		{
+			return (T) delegate;
+		}
+		if (isWrapperFor(iface))
+		{
+			return unwrap(delegate, iface);
+		}
+		throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
+	}
 
-    @SuppressWarnings("unchecked")
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        if (iface.isAssignableFrom(delegate.getClass())) {
-            return (T) delegate;
-        }
-        if (isWrapperFor(iface)) {
-            return unwrap(delegate, iface);
-        }
-        throw new SQLException(getClass().getName() + " is not a wrapper for " + iface);
-    }
+	/**
+	 * Method isWrapperFor ...
+	 *
+	 * @param iface
+	 * 		of type Class<?>
+	 *
+	 * @return boolean
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	public boolean isWrapperFor(Class<?> iface) throws SQLException
+	{
+		return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
+	}
 
-    /* Overridden methods of JavaProxyBase */
+	/* Overridden methods of JavaProxyBase */
 
-    @Override
-    protected Map<String, Method> getMethodMap() {
-        return selfMethodMap;
-    }
+	/**
+	 * Method getMethodMap returns the methodMap of this LrcConnectionJavaProxy object.
+	 *
+	 * @return the methodMap (type Map<String, Method>) of this LrcConnectionJavaProxy object.
+	 */
+	@Override
+	protected Map<String, Method> getMethodMap()
+	{
+		return selfMethodMap;
+	}
 }

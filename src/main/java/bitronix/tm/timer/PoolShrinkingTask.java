@@ -24,34 +24,71 @@ import java.util.Date;
  *
  * @author Ludovic Orban
  */
-public class PoolShrinkingTask extends Task {
+public class PoolShrinkingTask
+		extends Task
+{
 
-    private final XAPool xaPool;
+	private final XAPool xaPool;
 
-    public PoolShrinkingTask(XAPool xaPool, Date executionTime, TaskScheduler scheduler) {
-        super(executionTime, scheduler);
-        this.xaPool = xaPool;
-    }
+	/**
+	 * Constructor PoolShrinkingTask creates a new PoolShrinkingTask instance.
+	 *
+	 * @param xaPool
+	 * 		of type XAPool
+	 * @param executionTime
+	 * 		of type Date
+	 * @param scheduler
+	 * 		of type TaskScheduler
+	 */
+	public PoolShrinkingTask(XAPool xaPool, Date executionTime, TaskScheduler scheduler)
+	{
+		super(executionTime, scheduler);
+		this.xaPool = xaPool;
+	}
 
-    @Override
-    public Object getObject() {
-        return xaPool;
-    }
+	/**
+	 * Method getObject returns the object of this PoolShrinkingTask object.
+	 *
+	 * @return the object (type Object) of this PoolShrinkingTask object.
+	 */
+	@Override
+	public Object getObject()
+	{
+		return xaPool;
+	}
 
-    @Override
-    public void execute() throws TaskException {
-        try {
-            xaPool.shrink();
-        } catch (Exception ex) {
-            throw new TaskException("error while trying to shrink " + xaPool, ex);
-        } finally {
-            getTaskScheduler().schedulePoolShrinking(xaPool);
-        }
-    }
+	/**
+	 * Method execute ...
+	 *
+	 * @throws TaskException
+	 * 		when
+	 */
+	@Override
+	public void execute() throws TaskException
+	{
+		try
+		{
+			xaPool.shrink();
+		}
+		catch (Exception ex)
+		{
+			throw new TaskException("error while trying to shrink " + xaPool, ex);
+		}
+		finally
+		{
+			getTaskScheduler().schedulePoolShrinking(xaPool);
+		}
+	}
 
-    @Override
-    public String toString() {
-        return "a PoolShrinkingTask scheduled for " + getExecutionTime() + " on " + xaPool;
-    }
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
+	@Override
+	public String toString()
+	{
+		return "a PoolShrinkingTask scheduled for " + getExecutionTime() + " on " + xaPool;
+	}
 
 }

@@ -22,11 +22,24 @@ public class LocalCommitEvent
 		extends Event
 {
 
+	/**
+	 * Constructor LocalCommitEvent creates a new LocalCommitEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param ex
+	 * 		of type Exception
+	 */
 	public LocalCommitEvent(Object source, Exception ex)
 	{
 		super(source, ex);
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

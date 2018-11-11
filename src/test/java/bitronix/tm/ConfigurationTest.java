@@ -26,6 +26,9 @@ public class ConfigurationTest
 		extends TestCase
 {
 
+	/**
+	 * Method testGetString ...
+	 */
 	public void testGetString()
 	{
 		Properties props = new Properties();
@@ -82,6 +85,9 @@ public class ConfigurationTest
 		}
 	}
 
+	/**
+	 * Method testGetIntBoolean ...
+	 */
 	public void testGetIntBoolean()
 	{
 		Properties props = new Properties();
@@ -101,6 +107,9 @@ public class ConfigurationTest
 		assertEquals(true, Configuration.getBoolean(props, "wrong", true));
 	}
 
+	/**
+	 * Method testToString ...
+	 */
 	public void testToString()
 	{
 		String expectation = "a Configuration with [allowMultipleLrc=false, asynchronous2Pc=false," +

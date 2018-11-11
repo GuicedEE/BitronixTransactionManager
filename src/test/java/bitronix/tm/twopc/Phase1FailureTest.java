@@ -148,6 +148,16 @@ public class Phase1FailureTest
 		assertEquals("TM haven't properly tried to rollback", 2, rollbackEventCount);
 	}
 
+	/**
+	 * Method createXAException ...
+	 *
+	 * @param msg
+	 * 		of type String
+	 * @param errorCode
+	 * 		of type int
+	 *
+	 * @return XAException
+	 */
 	private XAException createXAException(String msg, int errorCode)
 	{
 		XAException prepareException = new XAException(msg);
@@ -341,6 +351,12 @@ public class Phase1FailureTest
 		assertEquals("TM haven't properly tried to rollback", 1, localRollbackEventCount);
 	}
 
+	/**
+	 * Method setUp ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -394,6 +410,9 @@ public class Phase1FailureTest
 		tm = TransactionManagerServices.getTransactionManager();
 	}
 
+	/**
+	 * Method tearDown ...
+	 */
 	@Override
 	protected void tearDown()
 	{

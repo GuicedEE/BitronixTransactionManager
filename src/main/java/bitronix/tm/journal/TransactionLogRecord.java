@@ -19,13 +19,12 @@ import bitronix.tm.utils.Decoder;
 import bitronix.tm.utils.MonotonicClock;
 import bitronix.tm.utils.Uid;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.CRC32;
+
+import static java.nio.charset.StandardCharsets.*;
 
 /**
  * Representation of a transaction log record on disk.
@@ -65,14 +64,12 @@ public class TransactionLogRecord
 		implements JournalRecord
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogRecord.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogRecord.class.toString());
 
 	// status + record length + record header length + current time + sequence number + checksum
-	private final static int RECORD_HEADER_LENGTH = 4 + 4 + 4 + 8 + 4 + 4;
+	private static final int RECORD_HEADER_LENGTH = 4 + 4 + 4 + 8 + 4 + 4;
 
-	private static final Charset US_ASCII = Charset.forName("US-ASCII");
-
-	private final static AtomicInteger sequenceGenerator = new AtomicInteger();
+	private static final AtomicInteger sequenceGenerator = new AtomicInteger();
 
 	private final int status;
 	private final int headerLength;
@@ -107,7 +104,7 @@ public class TransactionLogRecord
 	 * @param endRecord
 	 * 		end of record marker
 	 */
-	public TransactionLogRecord(int status, int recordLength, int headerLength, long time, int sequenceNumber, int crc32, Uid gtrid, Set<String> uniqueNames, int endRecord)
+	TransactionLogRecord(int status, int recordLength, int headerLength, long time, int sequenceNumber, int crc32, Uid gtrid, Set<String> uniqueNames, int endRecord)
 	{
 		this.status = status;
 		this.recordLength = recordLength;
@@ -157,7 +154,7 @@ public class TransactionLogRecord
 	 *
 	 * @return the CRC32 value of this record.
 	 */
-	public int calculateCrc32()
+	int calculateCrc32()
 	{
 		int total = 0;
 		for (String uniqueName : uniqueNames)
@@ -183,9 +180,9 @@ public class TransactionLogRecord
 
 		buf.putInt(endRecord);
 
-		CRC32 crc32 = new CRC32();
-		crc32.update(buf.array());
-		return (int) crc32.getValue();
+		CRC32 crc32Calculated = new CRC32();
+		crc32Calculated.update(buf.array());
+		return (int) crc32Calculated.getValue();
 	}
 
 	/**
@@ -199,24 +196,44 @@ public class TransactionLogRecord
 		return 4 + 8 + 4 + 4 + 1 + gtrid.length() + 4 + 4;
 	}
 
+	/**
+	 * Returns the current status of the transaction that this record belongs to.
+	 *
+	 * @return the current status of the transaction that this record belongs to.
+	 */
 	@Override
 	public int getStatus()
 	{
 		return status;
 	}
 
+	/**
+	 * Returns the global transaction id, identifying the transaction this record belongs to.
+	 *
+	 * @return the global transaction id, identifying the transaction this record belongs to.
+	 */
 	@Override
 	public Uid getGtrid()
 	{
 		return gtrid;
 	}
 
+	/**
+	 * Returns an unmodifiable set of the unique names identifying the components that are part of this transaction.
+	 *
+	 * @return an unmodifiable set of the unique names identifying the components that are part of this transaction.
+	 */
 	@Override
 	public Set<String> getUniqueNames()
 	{
 		return Collections.unmodifiableSortedSet(uniqueNames);
 	}
 
+	/**
+	 * Returns the time when this record was created.
+	 *
+	 * @return the time when this record was created.
+	 */
 	@Override
 	public long getTime()
 	{
@@ -242,6 +259,11 @@ public class TransactionLogRecord
 		return calculateCrc32() == getCrc32();
 	}
 
+	/**
+	 * Method getCrc32 returns the crc32 of this TransactionLogRecord object.
+	 *
+	 * @return the crc32 (type int) of this TransactionLogRecord object.
+	 */
 	public int getCrc32()
 	{
 		return crc32;
@@ -261,36 +283,72 @@ public class TransactionLogRecord
 		return props;
 	}
 
-	public int getRecordLength()
+	/**
+	 * Method getRecordLength returns the recordLength of this TransactionLogRecord object.
+	 *
+	 * @return the recordLength (type int) of this TransactionLogRecord object.
+	 */
+	int getRecordLength()
 	{
 		return recordLength;
 	}
 
-	public int getHeaderLength()
+	/**
+	 * Method getHeaderLength returns the headerLength of this TransactionLogRecord object.
+	 *
+	 * @return the headerLength (type int) of this TransactionLogRecord object.
+	 */
+	int getHeaderLength()
 	{
 		return headerLength;
 	}
 
-	public int getSequenceNumber()
+	/**
+	 * Method getSequenceNumber returns the sequenceNumber of this TransactionLogRecord object.
+	 *
+	 * @return the sequenceNumber (type int) of this TransactionLogRecord object.
+	 */
+	int getSequenceNumber()
 	{
 		return sequenceNumber;
 	}
 
-	public long getWritePosition()
+	/**
+	 * Method getWritePosition returns the writePosition of this TransactionLogRecord object.
+	 *
+	 * @return the writePosition (type long) of this TransactionLogRecord object.
+	 */
+	long getWritePosition()
 	{
 		return writePosition;
 	}
 
-	public void setWritePosition(long position)
+	/**
+	 * Method setWritePosition sets the writePosition of this TransactionLogRecord object.
+	 *
+	 * @param position
+	 * 		the writePosition of this TransactionLogRecord object.
+	 */
+	void setWritePosition(long position)
 	{
 		writePosition = position;
 	}
 
-	public int getEndRecord()
+	/**
+	 * Method getEndRecord returns the endRecord of this TransactionLogRecord object.
+	 *
+	 * @return the endRecord (type int) of this TransactionLogRecord object.
+	 */
+	int getEndRecord()
 	{
 		return endRecord;
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{
@@ -341,20 +399,5 @@ public class TransactionLogRecord
 	int calculateTotalRecordSize()
 	{
 		return recordLength + 4 + 4; // + status + record length
-	}
-
-	static class NullOutputStream
-			extends OutputStream
-	{
-		static final NullOutputStream INSTANCE = new NullOutputStream();
-
-		private NullOutputStream()
-		{
-		}
-
-		@Override
-		public void write(int b) throws IOException
-		{
-		}
 	}
 }

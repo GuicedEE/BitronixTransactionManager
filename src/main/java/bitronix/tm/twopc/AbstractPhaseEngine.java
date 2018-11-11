@@ -40,11 +40,25 @@ public abstract class AbstractPhaseEngine
 
 	private final Executor executor;
 
+	/**
+	 * Constructor AbstractPhaseEngine creates a new AbstractPhaseEngine instance.
+	 *
+	 * @param executor
+	 * 		of type Executor
+	 */
 	protected AbstractPhaseEngine(Executor executor)
 	{
 		this.executor = executor;
 	}
 
+	/**
+	 * Method collectResourcesUniqueNames ...
+	 *
+	 * @param resources
+	 * 		of type List<XAResourceHolderState>
+	 *
+	 * @return Set<String>
+	 */
 	protected static Set<String> collectResourcesUniqueNames(List<XAResourceHolderState> resources)
 	{
 		Set<String> uniqueNames = new HashSet<>();
@@ -57,6 +71,16 @@ public abstract class AbstractPhaseEngine
 		return uniqueNames;
 	}
 
+	/**
+	 * Method collectNotInterestedResources ...
+	 *
+	 * @param allResources
+	 * 		of type List<XAResourceHolderState>
+	 * @param interestedResources
+	 * 		of type List<XAResourceHolderState>
+	 *
+	 * @return List<XAResourceHolderState>
+	 */
 	protected static List<XAResourceHolderState> collectNotInterestedResources(List<XAResourceHolderState> allResources, List<XAResourceHolderState> interestedResources)
 	{
 		List<XAResourceHolderState> result = new ArrayList<>();
@@ -160,6 +184,14 @@ public abstract class AbstractPhaseEngine
 		}
 	}
 
+	/**
+	 * Method runJobsForPosition ...
+	 *
+	 * @param resources
+	 * 		of type List<XAResourceHolderState>
+	 *
+	 * @return JobsExecutionReport
+	 */
 	private JobsExecutionReport runJobsForPosition(List<XAResourceHolderState> resources)
 	{
 		List<Job> jobs = new ArrayList<>();
@@ -271,17 +303,35 @@ public abstract class AbstractPhaseEngine
 		private final List<Exception> exceptions;
 		private final List<XAResourceHolderState> resources;
 
+		/**
+		 * Constructor JobsExecutionReport creates a new JobsExecutionReport instance.
+		 *
+		 * @param exceptions
+		 * 		of type List<Exception>
+		 * @param resources
+		 * 		of type List<XAResourceHolderState>
+		 */
 		private JobsExecutionReport(List<Exception> exceptions, List<XAResourceHolderState> resources)
 		{
 			this.exceptions = Collections.unmodifiableList(exceptions);
 			this.resources = Collections.unmodifiableList(resources);
 		}
 
+		/**
+		 * Method getExceptions returns the exceptions of this JobsExecutionReport object.
+		 *
+		 * @return the exceptions (type List<Exception>) of this JobsExecutionReport object.
+		 */
 		public List<Exception> getExceptions()
 		{
 			return exceptions;
 		}
 
+		/**
+		 * Method getResources returns the resources of this JobsExecutionReport object.
+		 *
+		 * @return the resources (type List<XAResourceHolderState>) of this JobsExecutionReport object.
+		 */
 		public List<XAResourceHolderState> getResources()
 		{
 			return resources;

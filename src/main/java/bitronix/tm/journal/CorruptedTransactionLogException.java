@@ -22,8 +22,17 @@ import java.io.IOException;
  *
  * @author Ludovic Orban
  */
-public class CorruptedTransactionLogException extends IOException {
-	public CorruptedTransactionLogException(String s) {
-        super(s);
-    }
+public class CorruptedTransactionLogException
+		extends IOException
+{
+	/**
+	 * Constructor CorruptedTransactionLogException creates a new CorruptedTransactionLogException instance.
+	 *
+	 * @param s
+	 * 		of type String
+	 */
+	public CorruptedTransactionLogException(String s)
+	{
+		super(s);
+	}
 }

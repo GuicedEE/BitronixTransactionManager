@@ -15,93 +15,227 @@
  */
 package bitronix.tm.resource.jms.lrc;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionConsumer;
-import javax.jms.ConnectionMetaData;
-import javax.jms.Destination;
-import javax.jms.ExceptionListener;
-import javax.jms.JMSException;
-import javax.jms.ServerSessionPool;
-import javax.jms.Session;
-import javax.jms.Topic;
-import javax.jms.XAConnection;
-import javax.jms.XASession;
+import javax.jms.*;
 
 /**
  * XAConnection implementation for a non-XA JMS resource emulating XA with Last Resource Commit.
  *
  * @author Ludovic Orban
  */
-public class LrcXAConnection implements XAConnection {
+public class LrcXAConnection
+		implements XAConnection
+{
 
-    private final Connection nonXaConnection;
+	private final Connection nonXaConnection;
 
-    public LrcXAConnection(Connection connection) {
-        this.nonXaConnection = connection;
-    }
+	/**
+	 * Constructor LrcXAConnection creates a new LrcXAConnection instance.
+	 *
+	 * @param connection
+	 * 		of type Connection
+	 */
+	public LrcXAConnection(Connection connection)
+	{
+		this.nonXaConnection = connection;
+	}
 
-    @Override
-    public XASession createXASession() throws JMSException {
-        return new LrcXASession(nonXaConnection.createSession(true, Session.AUTO_ACKNOWLEDGE));
-    }
+	/**
+	 * Method createXASession ...
+	 *
+	 * @return XASession
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
+	@Override
+	public XASession createXASession() throws JMSException
+	{
+		return new LrcXASession(nonXaConnection.createSession(true, Session.AUTO_ACKNOWLEDGE));
+	}
 
-    @Override
-    public Session createSession(boolean transacted, int acknowledgeMode) throws JMSException {
-        throw new JMSException(LrcXAConnection.class.getName() + " can only respond to createXASession()");
-    }
+	/**
+	 * Method createSession ...
+	 *
+	 * @param transacted
+	 * 		of type boolean
+	 * @param acknowledgeMode
+	 * 		of type int
+	 *
+	 * @return Session
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
+	@Override
+	public Session createSession(boolean transacted, int acknowledgeMode) throws JMSException
+	{
+		throw new JMSException(LrcXAConnection.class.getName() + " can only respond to createXASession()");
+	}
 
-    @Override
-    public ConnectionConsumer createConnectionConsumer(Destination destination, String messageSelector, ServerSessionPool serverSessionPool, int maxMessages) throws JMSException {
-        return nonXaConnection.createConnectionConsumer(destination, messageSelector, serverSessionPool, maxMessages);
-    }
+	/**
+	 * Method getClientID returns the clientID of this LrcXAConnection object.
+	 *
+	 * @return the clientID (type String) of this LrcXAConnection object.
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
+	@Override
+	public String getClientID() throws JMSException
+	{
+		return nonXaConnection.getClientID();
+	}
 
-    @Override
-    public ConnectionConsumer createDurableConnectionConsumer(Topic topic, String subscriptionName, String messageSelector, ServerSessionPool serverSessionPool, int maxMessages) throws JMSException {
-        return nonXaConnection.createDurableConnectionConsumer(topic, subscriptionName, messageSelector, serverSessionPool, maxMessages);
-    }
+	/**
+	 * Method setClientID sets the clientID of this LrcXAConnection object.
+	 *
+	 * @param clientID
+	 * 		the clientID of this LrcXAConnection object.
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
+	@Override
+	public void setClientID(String clientID) throws JMSException
+	{
+		nonXaConnection.setClientID(clientID);
+	}
 
-    @Override
-    public String getClientID() throws JMSException {
-        return nonXaConnection.getClientID();
-    }
+	/**
+	 * Method getMetaData returns the metaData of this LrcXAConnection object.
+	 *
+	 * @return the metaData (type ConnectionMetaData) of this LrcXAConnection object.
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
+	@Override
+	public ConnectionMetaData getMetaData() throws JMSException
+	{
+		return nonXaConnection.getMetaData();
+	}
 
-    @Override
-    public void setClientID(String clientID) throws JMSException {
-        nonXaConnection.setClientID(clientID);
-    }
+	/**
+	 * Method getExceptionListener returns the exceptionListener of this LrcXAConnection object.
+	 *
+	 * @return the exceptionListener (type ExceptionListener) of this LrcXAConnection object.
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
+	@Override
+	public ExceptionListener getExceptionListener() throws JMSException
+	{
+		return nonXaConnection.getExceptionListener();
+	}
 
-    @Override
-    public ConnectionMetaData getMetaData() throws JMSException {
-        return nonXaConnection.getMetaData();
-    }
+	/**
+	 * Method setExceptionListener sets the exceptionListener of this LrcXAConnection object.
+	 *
+	 * @param exceptionListener
+	 * 		the exceptionListener of this LrcXAConnection object.
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
+	@Override
+	public void setExceptionListener(ExceptionListener exceptionListener) throws JMSException
+	{
+		nonXaConnection.setExceptionListener(exceptionListener);
+	}
 
-    @Override
-    public ExceptionListener getExceptionListener() throws JMSException {
-        return nonXaConnection.getExceptionListener();
-    }
+	/**
+	 * Method start ...
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
+	@Override
+	public void start() throws JMSException
+	{
+		nonXaConnection.start();
+	}
 
-    @Override
-    public void setExceptionListener(ExceptionListener exceptionListener) throws JMSException {
-        nonXaConnection.setExceptionListener(exceptionListener);
-    }
+	/**
+	 * Method stop ...
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
+	@Override
+	public void stop() throws JMSException
+	{
+		nonXaConnection.stop();
+	}
 
-    @Override
-    public void start() throws JMSException {
-        nonXaConnection.start();
-    }
+	/**
+	 * Method close ...
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
+	@Override
+	public void close() throws JMSException
+	{
+		nonXaConnection.close();
+	}
 
-    @Override
-    public void stop() throws JMSException {
-        nonXaConnection.stop();
-    }
+	/**
+	 * Method createConnectionConsumer ...
+	 *
+	 * @param destination
+	 * 		of type Destination
+	 * @param messageSelector
+	 * 		of type String
+	 * @param serverSessionPool
+	 * 		of type ServerSessionPool
+	 * @param maxMessages
+	 * 		of type int
+	 *
+	 * @return ConnectionConsumer
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
+	@Override
+	public ConnectionConsumer createConnectionConsumer(Destination destination, String messageSelector, ServerSessionPool serverSessionPool, int maxMessages) throws JMSException
+	{
+		return nonXaConnection.createConnectionConsumer(destination, messageSelector, serverSessionPool, maxMessages);
+	}
 
-    @Override
-    public void close() throws JMSException {
-        nonXaConnection.close();
-    }
+	/**
+	 * Method createDurableConnectionConsumer ...
+	 *
+	 * @param topic
+	 * 		of type Topic
+	 * @param subscriptionName
+	 * 		of type String
+	 * @param messageSelector
+	 * 		of type String
+	 * @param serverSessionPool
+	 * 		of type ServerSessionPool
+	 * @param maxMessages
+	 * 		of type int
+	 *
+	 * @return ConnectionConsumer
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
+	@Override
+	public ConnectionConsumer createDurableConnectionConsumer(Topic topic, String subscriptionName, String messageSelector, ServerSessionPool serverSessionPool, int maxMessages) throws JMSException
+	{
+		return nonXaConnection.createDurableConnectionConsumer(topic, subscriptionName, messageSelector, serverSessionPool, maxMessages);
+	}
 
-    @Override
-    public String toString() {
-        return "a JMS LrcXAConnection on " + nonXaConnection;
-    }
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
+	@Override
+	public String toString()
+	{
+		return "a JMS LrcXAConnection on " + nonXaConnection;
+	}
 }

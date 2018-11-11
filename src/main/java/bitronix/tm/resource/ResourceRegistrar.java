@@ -51,6 +51,9 @@ public final class ResourceRegistrar
 	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ResourceRegistrar.class.toString());
 	private final static Set<ProducerHolder> resources = new CopyOnWriteArraySet<>();
 
+	/**
+	 * Constructor ResourceRegistrar creates a new ResourceRegistrar instance.
+	 */
 	private ResourceRegistrar()
 	{
 	}
@@ -220,6 +223,12 @@ public final class ResourceRegistrar
 
 		private final XAResourceProducer producer;
 
+		/**
+		 * Constructor ProducerHolder creates a new ProducerHolder instance.
+		 *
+		 * @param producer
+		 * 		of type XAResourceProducer
+		 */
 		private ProducerHolder(XAResourceProducer producer)
 		{
 			if (producer == null)
@@ -244,12 +253,25 @@ public final class ResourceRegistrar
 			this.producer = producer;
 		}
 
+		/**
+		 * Method hashCode ...
+		 *
+		 * @return int
+		 */
 		@Override
 		public int hashCode()
 		{
 			return getUniqueName().hashCode();
 		}
 
+		/**
+		 * Method equals ...
+		 *
+		 * @param o
+		 * 		of type Object
+		 *
+		 * @return boolean
+		 */
 		@Override
 		public boolean equals(Object o)
 		{
@@ -265,6 +287,11 @@ public final class ResourceRegistrar
 			return getUniqueName().equals(that.getUniqueName());
 		}
 
+		/**
+		 * Method toString ...
+		 *
+		 * @return String
+		 */
 		@Override
 		public String toString()
 		{
@@ -274,11 +301,21 @@ public final class ResourceRegistrar
 			       '}';
 		}
 
+		/**
+		 * Method isInitialized returns the initialized of this ProducerHolder object.
+		 *
+		 * @return the initialized (type boolean) of this ProducerHolder object.
+		 */
 		boolean isInitialized()
 		{
 			return true;
 		}
 
+		/**
+		 * Method getUniqueName returns the uniqueName of this ProducerHolder object.
+		 *
+		 * @return the uniqueName (type String) of this ProducerHolder object.
+		 */
 		String getUniqueName()
 		{
 			return producer.getUniqueName();
@@ -294,17 +331,31 @@ public final class ResourceRegistrar
 
 		private volatile boolean initialized;
 
+		/**
+		 * Constructor InitializableProducerHolder creates a new InitializableProducerHolder instance.
+		 *
+		 * @param producer
+		 * 		of type XAResourceProducer
+		 */
 		private InitializableProducerHolder(XAResourceProducer producer)
 		{
 			super(producer);
 		}
 
+		/**
+		 * Method isInitialized returns the initialized of this InitializableProducerHolder object.
+		 *
+		 * @return the initialized (type boolean) of this InitializableProducerHolder object.
+		 */
 		@Override
 		boolean isInitialized()
 		{
 			return initialized;
 		}
 
+		/**
+		 * Method initialize ...
+		 */
 		void initialize()
 		{
 			initialized = true;

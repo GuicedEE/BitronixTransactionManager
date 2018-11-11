@@ -16,18 +16,67 @@
 package bitronix.tm.resource.jdbc;
 
 /**
- *
  * @author Ludovic Orban
  */
-public interface PoolingDataSourceMBean {
+public interface PoolingDataSourceMBean
+{
 
-    public int getMinPoolSize();
-    public int getMaxPoolSize();
-    public int getInPoolSize();
-    public int getTotalPoolSize();
-    public boolean isFailed();
-    public void reset() throws Exception;
-    public boolean isDisabled();
-    public void setDisabled(boolean disabled);
+	/**
+	 * Method getMinPoolSize returns the minPoolSize of this PoolingDataSourceMBean object.
+	 *
+	 * @return the minPoolSize (type int) of this PoolingDataSourceMBean object.
+	 */
+	public int getMinPoolSize();
+
+	/**
+	 * Method getMaxPoolSize returns the maxPoolSize of this PoolingDataSourceMBean object.
+	 *
+	 * @return the maxPoolSize (type int) of this PoolingDataSourceMBean object.
+	 */
+	public int getMaxPoolSize();
+
+	/**
+	 * Method getInPoolSize returns the inPoolSize of this PoolingDataSourceMBean object.
+	 *
+	 * @return the inPoolSize (type int) of this PoolingDataSourceMBean object.
+	 */
+	public int getInPoolSize();
+
+	/**
+	 * Method getTotalPoolSize returns the totalPoolSize of this PoolingDataSourceMBean object.
+	 *
+	 * @return the totalPoolSize (type int) of this PoolingDataSourceMBean object.
+	 */
+	public int getTotalPoolSize();
+
+	/**
+	 * Method isFailed returns the failed of this PoolingDataSourceMBean object.
+	 *
+	 * @return the failed (type boolean) of this PoolingDataSourceMBean object.
+	 */
+	public boolean isFailed();
+
+	/**
+	 * Method reset ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
+	public void reset() throws Exception;
+
+	/**
+	 * Method isDisabled returns the disabled of this PoolingDataSourceMBean object.
+	 *
+	 * @return the disabled (type boolean) of this PoolingDataSourceMBean object.
+	 */
+	public boolean isDisabled();
+
+	/**
+	 * Method setDisabled sets the disabled of this PoolingDataSourceMBean object.
+	 *
+	 * @param disabled
+	 * 		the disabled of this PoolingDataSourceMBean object.
+	 */
+	public void setDisabled(boolean disabled);
 
 }

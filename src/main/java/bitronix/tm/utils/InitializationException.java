@@ -20,13 +20,31 @@ package bitronix.tm.utils;
  *
  * @author Ludovic Orban
  */
-public class InitializationException extends RuntimeException {
-    public InitializationException(String message) {
-        super(message);
-    }
+public class InitializationException
+		extends RuntimeException
+{
+	/**
+	 * Constructor InitializationException creates a new InitializationException instance.
+	 *
+	 * @param message
+	 * 		of type String
+	 */
+	public InitializationException(String message)
+	{
+		super(message);
+	}
 
-    public InitializationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-    
+	/**
+	 * Constructor InitializationException creates a new InitializationException instance.
+	 *
+	 * @param message
+	 * 		of type String
+	 * @param cause
+	 * 		of type Throwable
+	 */
+	public InitializationException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
+
 }

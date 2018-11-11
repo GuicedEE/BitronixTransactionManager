@@ -37,6 +37,20 @@ public class MockJournal
 
 	private Map<Uid, JournalRecord> danglingRecords;
 
+	/**
+	 * Log a new transaction status to journal. Note that the journal will not check the flow of the transactions.
+	 * If you call this method with erroneous data, it will be added to the journal as-is.
+	 *
+	 * @param status
+	 * 		transaction status to log.
+	 * @param gtrid
+	 * 		GTRID of the transaction.
+	 * @param uniqueNames
+	 * 		unique names of the RecoverableXAResourceProducers participating in the transaction.
+	 *
+	 * @throws java.io.IOException
+	 * 		if an I/O error occurs.
+	 */
 	@Override
 	public void log(int status, Uid gtrid, Set<String> uniqueNames)
 	{
@@ -52,40 +66,82 @@ public class MockJournal
 		getEventRecorder().addEvent(new JournalLogEvent(this, status, gtrid, uniqueNames));
 	}
 
+	/**
+	 * Method getEventRecorder returns the eventRecorder of this MockJournal object.
+	 *
+	 * @return the eventRecorder (type EventRecorder) of this MockJournal object.
+	 */
 	private EventRecorder getEventRecorder()
 	{
 		return EventRecorder.getEventRecorder(this);
 	}
 
+	/**
+	 * Open the journal. Integrity should be checked and an exception should be thrown in case the journal is corrupt.
+	 *
+	 * @throws java.io.IOException
+	 * 		if an I/O error occurs.
+	 */
 	@Override
 	public void open()
 	{
 		danglingRecords = new HashMap<>();
 	}
 
+	/**
+	 * Close this journal and release all underlying resources.
+	 *
+	 * @throws java.io.IOException
+	 * 		if an I/O error occurs.
+	 */
 	@Override
 	public void close()
 	{
 		danglingRecords = null;
 	}
 
+	/**
+	 * Force journal to synchronize with permanent storage.
+	 *
+	 * @throws java.io.IOException
+	 * 		if an I/O error occurs.
+	 */
 	@Override
 	public void force()
 	{
 	}
 
+	/**
+	 * Collect all dangling records of the journal, ie: COMMITTING records with no corresponding COMMITTED record.
+	 *
+	 * @return a Map using Uid objects GTRID as key and implementations of {@link bitronix.tm.journal.JournalRecord} as value.
+	 *
+	 * @throws java.io.IOException
+	 * 		if an I/O error occurs.
+	 */
 	@Override
 	public Map<Uid, JournalRecord> collectDanglingRecords()
 	{
 		return danglingRecords;
 	}
 
+	/**
+	 * Method readRecords ...
+	 *
+	 * @param includeInvalid
+	 * 		of type boolean
+	 *
+	 * @return Iterator<JournalRecord>
+	 */
 	public Iterator<JournalRecord> readRecords(boolean includeInvalid)
 	{
 		return danglingRecords.values()
 		                      .iterator();
 	}
 
+	/**
+	 * Shutdown the service and free all held resources.
+	 */
 	@Override
 	public void shutdown()
 	{

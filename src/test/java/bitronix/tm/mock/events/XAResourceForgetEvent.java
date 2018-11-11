@@ -24,11 +24,24 @@ public class XAResourceForgetEvent
 		extends XAEvent
 {
 
+	/**
+	 * Constructor XAResourceForgetEvent creates a new XAResourceForgetEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param xid
+	 * 		of type Xid
+	 */
 	public XAResourceForgetEvent(Object source, Xid xid)
 	{
 		super(source, xid);
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

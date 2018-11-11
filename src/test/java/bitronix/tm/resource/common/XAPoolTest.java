@@ -29,6 +29,12 @@ public class XAPoolTest
 		extends TestCase
 {
 
+	/**
+	 * Method testBuildXAFactory ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testBuildXAFactory() throws Exception
 	{
 		ResourceBean rb = new ResourceBean() {};
@@ -49,6 +55,9 @@ public class XAPoolTest
 		assertEquals("java", xads.getPassword());
 	}
 
+	/**
+	 * Method testNoRestartOfTaskSchedulerDuringClose ...
+	 */
 	public void testNoRestartOfTaskSchedulerDuringClose()
 	{
 		PoolingDataSource pds = new PoolingDataSource();

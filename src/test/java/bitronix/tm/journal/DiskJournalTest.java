@@ -32,6 +32,9 @@ public class DiskJournalTest
 		extends TestCase
 {
 
+	/**
+	 * Method setUp ...
+	 */
 	@Override
 	protected void setUp()
 	{
@@ -41,6 +44,12 @@ public class DiskJournalTest
 		                                   .getLogPart2Filename()).delete();
 	}
 
+	/**
+	 * Method testExceptions ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testExceptions() throws Exception
 	{
 		DiskJournal journal = new DiskJournal();
@@ -77,6 +86,12 @@ public class DiskJournalTest
 		journal.shutdown();
 	}
 
+	/**
+	 * Method testSimpleCollectDanglingRecords ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSimpleCollectDanglingRecords() throws Exception
 	{
 		DiskJournal journal = new DiskJournal();
@@ -98,6 +113,14 @@ public class DiskJournalTest
 		journal.shutdown();
 	}
 
+	/**
+	 * Method csvToSet ...
+	 *
+	 * @param s
+	 * 		of type String
+	 *
+	 * @return SortedSet<String>
+	 */
 	private SortedSet<String> csvToSet(String s)
 	{
 		SortedSet<String> result = new TreeSet<>();
@@ -110,6 +133,9 @@ public class DiskJournalTest
 		return result;
 	}
 
+	/**
+	 * Method testCrc32Value ...
+	 */
 	public void testCrc32Value()
 	{
 		Set<String> names = new HashSet<>();
@@ -139,6 +165,12 @@ public class DiskJournalTest
 		assertTrue(tlr.isCrc32Correct());
 	}
 
+	/**
+	 * Method testComplexCollectDanglingRecords ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testComplexCollectDanglingRecords() throws Exception
 	{
 		DiskJournal journal = new DiskJournal();
@@ -197,6 +229,12 @@ public class DiskJournalTest
 		journal.shutdown();
 	}
 
+	/**
+	 * Method testCorruptedCollectDanglingRecords ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testCorruptedCollectDanglingRecords() throws Exception
 	{
 		DiskJournal journal = new DiskJournal();
@@ -235,6 +273,12 @@ public class DiskJournalTest
 		journal.shutdown();
 	}
 
+	/**
+	 * Method testRollover ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testRollover() throws Exception
 	{
 		TransactionManagerServices.getConfiguration()
@@ -276,6 +320,14 @@ public class DiskJournalTest
 		journal.shutdown();
 	}
 
+	/**
+	 * Method testJournalPerformance ...
+	 *
+	 * @throws IOException
+	 * 		when
+	 * @throws InterruptedException
+	 * 		when
+	 */
 	public void testJournalPerformance() throws IOException, InterruptedException
 	{
 		TransactionManagerServices.getConfiguration()
@@ -293,11 +345,19 @@ public class DiskJournalTest
 		{
 			private int ndx;
 
+			/**
+			 * Constructor Runner creates a new Runner instance.
+			 *
+			 * @param i of type int
+			 */
 			Runner(int i)
 			{
 				ndx = i;
 			}
 
+			/**
+			 * Method run ...
+			 */
 			@Override
 			public void run()
 			{
@@ -337,6 +397,14 @@ public class DiskJournalTest
 	}
 
 
+	/**
+	 * Method testRolloverStress ...
+	 *
+	 * @throws IOException
+	 * 		when
+	 * @throws InterruptedException
+	 * 		when
+	 */
 	public void testRolloverStress() throws IOException, InterruptedException
 	{
 		TransactionManagerServices.getConfiguration()
@@ -349,11 +417,19 @@ public class DiskJournalTest
 		{
 			private int ndx;
 
+			/**
+			 * Constructor Runner creates a new Runner instance.
+			 *
+			 * @param i of type int
+			 */
 			Runner(int i)
 			{
 				ndx = i;
 			}
 
+			/**
+			 * Method run ...
+			 */
 			@Override
 			public void run()
 			{

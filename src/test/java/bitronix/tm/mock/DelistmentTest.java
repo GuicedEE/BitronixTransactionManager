@@ -48,6 +48,12 @@ public class DelistmentTest
 	private PoolingDataSource poolingDataSource2;
 	private BitronixTransactionManager btm;
 
+	/**
+	 * Method setUp ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -90,6 +96,9 @@ public class DelistmentTest
 		btm = TransactionManagerServices.getTransactionManager();
 	}
 
+	/**
+	 * Method tearDown ...
+	 */
 	@Override
 	protected void tearDown()
 	{
@@ -98,6 +107,12 @@ public class DelistmentTest
 		btm.shutdown();
 	}
 
+	/**
+	 * Method testDelistErrorOnCommit ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testDelistErrorOnCommit() throws Exception
 	{
 		btm.begin();
@@ -144,6 +159,12 @@ public class DelistmentTest
 		assertEquals(Status.STATUS_ROLLEDBACK, ((JournalLogEvent) orderedEvents.get(i++)).getStatus());
 	}
 
+	/**
+	 * Method testDelistUnilateralRollbackOnCommit ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testDelistUnilateralRollbackOnCommit() throws Exception
 	{
 		btm.begin();
@@ -190,6 +211,12 @@ public class DelistmentTest
 		assertEquals(Status.STATUS_ROLLEDBACK, ((JournalLogEvent) orderedEvents.get(i++)).getStatus());
 	}
 
+	/**
+	 * Method testDelistErrorAndUnilateralRollbackOnCommit ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testDelistErrorAndUnilateralRollbackOnCommit() throws Exception
 	{
 		btm.begin();
@@ -241,6 +268,12 @@ public class DelistmentTest
 		assertEquals(Status.STATUS_ROLLEDBACK, ((JournalLogEvent) orderedEvents.get(i++)).getStatus());
 	}
 
+	/**
+	 * Method testDelistErrorAndUnilateralRollbackOnRollback ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testDelistErrorAndUnilateralRollbackOnRollback() throws Exception
 	{
 		btm.begin();

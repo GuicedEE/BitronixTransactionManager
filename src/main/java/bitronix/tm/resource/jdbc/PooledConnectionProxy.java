@@ -17,9 +17,20 @@ package bitronix.tm.resource.jdbc;
 
 import java.sql.Connection;
 
-public interface PooledConnectionProxy {
+public interface PooledConnectionProxy
+{
 
-    JdbcPooledConnection getPooledConnection();
+	/**
+	 * Method getPooledConnection returns the pooledConnection of this PooledConnectionProxy object.
+	 *
+	 * @return the pooledConnection (type JdbcPooledConnection) of this PooledConnectionProxy object.
+	 */
+	JdbcPooledConnection getPooledConnection();
 
-    Connection getProxiedDelegate();
+	/**
+	 * Method getProxiedDelegate returns the proxiedDelegate of this PooledConnectionProxy object.
+	 *
+	 * @return the proxiedDelegate (type Connection) of this PooledConnectionProxy object.
+	 */
+	Connection getProxiedDelegate();
 }

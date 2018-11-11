@@ -8,6 +8,11 @@ import java.util.logging.Logger;
  */
 public interface LogDebugCheck
 {
+	/**
+	 * Method isDebugEnabled returns the debugEnabled of this LogDebugCheck object.
+	 *
+	 * @return the debugEnabled (type boolean) of this LogDebugCheck object.
+	 */
 	static boolean isDebugEnabled()
 	{
 		return Logger.getLogger("")

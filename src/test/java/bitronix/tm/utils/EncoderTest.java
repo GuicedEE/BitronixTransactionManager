@@ -24,6 +24,9 @@ public class EncoderTest
 		extends TestCase
 {
 
+	/**
+	 * Method testLongEncodingDecoding ...
+	 */
 	public void testLongEncodingDecoding()
 	{
 		byte[] longAsBytes;

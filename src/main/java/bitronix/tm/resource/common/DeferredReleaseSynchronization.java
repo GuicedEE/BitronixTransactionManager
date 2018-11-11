@@ -33,21 +33,41 @@ public class DeferredReleaseSynchronization
 
 	private final XAStatefulHolder xaStatefulHolder;
 
+	/**
+	 * Constructor DeferredReleaseSynchronization creates a new DeferredReleaseSynchronization instance.
+	 *
+	 * @param xaStatefulHolder
+	 * 		of type XAStatefulHolder
+	 */
 	public DeferredReleaseSynchronization(XAStatefulHolder xaStatefulHolder)
 	{
 		this.xaStatefulHolder = xaStatefulHolder;
 	}
 
+	/**
+	 * Method getXAStatefulHolder returns the XAStatefulHolder of this DeferredReleaseSynchronization object.
+	 *
+	 * @return the XAStatefulHolder (type XAStatefulHolder) of this DeferredReleaseSynchronization object.
+	 */
 	public XAStatefulHolder getXAStatefulHolder()
 	{
 		return xaStatefulHolder;
 	}
 
+	/**
+	 * Method beforeCompletion ...
+	 */
 	@Override
 	public void beforeCompletion()
 	{
 	}
 
+	/**
+	 * Method afterCompletion ...
+	 *
+	 * @param status
+	 * 		of type int
+	 */
 	@Override
 	public void afterCompletion(int status)
 	{
@@ -65,6 +85,11 @@ public class DeferredReleaseSynchronization
 		}
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

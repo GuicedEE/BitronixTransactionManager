@@ -57,6 +57,9 @@ public final class EhCacheXAResourceProducer
 	private volatile RecoveryXAResourceHolder recoveryXAResourceHolder;
 
 
+	/**
+	 * Initialize all properties with their default values.
+	 */
 	private EhCacheXAResourceProducer()
 	{
 		setApplyTransactionTimeout(true);
@@ -98,6 +101,12 @@ public final class EhCacheXAResourceProducer
 		}
 	}
 
+	/**
+	 * Method addXAResource ...
+	 *
+	 * @param xaResource
+	 * 		of type XAResource
+	 */
 	private void addXAResource(XAResource xaResource)
 	{
 		EhCacheXAResourceHolder xaResourceHolder = new EhCacheXAResourceHolder(xaResource, this);
@@ -137,6 +146,14 @@ public final class EhCacheXAResourceProducer
 		}
 	}
 
+	/**
+	 * Method removeXAResource ...
+	 *
+	 * @param xaResource
+	 * 		of type XAResource
+	 *
+	 * @return boolean
+	 */
 	private boolean removeXAResource(XAResource xaResource)
 	{
 		for (Map.Entry<Integer, EhCacheXAResourceHolder> entry : xaResourceHolders.entrySet())
@@ -256,6 +273,11 @@ public final class EhCacheXAResourceProducer
 		                     ResourceObjectFactory.class.getName(), null);
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

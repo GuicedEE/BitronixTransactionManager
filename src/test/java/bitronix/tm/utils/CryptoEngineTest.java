@@ -24,6 +24,12 @@ public class CryptoEngineTest
 		extends TestCase
 {
 
+	/**
+	 * Method testCrypt ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testCrypt() throws Exception
 	{
 		String textToCrypt = "java";

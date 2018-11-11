@@ -20,18 +20,47 @@ package bitronix.tm.recovery;
  *
  * @author Ludovic Orban
  */
-public interface RecovererMBean {
+public interface RecovererMBean
+{
 
-    public void run();
+	/**
+	 * Method run ...
+	 */
+	public void run();
 
-    public int getCommittedCount();
+	/**
+	 * Method getCommittedCount returns the committedCount of this RecovererMBean object.
+	 *
+	 * @return the committedCount (type int) of this RecovererMBean object.
+	 */
+	public int getCommittedCount();
 
-    public int getRolledbackCount();
+	/**
+	 * Method getRolledbackCount returns the rolledbackCount of this RecovererMBean object.
+	 *
+	 * @return the rolledbackCount (type int) of this RecovererMBean object.
+	 */
+	public int getRolledbackCount();
 
-    public Exception getCompletionException();
+	/**
+	 * Method getCompletionException returns the completionException of this RecovererMBean object.
+	 *
+	 * @return the completionException (type Exception) of this RecovererMBean object.
+	 */
+	public Exception getCompletionException();
 
-    public int getExecutionsCount();
+	/**
+	 * Method getExecutionsCount returns the executionsCount of this RecovererMBean object.
+	 *
+	 * @return the executionsCount (type int) of this RecovererMBean object.
+	 */
+	public int getExecutionsCount();
 
-    public boolean isRunning();
+	/**
+	 * Method isRunning returns the running of this RecovererMBean object.
+	 *
+	 * @return the running (type boolean) of this RecovererMBean object.
+	 */
+	public boolean isRunning();
 
 }

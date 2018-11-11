@@ -60,46 +60,93 @@ public class PoolingConnectionFactory
 	private volatile JmsConnectionHandle recoveryConnectionHandle;
 	private volatile String jmxName;
 
+	/**
+	 * Initialize all properties with their default values.
+	 */
 	public PoolingConnectionFactory()
 	{
 		xaStatefulHolders = new CopyOnWriteArrayList<>();
 	}
 
+	/**
+	 * Method getCacheProducersConsumers returns the cacheProducersConsumers of this PoolingConnectionFactory object.
+	 *
+	 * @return the cacheProducersConsumers (type boolean) of this PoolingConnectionFactory object.
+	 */
 	public boolean getCacheProducersConsumers()
 	{
 		return cacheProducersConsumers;
 	}
 
+	/**
+	 * Method setCacheProducersConsumers sets the cacheProducersConsumers of this PoolingConnectionFactory object.
+	 *
+	 * @param cacheProducersConsumers
+	 * 		the cacheProducersConsumers of this PoolingConnectionFactory object.
+	 */
 	public void setCacheProducersConsumers(boolean cacheProducersConsumers)
 	{
 		this.cacheProducersConsumers = cacheProducersConsumers;
 	}
 
+	/**
+	 * Method getTestConnections returns the testConnections of this PoolingConnectionFactory object.
+	 *
+	 * @return the testConnections (type boolean) of this PoolingConnectionFactory object.
+	 */
 	public boolean getTestConnections()
 	{
 		return testConnections;
 	}
 
+	/**
+	 * Method setTestConnections sets the testConnections of this PoolingConnectionFactory object.
+	 *
+	 * @param testConnections
+	 * 		the testConnections of this PoolingConnectionFactory object.
+	 */
 	public void setTestConnections(boolean testConnections)
 	{
 		this.testConnections = testConnections;
 	}
 
+	/**
+	 * Method getUser returns the user of this PoolingConnectionFactory object.
+	 *
+	 * @return the user (type String) of this PoolingConnectionFactory object.
+	 */
 	public String getUser()
 	{
 		return user;
 	}
 
+	/**
+	 * Method setUser sets the user of this PoolingConnectionFactory object.
+	 *
+	 * @param user
+	 * 		the user of this PoolingConnectionFactory object.
+	 */
 	public void setUser(String user)
 	{
 		this.user = user;
 	}
 
+	/**
+	 * Method getPassword returns the password of this PoolingConnectionFactory object.
+	 *
+	 * @return the password (type String) of this PoolingConnectionFactory object.
+	 */
 	public String getPassword()
 	{
 		return password;
 	}
 
+	/**
+	 * Method setPassword sets the password of this PoolingConnectionFactory object.
+	 *
+	 * @param password
+	 * 		the password of this PoolingConnectionFactory object.
+	 */
 	public void setPassword(String password)
 	{
 		this.password = password;
@@ -126,17 +173,36 @@ public class PoolingConnectionFactory
 		this.xaConnectionFactory = xaConnectionFactory;
 	}
 
+	/**
+	 * Method unregister ...
+	 *
+	 * @param jmsPooledConnection
+	 * 		of type JmsPooledConnection
+	 */
 	void unregister(JmsPooledConnection jmsPooledConnection)
 	{
 		xaStatefulHolders.remove(jmsPooledConnection);
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{
 		return "a PoolingConnectionFactory with " + pool;
 	}
 
+	/**
+	 * Prepare the recoverable {@link javax.transaction.xa.XAResource} producer for recovery.
+	 *
+	 * @return a {@link bitronix.tm.internal.XAResourceHolderState} object that can be used to call <code>recover()</code>.
+	 *
+	 * @throws bitronix.tm.recovery.RecoveryException
+	 * 		thrown when a {@link bitronix.tm.internal.XAResourceHolderState} cannot be acquired.
+	 */
 	@Override
 	public XAResourceHolderState startRecovery() throws RecoveryException
 	{
@@ -159,39 +225,12 @@ public class PoolingConnectionFactory
 		}
 	}
 
-	private void buildXAPool() throws Exception
-	{
-		if (pool != null)
-		{
-			return;
-		}
-
-		if (LogDebugCheck.isDebugEnabled())
-		{
-			log.finer("building JMS XA pool for " + getUniqueName() + " with " + getMinPoolSize() + " connection(s)");
-		}
-		pool = new XAPool<>(this, this, xaConnectionFactory);
-		boolean builtXaFactory = false;
-		if (this.xaConnectionFactory == null)
-		{
-			this.xaConnectionFactory = (XAConnectionFactory) pool.getXAFactory();
-			builtXaFactory = true;
-		}
-		try
-		{
-			ResourceRegistrar.register(this);
-		}
-		catch (RecoveryException ex)
-		{
-			if (builtXaFactory)
-			{
-				xaConnectionFactory = null;
-			}
-			pool = null;
-			throw ex;
-		}
-	}
-
+	/**
+	 * Release internal resources held after call to <code>startRecovery()</code>.
+	 *
+	 * @throws bitronix.tm.recovery.RecoveryException
+	 * 		thrown when an error occurred while releasing reserved resources.
+	 */
 	@Override
 	public void endRecovery() throws RecoveryException
 	{
@@ -242,30 +281,100 @@ public class PoolingConnectionFactory
 		}
 	}
 
+	/**
+	 * Method buildXAPool ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
+	private void buildXAPool() throws Exception
+	{
+		if (pool != null)
+		{
+			return;
+		}
+
+		if (LogDebugCheck.isDebugEnabled())
+		{
+			log.finer("building JMS XA pool for " + getUniqueName() + " with " + getMinPoolSize() + " connection(s)");
+		}
+		pool = new XAPool<>(this, this, xaConnectionFactory);
+		boolean builtXaFactory = false;
+		if (this.xaConnectionFactory == null)
+		{
+			this.xaConnectionFactory = (XAConnectionFactory) pool.getXAFactory();
+			builtXaFactory = true;
+		}
+		try
+		{
+			ResourceRegistrar.register(this);
+		}
+		catch (RecoveryException ex)
+		{
+			if (builtXaFactory)
+			{
+				xaConnectionFactory = null;
+			}
+			pool = null;
+			throw ex;
+		}
+	}
+
+	/**
+	 * Method getInPoolSize returns the inPoolSize of this PoolingConnectionFactory object.
+	 *
+	 * @return the inPoolSize (type long) of this PoolingConnectionFactory object.
+	 */
 	@Override
 	public long getInPoolSize()
 	{
 		return pool.inPoolSize();
 	}
 
+	/**
+	 * Method getTotalPoolSize returns the totalPoolSize of this PoolingConnectionFactory object.
+	 *
+	 * @return the totalPoolSize (type long) of this PoolingConnectionFactory object.
+	 */
 	@Override
 	public long getTotalPoolSize()
 	{
 		return pool.totalPoolSize();
 	}
 
+	/**
+	 * Method isFailed returns the failed of this PoolingConnectionFactory object.
+	 *
+	 * @return the failed (type boolean) of this PoolingConnectionFactory object.
+	 */
 	@Override
 	public boolean isFailed()
 	{
 		return pool.isFailed();
 	}
 
+	/**
+	 * Mark this resource producer as failed or not. A resource is considered failed if recovery fails to run on it.
+	 *
+	 * @param failed
+	 * 		true is the resource must be considered failed, false it it must be considered sane.
+	 */
 	@Override
 	public void setFailed(boolean failed)
 	{
 		pool.setFailed(failed);
 	}
 
+	/**
+	 * Find in the {@link bitronix.tm.resource.common.XAResourceHolder}s created by this {@link bitronix.tm.resource.common.XAResourceProducer} the one which this
+	 * {@link javax.transaction.xa.XAResource} belongs to.
+	 *
+	 * @param xaResource
+	 * 		the {@link javax.transaction.xa.XAResource} to look for.
+	 *
+	 * @return the associated {@link bitronix.tm.resource.common.XAResourceHolder} or null if the {@link javax.transaction.xa.XAResource} does not belong to this
+	 * 		{@link bitronix.tm.resource.common.XAResourceProducer}.
+	 */
 	@Override
 	public DualSessionWrapper findXAResourceHolder(XAResource xaResource)
 	{
@@ -306,6 +415,9 @@ public class PoolingConnectionFactory
 		}
 	}
 
+	/**
+	 * Release this {@link bitronix.tm.resource.common.XAResourceProducer}'s internal resources.
+	 */
 	@Override
 	public void close()
 	{
@@ -327,6 +439,19 @@ public class PoolingConnectionFactory
 		ResourceRegistrar.unregister(this);
 	}
 
+	/**
+	 * Create a {@link bitronix.tm.resource.common.XAStatefulHolder} that will be placed in an {@link bitronix.tm.resource.common.XAPool}.
+	 *
+	 * @param xaFactory
+	 * 		the vendor's resource-specific XA factory.
+	 * @param bean
+	 * 		the resource-specific bean describing the resource parameters.
+	 *
+	 * @return a {@link bitronix.tm.resource.common.XAStatefulHolder} that will be placed in an {@link bitronix.tm.resource.common.XAPool}.
+	 *
+	 * @throws Exception
+	 * 		thrown when the {@link bitronix.tm.resource.common.XAStatefulHolder} cannot be created.
+	 */
 	@Override
 	public JmsPooledConnection createPooledConnection(Object xaFactory, ResourceBean bean) throws Exception
 	{
@@ -360,6 +485,12 @@ public class PoolingConnectionFactory
 		return jmsPooledConnection;
 	}
 
+	/**
+	 * Method reset ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Override
 	public void reset() throws Exception
 	{
@@ -386,6 +517,14 @@ public class PoolingConnectionFactory
 				null);
 	}
 
+	/**
+	 * Method createConnection ...
+	 *
+	 * @return Connection
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public Connection createConnection() throws JMSException
 	{
@@ -405,6 +544,19 @@ public class PoolingConnectionFactory
 		}
 	}
 
+	/**
+	 * Method createConnection ...
+	 *
+	 * @param userName
+	 * 		of type String
+	 * @param password
+	 * 		of type String
+	 *
+	 * @return Connection
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public Connection createConnection(String userName, String password) throws JMSException
 	{

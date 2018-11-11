@@ -48,6 +48,12 @@ public class NewJdbcWrongUsageMockTest
 
 	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(NewJdbcWrongUsageMockTest.class.toString());
 
+	/**
+	 * Method testPrepareXAFailureCase ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPrepareXAFailureCase() throws Exception
 	{
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
@@ -129,6 +135,12 @@ public class NewJdbcWrongUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testPrepareRuntimeFailureCase ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testPrepareRuntimeFailureCase() throws Exception
 	{
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
@@ -207,6 +219,12 @@ public class NewJdbcWrongUsageMockTest
 		                                                                               .getUniqueName());
 	}
 
+	/**
+	 * Method testIncorrectSuspendResume ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testIncorrectSuspendResume() throws Exception
 	{
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
@@ -249,6 +267,12 @@ public class NewJdbcWrongUsageMockTest
 		tm.commit();
 	}
 
+	/**
+	 * Method testEagerEnding ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testEagerEnding() throws Exception
 	{
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
@@ -273,6 +297,12 @@ public class NewJdbcWrongUsageMockTest
 		}
 	}
 
+	/**
+	 * Method testRegisterTwoLrc ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testRegisterTwoLrc() throws Exception
 	{
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();
@@ -331,6 +361,12 @@ public class NewJdbcWrongUsageMockTest
 		lrcDs1.close();
 	}
 
+	/**
+	 * Method testRegisterTwoLrcJms ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testRegisterTwoLrcJms() throws Exception
 	{
 		BitronixTransactionManager tm = TransactionManagerServices.getTransactionManager();

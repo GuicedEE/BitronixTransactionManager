@@ -33,6 +33,16 @@ public class BitronixMultiSystemException
 	private final transient List<? extends Exception> exceptions;
 	private final transient List<XAResourceHolderState> resourceStates;
 
+	/**
+	 * Constructor BitronixMultiSystemException creates a new BitronixMultiSystemException instance.
+	 *
+	 * @param string
+	 * 		of type String
+	 * @param exceptions
+	 * 		of type List<? extends Exception>
+	 * @param resourceStates
+	 * 		of type List<XAResourceHolderState>
+	 */
 	public BitronixMultiSystemException(String string, List<? extends Exception> exceptions, List<XAResourceHolderState> resourceStates)
 	{
 		super(string);
@@ -40,6 +50,11 @@ public class BitronixMultiSystemException
 		this.resourceStates = resourceStates;
 	}
 
+	/**
+	 * Method getMessage returns the message of this BitronixMultiSystemException object.
+	 *
+	 * @return the message (type String) of this BitronixMultiSystemException object.
+	 */
 	@Override
 	public String getMessage()
 	{
@@ -84,6 +99,11 @@ public class BitronixMultiSystemException
 		return errorMessage.toString();
 	}
 
+	/**
+	 * Method isUnilateralRollback returns the unilateralRollback of this BitronixMultiSystemException object.
+	 *
+	 * @return the unilateralRollback (type boolean) of this BitronixMultiSystemException object.
+	 */
 	public boolean isUnilateralRollback()
 	{
 		for (Throwable throwable : exceptions)

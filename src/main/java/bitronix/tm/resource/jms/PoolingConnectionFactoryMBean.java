@@ -16,18 +16,67 @@
 package bitronix.tm.resource.jms;
 
 /**
- *
  * @author Ludovic Orban
  */
-public interface PoolingConnectionFactoryMBean {
+public interface PoolingConnectionFactoryMBean
+{
 
-    public int getMinPoolSize();
-    public int getMaxPoolSize();
-    public long getInPoolSize();
-    public long getTotalPoolSize();
-    public boolean isFailed();
-    public void reset() throws Exception;
-    public boolean isDisabled();
-    public void setDisabled(boolean disabled);
-    
+	/**
+	 * Method getMinPoolSize returns the minPoolSize of this PoolingConnectionFactoryMBean object.
+	 *
+	 * @return the minPoolSize (type int) of this PoolingConnectionFactoryMBean object.
+	 */
+	public int getMinPoolSize();
+
+	/**
+	 * Method getMaxPoolSize returns the maxPoolSize of this PoolingConnectionFactoryMBean object.
+	 *
+	 * @return the maxPoolSize (type int) of this PoolingConnectionFactoryMBean object.
+	 */
+	public int getMaxPoolSize();
+
+	/**
+	 * Method getInPoolSize returns the inPoolSize of this PoolingConnectionFactoryMBean object.
+	 *
+	 * @return the inPoolSize (type long) of this PoolingConnectionFactoryMBean object.
+	 */
+	public long getInPoolSize();
+
+	/**
+	 * Method getTotalPoolSize returns the totalPoolSize of this PoolingConnectionFactoryMBean object.
+	 *
+	 * @return the totalPoolSize (type long) of this PoolingConnectionFactoryMBean object.
+	 */
+	public long getTotalPoolSize();
+
+	/**
+	 * Method isFailed returns the failed of this PoolingConnectionFactoryMBean object.
+	 *
+	 * @return the failed (type boolean) of this PoolingConnectionFactoryMBean object.
+	 */
+	public boolean isFailed();
+
+	/**
+	 * Method reset ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
+	public void reset() throws Exception;
+
+	/**
+	 * Method isDisabled returns the disabled of this PoolingConnectionFactoryMBean object.
+	 *
+	 * @return the disabled (type boolean) of this PoolingConnectionFactoryMBean object.
+	 */
+	public boolean isDisabled();
+
+	/**
+	 * Method setDisabled sets the disabled of this PoolingConnectionFactoryMBean object.
+	 *
+	 * @param disabled
+	 * 		the disabled of this PoolingConnectionFactoryMBean object.
+	 */
+	public void setDisabled(boolean disabled);
+
 }

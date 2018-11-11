@@ -32,6 +32,12 @@ public class JdbcFailedPoolTest
 		extends TestCase
 {
 
+	/**
+	 * Method setUp ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -40,6 +46,12 @@ public class JdbcFailedPoolTest
 		TransactionManagerServices.getTaskScheduler();
 	}
 
+	/**
+	 * Method tearDown ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Override
 	protected void tearDown() throws Exception
 	{
@@ -51,6 +63,12 @@ public class JdbcFailedPoolTest
 		MockitoXADataSource.setStaticGetXAConnectionException(null);
 	}
 
+	/**
+	 * Method testAcquiringConnectionAfterRecoveryDoesNotMarkAsFailed ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testAcquiringConnectionAfterRecoveryDoesNotMarkAsFailed() throws Exception
 	{
 		PoolingDataSource poolingDataSource = new PoolingDataSource();
@@ -80,6 +98,9 @@ public class JdbcFailedPoolTest
 		poolingDataSource.close();
 	}
 
+	/**
+	 * Method testFailingRecoveryMarksAsFailed ...
+	 */
 	public void testFailingRecoveryMarksAsFailed()
 	{
 		MockitoXADataSource.setStaticGetXAConnectionException(new SQLException("creating a new connection does not work"));
@@ -106,6 +127,9 @@ public class JdbcFailedPoolTest
 		poolingDataSource.close();
 	}
 
+	/**
+	 * Method testSuccessfulRecoveryMarksAsNotFailed ...
+	 */
 	public void testSuccessfulRecoveryMarksAsNotFailed()
 	{
 		MockitoXADataSource.setStaticGetXAConnectionException(new SQLException("creating a new connection does not work"));

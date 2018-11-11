@@ -26,10 +26,21 @@ public class EventRecorder
 	private static final Map<Object, EventRecorder> eventRecorders = new HashMap<>();
 	private final List<Event> events = new ArrayList<>();
 
+	/**
+	 * Constructor EventRecorder creates a new EventRecorder instance.
+	 */
 	private EventRecorder()
 	{
 	}
 
+	/**
+	 * Method getEventRecorder ...
+	 *
+	 * @param key
+	 * 		of type Object
+	 *
+	 * @return EventRecorder
+	 */
 	public synchronized static EventRecorder getEventRecorder(Object key)
 	{
 		EventRecorder er = eventRecorders.get(key);
@@ -41,11 +52,21 @@ public class EventRecorder
 		return er;
 	}
 
+	/**
+	 * Method getEventRecorders returns the eventRecorders of this EventRecorder object.
+	 *
+	 * @return the eventRecorders (type Map<Object, EventRecorder>) of this EventRecorder object.
+	 */
 	public static Map<Object, EventRecorder> getEventRecorders()
 	{
 		return eventRecorders;
 	}
 
+	/**
+	 * Method getOrderedEvents returns the orderedEvents of this EventRecorder object.
+	 *
+	 * @return the orderedEvents (type List<? extends Event>) of this EventRecorder object.
+	 */
 	public static List<? extends Event> getOrderedEvents()
 	{
 		Iterator<? extends Event> iterator = iterateEvents();
@@ -58,11 +79,23 @@ public class EventRecorder
 		return orderedEvents;
 	}
 
+	/**
+	 * Method iterateEvents ...
+	 *
+	 * @return Iterator<?
+                                               *               	       	       extends
+                                               *               	       	       Event>
+	 */
 	public static Iterator<? extends Event> iterateEvents()
 	{
 		return new EventsIterator(eventRecorders);
 	}
 
+	/**
+	 * Method dumpToString ...
+	 *
+	 * @return String
+	 */
 	public static String dumpToString()
 	{
 		StringBuilder sb = new StringBuilder();
@@ -81,16 +114,30 @@ public class EventRecorder
 		return sb.toString();
 	}
 
+	/**
+	 * Method clear ...
+	 */
 	public static void clear()
 	{
 		eventRecorders.clear();
 	}
 
+	/**
+	 * Method addEvent ...
+	 *
+	 * @param evt
+	 * 		of type Event
+	 */
 	public void addEvent(Event evt)
 	{
 		events.add(evt);
 	}
 
+	/**
+	 * Method getEvents returns the events of this EventRecorder object.
+	 *
+	 * @return the events (type List<Event>) of this EventRecorder object.
+	 */
 	public List<Event> getEvents()
 	{
 		return events;

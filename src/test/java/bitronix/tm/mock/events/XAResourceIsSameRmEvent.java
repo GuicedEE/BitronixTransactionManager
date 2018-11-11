@@ -27,6 +27,16 @@ public class XAResourceIsSameRmEvent
 	private XAResource xaResource;
 	private boolean sameRm;
 
+	/**
+	 * Constructor XAResourceIsSameRmEvent creates a new XAResourceIsSameRmEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param xaResource
+	 * 		of type XAResource
+	 * @param sameRm
+	 * 		of type boolean
+	 */
 	public XAResourceIsSameRmEvent(Object source, XAResource xaResource, boolean sameRm)
 	{
 		super(source, null);
@@ -34,16 +44,31 @@ public class XAResourceIsSameRmEvent
 		this.sameRm = sameRm;
 	}
 
+	/**
+	 * Method getXAResource returns the XAResource of this XAResourceIsSameRmEvent object.
+	 *
+	 * @return the XAResource (type XAResource) of this XAResourceIsSameRmEvent object.
+	 */
 	public XAResource getXAResource()
 	{
 		return xaResource;
 	}
 
+	/**
+	 * Method isSameRm returns the sameRm of this XAResourceIsSameRmEvent object.
+	 *
+	 * @return the sameRm (type boolean) of this XAResourceIsSameRmEvent object.
+	 */
 	public boolean isSameRm()
 	{
 		return sameRm;
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

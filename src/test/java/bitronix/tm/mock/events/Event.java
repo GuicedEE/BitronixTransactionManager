@@ -26,6 +26,14 @@ public abstract class Event
 	private final Exception exception;
 	private final long timestamp;
 
+	/**
+	 * Constructor Event creates a new Event instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param ex
+	 * 		of type Exception
+	 */
 	protected Event(Object source, Exception ex)
 	{
 		callStack = new Exception();
@@ -34,21 +42,41 @@ public abstract class Event
 		timestamp = Chrono.getTime();
 	}
 
+	/**
+	 * Method getCallStack returns the callStack of this Event object.
+	 *
+	 * @return the callStack (type Exception) of this Event object.
+	 */
 	public Exception getCallStack()
 	{
 		return callStack;
 	}
 
+	/**
+	 * Method getSource returns the source of this Event object.
+	 *
+	 * @return the source (type Object) of this Event object.
+	 */
 	public Object getSource()
 	{
 		return source;
 	}
 
+	/**
+	 * Method getTimestamp returns the timestamp of this Event object.
+	 *
+	 * @return the timestamp (type long) of this Event object.
+	 */
 	public long getTimestamp()
 	{
 		return timestamp;
 	}
 
+	/**
+	 * Method getException returns the exception of this Event object.
+	 *
+	 * @return the exception (type Exception) of this Event object.
+	 */
 	public Exception getException()
 	{
 		return exception;

@@ -24,36 +24,75 @@ import java.util.Map;
 /**
  * @author Brett Wooldridge
  */
-public class ResultSetJavaProxy extends JavaProxyBase<ResultSet> {
+public class ResultSetJavaProxy
+		extends JavaProxyBase<ResultSet>
+{
 
-    private final static Map<String, Method> selfMethodMap = createMethodMap(ResultSetJavaProxy.class);
+	private final static Map<String, Method> selfMethodMap = createMethodMap(ResultSetJavaProxy.class);
 
-    private Statement statement;
+	private Statement statement;
 
-    public ResultSetJavaProxy(Statement statement, ResultSet resultSet) {
+	/**
+	 * Constructor ResultSetJavaProxy creates a new ResultSetJavaProxy instance.
+	 *
+	 * @param statement
+	 * 		of type Statement
+	 * @param resultSet
+	 * 		of type ResultSet
+	 */
+	public ResultSetJavaProxy(Statement statement, ResultSet resultSet)
+	{
 		initialize(statement, resultSet);
 	}
 
-    public ResultSetJavaProxy() {
-    	// Default constructor
-    }
+	/**
+	 * Method initialize ...
+	 *
+	 * @param statement
+	 * 		of type Statement
+	 * @param resultSet
+	 * 		of type ResultSet
+	 */
+	void initialize(Statement statement, ResultSet resultSet)
+	{
+		this.proxy = this;
+		this.statement = statement;
+		this.delegate = resultSet;
+	}
 
-    void initialize(Statement statement, ResultSet resultSet) {
-    	this.proxy = this;
-        this.statement = statement;
-        this.delegate = resultSet;
-    }
+	/**
+	 * Constructor ResultSetJavaProxy creates a new ResultSetJavaProxy instance.
+	 */
+	public ResultSetJavaProxy()
+	{
+		// Default constructor
+	}
 
-    /* Overridden methods of java.sql.ResultSet */
+	/* Overridden methods of java.sql.ResultSet */
 
-    public Statement getStatement() throws SQLException {
-    	return statement;
-    }
+	/**
+	 * Method getStatement returns the statement of this ResultSetJavaProxy object.
+	 *
+	 * @return the statement (type Statement) of this ResultSetJavaProxy object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
+	public Statement getStatement() throws SQLException
+	{
+		return statement;
+	}
 
-    /* Overridden methods of JavaProxyBase */
+	/* Overridden methods of JavaProxyBase */
 
+	/**
+	 * Method getMethodMap returns the methodMap of this ResultSetJavaProxy object.
+	 *
+	 * @return the methodMap (type Map<String, Method>) of this ResultSetJavaProxy object.
+	 */
 	@Override
-	protected Map<String, Method> getMethodMap() {
+	protected Map<String, Method> getMethodMap()
+	{
 		return selfMethodMap;
 	}
 }

@@ -26,23 +26,55 @@ public class XAResourceCommitEvent
 
 	private boolean onePhase;
 
+	/**
+	 * Constructor XAResourceCommitEvent creates a new XAResourceCommitEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param xid
+	 * 		of type Xid
+	 * @param onePhase
+	 * 		of type boolean
+	 */
 	public XAResourceCommitEvent(Object source, Xid xid, boolean onePhase)
 	{
 		super(source, xid);
 		this.onePhase = onePhase;
 	}
 
+	/**
+	 * Constructor XAResourceCommitEvent creates a new XAResourceCommitEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param ex
+	 * 		of type Exception
+	 * @param xid
+	 * 		of type Xid
+	 * @param onePhase
+	 * 		of type boolean
+	 */
 	public XAResourceCommitEvent(Object source, Exception ex, Xid xid, boolean onePhase)
 	{
 		super(source, ex, xid);
 		this.onePhase = onePhase;
 	}
 
+	/**
+	 * Method isOnePhase returns the onePhase of this XAResourceCommitEvent object.
+	 *
+	 * @return the onePhase (type boolean) of this XAResourceCommitEvent object.
+	 */
 	public boolean isOnePhase()
 	{
 		return onePhase;
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

@@ -23,48 +23,99 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author Ludovic Orban
  */
-public abstract class Task implements Comparable<Task> {
+public abstract class Task
+		implements Comparable<Task>
+{
 
-    private static final AtomicInteger UNIQUE_ID_SOURCE = new AtomicInteger();
+	private static final AtomicInteger UNIQUE_ID_SOURCE = new AtomicInteger();
 
-    private final Date executionTime;
-    private final TaskScheduler taskScheduler;
-    private final int uniqueId;
+	private final Date executionTime;
+	private final TaskScheduler taskScheduler;
+	private final int uniqueId;
 
-    protected Task(Date executionTime, TaskScheduler scheduler) {
-        this.executionTime = executionTime;
-        this.taskScheduler = scheduler;
-        this.uniqueId = UNIQUE_ID_SOURCE.getAndIncrement();
-    }
+	/**
+	 * Constructor Task creates a new Task instance.
+	 *
+	 * @param executionTime
+	 * 		of type Date
+	 * @param scheduler
+	 * 		of type TaskScheduler
+	 */
+	protected Task(Date executionTime, TaskScheduler scheduler)
+	{
+		this.executionTime = executionTime;
+		this.taskScheduler = scheduler;
+		this.uniqueId = UNIQUE_ID_SOURCE.getAndIncrement();
+	}
 
-    public Date getExecutionTime() {
-        return executionTime;
-    }
+	/**
+	 * Method getExecutionTime returns the executionTime of this Task object.
+	 *
+	 * @return the executionTime (type Date) of this Task object.
+	 */
+	public Date getExecutionTime()
+	{
+		return executionTime;
+	}
 
-    protected TaskScheduler getTaskScheduler() {
-        return taskScheduler;
-    }
+	/**
+	 * Method getTaskScheduler returns the taskScheduler of this Task object.
+	 *
+	 * @return the taskScheduler (type TaskScheduler) of this Task object.
+	 */
+	protected TaskScheduler getTaskScheduler()
+	{
+		return taskScheduler;
+	}
 
-    /*
-     * Compare by timestamp.  In the event of a duplicate timestamp, objects uniqueIds are compared so that
-     * one task (it doesn't matter which - they both have identical schedule times) will be deemed greater than the
-     * other
-     */
-    @Override
-    public int compareTo(Task otherTask) {
-        int compareResult = this.executionTime.compareTo(otherTask.executionTime);
+	/**
+	 * Method compareTo ...
+	 *
+	 * @param otherTask
+	 * 		of type Task
+	 *
+	 * @return int
+	 */
+	/*
+	 * Compare by timestamp.  In the event of a duplicate timestamp, objects uniqueIds are compared so that
+	 * one task (it doesn't matter which - they both have identical schedule times) will be deemed greater than the
+	 * other
+	 */
+	@Override
+	public int compareTo(Task otherTask)
+	{
+		int compareResult = this.executionTime.compareTo(otherTask.executionTime);
 
-        if (compareResult == 0) {
-            compareResult = Integer.valueOf(uniqueId).compareTo(otherTask.getUniqueId());
-        }
-        return compareResult;
-    }
+		if (compareResult == 0)
+		{
+			compareResult = Integer.valueOf(uniqueId)
+			                       .compareTo(otherTask.getUniqueId());
+		}
+		return compareResult;
+	}
 
-    public abstract Object getObject();
+	/**
+	 * Method getUniqueId returns the uniqueId of this Task object.
+	 *
+	 * @return the uniqueId (type int) of this Task object.
+	 */
+	int getUniqueId()
+	{
+		return uniqueId;
+	}
 
-    public abstract void execute() throws TaskException;
+	/**
+	 * Method getObject returns the object of this Task object.
+	 *
+	 * @return the object (type Object) of this Task object.
+	 */
+	public abstract Object getObject();
 
-    int getUniqueId() {
-        return uniqueId;
-    }
+	/**
+	 * Method execute ...
+	 *
+	 * @throws TaskException
+	 * 		when
+	 */
+	public abstract void execute() throws TaskException;
 }

@@ -22,15 +22,33 @@ import javax.transaction.HeuristicCommitException;
  *
  * @author Ludovic Orban
  */
-public class BitronixHeuristicCommitException extends HeuristicCommitException {
+public class BitronixHeuristicCommitException
+		extends HeuristicCommitException
+{
 
-    public BitronixHeuristicCommitException(String string) {
-        super(string);
-    }
+	/**
+	 * Constructor BitronixHeuristicCommitException creates a new BitronixHeuristicCommitException instance.
+	 *
+	 * @param string
+	 * 		of type String
+	 */
+	public BitronixHeuristicCommitException(String string)
+	{
+		super(string);
+	}
 
-    public BitronixHeuristicCommitException(String string, Throwable t) {
-        super(string);
-        initCause(t);
-    }
+	/**
+	 * Constructor BitronixHeuristicCommitException creates a new BitronixHeuristicCommitException instance.
+	 *
+	 * @param string
+	 * 		of type String
+	 * @param t
+	 * 		of type Throwable
+	 */
+	public BitronixHeuristicCommitException(String string, Throwable t)
+	{
+		super(string);
+		initCause(t);
+	}
 
 }

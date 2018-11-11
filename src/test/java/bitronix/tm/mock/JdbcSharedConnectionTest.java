@@ -32,6 +32,12 @@ public class JdbcSharedConnectionTest
 {
 	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(NewJdbcProperUsageMockTest.class.toString());
 
+	/**
+	 * Method testSharedConnectionMultithreaded ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSharedConnectionMultithreaded() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -105,6 +111,12 @@ public class JdbcSharedConnectionTest
 
 	}
 
+	/**
+	 * Method testUnSharedConnection ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testUnSharedConnection() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -148,6 +160,12 @@ public class JdbcSharedConnectionTest
 		tm.commit();
 	}
 
+	/**
+	 * Method testSharedConnectionInLocalTransaction ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSharedConnectionInLocalTransaction() throws Exception
 	{
 
@@ -173,6 +191,12 @@ public class JdbcSharedConnectionTest
 		connection2.close();
 	}
 
+	/**
+	 * Method testUnSharedConnectionInLocalTransaction ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testUnSharedConnectionInLocalTransaction() throws Exception
 	{
 
@@ -198,6 +222,12 @@ public class JdbcSharedConnectionTest
 		connection2.close();
 	}
 
+	/**
+	 * Method testSharedConnectionInGlobal ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testSharedConnectionInGlobal() throws Exception
 	{
 		if (LogDebugCheck.isDebugEnabled())

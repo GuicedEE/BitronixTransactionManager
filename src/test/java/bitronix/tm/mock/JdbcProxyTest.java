@@ -28,6 +28,12 @@ public class JdbcProxyTest
 		extends AbstractMockJdbcTest
 {
 
+	/**
+	 * Method testSetters ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test
 	public void testSetters() throws Exception
 	{
@@ -58,6 +64,12 @@ public class JdbcProxyTest
 		tm.shutdown();
 	}
 
+	/**
+	 * Method testPrepares ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test
 	public void testPrepares() throws Exception
 	{
@@ -81,6 +93,12 @@ public class JdbcProxyTest
 		tm.shutdown();
 	}
 
+	/**
+	 * Method testCachedPrepared ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test
 	public void testCachedPrepared() throws Exception
 	{
@@ -107,6 +125,12 @@ public class JdbcProxyTest
 		tm.shutdown();
 	}
 
+	/**
+	 * Method testCachedStatementsCanBeReused ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test
 	public void testCachedStatementsCanBeReused() throws Exception
 	{
@@ -138,6 +162,12 @@ public class JdbcProxyTest
 		}
 	}
 
+	/**
+	 * Method testUnCachedPrepared ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test
 	public void testUnCachedPrepared() throws Exception
 	{

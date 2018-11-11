@@ -31,11 +31,25 @@ final class XAFactoryHelper
 
 	private final static String PASSWORD_PROPERTY_NAME = "password";
 
+	/**
+	 * Constructor XAFactoryHelper creates a new XAFactoryHelper instance.
+	 */
 	private XAFactoryHelper()
 	{
 		// This class is not instantiable.
 	}
 
+	/**
+	 * Method createXAFactory ...
+	 *
+	 * @param bean
+	 * 		of type ResourceBean
+	 *
+	 * @return Object
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	static Object createXAFactory(ResourceBean bean) throws Exception
 	{
 		String className = bean.getClassName();
@@ -67,6 +81,17 @@ final class XAFactoryHelper
 		return xaFactory;
 	}
 
+	/**
+	 * Method decrypt ...
+	 *
+	 * @param resourcePassword
+	 * 		of type String
+	 *
+	 * @return String
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	private static String decrypt(String resourcePassword) throws Exception
 	{
 		int startIdx = resourcePassword.indexOf("{");

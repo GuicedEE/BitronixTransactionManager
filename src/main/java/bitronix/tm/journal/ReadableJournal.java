@@ -23,21 +23,26 @@ import java.util.Collection;
  *
  * @author Juergen Kellerer
  */
-public interface ReadableJournal {
-    /**
-     * Reads all raw journal records and and adds them to the given collection.
-     * <p>
-     * <b>Notes:</b><ul>
-     * <li>This implementation does not guarantee to return valid results if the journal is in use.
-     * The caller is responsible to control this state.</li>
-     * <li>The journal is read from the beginning to end with the oldest entry being first. If only
-     * a subset of data is required, the given collection should take care to capture the required data.</li>
-     * </ul>
-     *
-     *
-     * @param target         the target collection to read the records into.
-     * @param includeInvalid specified whether broken records are attempted to be included.
-     * @throws java.io.IOException In case of reading the first record fails.
-     */
-    void unsafeReadRecordsInto(Collection<JournalRecord> target, boolean includeInvalid) throws IOException;
+@FunctionalInterface
+public interface ReadableJournal
+{
+	/**
+	 * Reads all raw journal records and and adds them to the given collection.
+	 * <p>
+	 * <b>Notes:</b><ul>
+	 * <li>This implementation does not guarantee to return valid results if the journal is in use.
+	 * The caller is responsible to control this state.</li>
+	 * <li>The journal is read from the beginning to end with the oldest entry being first. If only
+	 * a subset of data is required, the given collection should take care to capture the required data.</li>
+	 * </ul>
+	 *
+	 * @param target
+	 * 		the target collection to read the records into.
+	 * @param includeInvalid
+	 * 		specified whether broken records are attempted to be included.
+	 *
+	 * @throws java.io.IOException
+	 * 		In case of reading the first record fails.
+	 */
+	void unsafeReadRecordsInto(Collection<JournalRecord> target, boolean includeInvalid) throws IOException;
 }

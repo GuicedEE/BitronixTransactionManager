@@ -50,66 +50,142 @@ public class MockitoXADataSource
 	private Properties clonedProperties;
 	private SQLException getXAConnectionException;
 
+	/**
+	 * Method setStaticGetXAConnectionException sets the staticGetXAConnectionException of this MockitoXADataSource object.
+	 *
+	 * @param ex
+	 * 		the staticGetXAConnectionException of this MockitoXADataSource object.
+	 */
 	public static void setStaticGetXAConnectionException(SQLException ex)
 	{
 		staticGetXAConnectionException = ex;
 	}
 
+	/**
+	 * Method setStaticCloseXAConnectionException sets the staticCloseXAConnectionException of this MockitoXADataSource object.
+	 *
+	 * @param ex
+	 * 		the staticCloseXAConnectionException of this MockitoXADataSource object.
+	 */
 	public static void setStaticCloseXAConnectionException(SQLException ex)
 	{
 		staticCloseXAConnectionException = ex;
 	}
 
+	/**
+	 * Method setXaConnections sets the xaConnections of this MockitoXADataSource object.
+	 *
+	 * @param xaConnections
+	 * 		the xaConnections of this MockitoXADataSource object.
+	 */
 	public void setXaConnections(List<XAConnection> xaConnections)
 	{
 		this.xaConnections = xaConnections;
 	}
 
+	/**
+	 * Method getUserName returns the userName of this MockitoXADataSource object.
+	 *
+	 * @return the userName (type String) of this MockitoXADataSource object.
+	 */
 	public String getUserName()
 	{
 		return userName;
 	}
 
+	/**
+	 * Method setUserName sets the userName of this MockitoXADataSource object.
+	 *
+	 * @param userName
+	 * 		the userName of this MockitoXADataSource object.
+	 */
 	public void setUserName(String userName)
 	{
 		this.userName = userName;
 	}
 
+	/**
+	 * Method getPassword returns the password of this MockitoXADataSource object.
+	 *
+	 * @return the password (type String) of this MockitoXADataSource object.
+	 */
 	public String getPassword()
 	{
 		return password;
 	}
 
+	/**
+	 * Method setPassword sets the password of this MockitoXADataSource object.
+	 *
+	 * @param password
+	 * 		the password of this MockitoXADataSource object.
+	 */
 	public void setPassword(String password)
 	{
 		this.password = password;
 	}
 
+	/**
+	 * Method getDatabase returns the database of this MockitoXADataSource object.
+	 *
+	 * @return the database (type String) of this MockitoXADataSource object.
+	 */
 	public String getDatabase()
 	{
 		return database;
 	}
 
+	/**
+	 * Method setDatabase sets the database of this MockitoXADataSource object.
+	 *
+	 * @param database
+	 * 		the database of this MockitoXADataSource object.
+	 */
 	public void setDatabase(String database)
 	{
 		this.database = database;
 	}
 
+	/**
+	 * Method getClonedProperties returns the clonedProperties of this MockitoXADataSource object.
+	 *
+	 * @return the clonedProperties (type Properties) of this MockitoXADataSource object.
+	 */
 	public Properties getClonedProperties()
 	{
 		return (clonedProperties == null) ? null : (Properties) clonedProperties.clone();
 	}
 
+	/**
+	 * Method setClonedProperties sets the clonedProperties of this MockitoXADataSource object.
+	 *
+	 * @param properties
+	 * 		the clonedProperties of this MockitoXADataSource object.
+	 */
 	public void setClonedProperties(Properties properties)
 	{
 		clonedProperties = (properties == null) ? null : (Properties) properties.clone();
 	}
 
+	/**
+	 * Method addInDoubtXid ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 */
 	public void addInDoubtXid(Xid xid)
 	{
 		inDoubtXids.add(xid);
 	}
 
+	/**
+	 * Method removeInDoubtXid ...
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 *
+	 * @return boolean
+	 */
 	public boolean removeInDoubtXid(Xid xid)
 	{
 		for (int i = 0; i < inDoubtXids.size(); i++)
@@ -124,32 +200,67 @@ public class MockitoXADataSource
 		return false;
 	}
 
+	/**
+	 * Method getInDoubtXids returns the inDoubtXids of this MockitoXADataSource object.
+	 *
+	 * @return the inDoubtXids (type Xid[]) of this MockitoXADataSource object.
+	 */
 	public Xid[] getInDoubtXids()
 	{
 		return inDoubtXids.toArray(new Xid[inDoubtXids.size()]);
 	}
 
+	/**
+	 * Method setGetXAConnectionException sets the getXAConnectionException of this MockitoXADataSource object.
+	 *
+	 * @param ex
+	 * 		the getXAConnectionException of this MockitoXADataSource object.
+	 */
 	public void setGetXAConnectionException(SQLException ex)
 	{
 		getXAConnectionException = ex;
 	}
 
+	/**
+	 * Method getUselessThing returns the uselessThing of this MockitoXADataSource object.
+	 *
+	 * @return the uselessThing (type Object) of this MockitoXADataSource object.
+	 */
 	public Object getUselessThing()
 	{
 		return uselessThing;
 	}
 
+	/**
+	 * Method setUselessThing sets the uselessThing of this MockitoXADataSource object.
+	 *
+	 * @param uselessThing
+	 * 		the uselessThing of this MockitoXADataSource object.
+	 */
 	public void setUselessThing(Object uselessThing)
 	{
 		this.uselessThing = uselessThing;
 	}
 
+	/**
+	 * Method getParentLogger returns the parentLogger of this MockitoXADataSource object.
+	 *
+	 * @return the parentLogger (type Logger) of this MockitoXADataSource object.
+	 *
+	 * @throws SQLFeatureNotSupportedException
+	 * 		when
+	 */
 	@Override
 	public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException
 	{
 		throw new SQLFeatureNotSupportedException();
 	}
 
+	/**
+	 * Method getLoginTimeout returns the loginTimeout of this MockitoXADataSource object.
+	 *
+	 * @return the loginTimeout (type int) of this MockitoXADataSource object.
+	 */
 	@Override
 	public int getLoginTimeout()
 	{
@@ -157,12 +268,23 @@ public class MockitoXADataSource
 	}
 
 
+	/**
+	 * Method setLoginTimeout sets the loginTimeout of this MockitoXADataSource object.
+	 *
+	 * @param seconds
+	 * 		the loginTimeout of this MockitoXADataSource object.
+	 */
 	@Override
 	public void setLoginTimeout(int seconds)
 	{
 	}
 
 
+	/**
+	 * Method getLogWriter returns the logWriter of this MockitoXADataSource object.
+	 *
+	 * @return the logWriter (type PrintWriter) of this MockitoXADataSource object.
+	 */
 	@Override
 	public PrintWriter getLogWriter()
 	{
@@ -170,11 +292,25 @@ public class MockitoXADataSource
 	}
 
 
+	/**
+	 * Method setLogWriter sets the logWriter of this MockitoXADataSource object.
+	 *
+	 * @param out
+	 * 		the logWriter of this MockitoXADataSource object.
+	 */
 	@Override
 	public void setLogWriter(PrintWriter out)
 	{
 	}
 
+	/**
+	 * Method getXAConnection returns the XAConnection of this MockitoXADataSource object.
+	 *
+	 * @return the XAConnection (type XAConnection) of this MockitoXADataSource object.
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@Override
 	public XAConnection getXAConnection() throws SQLException
 	{
@@ -220,12 +356,33 @@ public class MockitoXADataSource
 	}
 
 
+	/**
+	 * Method getXAConnection ...
+	 *
+	 * @param user
+	 * 		of type String
+	 * @param password
+	 * 		of type String
+	 *
+	 * @return XAConnection
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	@Override
 	public XAConnection getXAConnection(String user, String password) throws SQLException
 	{
 		return getXAConnection();
 	}
 
+	/**
+	 * Method createMockConnection ...
+	 *
+	 * @return Connection
+	 *
+	 * @throws SQLException
+	 * 		when
+	 */
 	public static Connection createMockConnection() throws SQLException
 	{
 		// Setup mock connection
@@ -285,16 +442,31 @@ public class MockitoXADataSource
 		return mockConnection;
 	}
 
+	/**
+	 * Method mockStatement ...
+	 *
+	 * @return Answer<Statement>
+	 */
 	private static Answer<Statement> mockStatement()
 	{
 		return invocation -> mock(Statement.class);
 	}
 
+	/**
+	 * Method mockPreparedStatement ...
+	 *
+	 * @return Answer<PreparedStatement>
+	 */
 	private static Answer<PreparedStatement> mockPreparedStatement()
 	{
 		return invocation -> mock(PreparedStatement.class);
 	}
 
+	/**
+	 * Method mockCallableStatement ...
+	 *
+	 * @return Answer<CallableStatement>
+	 */
 	private static Answer<CallableStatement> mockCallableStatement()
 	{
 		return invocation -> mock(CallableStatement.class);

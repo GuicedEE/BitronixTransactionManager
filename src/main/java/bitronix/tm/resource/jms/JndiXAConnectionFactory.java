@@ -46,6 +46,9 @@ public class JndiXAConnectionFactory
 	private volatile XAConnectionFactory wrappedFactory;
 
 
+	/**
+	 * Constructor JndiXAConnectionFactory creates a new JndiXAConnectionFactory instance.
+	 */
 	public JndiXAConnectionFactory()
 	{
 	}
@@ -224,6 +227,14 @@ public class JndiXAConnectionFactory
 		this.narrowJndiObject = narrowJndiObject;
 	}
 
+	/**
+	 * Method createXAConnection ...
+	 *
+	 * @return XAConnection
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public XAConnection createXAConnection() throws JMSException
 	{
@@ -238,6 +249,12 @@ public class JndiXAConnectionFactory
 		}
 	}
 
+	/**
+	 * Method init ...
+	 *
+	 * @throws NamingException
+	 * 		when
+	 */
 	protected void init() throws NamingException
 	{
 		if (wrappedFactory != null)
@@ -295,12 +312,33 @@ public class JndiXAConnectionFactory
 		}
 	}
 
+	/**
+	 * Method isEmpty ...
+	 *
+	 * @param str
+	 * 		of type String
+	 *
+	 * @return boolean
+	 */
 	private static boolean isEmpty(String str)
 	{
 		return str == null || str.trim()
 		                         .equals("");
 	}
 
+	/**
+	 * Method createXAConnection ...
+	 *
+	 * @param userName
+	 * 		of type String
+	 * @param password
+	 * 		of type String
+	 *
+	 * @return XAConnection
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public XAConnection createXAConnection(String userName, String password) throws JMSException
 	{

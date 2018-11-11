@@ -34,18 +34,36 @@ public class RecoveryTask
 
 	private final Recoverer recoverer;
 
+	/**
+	 * Constructor RecoveryTask creates a new RecoveryTask instance.
+	 *
+	 * @param recoverer
+	 * 		of type Recoverer
+	 * @param executionTime
+	 * 		of type Date
+	 * @param scheduler
+	 * 		of type TaskScheduler
+	 */
 	public RecoveryTask(Recoverer recoverer, Date executionTime, TaskScheduler scheduler)
 	{
 		super(executionTime, scheduler);
 		this.recoverer = recoverer;
 	}
 
+	/**
+	 * Method getObject returns the object of this RecoveryTask object.
+	 *
+	 * @return the object (type Object) of this RecoveryTask object.
+	 */
 	@Override
 	public Object getObject()
 	{
 		return recoverer;
 	}
 
+	/**
+	 * Method execute ...
+	 */
 	@Override
 	public void execute()
 	{
@@ -68,6 +86,11 @@ public class RecoveryTask
 		getTaskScheduler().scheduleRecovery(recoverer, nextExecutionDate);
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

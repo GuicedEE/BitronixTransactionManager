@@ -24,16 +24,39 @@ public class XAResourceRollbackEvent
 		extends XAEvent
 {
 
+	/**
+	 * Constructor XAResourceRollbackEvent creates a new XAResourceRollbackEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param xid
+	 * 		of type Xid
+	 */
 	public XAResourceRollbackEvent(Object source, Xid xid)
 	{
 		super(source, xid);
 	}
 
+	/**
+	 * Constructor XAResourceRollbackEvent creates a new XAResourceRollbackEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param ex
+	 * 		of type Exception
+	 * @param xid
+	 * 		of type Xid
+	 */
 	public XAResourceRollbackEvent(Object source, Exception ex, Xid xid)
 	{
 		super(source, ex, xid);
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

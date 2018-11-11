@@ -27,54 +27,114 @@ public class DummyStatefulHolder
 		implements XAStatefulHolder<DummyStatefulHolder>
 {
 
+	/**
+	 * Get the current resource state.
+	 * <p>This method is thread-safe.</p>
+	 *
+	 * @return the current resource state.
+	 */
 	@Override
 	public State getState()
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+	/**
+	 * Set the current resource state.
+	 * <p>This method is thread-safe.</p>
+	 *
+	 * @param state
+	 * 		the current resource state.
+	 */
 	@Override
 	public void setState(State state)
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+	/**
+	 * Method addStateChangeEventListener ...
+	 *
+	 * @param listener
+	 * 		of type StateChangeListener<DummyStatefulHolder>
+	 */
 	@Override
 	public void addStateChangeEventListener(StateChangeListener<DummyStatefulHolder> listener)
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+	/**
+	 * Method removeStateChangeEventListener ...
+	 *
+	 * @param listener
+	 * 		of type StateChangeListener<DummyStatefulHolder>
+	 */
 	@Override
 	public void removeStateChangeEventListener(StateChangeListener<DummyStatefulHolder> listener)
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+	/**
+	 * Get the list of {@link XAResourceHolder}s created by this
+	 * {@link XAStatefulHolder} that are still open.
+	 * <p>This method is thread-safe.</p>
+	 *
+	 * @return the list of {@link bitronix.tm.resource.common.XAResourceHolder}s created by this
+	 * 		{@link XAStatefulHolder} that are still open.
+	 */
 	@Override
 	public List<? extends XAResourceHolder<? extends XAResourceHolder>> getXAResourceHolders()
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+	/**
+	 * Create a disposable handler used to drive a pooled instance of
+	 * {@link XAStatefulHolder}.
+	 * <p>This method is thread-safe.</p>
+	 *
+	 * @return a resource-specific disposable connection object.
+	 *
+	 * @throws Exception
+	 * 		a resource-specific exception thrown when the disposable connection cannot be created.
+	 */
 	@Override
 	public Object getConnectionHandle()
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+	/**
+	 * Close the physical connection that this {@link XAStatefulHolder} represents.
+	 *
+	 * @throws Exception
+	 * 		a resource-specific exception thrown when there is an error closing the physical connection.
+	 */
 	@Override
 	public void close()
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+	/**
+	 * Get the date at which this object was last released to the pool. This is required to check if it is eligible
+	 * for discard when the containing pool needs to shrink.
+	 *
+	 * @return the date at which this object was last released to the pool or null if it never left the pool.
+	 */
 	@Override
 	public Date getLastReleaseDate()
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
+	/**
+	 * Get the date at which this object was created in the pool.
+	 *
+	 * @return the date at which this object was created in the pool.
+	 */
 	@Override
 	public Date getCreationDate()
 	{

@@ -38,26 +38,57 @@ public class MockXAConnectionFactory
 
 	private String endPoint;
 
+	/**
+	 * Method setStaticCloseXAConnectionException sets the staticCloseXAConnectionException of this MockXAConnectionFactory object.
+	 *
+	 * @param e
+	 * 		the staticCloseXAConnectionException of this MockXAConnectionFactory object.
+	 */
 	public static void setStaticCloseXAConnectionException(JMSException e)
 	{
 		staticCloseXAConnectionException = e;
 	}
 
+	/**
+	 * Method setStaticCreateXAConnectionException sets the staticCreateXAConnectionException of this MockXAConnectionFactory object.
+	 *
+	 * @param e
+	 * 		the staticCreateXAConnectionException of this MockXAConnectionFactory object.
+	 */
 	public static void setStaticCreateXAConnectionException(JMSException e)
 	{
 		staticCreateXAConnectionException = e;
 	}
 
+	/**
+	 * Method getEndpoint returns the endpoint of this MockXAConnectionFactory object.
+	 *
+	 * @return the endpoint (type String) of this MockXAConnectionFactory object.
+	 */
 	public String getEndpoint()
 	{
 		return endPoint;
 	}
 
+	/**
+	 * Method setEndpoint sets the endpoint of this MockXAConnectionFactory object.
+	 *
+	 * @param endPoint
+	 * 		the endpoint of this MockXAConnectionFactory object.
+	 */
 	public void setEndpoint(String endPoint)
 	{
 		this.endPoint = endPoint;
 	}
 
+	/**
+	 * Method createXAConnection ...
+	 *
+	 * @return XAConnection
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public XAConnection createXAConnection() throws JMSException
 	{
@@ -106,6 +137,19 @@ public class MockXAConnectionFactory
 	}
 
 
+	/**
+	 * Method createXAConnection ...
+	 *
+	 * @param jndiName
+	 * 		of type String
+	 * @param jndiName1
+	 * 		of type String
+	 *
+	 * @return XAConnection
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	@Override
 	public XAConnection createXAConnection(String jndiName, String jndiName1) throws JMSException
 	{

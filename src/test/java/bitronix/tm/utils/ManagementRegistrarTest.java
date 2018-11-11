@@ -40,6 +40,9 @@ public class ManagementRegistrarTest
 	final String objectName = "bitronix.somename:type=TestBean";
 	final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
 
+	/**
+	 * Method assertJMXDefaultsAreAsyncAndEnabled ...
+	 */
 	@Before
 	public void assertJMXDefaultsAreAsyncAndEnabled()
 	{
@@ -49,6 +52,9 @@ public class ManagementRegistrarTest
 		                                      .isSynchronousJmxRegistration());
 	}
 
+	/**
+	 * Method tearDown ...
+	 */
 	@After
 	public void tearDown()
 	{
@@ -56,6 +62,12 @@ public class ManagementRegistrarTest
 		ManagementRegistrar.normalizeAndRunQueuedCommands();
 	}
 
+	/**
+	 * Method testCanRegister ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test
 	public void testCanRegister() throws Exception
 	{
@@ -79,6 +91,12 @@ public class ManagementRegistrarTest
 		                  .getName(), mBeanServer.getAttribute(new ObjectName(objectName), "Name"));
 	}
 
+	/**
+	 * Method testCanUnregister ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test(expected = InstanceNotFoundException.class)
 	public void testCanUnregister() throws Exception
 	{
@@ -92,6 +110,11 @@ public class ManagementRegistrarTest
 
 	public interface TestBeanMBean
 	{
+		/**
+		 * Method getName returns the name of this TestBeanMBean object.
+		 *
+		 * @return the name (type String) of this TestBeanMBean object.
+		 */
 		String getName();
 	}
 
@@ -101,11 +124,22 @@ public class ManagementRegistrarTest
 
 		String name;
 
+		/**
+		 * Constructor TestBean creates a new TestBean instance.
+		 *
+		 * @param name
+		 * 		of type String
+		 */
 		public TestBean(String name)
 		{
 			this.name = name;
 		}
 
+		/**
+		 * Method getName returns the name of this TestBean object.
+		 *
+		 * @return the name (type String) of this TestBean object.
+		 */
 		@Override
 		public String getName()
 		{

@@ -28,6 +28,9 @@ public class DefaultExceptionAnalyzerTest
 		extends TestCase
 {
 
+	/**
+	 * Method testExtract ...
+	 */
 	public void testExtract()
 	{
 		DefaultExceptionAnalyzer analyzer = new DefaultExceptionAnalyzer();

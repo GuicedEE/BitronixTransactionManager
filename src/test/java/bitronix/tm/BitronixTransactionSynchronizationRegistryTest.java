@@ -30,12 +30,21 @@ public class BitronixTransactionSynchronizationRegistryTest
 
 	private BitronixTransactionManager btm;
 
+	/**
+	 * Method setUp ...
+	 */
 	@Override
 	protected void setUp()
 	{
 		btm = TransactionManagerServices.getTransactionManager();
 	}
 
+	/**
+	 * Method tearDown ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Override
 	protected void tearDown() throws Exception
 	{
@@ -46,6 +55,12 @@ public class BitronixTransactionSynchronizationRegistryTest
 		btm.shutdown();
 	}
 
+	/**
+	 * Method testMultiThreaded ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testMultiThreaded() throws Exception
 	{
 		TransactionSynchronizationRegistry reg = TransactionManagerServices.getTransactionSynchronizationRegistry();
@@ -74,6 +89,12 @@ public class BitronixTransactionSynchronizationRegistryTest
 		t.join();
 	}
 
+	/**
+	 * Method testRegistryResources ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testRegistryResources() throws Exception
 	{
 		TransactionSynchronizationRegistry reg = TransactionManagerServices.getTransactionSynchronizationRegistry();
@@ -109,6 +130,12 @@ public class BitronixTransactionSynchronizationRegistryTest
 	}
 
 
+	/**
+	 * Method testRegistrySynchronizations ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	public void testRegistrySynchronizations() throws Exception
 	{
 		TransactionSynchronizationRegistry reg = TransactionManagerServices.getTransactionSynchronizationRegistry();
@@ -136,16 +163,29 @@ public class BitronixTransactionSynchronizationRegistryTest
 		private long beforeTimestamp;
 		private long afterTimestamp;
 
+		/**
+		 * Method getBeforeTimestamp returns the beforeTimestamp of this CoutingSynchronization object.
+		 *
+		 * @return the beforeTimestamp (type long) of this CoutingSynchronization object.
+		 */
 		public long getBeforeTimestamp()
 		{
 			return beforeTimestamp;
 		}
 
+		/**
+		 * Method getAfterTimestamp returns the afterTimestamp of this CoutingSynchronization object.
+		 *
+		 * @return the afterTimestamp (type long) of this CoutingSynchronization object.
+		 */
 		public long getAfterTimestamp()
 		{
 			return afterTimestamp;
 		}
 
+		/**
+		 * Method beforeCompletion ...
+		 */
 		@Override
 		public void beforeCompletion()
 		{
@@ -160,6 +200,12 @@ public class BitronixTransactionSynchronizationRegistryTest
 			}
 		}
 
+		/**
+		 * Method afterCompletion ...
+		 *
+		 * @param status
+		 * 		of type int
+		 */
 		@Override
 		public void afterCompletion(int status)
 		{

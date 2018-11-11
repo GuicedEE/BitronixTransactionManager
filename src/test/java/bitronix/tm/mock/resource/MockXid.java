@@ -28,12 +28,30 @@ public class MockXid
 	private byte[] bqual;
 	private byte[] gtrid;
 
+	/**
+	 * Constructor MockXid creates a new MockXid instance.
+	 *
+	 * @param bqual0
+	 * 		of type long
+	 * @param gtrid0
+	 * 		of type long
+	 * @param formatId
+	 * 		of type int
+	 */
 	public MockXid(long bqual0, long gtrid0, int formatId)
 	{
 		this(bqual0, gtrid0);
 		this.formatId = formatId;
 	}
 
+	/**
+	 * Constructor MockXid creates a new MockXid instance.
+	 *
+	 * @param bqual0
+	 * 		of type long
+	 * @param gtrid0
+	 * 		of type long
+	 */
 	public MockXid(long bqual0, long gtrid0)
 	{
 		bqual = new byte[8];
@@ -42,6 +60,14 @@ public class MockXid
 		System.arraycopy(longToBytes(gtrid0), 0, gtrid, 0, 8);
 	}
 
+	/**
+	 * Method longToBytes ...
+	 *
+	 * @param aLong
+	 * 		of type long
+	 *
+	 * @return byte[]
+	 */
 	private static byte[] longToBytes(long aLong)
 	{
 		byte[] array = new byte[8];
@@ -54,6 +80,16 @@ public class MockXid
 		return array;
 	}
 
+	/**
+	 * Constructor MockXid creates a new MockXid instance.
+	 *
+	 * @param bqual0
+	 * 		of type long
+	 * @param gtrid0
+	 * 		of type byte[]
+	 * @param formatId
+	 * 		of type int
+	 */
 	public MockXid(long bqual0, byte[] gtrid0, int formatId)
 	{
 		bqual = new byte[8];
@@ -62,12 +98,30 @@ public class MockXid
 		this.formatId = formatId;
 	}
 
+	/**
+	 * Constructor MockXid creates a new MockXid instance.
+	 *
+	 * @param bqual
+	 * 		of type byte[]
+	 * @param gtrid
+	 * 		of type byte[]
+	 */
 	public MockXid(byte[] bqual, byte[] gtrid)
 	{
 		this.bqual = bqual;
 		this.gtrid = gtrid;
 	}
 
+	/**
+	 * Constructor MockXid creates a new MockXid instance.
+	 *
+	 * @param bqual
+	 * 		of type byte[]
+	 * @param gtrid
+	 * 		of type byte[]
+	 * @param formatId
+	 * 		of type int
+	 */
 	public MockXid(byte[] bqual, byte[] gtrid, int formatId)
 	{
 		this.bqual = bqual;
@@ -75,18 +129,33 @@ public class MockXid
 		this.formatId = formatId;
 	}
 
+	/**
+	 * Method getFormatId returns the formatId of this MockXid object.
+	 *
+	 * @return the formatId (type int) of this MockXid object.
+	 */
 	@Override
 	public int getFormatId()
 	{
 		return formatId;
 	}
 
+	/**
+	 * Method getGlobalTransactionId returns the globalTransactionId of this MockXid object.
+	 *
+	 * @return the globalTransactionId (type byte[]) of this MockXid object.
+	 */
 	@Override
 	public byte[] getGlobalTransactionId()
 	{
 		return gtrid;
 	}
 
+	/**
+	 * Method getBranchQualifier returns the branchQualifier of this MockXid object.
+	 *
+	 * @return the branchQualifier (type byte[]) of this MockXid object.
+	 */
 	@Override
 	public byte[] getBranchQualifier()
 	{

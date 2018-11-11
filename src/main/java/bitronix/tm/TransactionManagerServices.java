@@ -59,6 +59,9 @@ public class TransactionManagerServices
 	private static final AtomicReference<ExceptionAnalyzer> exceptionAnalyzerRef = new AtomicReference<>();
 	private static volatile BitronixTransactionManager transactionManager;
 
+	/**
+	 * Constructor TransactionManagerServices creates a new TransactionManagerServices instance.
+	 */
 	private TransactionManagerServices()
 	{
 		//No config required

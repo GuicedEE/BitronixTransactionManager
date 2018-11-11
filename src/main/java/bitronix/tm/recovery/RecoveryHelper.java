@@ -39,7 +39,12 @@ import java.util.logging.Level;
 public class RecoveryHelper
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(RecoveryHelper.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(RecoveryHelper.class.toString());
+
+	private RecoveryHelper()
+	{
+		//Nothing needed
+	}
 
 	/**
 	 * Run the recovery process on the target resource.
@@ -291,24 +296,39 @@ public class RecoveryHelper
 		}
 		if (forget)
 		{
-			try
-			{
-				if (LogDebugCheck.isDebugEnabled())
-				{
-					log.finer("forgetting XID " + xid + " on resource " + uniqueName);
-				}
-				xaResourceHolderState.getXAResource()
-				                     .forget(xid);
-			}
-			catch (XAException ex)
-			{
-				String extraErrorDetails = TransactionManagerServices.getExceptionAnalyzer()
-				                                                     .extractExtraXAExceptionDetails(ex);
-				log.log(Level.SEVERE, "unable to forget XID " + xid + " on resource " + uniqueName + ", error=" + Decoder.decodeXAExceptionErrorCode(ex) +
-				                      (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails), ex);
-			}
+			processForget(xaResourceHolderState, xid, uniqueName);
 		}
 		return success;
+	}
+
+	/**
+	 * Goes through the forget phase
+	 *
+	 * @param xaResourceHolderState
+	 * 		resource
+	 * @param xid
+	 * 		yes
+	 * @param uniqueName
+	 * 		Single unique name
+	 */
+	private static void processForget(XAResourceHolderState xaResourceHolderState, Xid xid, String uniqueName)
+	{
+		try
+		{
+			if (LogDebugCheck.isDebugEnabled())
+			{
+				log.finer("forgetting XID " + xid + " on resource " + uniqueName);
+			}
+			xaResourceHolderState.getXAResource()
+			                     .forget(xid);
+		}
+		catch (XAException ex)
+		{
+			String extraErrorDetails = TransactionManagerServices.getExceptionAnalyzer()
+			                                                     .extractExtraXAExceptionDetails(ex);
+			log.log(Level.SEVERE, "unable to forget XID " + xid + " on resource " + uniqueName + ", error=" + Decoder.decodeXAExceptionErrorCode(ex) +
+			                      (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails), ex);
+		}
 	}
 
 	/**
@@ -364,25 +384,9 @@ public class RecoveryHelper
 		}
 		if (forget)
 		{
-			try
-			{
-				if (LogDebugCheck.isDebugEnabled())
-				{
-					log.finer("forgetting XID " + xid + " on resource " + uniqueName);
-				}
-				xaResourceHolderState.getXAResource()
-				                     .forget(xid);
-			}
-			catch (XAException ex)
-			{
-				String extraErrorDetails = TransactionManagerServices.getExceptionAnalyzer()
-				                                                     .extractExtraXAExceptionDetails(ex);
-				log.log(Level.SEVERE, "unable to forget XID " + xid + " on resource " + uniqueName + ", error=" + Decoder.decodeXAExceptionErrorCode(ex) +
-				                      (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails), ex);
-			}
+			processForget(xaResourceHolderState, xid, uniqueName);
 		}
 		return success;
 	}
-
 
 }

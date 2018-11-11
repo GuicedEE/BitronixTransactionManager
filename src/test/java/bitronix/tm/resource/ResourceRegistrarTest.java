@@ -47,6 +47,12 @@ public class ResourceRegistrarTest
 	ExecutorService executorService;
 	XAResourceProducer producer;
 
+	/**
+	 * Method setUp ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Before
 	public void setUp() throws Exception
 	{
@@ -56,6 +62,17 @@ public class ResourceRegistrarTest
 		TransactionManagerServices.getTransactionManager();
 	}
 
+	/**
+	 * Method createMockProducer ...
+	 *
+	 * @param uniqueName
+	 * 		of type String
+	 *
+	 * @return XAResourceProducer
+	 *
+	 * @throws RecoveryException
+	 * 		when
+	 */
 	private XAResourceProducer createMockProducer(String uniqueName) throws RecoveryException
 	{
 		XAResourceProducer producer;
@@ -75,6 +92,9 @@ public class ResourceRegistrarTest
 		return producer;
 	}
 
+	/**
+	 * Method tearDown ...
+	 */
 	@After
 	public void tearDown()
 	{
@@ -87,6 +107,9 @@ public class ResourceRegistrarTest
 		}
 	}
 
+	/**
+	 * Method testGet ...
+	 */
 	@Test
 	public void testGet()
 	{
@@ -95,6 +118,12 @@ public class ResourceRegistrarTest
 		assertNull(ResourceRegistrar.get(null));
 	}
 
+	/**
+	 * Method testGetDoesNotReturnUninitializedProducers ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test
 	public void testGetDoesNotReturnUninitializedProducers() throws Exception
 	{
@@ -107,6 +136,19 @@ public class ResourceRegistrarTest
 		assertNotNull(ResourceRegistrar.get("uninitialized"));
 	}
 
+	/**
+	 * Method registerBlockingProducer ...
+	 *
+	 * @param producer
+	 * 		of type XAResourceProducer
+	 * @param border
+	 * 		of type CountDownLatch
+	 *
+	 * @return Future
+	 *
+	 * @throws RecoveryException
+	 * 		when
+	 */
 	private Future registerBlockingProducer(XAResourceProducer producer, CountDownLatch border) throws RecoveryException
 	{
 		XAResourceHolderState resourceHolderState = producer.startRecovery();
@@ -123,6 +165,9 @@ public class ResourceRegistrarTest
 		                              });
 	}
 
+	/**
+	 * Method testGetResourcesUniqueNames ...
+	 */
 	@Test
 	public void testGetResourcesUniqueNames()
 	{
@@ -130,6 +175,12 @@ public class ResourceRegistrarTest
 		                                                          .toArray());
 	}
 
+	/**
+	 * Method testGetResourcesUniqueNamesDoesNotReturnUninitializedProducers ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test
 	public void testGetResourcesUniqueNamesDoesNotReturnUninitializedProducers() throws Exception
 	{
@@ -145,18 +196,36 @@ public class ResourceRegistrarTest
 		                                                                           .toArray());
 	}
 
+	/**
+	 * Method testCannotRegisterSameRPTwice ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test(expected = IllegalStateException.class)
 	public void testCannotRegisterSameRPTwice() throws Exception
 	{
 		ResourceRegistrar.register(createMockProducer("xa-rp"));
 	}
 
+	/**
+	 * Method testCannotRegisterNonASCIIUniqueName ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testCannotRegisterNonASCIIUniqueName() throws Exception
 	{
 		ResourceRegistrar.register(createMockProducer("äöü"));
 	}
 
+	/**
+	 * Method testNonRecoverableProducersAreNotRegistered ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test
 	public void testNonRecoverableProducersAreNotRegistered() throws Exception
 	{
@@ -174,6 +243,12 @@ public class ResourceRegistrarTest
 		}
 	}
 
+	/**
+	 * Method testUnregister ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test
 	public void testUnregister() throws Exception
 	{
@@ -184,6 +259,12 @@ public class ResourceRegistrarTest
 		                                 .size());
 	}
 
+	/**
+	 * Method testFindXAResourceHolderDelegatesAndDoesNotCallUninitialized ...
+	 *
+	 * @throws Exception
+	 * 		when
+	 */
 	@Test
 	public void testFindXAResourceHolderDelegatesAndDoesNotCallUninitialized() throws Exception
 	{

@@ -32,6 +32,18 @@ public class JournalLogEvent
 	private Set jndiNames;
 
 
+	/**
+	 * Constructor JournalLogEvent creates a new JournalLogEvent instance.
+	 *
+	 * @param source
+	 * 		of type Object
+	 * @param status
+	 * 		of type int
+	 * @param gtrid
+	 * 		of type Uid
+	 * @param jndiNames
+	 * 		of type Set
+	 */
 	public JournalLogEvent(Object source, int status, Uid gtrid, Set jndiNames)
 	{
 		super(source, null);
@@ -41,21 +53,41 @@ public class JournalLogEvent
 	}
 
 
+	/**
+	 * Method getStatus returns the status of this JournalLogEvent object.
+	 *
+	 * @return the status (type int) of this JournalLogEvent object.
+	 */
 	public int getStatus()
 	{
 		return status;
 	}
 
+	/**
+	 * Method getGtrid returns the gtrid of this JournalLogEvent object.
+	 *
+	 * @return the gtrid (type Uid) of this JournalLogEvent object.
+	 */
 	public Uid getGtrid()
 	{
 		return gtrid;
 	}
 
+	/**
+	 * Method getJndiNames returns the jndiNames of this JournalLogEvent object.
+	 *
+	 * @return the jndiNames (type Set) of this JournalLogEvent object.
+	 */
 	public Set getJndiNames()
 	{
 		return jndiNames;
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{

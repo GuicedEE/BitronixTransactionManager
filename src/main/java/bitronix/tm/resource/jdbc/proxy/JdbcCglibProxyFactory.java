@@ -48,6 +48,9 @@ public class JdbcCglibProxyFactory
 	// For LRC we just use the standard Java Proxies
 	private final JdbcJavaProxyFactory lrcProxyFactory;
 
+	/**
+	 * Constructor JdbcCglibProxyFactory creates a new JdbcCglibProxyFactory instance.
+	 */
 	JdbcCglibProxyFactory()
 	{
 		proxyConnectionClass = createProxyConnectionClass();
@@ -58,6 +61,11 @@ public class JdbcCglibProxyFactory
 		lrcProxyFactory = new JdbcJavaProxyFactory();
 	}
 
+	/**
+	 * Method createProxyConnectionClass ...
+	 *
+	 * @return Class<Connection>
+	 */
 	@SuppressWarnings("unchecked")
 	private Class<Connection> createProxyConnectionClass()
 	{
@@ -71,6 +79,11 @@ public class JdbcCglibProxyFactory
 		return enhancer.createClass();
 	}
 
+	/**
+	 * Method createProxyStatementClass ...
+	 *
+	 * @return Class<Statement>
+	 */
 	@SuppressWarnings("unchecked")
 	private Class<Statement> createProxyStatementClass()
 	{
@@ -83,6 +96,11 @@ public class JdbcCglibProxyFactory
 		return enhancer.createClass();
 	}
 
+	/**
+	 * Method createProxyCallableStatementClass ...
+	 *
+	 * @return Class<CallableStatement>
+	 */
 	@SuppressWarnings("unchecked")
 	private Class<CallableStatement> createProxyCallableStatementClass()
 	{
@@ -95,6 +113,11 @@ public class JdbcCglibProxyFactory
 		return enhancer.createClass();
 	}
 
+	/**
+	 * Method createProxyPreparedStatementClass ...
+	 *
+	 * @return Class<PreparedStatement>
+	 */
 	@SuppressWarnings("unchecked")
 	private Class<PreparedStatement> createProxyPreparedStatementClass()
 	{
@@ -107,6 +130,11 @@ public class JdbcCglibProxyFactory
 		return enhancer.createClass();
 	}
 
+	/**
+	 * Method createProxyResultSetClass ...
+	 *
+	 * @return Class<ResultSet>
+	 */
 	@SuppressWarnings("unchecked")
 	private Class<ResultSet> createProxyResultSetClass()
 	{
@@ -261,11 +289,25 @@ public class JdbcCglibProxyFactory
 	{
 		private final Object delegate;
 
+		/**
+		 * Constructor FastDispatcher creates a new FastDispatcher instance.
+		 *
+		 * @param delegate
+		 * 		of type Object
+		 */
 		public FastDispatcher(Object delegate)
 		{
 			this.delegate = delegate;
 		}
 
+		/**
+		 * Method loadObject ...
+		 *
+		 * @return Object
+		 *
+		 * @throws Exception
+		 * 		when
+		 */
 		@Override
 		public Object loadObject() throws Exception
 		{
@@ -278,11 +320,34 @@ public class JdbcCglibProxyFactory
 	{
 		private final JavaProxyBase<?> interceptor;
 
+		/**
+		 * Constructor Interceptor creates a new Interceptor instance.
+		 *
+		 * @param interceptor
+		 * 		of type JavaProxyBase<?>
+		 */
 		public Interceptor(JavaProxyBase<?> interceptor)
 		{
 			this.interceptor = interceptor;
 		}
 
+		/**
+		 * Method intercept ...
+		 *
+		 * @param enhanced
+		 * 		of type Object
+		 * @param method
+		 * 		of type Method
+		 * @param args
+		 * 		of type Object[]
+		 * @param fastProxy
+		 * 		of type MethodProxy
+		 *
+		 * @return Object
+		 *
+		 * @throws Throwable
+		 * 		when
+		 */
 		@Override
 		public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy fastProxy) throws Throwable
 		{
@@ -296,11 +361,25 @@ public class JdbcCglibProxyFactory
 	{
 		private final Map<String, Method> methodMap;
 
+		/**
+		 * Constructor InterceptorFilter creates a new InterceptorFilter instance.
+		 *
+		 * @param proxyClass
+		 * 		of type JavaProxyBase<?>
+		 */
 		public InterceptorFilter(JavaProxyBase<?> proxyClass)
 		{
 			methodMap = proxyClass.getMethodMap();
 		}
 
+		/**
+		 * Method accept ...
+		 *
+		 * @param method
+		 * 		of type Method
+		 *
+		 * @return int
+		 */
 		@Override
 		public int accept(Method method)
 		{

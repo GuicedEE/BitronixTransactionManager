@@ -41,6 +41,9 @@ public final class TransactionContextHelper
 
 	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionContextHelper.class.toString());
 
+	/**
+	 * Constructor TransactionContextHelper creates a new TransactionContextHelper instance.
+	 */
 	// do not instantiate
 	private TransactionContextHelper()
 	{
@@ -120,6 +123,16 @@ public final class TransactionContextHelper
 		                                 .getCurrentTransaction();
 	}
 
+	/**
+	 * Method getLatestAlreadyEnlistedXAResourceHolderState ...
+	 *
+	 * @param xaResourceHolder
+	 * 		of type XAResourceHolder
+	 * @param currentTransaction
+	 * 		of type BitronixTransaction
+	 *
+	 * @return XAResourceHolderState
+	 */
 	private static XAResourceHolderState getLatestAlreadyEnlistedXAResourceHolderState(XAResourceHolder xaResourceHolder, BitronixTransaction currentTransaction)
 	{
 		if (currentTransaction == null)
@@ -132,6 +145,11 @@ public final class TransactionContextHelper
 		{
 			private XAResourceHolderState latestEnlistedHolder;
 
+			/**
+			 * Called when visiting all {@link bitronix.tm.internal.XAResourceHolderState}s.
+			 * @param xaResourceHolderState the currently visited {@link bitronix.tm.internal.XAResourceHolderState}
+			 * @return return <code>true</code> to continue visitation, <code>false</code> to stop visitation
+			 */
 			@Override
 			public boolean visit(XAResourceHolderState xaResourceHolderState)
 			{
@@ -186,6 +204,11 @@ public final class TransactionContextHelper
 			{
 				private SystemException systemException = null;
 
+				/**
+				 * Called when visiting all {@link bitronix.tm.internal.XAResourceHolderState}s.
+				 * @param xaResourceHolderState the currently visited {@link bitronix.tm.internal.XAResourceHolderState}
+				 * @return return <code>true</code> to continue visitation, <code>false</code> to stop visitation
+				 */
 				@Override
 				public boolean visit(XAResourceHolderState xaResourceHolderState)
 				{
@@ -226,6 +249,16 @@ public final class TransactionContextHelper
 		} // isInEnlistingGlobalTransactionContext
 	}
 
+	/**
+	 * Method isInEnlistingGlobalTransactionContext ...
+	 *
+	 * @param xaResourceHolder
+	 * 		of type XAResourceHolder<? extends XAResourceHolder>
+	 * @param currentTransaction
+	 * 		of type BitronixTransaction
+	 *
+	 * @return boolean
+	 */
 	private static boolean isInEnlistingGlobalTransactionContext(XAResourceHolder<? extends XAResourceHolder> xaResourceHolder, BitronixTransaction currentTransaction)
 	{
 		boolean globalTransactionMode = false;
@@ -317,6 +350,16 @@ public final class TransactionContextHelper
 		}
 	}
 
+	/**
+	 * Method isInEnlistingGlobalTransactionContext ...
+	 *
+	 * @param xaStatefulHolder
+	 * 		of type XAStatefulHolder<? extends XAStatefulHolder>
+	 * @param currentTransaction
+	 * 		of type BitronixTransaction
+	 *
+	 * @return boolean
+	 */
 	private static boolean isInEnlistingGlobalTransactionContext(XAStatefulHolder<? extends XAStatefulHolder> xaStatefulHolder, BitronixTransaction currentTransaction)
 	{
 		List<? extends XAResourceHolder<? extends XAResourceHolder>> xaResourceHolders = xaStatefulHolder.getXAResourceHolders();
@@ -336,6 +379,17 @@ public final class TransactionContextHelper
 		return false;
 	}
 
+	/**
+	 * Method isEnlistedInSomeTransaction ...
+	 *
+	 * @param xaStatefulHolder
+	 * 		of type XAStatefulHolder<? extends XAStatefulHolder>
+	 *
+	 * @return boolean
+	 *
+	 * @throws BitronixSystemException
+	 * 		when
+	 */
 	private static boolean isEnlistedInSomeTransaction(XAStatefulHolder<? extends XAStatefulHolder> xaStatefulHolder) throws BitronixSystemException
 	{
 		List<? extends XAResourceHolder<? extends XAResourceHolder>> xaResourceHolders = xaStatefulHolder.getXAResourceHolders();
@@ -355,6 +409,16 @@ public final class TransactionContextHelper
 		return false;
 	}
 
+	/**
+	 * Method isAlreadyRegisteredForDeferredRelease ...
+	 *
+	 * @param xaStatefulHolder
+	 * 		of type XAStatefulHolder<? extends XAStatefulHolder>
+	 * @param currentTransaction
+	 * 		of type BitronixTransaction
+	 *
+	 * @return boolean
+	 */
 	private static boolean isAlreadyRegisteredForDeferredRelease(XAStatefulHolder<? extends XAStatefulHolder> xaStatefulHolder, BitronixTransaction currentTransaction)
 	{
 		boolean alreadyDeferred = findDeferredRelease(xaStatefulHolder, currentTransaction) != null;
@@ -365,6 +429,17 @@ public final class TransactionContextHelper
 		return alreadyDeferred;
 	}
 
+	/**
+	 * Method isEnlistedInSomeTransaction ...
+	 *
+	 * @param xaResourceHolder
+	 * 		of type XAResourceHolder<? extends XAResourceHolder>
+	 *
+	 * @return boolean
+	 *
+	 * @throws BitronixSystemException
+	 * 		when
+	 */
 	private static boolean isEnlistedInSomeTransaction(XAResourceHolder<? extends XAResourceHolder> xaResourceHolder) throws BitronixSystemException
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -384,6 +459,16 @@ public final class TransactionContextHelper
 		return xaResourceHolder.hasStateForXAResource(xaResourceHolder);
 	}
 
+	/**
+	 * Method findDeferredRelease ...
+	 *
+	 * @param xaStatefulHolder
+	 * 		of type XAStatefulHolder<? extends XAStatefulHolder>
+	 * @param currentTransaction
+	 * 		of type BitronixTransaction
+	 *
+	 * @return DeferredReleaseSynchronization
+	 */
 	private static DeferredReleaseSynchronization findDeferredRelease(XAStatefulHolder<? extends XAStatefulHolder> xaStatefulHolder, BitronixTransaction currentTransaction)
 	{
 		Scheduler<Synchronization> synchronizationScheduler = currentTransaction.getSynchronizationScheduler();

@@ -51,6 +51,14 @@ public class JmsPooledConnection
 	private volatile Date acquisitionDate;
 	private volatile Date lastReleaseDate;
 
+	/**
+	 * Constructor JmsPooledConnection creates a new JmsPooledConnection instance.
+	 *
+	 * @param poolingConnectionFactory
+	 * 		of type PoolingConnectionFactory
+	 * @param connection
+	 * 		of type XAConnection
+	 */
 	protected JmsPooledConnection(PoolingConnectionFactory poolingConnectionFactory, XAConnection connection)
 	{
 		this.poolingConnectionFactory = poolingConnectionFactory;
@@ -83,16 +91,34 @@ public class JmsPooledConnection
 		ManagementRegistrar.register(jmxName, this);
 	}
 
+	/**
+	 * Method getXAConnection returns the XAConnection of this JmsPooledConnection object.
+	 *
+	 * @return the XAConnection (type XAConnection) of this JmsPooledConnection object.
+	 */
 	public XAConnection getXAConnection()
 	{
 		return xaConnection;
 	}
 
+	/**
+	 * Method getPoolingConnectionFactory returns the poolingConnectionFactory of this JmsPooledConnection object.
+	 *
+	 * @return the poolingConnectionFactory (type PoolingConnectionFactory) of this JmsPooledConnection object.
+	 */
 	public PoolingConnectionFactory getPoolingConnectionFactory()
 	{
 		return poolingConnectionFactory;
 	}
 
+	/**
+	 * Method createRecoveryXAResourceHolder ...
+	 *
+	 * @return RecoveryXAResourceHolder
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	public synchronized RecoveryXAResourceHolder createRecoveryXAResourceHolder() throws JMSException
 	{
 		DualSessionWrapper dualSessionWrapper = new DualSessionWrapper(this, false, 0);
@@ -100,6 +126,14 @@ public class JmsPooledConnection
 		return new RecoveryXAResourceHolder(dualSessionWrapper);
 	}
 
+	/**
+	 * Get the list of {@link bitronix.tm.resource.common.XAResourceHolder}s created by this
+	 * {@link bitronix.tm.resource.common.XAStatefulHolder} that are still open.
+	 * <p>This method is thread-safe.</p>
+	 *
+	 * @return the list of {@link bitronix.tm.resource.common.XAResourceHolder}s created by this
+	 * 		{@link bitronix.tm.resource.common.XAStatefulHolder} that are still open.
+	 */
 	@Override
 	public List<DualSessionWrapper> getXAResourceHolders()
 	{
@@ -109,6 +143,16 @@ public class JmsPooledConnection
 		}
 	}
 
+	/**
+	 * Create a disposable handler used to drive a pooled instance of
+	 * {@link bitronix.tm.resource.common.XAStatefulHolder}.
+	 * <p>This method is thread-safe.</p>
+	 *
+	 * @return a resource-specific disposable connection object.
+	 *
+	 * @throws Exception
+	 * 		a resource-specific exception thrown when the disposable connection cannot be created.
+	 */
 	@Override
 	public Object getConnectionHandle() throws Exception
 	{
@@ -143,6 +187,12 @@ public class JmsPooledConnection
 		return new JmsConnectionHandle(this, xaConnection);
 	}
 
+	/**
+	 * Close the physical connection that this {@link bitronix.tm.resource.common.XAStatefulHolder} represents.
+	 *
+	 * @throws Exception
+	 * 		a resource-specific exception thrown when there is an error closing the physical connection.
+	 */
 	@Override
 	public synchronized void close() throws JMSException
 	{
@@ -161,12 +211,24 @@ public class JmsPooledConnection
 		}
 	}
 
+	/**
+	 * Get the date at which this object was last released to the pool. This is required to check if it is eligible
+	 * for discard when the containing pool needs to shrink.
+	 *
+	 * @return the date at which this object was last released to the pool or null if it never left the pool.
+	 */
 	@Override
 	public Date getLastReleaseDate()
 	{
 		return lastReleaseDate;
 	}
 
+	/**
+	 * Method testXAConnection ...
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	private void testXAConnection() throws JMSException
 	{
 		if (!poolingConnectionFactory.getTestConnections())
@@ -194,6 +256,12 @@ public class JmsPooledConnection
 		}
 	}
 
+	/**
+	 * Method release ...
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	protected void release() throws JMSException
 	{
 		if (LogDebugCheck.isDebugEnabled())
@@ -218,6 +286,9 @@ public class JmsPooledConnection
 		}
 	}
 
+	/**
+	 * Method closePendingSessions ...
+	 */
 	private void closePendingSessions()
 	{
 		synchronized (sessions)
@@ -245,6 +316,19 @@ public class JmsPooledConnection
 		}
 	}
 
+	/**
+	 * Method createSession ...
+	 *
+	 * @param transacted
+	 * 		of type boolean
+	 * @param acknowledgeMode
+	 * 		of type int
+	 *
+	 * @return Session
+	 *
+	 * @throws JMSException
+	 * 		when
+	 */
 	protected Session createSession(boolean transacted, int acknowledgeMode) throws JMSException
 	{
 		synchronized (sessions)
@@ -274,6 +358,11 @@ public class JmsPooledConnection
 		}
 	}
 
+	/**
+	 * Method getNotAccessibleSession returns the notAccessibleSession of this JmsPooledConnection object.
+	 *
+	 * @return the notAccessibleSession (type DualSessionWrapper) of this JmsPooledConnection object.
+	 */
 	private DualSessionWrapper getNotAccessibleSession()
 	{
 		synchronized (sessions)
@@ -293,6 +382,11 @@ public class JmsPooledConnection
 		}
 	}
 
+	/**
+	 * Method toString ...
+	 *
+	 * @return String
+	 */
 	@Override
 	public String toString()
 	{
@@ -302,18 +396,33 @@ public class JmsPooledConnection
 
 	/* management */
 
+	/**
+	 * Method getStateDescription returns the stateDescription of this JmsPooledConnection object.
+	 *
+	 * @return the stateDescription (type String) of this JmsPooledConnection object.
+	 */
 	@Override
 	public String getStateDescription()
 	{
 		return getState().toString();
 	}
 
+	/**
+	 * Method getAcquisitionDate returns the acquisitionDate of this JmsPooledConnection object.
+	 *
+	 * @return the acquisitionDate (type Date) of this JmsPooledConnection object.
+	 */
 	@Override
 	public Date getAcquisitionDate()
 	{
 		return acquisitionDate;
 	}
 
+	/**
+	 * Method getTransactionGtridsCurrentlyHoldingThis returns the transactionGtridsCurrentlyHoldingThis of this JmsPooledConnection object.
+	 *
+	 * @return the transactionGtridsCurrentlyHoldingThis (type Collection<String>) of this JmsPooledConnection object.
+	 */
 	@Override
 	public Collection<String> getTransactionGtridsCurrentlyHoldingThis()
 	{
@@ -328,6 +437,14 @@ public class JmsPooledConnection
 		}
 	}
 
+	/**
+	 * Method getXAResourceHolderForXaResource ...
+	 *
+	 * @param xaResource
+	 * 		of type XAResource
+	 *
+	 * @return DualSessionWrapper
+	 */
 	public DualSessionWrapper getXAResourceHolderForXaResource(XAResource xaResource)
 	{
 		synchronized (sessions)
@@ -351,6 +468,16 @@ public class JmsPooledConnection
 	private final class JmsPooledConnectionStateChangeListener
 			implements StateChangeListener<JmsPooledConnection>
 	{
+		/**
+		 * Method stateChanged ...
+		 *
+		 * @param source
+		 * 		of type JmsPooledConnection
+		 * @param oldState
+		 * 		of type State
+		 * @param newState
+		 * 		of type State
+		 */
 		@Override
 		public void stateChanged(JmsPooledConnection source, State oldState, State newState)
 		{
@@ -372,6 +499,16 @@ public class JmsPooledConnection
 			}
 		}
 
+		/**
+		 * Method stateChanging ...
+		 *
+		 * @param source
+		 * 		of type JmsPooledConnection
+		 * @param currentState
+		 * 		of type State
+		 * @param futureState
+		 * 		of type State
+		 */
 		@Override
 		public void stateChanging(JmsPooledConnection source, State currentState, State futureState)
 		{
@@ -385,6 +522,16 @@ public class JmsPooledConnection
 	private final class JmsConnectionHandleStateChangeListener
 			implements StateChangeListener<DualSessionWrapper>
 	{
+		/**
+		 * Method stateChanged ...
+		 *
+		 * @param source
+		 * 		of type DualSessionWrapper
+		 * @param oldState
+		 * 		of type State
+		 * @param newState
+		 * 		of type State
+		 */
 		@Override
 		public void stateChanged(DualSessionWrapper source, State oldState, State newState)
 		{
@@ -401,6 +548,16 @@ public class JmsPooledConnection
 			}
 		}
 
+		/**
+		 * Method stateChanging ...
+		 *
+		 * @param source
+		 * 		of type DualSessionWrapper
+		 * @param currentState
+		 * 		of type State
+		 * @param futureState
+		 * 		of type State
+		 */
 		@Override
 		public void stateChanging(DualSessionWrapper source, State currentState, State futureState)
 		{
