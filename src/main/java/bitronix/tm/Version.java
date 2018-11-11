@@ -3,9 +3,15 @@ package bitronix.tm;
 import java.io.IOException;
 import java.net.URL;
 import java.util.jar.Manifest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Version
 {
+	private Version()
+	{
+		//No config
+	}
 
 	public static String getVersion()
 	{
@@ -26,7 +32,8 @@ public class Version
 		}
 		catch (IOException E)
 		{
-			// handle
+			Logger.getLogger("BTMVersion")
+			      .log(Level.WARNING, "Unable to read MANIFEST in META-INF", E);
 		}
 		return "Unknown";
 	}

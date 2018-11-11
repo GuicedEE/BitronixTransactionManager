@@ -203,7 +203,7 @@ public class BitronixTransactionManager
 		}
 		currentTx = createTransaction();
 
-		ThreadContext threadContext = ThreadContext.getThreadContext();
+		ThreadContext threadContext = ThreadContext.getContext();
 		ClearContextSynchronization clearContextSynchronization = new ClearContextSynchronization(currentTx, threadContext);
 		try
 		{
@@ -285,7 +285,7 @@ public class BitronixTransactionManager
 		{
 			XAResourceManager resourceManager = tx.getResourceManager();
 			resourceManager.resume();
-			ThreadContext threadContext = ThreadContext.getThreadContext();
+			ThreadContext threadContext = ThreadContext.getContext();
 			threadContext.setTransaction(tx);
 			inFlightTransactions.get(tx)
 			                    .setThreadContext(threadContext);
@@ -338,7 +338,7 @@ public class BitronixTransactionManager
 		{
 			throw new BitronixSystemException("cannot set a timeout to less than 0 second (was: " + seconds + "s)");
 		}
-		ThreadContext.getThreadContext()
+		ThreadContext.getContext()
 		             .setTimeout(seconds);
 	}
 
@@ -380,9 +380,9 @@ public class BitronixTransactionManager
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("clearing current thread context: " + ThreadContext.getThreadContext());
+			log.finer("clearing current thread context: " + ThreadContext.getContext());
 		}
-		ThreadContext.getThreadContext()
+		ThreadContext.getContext()
 		             .clearTransaction();
 	}
 
@@ -424,7 +424,7 @@ public class BitronixTransactionManager
 	 */
 	public BitronixTransaction getCurrentTransaction()
 	{
-		return ThreadContext.getThreadContext()
+		return ThreadContext.getContext()
 		                    .getTransaction();
 	}
 
@@ -436,7 +436,7 @@ public class BitronixTransactionManager
 	private BitronixTransaction createTransaction()
 	{
 		BitronixTransaction transaction = new BitronixTransaction();
-		ThreadContext.getThreadContext()
+		ThreadContext.getContext()
 		             .setTransaction(transaction);
 		return transaction;
 	}
@@ -601,7 +601,7 @@ public class BitronixTransactionManager
 				}
 				try
 				{
-					wait(1000);
+					Thread.sleep(1000);
 				}
 				catch (InterruptedException ex)
 				{

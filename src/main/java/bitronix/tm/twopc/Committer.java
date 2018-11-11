@@ -25,6 +25,7 @@ import bitronix.tm.utils.Decoder;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.Status;
+import javax.transaction.SystemException;
 import javax.transaction.xa.XAException;
 import java.util.*;
 import java.util.logging.Level;
@@ -67,7 +68,8 @@ public final class Committer
 	 * @throws bitronix.tm.internal.BitronixRollbackException
 	 * 		during 1PC when resource fails to commit
 	 */
-	public void commit(BitronixTransaction transaction, List<XAResourceHolderState> interestedResources) throws HeuristicMixedException, HeuristicRollbackException, BitronixSystemException, BitronixRollbackException
+	public void commit(BitronixTransaction transaction, List<XAResourceHolderState> interestedResources)
+			throws HeuristicMixedException, HeuristicRollbackException, SystemException, BitronixRollbackException
 	{
 		XAResourceManager resourceManager = transaction.getResourceManager();
 		if (resourceManager.size() == 0)

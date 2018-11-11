@@ -39,8 +39,12 @@ public class BitronixTransactionSynchronizationRegistry
 		implements TransactionSynchronizationRegistry, Referenceable
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixTransactionSynchronizationRegistry.class.toString());
-	private final static ThreadLocal<Map<Object, Object>> resourcesTl = ThreadLocal.withInitial(HashMap::new);
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixTransactionSynchronizationRegistry.class.toString());
+	private static final ThreadLocal<Map<Object, Object>> resourcesTl = ThreadLocal.withInitial(HashMap::new);
+
+	private static final String CANT_GET_TRANSACTION = "cannot get current transaction status";
+	private static final String NO_TRANSACTION_ON_THREAD = "no transaction started on current thread";
+
 	private final BitronixTransactionManager transactionManager;
 
 
@@ -63,7 +67,7 @@ public class BitronixTransactionSynchronizationRegistry
 		}
 		catch (SystemException ex)
 		{
-			throw new BitronixRuntimeException("cannot get current transaction status", ex);
+			throw new BitronixRuntimeException(CANT_GET_TRANSACTION, ex);
 		}
 	}
 
@@ -78,7 +82,7 @@ public class BitronixTransactionSynchronizationRegistry
 			}
 			if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
 			{
-				throw new IllegalStateException("no transaction started on current thread");
+				throw new IllegalStateException(NO_TRANSACTION_ON_THREAD);
 			}
 
 			Object oldValue = getResources().put(key, value);
@@ -96,7 +100,7 @@ public class BitronixTransactionSynchronizationRegistry
 		}
 		catch (SystemException ex)
 		{
-			throw new BitronixRuntimeException("cannot get current transaction status", ex);
+			throw new BitronixRuntimeException(CANT_GET_TRANSACTION, ex);
 		}
 	}
 
@@ -111,14 +115,14 @@ public class BitronixTransactionSynchronizationRegistry
 			}
 			if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
 			{
-				throw new IllegalStateException("no transaction started on current thread");
+				throw new IllegalStateException(NO_TRANSACTION_ON_THREAD);
 			}
 
 			return getResources().get(key);
 		}
 		catch (SystemException ex)
 		{
-			throw new BitronixRuntimeException("cannot get current transaction status", ex);
+			throw new BitronixRuntimeException(CANT_GET_TRANSACTION, ex);
 		}
 	}
 
@@ -129,7 +133,7 @@ public class BitronixTransactionSynchronizationRegistry
 		{
 			if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
 			{
-				throw new IllegalStateException("no transaction started on current thread");
+				throw new IllegalStateException(NO_TRANSACTION_ON_THREAD);
 			}
 			if (currentTransaction().getStatus() == Status.STATUS_PREPARING ||
 			    currentTransaction().getStatus() == Status.STATUS_PREPARED ||
@@ -147,7 +151,7 @@ public class BitronixTransactionSynchronizationRegistry
 		}
 		catch (SystemException ex)
 		{
-			throw new BitronixRuntimeException("cannot get current transaction status", ex);
+			throw new BitronixRuntimeException(CANT_GET_TRANSACTION, ex);
 		}
 	}
 
@@ -165,7 +169,7 @@ public class BitronixTransactionSynchronizationRegistry
 		}
 		catch (SystemException ex)
 		{
-			throw new BitronixRuntimeException("cannot get current transaction status", ex);
+			throw new BitronixRuntimeException(CANT_GET_TRANSACTION, ex);
 		}
 	}
 
@@ -176,7 +180,7 @@ public class BitronixTransactionSynchronizationRegistry
 		{
 			if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
 			{
-				throw new IllegalStateException("no transaction started on current thread");
+				throw new IllegalStateException(NO_TRANSACTION_ON_THREAD);
 			}
 
 			currentTransaction().setStatus(Status.STATUS_MARKED_ROLLBACK);
@@ -194,14 +198,14 @@ public class BitronixTransactionSynchronizationRegistry
 		{
 			if (currentTransaction() == null || currentTransaction().getStatus() == Status.STATUS_NO_TRANSACTION)
 			{
-				throw new IllegalStateException("no transaction started on current thread");
+				throw new IllegalStateException(NO_TRANSACTION_ON_THREAD);
 			}
 
 			return currentTransaction().getStatus() == Status.STATUS_MARKED_ROLLBACK;
 		}
 		catch (SystemException e)
 		{
-			throw new BitronixRuntimeException("cannot get current transaction status");
+			throw new BitronixRuntimeException(CANT_GET_TRANSACTION);
 		}
 	}
 

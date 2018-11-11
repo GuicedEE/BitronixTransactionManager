@@ -17,13 +17,17 @@ package bitronix.tm.twopc;
 
 import bitronix.tm.BitronixTransaction;
 import bitronix.tm.TransactionManagerServices;
-import bitronix.tm.internal.*;
+import bitronix.tm.internal.BitronixRollbackException;
+import bitronix.tm.internal.LogDebugCheck;
+import bitronix.tm.internal.XAResourceHolderState;
+import bitronix.tm.internal.XAResourceManager;
 import bitronix.tm.twopc.executor.Executor;
 import bitronix.tm.twopc.executor.Job;
 import bitronix.tm.utils.Decoder;
 
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
+import javax.transaction.SystemException;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import java.util.ArrayList;
@@ -63,7 +67,7 @@ public final class Preparer
 	 * @throws bitronix.tm.internal.BitronixSystemException
 	 * 		when an internal error occured.
 	 */
-	public List<XAResourceHolderState> prepare(BitronixTransaction transaction) throws RollbackException, BitronixSystemException
+	public List<XAResourceHolderState> prepare(BitronixTransaction transaction) throws RollbackException, SystemException
 	{
 		XAResourceManager resourceManager = transaction.getResourceManager();
 		transaction.setStatus(Status.STATUS_PREPARING);

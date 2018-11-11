@@ -30,8 +30,8 @@ public class BitronixMultiSystemException
 		extends BitronixSystemException
 {
 
-	private List<? extends Exception> exceptions;
-	private List<XAResourceHolderState> resourceStates;
+	private final transient List<? extends Exception> exceptions;
+	private final transient List<XAResourceHolderState> resourceStates;
 
 	public BitronixMultiSystemException(String string, List<? extends Exception> exceptions, List<XAResourceHolderState> resourceStates)
 	{

@@ -27,8 +27,8 @@ import bitronix.tm.TransactionManagerServices;
 public class ThreadContext
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ThreadContext.class.toString());
-	private static final ThreadLocal<ThreadContext> threadContext = ThreadLocal.withInitial(() -> new ThreadContext());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ThreadContext.class.toString());
+	private static final ThreadLocal<ThreadContext> context = ThreadLocal.withInitial(ThreadContext::new);
 	private volatile BitronixTransaction transaction;
 	private volatile int timeout = TransactionManagerServices.getConfiguration()
 	                                                         .getDefaultTransactionTimeout();
@@ -49,9 +49,9 @@ public class ThreadContext
 	 *
 	 * @return the calling thread's ThreadContext
 	 */
-	public static ThreadContext getThreadContext()
+	public static ThreadContext getContext()
 	{
-		return threadContext.get();
+		return context.get();
 	}
 
 	/**

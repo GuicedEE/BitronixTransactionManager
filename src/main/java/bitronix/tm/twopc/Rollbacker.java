@@ -25,6 +25,7 @@ import bitronix.tm.utils.Decoder;
 import javax.transaction.HeuristicCommitException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.Status;
+import javax.transaction.SystemException;
 import javax.transaction.xa.XAException;
 import java.util.*;
 import java.util.logging.Level;
@@ -65,7 +66,7 @@ public final class Rollbacker
 	 * @throws bitronix.tm.internal.BitronixSystemException
 	 * 		when an internal error occured.
 	 */
-	public void rollback(BitronixTransaction transaction, List<XAResourceHolderState> interestedResources) throws HeuristicMixedException, HeuristicCommitException, BitronixSystemException
+	public void rollback(BitronixTransaction transaction, List<XAResourceHolderState> interestedResources) throws HeuristicMixedException, HeuristicCommitException, SystemException
 	{
 		XAResourceManager resourceManager = transaction.getResourceManager();
 		transaction.setStatus(Status.STATUS_ROLLING_BACK);

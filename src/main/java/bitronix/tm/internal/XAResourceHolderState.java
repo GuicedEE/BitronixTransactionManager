@@ -42,7 +42,7 @@ import java.util.Date;
 public class XAResourceHolderState
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(XAResourceHolderState.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(XAResourceHolderState.class.toString());
 
 	private final ResourceBean bean;
 	private final XAResourceHolder xaResourceHolder;

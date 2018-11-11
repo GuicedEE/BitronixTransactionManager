@@ -46,7 +46,7 @@ import java.util.logging.Level;
 public class TransactionManagerServices
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionManagerServices.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionManagerServices.class.toString());
 
 	private static final Lock transactionManagerLock = new ReentrantLock();
 	private static final AtomicReference<BitronixTransactionSynchronizationRegistry> transactionSynchronizationRegistryRef = new AtomicReference<>();
@@ -58,6 +58,11 @@ public class TransactionManagerServices
 	private static final AtomicReference<Executor> executorRef = new AtomicReference<>();
 	private static final AtomicReference<ExceptionAnalyzer> exceptionAnalyzerRef = new AtomicReference<>();
 	private static volatile BitronixTransactionManager transactionManager;
+
+	private TransactionManagerServices()
+	{
+		//No config required
+	}
 
 	/**
 	 * Create an initialized transaction manager.

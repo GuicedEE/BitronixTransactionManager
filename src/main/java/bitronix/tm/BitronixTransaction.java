@@ -43,8 +43,11 @@ import java.util.logging.Level;
 public class BitronixTransaction
 		implements Transaction, BitronixTransactionMBean
 {
+	private static final String NOT_STARTED_TEXT = "transaction hasn't started yet";
+	private static final String EXTRA_ERROR_TEXT = ", extra error=";
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixTransaction.class.toString());
+
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixTransaction.class.toString());
 
 	private final XAResourceManager resourceManager;
 	private final Scheduler<Synchronization> synchronizationScheduler = new Scheduler<>();
@@ -99,11 +102,11 @@ public class BitronixTransaction
 	}
 
 	@Override
-	public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SecurityException, SystemException
+	public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SystemException
 	{
 		if (status == Status.STATUS_NO_TRANSACTION)
 		{
-			throw new IllegalStateException("transaction hasn't started yet");
+			throw new IllegalStateException(NOT_STARTED_TEXT);
 		}
 		if (isDone())
 		{
@@ -224,7 +227,7 @@ public class BitronixTransaction
 	{
 		if (status == Status.STATUS_NO_TRANSACTION)
 		{
-			throw new IllegalStateException("transaction hasn't started yet");
+			throw new IllegalStateException(NOT_STARTED_TEXT);
 		}
 		if (flag != XAResource.TMSUCCESS && flag != XAResource.TMSUSPEND && flag != XAResource.TMFAIL)
 		{
@@ -244,7 +247,7 @@ public class BitronixTransaction
 		class LocalVisitor
 				implements XAResourceHolderStateVisitor
 		{
-			private final List<BitronixSystemException> exceptions = new ArrayList<>();
+			private final List<SystemException> exceptions = new ArrayList<>();
 			private final List<XAResourceHolderState> resourceStates = new ArrayList<>();
 			private boolean result = true;
 
@@ -255,7 +258,7 @@ public class BitronixTransaction
 				{
 					result &= delistResource(xaResourceHolderState, flag);
 				}
-				catch (BitronixSystemException ex)
+				catch (SystemException ex)
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{
@@ -295,7 +298,7 @@ public class BitronixTransaction
 	{
 		if (status == Status.STATUS_NO_TRANSACTION)
 		{
-			throw new IllegalStateException("transaction hasn't started yet");
+			throw new IllegalStateException(NOT_STARTED_TEXT);
 		}
 		if (status == Status.STATUS_MARKED_ROLLBACK)
 		{
@@ -330,10 +333,10 @@ public class BitronixTransaction
 				// if the resource unilaterally rolled back, the transaction will never be able to commit -> mark it as rollback only
 				setStatus(Status.STATUS_MARKED_ROLLBACK);
 				throw new BitronixRollbackException("resource " + resourceHolderState + " unilaterally rolled back, error=" +
-				                                    Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails), ex);
+				                                    Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : EXTRA_ERROR_TEXT + extraErrorDetails), ex);
 			}
 			throw new BitronixSystemException("cannot enlist " + resourceHolderState + ", error=" +
-			                                  Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails), ex);
+			                                  Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : EXTRA_ERROR_TEXT + extraErrorDetails), ex);
 		}
 
 		resourceHolder.putXAResourceHolderState(resourceHolderState.getXid(), resourceHolderState);
@@ -347,11 +350,11 @@ public class BitronixTransaction
 	}
 
 	@Override
-	public void registerSynchronization(Synchronization synchronization) throws RollbackException, IllegalStateException, SystemException
+	public void registerSynchronization(Synchronization synchronization) throws RollbackException
 	{
 		if (status == Status.STATUS_NO_TRANSACTION)
 		{
-			throw new IllegalStateException("transaction hasn't started yet");
+			throw new IllegalStateException(NOT_STARTED_TEXT);
 		}
 		if (status == Status.STATUS_MARKED_ROLLBACK)
 		{
@@ -370,11 +373,11 @@ public class BitronixTransaction
 	}
 
 	@Override
-	public void rollback() throws IllegalStateException, SystemException
+	public void rollback() throws SystemException
 	{
 		if (status == Status.STATUS_NO_TRANSACTION)
 		{
-			throw new IllegalStateException("transaction hasn't started yet");
+			throw new IllegalStateException(NOT_STARTED_TEXT);
 		}
 		if (isDone())
 		{
@@ -441,7 +444,7 @@ public class BitronixTransaction
 	{
 		if (status == Status.STATUS_NO_TRANSACTION)
 		{
-			throw new IllegalStateException("transaction hasn't started yet");
+			throw new IllegalStateException(NOT_STARTED_TEXT);
 		}
 		if (isDone())
 		{
@@ -451,7 +454,7 @@ public class BitronixTransaction
 		setStatus(Status.STATUS_MARKED_ROLLBACK);
 	}
 
-	public void setStatus(int status) throws BitronixSystemException
+	public void setStatus(int status) throws SystemException
 	{
 		setStatus(status, resourceManager.collectUniqueNames());
 	}
@@ -467,8 +470,9 @@ public class BitronixTransaction
 			case Status.STATUS_ROLLING_BACK:
 			case Status.STATUS_ROLLEDBACK:
 				return true;
+			default:
+				return false;
 		}
-		return false;
 	}
 
 	private boolean isWorking()
@@ -480,11 +484,12 @@ public class BitronixTransaction
 			case Status.STATUS_COMMITTING:
 			case Status.STATUS_ROLLING_BACK:
 				return true;
+			default:
+				return false;
 		}
-		return false;
 	}
 
-	private boolean delistResource(XAResourceHolderState resourceHolderState, int flag) throws BitronixSystemException
+	private boolean delistResource(XAResourceHolderState resourceHolderState, int flag) throws SystemException
 	{
 		try
 		{
@@ -508,14 +513,14 @@ public class BitronixTransaction
 				// forward as this 'hidden' exception can be left throw out at unexpected locations where SystemException
 				// should be rethrown but the exception thrown here should be catched & handled... ?
 				throw new BitronixRollbackSystemException("resource " + resourceHolderState + " unilaterally rolled back, error=" +
-				                                          Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails), ex);
+				                                          Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : EXTRA_ERROR_TEXT + extraErrorDetails), ex);
 			}
 			throw new BitronixSystemException("cannot delist " + resourceHolderState + ", error=" + Decoder.decodeXAExceptionErrorCode(ex) +
-			                                  (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails), ex);
+			                                  (extraErrorDetails == null ? "" : EXTRA_ERROR_TEXT + extraErrorDetails), ex);
 		}
 	}
 
-	public void setStatus(int status, Set<String> uniqueNames) throws BitronixSystemException
+	public void setStatus(int status, Set<String> uniqueNames) throws SystemException
 	{
 		try
 		{
@@ -570,16 +575,47 @@ public class BitronixTransaction
 		}
 	}
 
+	/**
+	 * Run all registered Synchronizations' beforeCompletion() method. Be aware that this method can change the
+	 * transaction status to mark it as rollback only for instance.
+	 *
+	 * @throws bitronix.tm.internal.BitronixSystemException
+	 * 		if status changing due to a synchronization throwing an
+	 * 		exception fails.
+	 */
+	private void fireBeforeCompletionEvent() throws SystemException
+	{
+		if (LogDebugCheck.isDebugEnabled())
+		{
+			log.finer("before completion, " + synchronizationScheduler.size() + " synchronization(s) to execute");
+		}
+		Iterator<Synchronization> it = synchronizationScheduler.reverseIterator();
+		while (it.hasNext())
+		{
+			Synchronization synchronization = it.next();
+			try
+			{
+				if (LogDebugCheck.isDebugEnabled())
+				{
+					log.finer("executing synchronization " + synchronization);
+				}
+				synchronization.beforeCompletion();
+			}
+			catch (RuntimeException ex)
+			{
+				if (LogDebugCheck.isDebugEnabled())
+				{
+					log.finer("Synchronization.beforeCompletion() call failed for " + synchronization + ", marking transaction as rollback only - " + ex);
+				}
+				setStatus(Status.STATUS_MARKED_ROLLBACK);
+				throw ex;
+			}
+		}
+	}
+
 	public XAResourceManager getResourceManager()
 	{
 		return resourceManager;
-	}
-
-	public void timeout() throws BitronixSystemException
-	{
-		this.timeout = true;
-		setStatus(Status.STATUS_MARKED_ROLLBACK);
-		log.warning("transaction timed out: " + this);
 	}
 
 	public boolean timedOut()
@@ -587,23 +623,11 @@ public class BitronixTransaction
 		return timeout;
 	}
 
-	public void setActive(int timeout) throws IllegalStateException, SystemException
+	public void timeout() throws SystemException
 	{
-		if (status != Status.STATUS_NO_TRANSACTION)
-		{
-			throw new IllegalStateException("transaction has already started");
-		}
-
-		setStatus(Status.STATUS_ACTIVE);
-		this.startDate = new Date(MonotonicClock.currentTimeMillis());
-		this.timeoutDate = new Date(MonotonicClock.currentTimeMillis() + (timeout * 1000L));
-		if (TransactionManagerServices.getConfiguration()
-		                              .isDebugZeroResourceTransaction())
-		{
-			this.activationStackTrace = new StackTrace();
-		}
-
-		taskScheduler.scheduleTransactionTimeout(this, timeoutDate);
+		this.timeout = true;
+		setStatus(Status.STATUS_MARKED_ROLLBACK);
+		log.warning("transaction timed out: " + this);
 	}
 
 	public void addTransactionStatusChangeListener(TransactionStatusChangeListener listener)
@@ -755,42 +779,23 @@ public class BitronixTransaction
 		}
 	}
 
-	/**
-	 * Run all registered Synchronizations' beforeCompletion() method. Be aware that this method can change the
-	 * transaction status to mark it as rollback only for instance.
-	 *
-	 * @throws bitronix.tm.internal.BitronixSystemException
-	 * 		if status changing due to a synchronization throwing an
-	 * 		exception fails.
-	 */
-	private void fireBeforeCompletionEvent() throws BitronixSystemException
+	public void setActive(int timeout) throws SystemException
 	{
-		if (LogDebugCheck.isDebugEnabled())
+		if (status != Status.STATUS_NO_TRANSACTION)
 		{
-			log.finer("before completion, " + synchronizationScheduler.size() + " synchronization(s) to execute");
+			throw new IllegalStateException("transaction has already started");
 		}
-		Iterator<Synchronization> it = synchronizationScheduler.reverseIterator();
-		while (it.hasNext())
+
+		setStatus(Status.STATUS_ACTIVE);
+		this.startDate = new Date(MonotonicClock.currentTimeMillis());
+		this.timeoutDate = new Date(MonotonicClock.currentTimeMillis() + (timeout * 1000L));
+		if (TransactionManagerServices.getConfiguration()
+		                              .isDebugZeroResourceTransaction())
 		{
-			Synchronization synchronization = it.next();
-			try
-			{
-				if (LogDebugCheck.isDebugEnabled())
-				{
-					log.finer("executing synchronization " + synchronization);
-				}
-				synchronization.beforeCompletion();
-			}
-			catch (RuntimeException ex)
-			{
-				if (LogDebugCheck.isDebugEnabled())
-				{
-					log.finer("Synchronization.beforeCompletion() call failed for " + synchronization + ", marking transaction as rollback only - " + ex);
-				}
-				setStatus(Status.STATUS_MARKED_ROLLBACK);
-				throw ex;
-			}
+			this.activationStackTrace = new StackTrace();
 		}
+
+		taskScheduler.scheduleTransactionTimeout(this, timeoutDate);
 	}
 
 	private void fireAfterCompletionEvent()

@@ -46,8 +46,8 @@ public class Configuration
 
 	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(Configuration.class.toString());
 
-	private final static int MAX_SERVER_ID_LENGTH = 51;
-	private final static Charset SERVER_ID_CHARSET = Charset.forName("US-ASCII");
+	private static final int MAX_SERVER_ID_LENGTH = 51;
+	private static final Charset SERVER_ID_CHARSET = Charset.forName("US-ASCII");
 	private final AtomicReference<byte[]> serverIdArray = new AtomicReference<>();
 	private volatile String serverId;
 	private volatile String logPart1Filename;
@@ -1000,6 +1000,7 @@ public class Configuration
 						log.warning("Cannot get the unique server ID for this JVM ('bitronix.tm.serverId'). Make sure it is configured and you use only " +
 						            SERVER_ID_CHARSET.displayName() + " characters. " +
 						            "Will use IP address instead (unsafe for production usage!).");
+						log.log(Level.FINEST, "Using alternative id", ex);
 						try
 						{
 							id = InetAddress.getLocalHost()

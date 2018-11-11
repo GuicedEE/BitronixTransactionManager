@@ -31,7 +31,7 @@ public class BitronixTransactionSynchronizationRegistryObjectFactory
 		implements ObjectFactory
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixTransactionSynchronizationRegistryObjectFactory.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixTransactionSynchronizationRegistryObjectFactory.class.toString());
 
 	/**
 	 * Since there can be only one synchronization registry per VM instance, this method always returns a reference

@@ -16,9 +16,9 @@
 package bitronix.tm.timer;
 
 import bitronix.tm.BitronixTransaction;
-import bitronix.tm.internal.BitronixSystemException;
 import bitronix.tm.internal.LogDebugCheck;
 
+import javax.transaction.SystemException;
 import java.util.Date;
 
 /**
@@ -57,7 +57,7 @@ public class TransactionTimeoutTask
 			}
 			transaction.timeout();
 		}
-		catch (BitronixSystemException ex)
+		catch (SystemException ex)
 		{
 			throw new TaskException("failed to timeout " + transaction, ex);
 		}
