@@ -38,8 +38,13 @@ import java.util.logging.Level;
  */
 public class RecoveryHelper
 {
-
 	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(RecoveryHelper.class.toString());
+
+	private static final String XIDS_ON = " xid(s) on ";
+	private static final String UNABLE_TO_COMMIT_INDOUBT = "unable to commit in-doubt branch on resource ";
+	private static final String EXTRA_ERROR = ", extra error=";
+	private static final String ERROR = " - error=";
+	private static final String UNABLE_TO_ROLLBACK_INDOUBT = "unable to rollback aborted in-doubt branch on resource ";
 
 	private RecoveryHelper()
 	{
@@ -84,7 +89,7 @@ public class RecoveryHelper
 		}
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("STARTRSCAN recovered " + xidCount + " xid(s) on " + xaResourceHolderState);
+			log.finer("STARTRSCAN recovered " + xidCount + XIDS_ON + xaResourceHolderState);
 		}
 
 		try
@@ -98,7 +103,7 @@ public class RecoveryHelper
 				xidCount = recover(xaResourceHolderState, xids, XAResource.TMNOFLAGS);
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("NOFLAGS recovered " + xidCount + " xid(s) on " + xaResourceHolderState);
+					log.finer("NOFLAGS recovered " + xidCount + XIDS_ON + xaResourceHolderState);
 				}
 			}
 		}
@@ -119,7 +124,7 @@ public class RecoveryHelper
 			xidCount = recover(xaResourceHolderState, xids, XAResource.TMENDRSCAN);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("ENDRSCAN recovered " + xidCount + " xid(s) on " + xaResourceHolderState);
+				log.finer("ENDRSCAN recovered " + xidCount + XIDS_ON + xaResourceHolderState);
 			}
 		}
 		catch (XAException ex)
@@ -269,28 +274,28 @@ public class RecoveryHelper
 			                                                     .extractExtraXAExceptionDetails(ex);
 			if (ex.errorCode == XAException.XAER_NOTA)
 			{
-				log.log(Level.SEVERE, "unable to commit in-doubt branch on resource " + uniqueName + " - error=XAER_NOTA" +
-				                      (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails) + ". Forgotten heuristic?", ex);
+				log.log(Level.SEVERE, UNABLE_TO_COMMIT_INDOUBT + uniqueName + " - error=XAER_NOTA" +
+				                      (extraErrorDetails == null ? "" : EXTRA_ERROR + extraErrorDetails) + ". Forgotten heuristic?", ex);
 			}
 			else if (ex.errorCode == XAException.XA_HEURCOM)
 			{
-				log.info("unable to commit in-doubt branch on resource " + uniqueName + " - error=" +
-				         Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails) +
+				log.info(UNABLE_TO_COMMIT_INDOUBT + uniqueName + ERROR +
+				         Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : EXTRA_ERROR + extraErrorDetails) +
 				         ". Heuristic decision compatible with the global state of this transaction.");
 				forget = true;
 			}
 			else if (ex.errorCode == XAException.XA_HEURHAZ || ex.errorCode == XAException.XA_HEURMIX || ex.errorCode == XAException.XA_HEURRB)
 			{
-				log.severe("unable to commit in-doubt branch on resource " + uniqueName + " - error=" +
-				           Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails) +
+				log.severe(UNABLE_TO_COMMIT_INDOUBT + uniqueName + ERROR +
+				           Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : EXTRA_ERROR + extraErrorDetails) +
 				           ". Heuristic decision incompatible with the global state of this transaction!");
 				forget = true;
 				success = false;
 			}
 			else
 			{
-				log.log(Level.SEVERE, "unable to commit in-doubt branch on resource " + uniqueName +
-				                      " - error=" + Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails) + ".", ex);
+				log.log(Level.SEVERE, UNABLE_TO_COMMIT_INDOUBT + uniqueName +
+				                      ERROR + Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : EXTRA_ERROR + extraErrorDetails) + ".", ex);
 				success = false;
 			}
 		}
@@ -327,7 +332,7 @@ public class RecoveryHelper
 			String extraErrorDetails = TransactionManagerServices.getExceptionAnalyzer()
 			                                                     .extractExtraXAExceptionDetails(ex);
 			log.log(Level.SEVERE, "unable to forget XID " + xid + " on resource " + uniqueName + ", error=" + Decoder.decodeXAExceptionErrorCode(ex) +
-			                      (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails), ex);
+			                      (extraErrorDetails == null ? "" : EXTRA_ERROR + extraErrorDetails), ex);
 		}
 	}
 
@@ -357,28 +362,28 @@ public class RecoveryHelper
 			                                                     .extractExtraXAExceptionDetails(ex);
 			if (ex.errorCode == XAException.XAER_NOTA)
 			{
-				log.log(Level.SEVERE, "unable to rollback aborted in-doubt branch on resource " + uniqueName + " - error=XAER_NOTA" +
-				                      (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails) + ". Forgotten heuristic?", ex);
+				log.log(Level.SEVERE, UNABLE_TO_ROLLBACK_INDOUBT + uniqueName + " - error=XAER_NOTA" +
+				                      (extraErrorDetails == null ? "" : EXTRA_ERROR + extraErrorDetails) + ". Forgotten heuristic?", ex);
 			}
 			else if (ex.errorCode == XAException.XA_HEURRB)
 			{
-				log.info("unable to rollback aborted in-doubt branch on resource " + uniqueName + " - error=" +
-				         Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails) +
+				log.info(UNABLE_TO_ROLLBACK_INDOUBT + uniqueName + ERROR +
+				         Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : EXTRA_ERROR + extraErrorDetails) +
 				         ". Heuristic decision compatible with the global state of this transaction.");
 				forget = true;
 			}
 			else if (ex.errorCode == XAException.XA_HEURHAZ || ex.errorCode == XAException.XA_HEURMIX || ex.errorCode == XAException.XA_HEURCOM)
 			{
-				log.severe("unable to rollback aborted in-doubt branch on resource " + uniqueName + " - error=" +
-				           Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails) +
+				log.severe(UNABLE_TO_ROLLBACK_INDOUBT + uniqueName + ERROR +
+				           Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : EXTRA_ERROR + extraErrorDetails) +
 				           ". Heuristic decision incompatible with the global state of this transaction!");
 				forget = true;
 				success = false;
 			}
 			else
 			{
-				log.log(Level.SEVERE, "unable to rollback aborted in-doubt branch on resource " + uniqueName + " - error=" +
-				                      Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails) + ".", ex);
+				log.log(Level.SEVERE, UNABLE_TO_ROLLBACK_INDOUBT + uniqueName + ERROR +
+				                      Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : EXTRA_ERROR + extraErrorDetails) + ".", ex);
 				success = false;
 			}
 		}

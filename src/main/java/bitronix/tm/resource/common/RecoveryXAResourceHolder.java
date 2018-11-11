@@ -16,6 +16,7 @@
 package bitronix.tm.resource.common;
 
 import javax.transaction.xa.XAResource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class RecoveryXAResourceHolder
 	@Override
 	public List<RecoveryXAResourceHolder> getXAResourceHolders()
 	{
-		return null;
+		return new ArrayList<>();
 	}
 
 	/**

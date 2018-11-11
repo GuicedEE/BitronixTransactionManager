@@ -51,7 +51,7 @@ public class JdbcCglibProxyFactory
 	/**
 	 * Constructor JdbcCglibProxyFactory creates a new JdbcCglibProxyFactory instance.
 	 */
-	JdbcCglibProxyFactory()
+	public JdbcCglibProxyFactory()
 	{
 		proxyConnectionClass = createProxyConnectionClass();
 		proxyStatementClass = createProxyStatementClass();
@@ -318,17 +318,17 @@ public class JdbcCglibProxyFactory
 	static class Interceptor
 			implements MethodInterceptor
 	{
-		private final JavaProxyBase<?> interceptor;
+		private final JavaProxyBase<?> innerInterceptor;
 
 		/**
 		 * Constructor Interceptor creates a new Interceptor instance.
 		 *
-		 * @param interceptor
+		 * @param innerInterceptor
 		 * 		of type JavaProxyBase<?>
 		 */
-		public Interceptor(JavaProxyBase<?> interceptor)
+		public Interceptor(JavaProxyBase<?> innerInterceptor)
 		{
-			this.interceptor = interceptor;
+			this.innerInterceptor = innerInterceptor;
 		}
 
 		/**
@@ -351,8 +351,8 @@ public class JdbcCglibProxyFactory
 		@Override
 		public Object intercept(Object enhanced, Method method, Object[] args, MethodProxy fastProxy) throws Throwable
 		{
-			interceptor.proxy = enhanced;
-			return interceptor.invoke(interceptor, method, args);
+			innerInterceptor.proxy = enhanced;
+			return innerInterceptor.invoke(innerInterceptor, method, args);
 		}
 	}
 

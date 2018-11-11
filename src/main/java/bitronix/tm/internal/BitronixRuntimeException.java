@@ -46,4 +46,9 @@ public class BitronixRuntimeException
 	{
 		super(message);
 	}
+
+	public BitronixRuntimeException(Throwable cause)
+	{
+		super(cause);
+	}
 }

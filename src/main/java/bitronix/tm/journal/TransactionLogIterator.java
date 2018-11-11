@@ -1,6 +1,7 @@
 package bitronix.tm.journal;
 
 import bitronix.tm.TransactionManagerServices;
+import bitronix.tm.internal.BitronixRuntimeException;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -68,7 +69,7 @@ public class TransactionLogIterator
 			}
 			catch (IOException e)
 			{
-				throw new RuntimeException(e);
+				throw new BitronixRuntimeException(e);
 			}
 		}
 

@@ -23,6 +23,7 @@ package bitronix.tm.resource.jdbc;
  *
  * @author Ludovic Orban
  */
+@FunctionalInterface
 public interface LruEvictionListener<T>
 {
 
@@ -32,6 +33,6 @@ public interface LruEvictionListener<T>
 	 * @param value
 	 * 		of type T
 	 */
-	public void onEviction(T value);
+	void onEviction(T value);
 
 }

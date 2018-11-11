@@ -63,9 +63,6 @@ import static java.nio.charset.StandardCharsets.*;
 public class TransactionLogRecord
 		implements JournalRecord
 {
-
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogRecord.class.toString());
-
 	// status + record length + record header length + current time + sequence number + checksum
 	private static final int RECORD_HEADER_LENGTH = 4 + 4 + 4 + 8 + 4 + 4;
 

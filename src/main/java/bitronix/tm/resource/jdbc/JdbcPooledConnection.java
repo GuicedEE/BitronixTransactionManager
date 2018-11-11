@@ -46,7 +46,8 @@ public class JdbcPooledConnection
 		implements StateChangeListener<JdbcPooledConnection>, JdbcPooledConnectionMBean
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(JdbcPooledConnection.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(JdbcPooledConnection.class.toString());
+	private static final String EMULATING_STRING = "emulating XA for resource ";
 
 	private final XAConnection xaConnection;
 	private final Connection connection;
@@ -102,17 +103,17 @@ public class JdbcPooledConnection
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("emulating XA for resource " + poolingDataSource.getUniqueName() + " - changing twoPcOrderingPosition to ALWAYS_LAST_POSITION");
+				log.finer(EMULATING_STRING + poolingDataSource.getUniqueName() + " - changing twoPcOrderingPosition to ALWAYS_LAST_POSITION");
 			}
 			poolingDataSource.setTwoPcOrderingPosition(Scheduler.ALWAYS_LAST_POSITION);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("emulating XA for resource " + poolingDataSource.getUniqueName() + " - changing deferConnectionRelease to true");
+				log.finer(EMULATING_STRING + poolingDataSource.getUniqueName() + " - changing deferConnectionRelease to true");
 			}
 			poolingDataSource.setDeferConnectionRelease(true);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("emulating XA for resource " + poolingDataSource.getUniqueName() + " - changing useTmJoin to true");
+				log.finer(EMULATING_STRING + poolingDataSource.getUniqueName() + " - changing useTmJoin to true");
 			}
 			poolingDataSource.setUseTmJoin(true);
 		}
@@ -398,23 +399,21 @@ public class JdbcPooledConnection
 			}
 			catch (Exception e)
 			{
-				log.warning("dysfunctional JDBC4 Connection.isValid() method, or negative acquisition timeout, in call to test connection of " + this +
-				            ".  Falling back to test query.");
+				log.log(Level.WARNING, "dysfunctional JDBC4 Connection.isValid() method, or negative acquisition timeout, in call to test connection of " + this +
+				                       ".  Falling back to test query.", e);
 				jdbcVersionDetected = 3;
 			}
 			// if isValid is null, an exception was caught above and we fall through to the query test
-			if (isValid != null)
+			if (isValid != null && isValid)
 			{
-				if (isValid.booleanValue())
+				if (LogDebugCheck.isDebugEnabled())
 				{
-					if (LogDebugCheck.isDebugEnabled())
-					{
-						log.finer("isValid successfully tested connection of " + this);
-					}
-					return;
+					log.finer("isValid successfully tested connection of " + this);
 				}
-				throw new SQLException("connection is no longer valid");
+				return;
 			}
+			throw new SQLException("connection is no longer valid");
+
 		}
 
 		String query = poolingDataSource.getTestQuery();
@@ -432,16 +431,11 @@ public class JdbcPooledConnection
 		{
 			log.finer("testing with query '" + query + "' connection of " + this);
 		}
-		PreparedStatement stmt = connection.prepareStatement(query);
-		try
+		try (PreparedStatement stmt = connection.prepareStatement(query))
 		{
 			stmt.setQueryTimeout(connectionTestTimeout);
 			ResultSet rs = stmt.executeQuery();
 			rs.close();
-		}
-		finally
-		{
-			stmt.close();
 		}
 		if (LogDebugCheck.isDebugEnabled())
 		{
@@ -514,7 +508,7 @@ public class JdbcPooledConnection
 		String localAutoCommit = getPoolingDataSource().getLocalAutoCommit();
 		if (localAutoCommit != null)
 		{
-			if (localAutoCommit.equalsIgnoreCase("true"))
+			if ("true".equalsIgnoreCase(localAutoCommit))
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
@@ -522,7 +516,7 @@ public class JdbcPooledConnection
 				}
 				connection.setAutoCommit(true);
 			}
-			else if (localAutoCommit.equalsIgnoreCase("false"))
+			else if ("false".equalsIgnoreCase(localAutoCommit))
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
@@ -548,7 +542,7 @@ public class JdbcPooledConnection
 	 * @throws SQLException
 	 * 		when
 	 */
-	private Object getConnectionHandle(Connection connection) throws SQLException
+	private Object getConnectionHandle(Connection connection)
 	{
 		return JdbcProxyFactory.INSTANCE.getProxyConnection(this, connection);
 	}

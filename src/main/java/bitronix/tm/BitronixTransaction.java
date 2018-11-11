@@ -357,7 +357,7 @@ public class BitronixTransaction
 	 * 		when
 	 */
 	@Override
-	public boolean enlistResource(XAResource xaResource) throws RollbackException, IllegalStateException, SystemException
+	public boolean enlistResource(XAResource xaResource) throws RollbackException, SystemException
 	{
 		if (status == Status.STATUS_NO_TRANSACTION)
 		{

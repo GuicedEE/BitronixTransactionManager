@@ -30,14 +30,15 @@ import java.util.Map;
 /**
  * @author Brett Wooldridge
  */
+@SuppressWarnings({"Duplicates", "unused"})
 public class ConnectionJavaProxy
 		extends JavaProxyBase<Connection>
 		implements PooledConnectionProxy
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ConnectionJavaProxy.class.toString());
-
-	private final static Map<String, Method> selfMethodMap = createMethodMap(ConnectionJavaProxy.class);
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ConnectionJavaProxy.class.toString());
+	private static final Map<String, Method> selfMethodMap = createMethodMap(ConnectionJavaProxy.class);
+	private static final String CONNECTION_ALREADY_CLOSED = "connection handle already closed";
 
 	private JdbcPooledConnection jdbcPooledConnection;
 	private boolean useStatementCache;
@@ -71,7 +72,7 @@ public class ConnectionJavaProxy
 	 * @param connection
 	 * 		of type Connection
 	 */
-	void initialize(JdbcPooledConnection jdbcPooledConnection, Connection connection)
+	private void initialize(JdbcPooledConnection jdbcPooledConnection, Connection connection)
 	{
 		this.proxy = this;
 		this.jdbcPooledConnection = jdbcPooledConnection;
@@ -154,7 +155,7 @@ public class ConnectionJavaProxy
 	{
 		if (jdbcPooledConnection == null)
 		{
-			throw new SQLException("connection handle already closed");
+			throw new SQLException(CONNECTION_ALREADY_CLOSED);
 		}
 		if (jdbcPooledConnection.isParticipatingInActiveGlobalTransaction())
 		{
@@ -174,7 +175,7 @@ public class ConnectionJavaProxy
 	{
 		if (jdbcPooledConnection == null)
 		{
-			throw new SQLException("connection handle already closed");
+			throw new SQLException(CONNECTION_ALREADY_CLOSED);
 		}
 		if (jdbcPooledConnection.isParticipatingInActiveGlobalTransaction())
 		{
@@ -197,7 +198,7 @@ public class ConnectionJavaProxy
 	{
 		if (jdbcPooledConnection == null)
 		{
-			throw new SQLException("connection handle already closed");
+			throw new SQLException(CONNECTION_ALREADY_CLOSED);
 		}
 		if (jdbcPooledConnection.isParticipatingInActiveGlobalTransaction())
 		{
@@ -219,7 +220,7 @@ public class ConnectionJavaProxy
 	{
 		if (jdbcPooledConnection == null)
 		{
-			throw new SQLException("connection handle already closed");
+			throw new SQLException(CONNECTION_ALREADY_CLOSED);
 		}
 		if (jdbcPooledConnection.isParticipatingInActiveGlobalTransaction())
 		{
@@ -244,7 +245,7 @@ public class ConnectionJavaProxy
 	{
 		if (jdbcPooledConnection == null)
 		{
-			throw new SQLException("connection handle already closed");
+			throw new SQLException(CONNECTION_ALREADY_CLOSED);
 		}
 		if (jdbcPooledConnection.isParticipatingInActiveGlobalTransaction())
 		{
@@ -267,7 +268,7 @@ public class ConnectionJavaProxy
 	{
 		if (jdbcPooledConnection == null)
 		{
-			throw new SQLException("connection handle already closed");
+			throw new SQLException(CONNECTION_ALREADY_CLOSED);
 		}
 		if (jdbcPooledConnection.isParticipatingInActiveGlobalTransaction())
 		{
@@ -289,7 +290,7 @@ public class ConnectionJavaProxy
 	{
 		if (jdbcPooledConnection == null)
 		{
-			throw new SQLException("connection handle already closed");
+			throw new SQLException(CONNECTION_ALREADY_CLOSED);
 		}
 
 		if (jdbcPooledConnection.isParticipatingInActiveGlobalTransaction())
@@ -313,7 +314,7 @@ public class ConnectionJavaProxy
 	{
 		if (jdbcPooledConnection == null)
 		{
-			throw new SQLException("connection handle already closed");
+			throw new SQLException(CONNECTION_ALREADY_CLOSED);
 		}
 
 		if (!jdbcPooledConnection.isParticipatingInActiveGlobalTransaction())
@@ -357,8 +358,7 @@ public class ConnectionJavaProxy
 
 		Statement statement = delegate.createStatement();
 		jdbcPooledConnection.registerUncachedStatement(statement);
-		Statement statementProxy = JdbcProxyFactory.INSTANCE.getProxyStatement(jdbcPooledConnection, statement);
-		return statementProxy;
+		return JdbcProxyFactory.INSTANCE.getProxyStatement(jdbcPooledConnection, statement);
 	}
 
 	/**
@@ -372,7 +372,7 @@ public class ConnectionJavaProxy
 	{
 		if (jdbcPooledConnection == null)
 		{
-			throw new SQLException("connection handle already closed");
+			throw new SQLException(CONNECTION_ALREADY_CLOSED);
 		}
 
 		if (jdbcPooledConnection.getPoolingDataSource()
@@ -382,11 +382,7 @@ public class ConnectionJavaProxy
 			{
 				TransactionContextHelper.enlistInCurrentTransaction(jdbcPooledConnection);
 			}
-			catch (SystemException ex)
-			{
-				throw new SQLException("error enlisting " + this, ex);
-			}
-			catch (RollbackException ex)
+			catch (SystemException | RollbackException ex)
 			{
 				throw new SQLException("error enlisting " + this, ex);
 			}
@@ -412,8 +408,7 @@ public class ConnectionJavaProxy
 
 		Statement statement = delegate.createStatement(resultSetType, resultSetConcurrency);
 		jdbcPooledConnection.registerUncachedStatement(statement);
-		Statement statementProxy = JdbcProxyFactory.INSTANCE.getProxyStatement(jdbcPooledConnection, statement);
-		return statementProxy;
+		return JdbcProxyFactory.INSTANCE.getProxyStatement(jdbcPooledConnection, statement);
 	}
 
 	/**
@@ -437,8 +432,7 @@ public class ConnectionJavaProxy
 
 		Statement statement = delegate.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
 		jdbcPooledConnection.registerUncachedStatement(statement);
-		Statement statementProxy = JdbcProxyFactory.INSTANCE.getProxyStatement(jdbcPooledConnection, statement);
-		return statementProxy;
+		return JdbcProxyFactory.INSTANCE.getProxyStatement(jdbcPooledConnection, statement);
 	}
 
 	/**
@@ -458,8 +452,7 @@ public class ConnectionJavaProxy
 
 		CallableStatement statement = delegate.prepareCall(sql);
 		jdbcPooledConnection.registerUncachedStatement(statement);
-		CallableStatement statementProxy = JdbcProxyFactory.INSTANCE.getProxyCallableStatement(jdbcPooledConnection, statement);
-		return statementProxy;
+		return JdbcProxyFactory.INSTANCE.getProxyCallableStatement(jdbcPooledConnection, statement);
 	}
 
 	/**
@@ -483,8 +476,7 @@ public class ConnectionJavaProxy
 
 		CallableStatement statement = delegate.prepareCall(sql, resultSetType, resultSetConcurrency);
 		jdbcPooledConnection.registerUncachedStatement(statement);
-		CallableStatement statementProxy = JdbcProxyFactory.INSTANCE.getProxyCallableStatement(jdbcPooledConnection, statement);
-		return statementProxy;
+		return JdbcProxyFactory.INSTANCE.getProxyCallableStatement(jdbcPooledConnection, statement);
 	}
 
 	/* PreparedStatement cache aware methods */
@@ -512,8 +504,7 @@ public class ConnectionJavaProxy
 
 		CallableStatement statement = delegate.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
 		jdbcPooledConnection.registerUncachedStatement(statement);
-		CallableStatement statementProxy = JdbcProxyFactory.INSTANCE.getProxyCallableStatement(jdbcPooledConnection, statement);
-		return statementProxy;
+		return JdbcProxyFactory.INSTANCE.getProxyCallableStatement(jdbcPooledConnection, statement);
 	}
 
 	/**
@@ -547,8 +538,7 @@ public class ConnectionJavaProxy
 		{
 			PreparedStatement stmt = delegate.prepareStatement(sql);
 			jdbcPooledConnection.registerUncachedStatement(stmt);
-			PreparedStatement statementProxy = JdbcProxyFactory.INSTANCE.getProxyPreparedStatement(jdbcPooledConnection, stmt, null);
-			return statementProxy;
+			return JdbcProxyFactory.INSTANCE.getProxyPreparedStatement(jdbcPooledConnection, stmt, null);
 		}
 	}
 
@@ -565,6 +555,7 @@ public class ConnectionJavaProxy
 	 * @throws SQLException
 	 * 		when
 	 */
+
 	public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException
 	{
 		enlistResource();
@@ -585,8 +576,7 @@ public class ConnectionJavaProxy
 		{
 			PreparedStatement stmt = delegate.prepareStatement(sql, autoGeneratedKeys);
 			jdbcPooledConnection.registerUncachedStatement(stmt);
-			PreparedStatement statementProxy = JdbcProxyFactory.INSTANCE.getProxyPreparedStatement(jdbcPooledConnection, stmt, null);
-			return statementProxy;
+			return JdbcProxyFactory.INSTANCE.getProxyPreparedStatement(jdbcPooledConnection, stmt, null);
 		}
 	}
 
@@ -625,8 +615,7 @@ public class ConnectionJavaProxy
 		{
 			PreparedStatement stmt = delegate.prepareStatement(sql, resultSetType, resultSetConcurrency);
 			jdbcPooledConnection.registerUncachedStatement(stmt);
-			PreparedStatement statementProxy = JdbcProxyFactory.INSTANCE.getProxyPreparedStatement(jdbcPooledConnection, stmt, null);
-			return statementProxy;
+			return JdbcProxyFactory.INSTANCE.getProxyPreparedStatement(jdbcPooledConnection, stmt, null);
 		}
 	}
 
@@ -667,8 +656,7 @@ public class ConnectionJavaProxy
 		{
 			PreparedStatement stmt = delegate.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
 			jdbcPooledConnection.registerUncachedStatement(stmt);
-			PreparedStatement statementProxy = JdbcProxyFactory.INSTANCE.getProxyPreparedStatement(jdbcPooledConnection, stmt, null);
-			return statementProxy;
+			return JdbcProxyFactory.INSTANCE.getProxyPreparedStatement(jdbcPooledConnection, stmt, null);
 		}
 	}
 
@@ -705,8 +693,7 @@ public class ConnectionJavaProxy
 		{
 			PreparedStatement stmt = delegate.prepareStatement(sql, columnIndexes);
 			jdbcPooledConnection.registerUncachedStatement(stmt);
-			PreparedStatement statementProxy = JdbcProxyFactory.INSTANCE.getProxyPreparedStatement(jdbcPooledConnection, stmt, null);
-			return statementProxy;
+			return JdbcProxyFactory.INSTANCE.getProxyPreparedStatement(jdbcPooledConnection, stmt, null);
 		}
 	}
 
@@ -745,8 +732,7 @@ public class ConnectionJavaProxy
 		{
 			PreparedStatement stmt = delegate.prepareStatement(sql, columnNames);
 			jdbcPooledConnection.registerUncachedStatement(stmt);
-			PreparedStatement statementProxy = JdbcProxyFactory.INSTANCE.getProxyPreparedStatement(jdbcPooledConnection, stmt, null);
-			return statementProxy;
+			return JdbcProxyFactory.INSTANCE.getProxyPreparedStatement(jdbcPooledConnection, stmt, null);
 		}
 	}
 
@@ -786,7 +772,7 @@ public class ConnectionJavaProxy
 	 * @throws SQLException
 	 * 		when
 	 */
-	public boolean isWrapperFor(Class<?> iface) throws SQLException
+	public boolean isWrapperFor(Class<?> iface)
 	{
 		return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
 	}

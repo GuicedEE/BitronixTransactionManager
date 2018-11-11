@@ -23,34 +23,47 @@ import java.sql.Connection;
  *
  * @author Ludovic Orban
  */
-public interface ConnectionCustomizer {
+public interface ConnectionCustomizer
+{
 
-    /**
-     * Called when the physical connection is created.
-     * @param connection the physical connection.
-     * @param uniqueName the PoolingDataSource unique name.
-     */
-    public void onAcquire(Connection connection, String uniqueName);
-    
-    /**
-     * Called when the physical connection is leased from the pool.
-     * @param connection the physical connection.
-     * @param uniqueName the PoolingDataSource unique name.
-     */
-    public void onLease(Connection connection, String uniqueName);
-    
-    /**
-     * Called when the physical connection is returned to the pool.
-     * @param connection the physical connection.
-     * @param uniqueName the PoolingDataSource unique name.
-     */
-    public void onRelease(Connection connection, String uniqueName);
+	/**
+	 * Called when the physical connection is created.
+	 *
+	 * @param connection
+	 * 		the physical connection.
+	 * @param uniqueName
+	 * 		the PoolingDataSource unique name.
+	 */
+	void onAcquire(Connection connection, String uniqueName);
 
-    /**
-     * Called when the physical connection is destroyed.
-     * @param connection the physical connection.
-     * @param uniqueName the PoolingDataSource unique name.
-     */
-    public void onDestroy(Connection connection, String uniqueName);
+	/**
+	 * Called when the physical connection is leased from the pool.
+	 *
+	 * @param connection
+	 * 		the physical connection.
+	 * @param uniqueName
+	 * 		the PoolingDataSource unique name.
+	 */
+	void onLease(Connection connection, String uniqueName);
+
+	/**
+	 * Called when the physical connection is returned to the pool.
+	 *
+	 * @param connection
+	 * 		the physical connection.
+	 * @param uniqueName
+	 * 		the PoolingDataSource unique name.
+	 */
+	void onRelease(Connection connection, String uniqueName);
+
+	/**
+	 * Called when the physical connection is destroyed.
+	 *
+	 * @param connection
+	 * 		the physical connection.
+	 * @param uniqueName
+	 * 		the PoolingDataSource unique name.
+	 */
+	void onDestroy(Connection connection, String uniqueName);
 
 }

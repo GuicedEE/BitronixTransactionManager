@@ -26,35 +26,35 @@ public interface PoolingDataSourceMBean
 	 *
 	 * @return the minPoolSize (type int) of this PoolingDataSourceMBean object.
 	 */
-	public int getMinPoolSize();
+	int getMinPoolSize();
 
 	/**
 	 * Method getMaxPoolSize returns the maxPoolSize of this PoolingDataSourceMBean object.
 	 *
 	 * @return the maxPoolSize (type int) of this PoolingDataSourceMBean object.
 	 */
-	public int getMaxPoolSize();
+	int getMaxPoolSize();
 
 	/**
 	 * Method getInPoolSize returns the inPoolSize of this PoolingDataSourceMBean object.
 	 *
 	 * @return the inPoolSize (type int) of this PoolingDataSourceMBean object.
 	 */
-	public int getInPoolSize();
+	int getInPoolSize();
 
 	/**
 	 * Method getTotalPoolSize returns the totalPoolSize of this PoolingDataSourceMBean object.
 	 *
 	 * @return the totalPoolSize (type int) of this PoolingDataSourceMBean object.
 	 */
-	public int getTotalPoolSize();
+	int getTotalPoolSize();
 
 	/**
 	 * Method isFailed returns the failed of this PoolingDataSourceMBean object.
 	 *
 	 * @return the failed (type boolean) of this PoolingDataSourceMBean object.
 	 */
-	public boolean isFailed();
+	boolean isFailed();
 
 	/**
 	 * Method reset ...
@@ -62,14 +62,14 @@ public interface PoolingDataSourceMBean
 	 * @throws Exception
 	 * 		when
 	 */
-	public void reset() throws Exception;
+	void reset() throws Exception;
 
 	/**
 	 * Method isDisabled returns the disabled of this PoolingDataSourceMBean object.
 	 *
 	 * @return the disabled (type boolean) of this PoolingDataSourceMBean object.
 	 */
-	public boolean isDisabled();
+	boolean isDisabled();
 
 	/**
 	 * Method setDisabled sets the disabled of this PoolingDataSourceMBean object.
@@ -77,6 +77,6 @@ public interface PoolingDataSourceMBean
 	 * @param disabled
 	 * 		the disabled of this PoolingDataSourceMBean object.
 	 */
-	public void setDisabled(boolean disabled);
+	void setDisabled(boolean disabled);
 
 }

@@ -26,41 +26,41 @@ public interface RecovererMBean
 	/**
 	 * Method run ...
 	 */
-	public void run();
+	void run();
 
 	/**
 	 * Method getCommittedCount returns the committedCount of this RecovererMBean object.
 	 *
 	 * @return the committedCount (type int) of this RecovererMBean object.
 	 */
-	public int getCommittedCount();
+	int getCommittedCount();
 
 	/**
 	 * Method getRolledbackCount returns the rolledbackCount of this RecovererMBean object.
 	 *
 	 * @return the rolledbackCount (type int) of this RecovererMBean object.
 	 */
-	public int getRolledbackCount();
+	int getRolledbackCount();
 
 	/**
 	 * Method getCompletionException returns the completionException of this RecovererMBean object.
 	 *
 	 * @return the completionException (type Exception) of this RecovererMBean object.
 	 */
-	public Exception getCompletionException();
+	Exception getCompletionException();
 
 	/**
 	 * Method getExecutionsCount returns the executionsCount of this RecovererMBean object.
 	 *
 	 * @return the executionsCount (type int) of this RecovererMBean object.
 	 */
-	public int getExecutionsCount();
+	int getExecutionsCount();
 
 	/**
 	 * Method isRunning returns the running of this RecovererMBean object.
 	 *
 	 * @return the running (type boolean) of this RecovererMBean object.
 	 */
-	public boolean isRunning();
+	boolean isRunning();
 
 }

@@ -23,12 +23,13 @@ import bitronix.tm.resource.common.XAResourceHolder;
 import bitronix.tm.resource.common.XAResourceProducer;
 
 import javax.transaction.xa.XAResource;
-import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Level;
+
+import static java.nio.charset.StandardCharsets.*;
 
 /**
  * Collection of initialized {@link XAResourceProducer}s. All resources must be registered in the {@link ResourceRegistrar}
@@ -47,15 +48,15 @@ public final class ResourceRegistrar
 	/**
 	 * Specifies the charset that unique names of resources must be encodable with to be storeable in a TX journal.
 	 */
-	public final static Charset UNIQUE_NAME_CHARSET = Charset.forName("US-ASCII");
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ResourceRegistrar.class.toString());
-	private final static Set<ProducerHolder> resources = new CopyOnWriteArraySet<>();
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ResourceRegistrar.class.toString());
+	private static final Set<ProducerHolder> resources = new CopyOnWriteArraySet<>();
 
 	/**
 	 * Constructor ResourceRegistrar creates a new ResourceRegistrar instance.
 	 */
 	private ResourceRegistrar()
 	{
+		//No config required
 	}
 
 	/**
@@ -121,29 +122,11 @@ public final class ResourceRegistrar
 		{
 			boolean alreadyRunning = TransactionManagerServices.isTransactionManagerRunning();
 			ProducerHolder holder = alreadyRunning ? new InitializableProducerHolder(producer) : new ProducerHolder(producer);
-
 			if (resources.add(holder))
 			{
 				if (holder instanceof InitializableProducerHolder)
 				{
-					boolean recovered = false;
-					try
-					{
-						if (LogDebugCheck.isDebugEnabled())
-						{
-							log.finer("Transaction manager is running, recovering resource '" + holder.getUniqueName() + "'.");
-						}
-						IncrementalRecoverer.recover(producer);
-						((InitializableProducerHolder) holder).initialize();
-						recovered = true;
-					}
-					finally
-					{
-						if (!recovered)
-						{
-							resources.remove(holder);
-						}
-					}
+					processInitializableProducerHolder(producer, (InitializableProducerHolder) holder);
 				}
 			}
 			else
@@ -159,6 +142,39 @@ public final class ResourceRegistrar
 	}
 
 	/**
+	 * Processes a type cast instantiable  producer holder
+	 *
+	 * @param producer
+	 * @param holder
+	 *
+	 * @return
+	 *
+	 * @throws RecoveryException
+	 */
+	private static boolean processInitializableProducerHolder(XAResourceProducer producer, InitializableProducerHolder holder) throws RecoveryException
+	{
+		boolean recovered = false;
+		try
+		{
+			if (LogDebugCheck.isDebugEnabled())
+			{
+				log.finer("Transaction manager is running, recovering resource '" + holder.getUniqueName() + "'.");
+			}
+			IncrementalRecoverer.recover(producer);
+			holder.initialize();
+			recovered = true;
+		}
+		finally
+		{
+			if (!recovered)
+			{
+				resources.remove(holder);
+			}
+		}
+		return recovered;
+	}
+
+	/**
 	 * Unregister a previously registered {@link XAResourceProducer}.
 	 *
 	 * @param producer
@@ -167,13 +183,9 @@ public final class ResourceRegistrar
 	public static void unregister(XAResourceProducer producer)
 	{
 		ProducerHolder holder = new ProducerHolder(producer);
-
-		if (!resources.remove(holder))
+		if (!resources.remove(holder) && LogDebugCheck.isDebugEnabled())
 		{
-			if (LogDebugCheck.isDebugEnabled())
-			{
-				log.log(Level.FINER, "resource with uniqueName '{}' has not been registered", holder.getUniqueName());
-			}
+			log.log(Level.FINER, "resource with uniqueName '" + holder.getUniqueName() + "' has not been registered");
 		}
 	}
 
@@ -242,7 +254,7 @@ public final class ResourceRegistrar
 				throw new IllegalArgumentException("The given XAResourceProducer '" + producer + "' does not specify a uniqueName.");
 			}
 
-			String transcodedUniqueName = new String(uniqueName.getBytes(UNIQUE_NAME_CHARSET), UNIQUE_NAME_CHARSET);
+			String transcodedUniqueName = new String(uniqueName.getBytes(US_ASCII), US_ASCII);
 			if (!transcodedUniqueName.equals(uniqueName))
 			{
 				throw new IllegalArgumentException("The given XAResourceProducer's uniqueName '" + uniqueName + "' is not compatible with the charset " +
@@ -343,6 +355,26 @@ public final class ResourceRegistrar
 		}
 
 		/**
+		 * Method initialize ...
+		 */
+		void initialize()
+		{
+			initialized = true;
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return super.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			return super.equals(o);
+		}
+
+		/**
 		 * Method isInitialized returns the initialized of this InitializableProducerHolder object.
 		 *
 		 * @return the initialized (type boolean) of this InitializableProducerHolder object.
@@ -351,14 +383,6 @@ public final class ResourceRegistrar
 		boolean isInitialized()
 		{
 			return initialized;
-		}
-
-		/**
-		 * Method initialize ...
-		 */
-		void initialize()
-		{
-			initialized = true;
 		}
 	}
 }

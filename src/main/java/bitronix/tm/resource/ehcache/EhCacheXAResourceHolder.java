@@ -35,8 +35,11 @@ public class EhCacheXAResourceHolder
 		extends AbstractXAResourceHolder<EhCacheXAResourceHolder>
 {
 
+	private static final String EHCACHE_CANT_BE_USED = "EhCacheXAResourceHolder cannot be used with an XAPool";
+
 	private final XAResource resource;
 	private final ResourceBean bean;
+
 
 	/**
 	 * Create a new EhCacheXAResourceHolder for a particular XAResource
@@ -85,7 +88,7 @@ public class EhCacheXAResourceHolder
 	@Override
 	public Object getConnectionHandle() throws Exception
 	{
-		throw new UnsupportedOperationException("EhCacheXAResourceHolder cannot be used with an XAPool");
+		throw new UnsupportedOperationException(EHCACHE_CANT_BE_USED);
 	}
 
 	/**
@@ -94,7 +97,7 @@ public class EhCacheXAResourceHolder
 	@Override
 	public void close() throws Exception
 	{
-		throw new UnsupportedOperationException("EhCacheXAResourceHolder cannot be used with an XAPool");
+		throw new UnsupportedOperationException(EHCACHE_CANT_BE_USED);
 	}
 
 	/**
@@ -103,7 +106,7 @@ public class EhCacheXAResourceHolder
 	@Override
 	public Date getLastReleaseDate()
 	{
-		throw new UnsupportedOperationException("EhCacheXAResourceHolder cannot be used with an XAPool");
+		throw new UnsupportedOperationException(EHCACHE_CANT_BE_USED);
 	}
 
 	/**

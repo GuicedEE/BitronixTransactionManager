@@ -46,10 +46,10 @@ public class ResourceLoader
 		implements Service
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ResourceLoader.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ResourceLoader.class.toString());
 
-	private final static String JDBC_RESOURCE_CLASSNAME = "bitronix.tm.resource.jdbc.PoolingDataSource";
-	private final static String JMS_RESOURCE_CLASSNAME = "bitronix.tm.resource.jms.PoolingConnectionFactory";
+	private static final String JDBC_RESOURCE_CLASSNAME = "bitronix.tm.resource.jdbc.PoolingDataSource";
+	private static final String JMS_RESOURCE_CLASSNAME = "bitronix.tm.resource.jms.PoolingConnectionFactory";
 
 	private final Map<String, XAResourceProducer> resourcesByUniqueName = new HashMap<>();
 
@@ -58,6 +58,7 @@ public class ResourceLoader
 	 */
 	public ResourceLoader()
 	{
+		//No config required
 	}
 
 	/**
@@ -110,24 +111,11 @@ public class ResourceLoader
 	 */
 	private int init(String propertiesFilename)
 	{
-		try
+		try (FileInputStream fis = new FileInputStream(propertiesFilename))
 		{
-			FileInputStream fis = null;
 			Properties properties;
-			try
-			{
-				fis = new FileInputStream(propertiesFilename);
-				properties = new Properties();
-				properties.load(fis);
-			}
-			finally
-			{
-				if (fis != null)
-				{
-					fis.close();
-				}
-			}
-
+			properties = new Properties();
+			properties.load(fis);
 			return initXAResourceProducers(properties);
 		}
 		catch (IOException ex)
@@ -214,23 +202,17 @@ public class ResourceLoader
 					continue;
 				}
 				String configuredName = keyParts[1];
-				String propertyName = keyParts[2];
+				StringBuilder propertyName = new StringBuilder(keyParts[2]);
 				if (keyParts.length > 3)
 				{
 					for (int i = 3; i < keyParts.length; i++)
 					{
-						propertyName += "." + keyParts[i];
+						propertyName.append(".")
+						            .append(keyParts[i]);
 					}
 				}
-
-				List<PropertyPair> pairs = entries.get(configuredName);
-				if (pairs == null)
-				{
-					pairs = new ArrayList<>();
-					entries.put(configuredName, pairs);
-				}
-
-				pairs.add(new PropertyPair(propertyName, value));
+				List<PropertyPair> pairs = entries.computeIfAbsent(configuredName, k -> new ArrayList<>());
+				pairs.add(new PropertyPair(propertyName.toString(), value));
 			}
 		}
 		return entries;
@@ -249,7 +231,7 @@ public class ResourceLoader
 	 * @throws ResourceConfigurationException
 	 * 		if the {@link XAResourceProducer} cannot be built.
 	 */
-	private XAResourceProducer buildXAResourceProducer(String configuredName, List<PropertyPair> propertyPairs) throws ResourceConfigurationException
+	private XAResourceProducer buildXAResourceProducer(String configuredName, List<PropertyPair> propertyPairs)
 	{
 		String lastPropertyName = "className";
 		try
@@ -302,8 +284,7 @@ public class ResourceLoader
 	{
 		for (PropertyPair propertyPair : propertyPairs)
 		{
-			if (propertyPair.getName()
-			                .equals("className"))
+			if ("className".equals(propertyPair.getName()))
 			{
 				String className = propertyPair.getValue();
 				XAResourceProducer producer = instantiate(className);

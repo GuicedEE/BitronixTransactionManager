@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class LruStatementCache
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(LruStatementCache.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LruStatementCache.class.toString());
 	/**
 	 * We use a LinkedHashMap with _access order_ specified in the
 	 * constructor.  According to the LinkedHashMap documentation:

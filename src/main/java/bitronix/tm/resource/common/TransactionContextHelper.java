@@ -39,7 +39,8 @@ import java.util.List;
 public final class TransactionContextHelper
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionContextHelper.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionContextHelper.class.toString());
+	private static final String FROM_SPACE = " from ";
 
 	/**
 	 * Constructor TransactionContextHelper creates a new TransactionContextHelper instance.
@@ -191,7 +192,7 @@ public final class TransactionContextHelper
 		ResourceBean bean = xaResourceHolder.getResourceBean();
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("delisting " + xaResourceHolder + " from " + currentTransaction);
+			log.finer("delisting " + xaResourceHolder + FROM_SPACE + currentTransaction);
 		}
 
 		// End resource as eagerly as possible. This allows to release connections to the pool much earlier
@@ -216,7 +217,7 @@ public final class TransactionContextHelper
 					{
 						if (LogDebugCheck.isDebugEnabled())
 						{
-							log.finer("delisting resource " + xaResourceHolderState + " from " + currentTransaction);
+							log.finer("delisting resource " + xaResourceHolderState + FROM_SPACE + currentTransaction);
 						}
 
 						// Watch out: the delistResource() call might throw a BitronixRollbackSystemException to indicate a unilateral rollback.
@@ -295,7 +296,7 @@ public final class TransactionContextHelper
 		BitronixTransaction currentTransaction = currentTransaction();
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("requeuing " + xaStatefulHolder + " from " + currentTransaction);
+			log.finer("requeuing " + xaStatefulHolder + FROM_SPACE + currentTransaction);
 		}
 
 		if (!TransactionContextHelper.isInEnlistingGlobalTransactionContext(xaStatefulHolder, currentTransaction))

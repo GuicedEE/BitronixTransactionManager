@@ -63,7 +63,7 @@ public class CallableStatementJavaProxy
 	 * @param statement
 	 * 		of type CallableStatement
 	 */
-	void initialize(JdbcPooledConnection jdbcPooledConnection, CallableStatement statement)
+	private void initialize(JdbcPooledConnection jdbcPooledConnection, CallableStatement statement)
 	{
 		this.proxy = this;
 		this.jdbcPooledConnection = jdbcPooledConnection;
@@ -169,7 +169,7 @@ public class CallableStatementJavaProxy
 	 * @throws SQLException
 	 * 		when
 	 */
-	public boolean isWrapperFor(Class<?> iface) throws SQLException
+	public boolean isWrapperFor(Class<?> iface)
 	{
 		return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
 	}

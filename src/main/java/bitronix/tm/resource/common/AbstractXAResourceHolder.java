@@ -37,7 +37,7 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 		implements XAResourceHolder<T>
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(AbstractXAResourceHolder.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(AbstractXAResourceHolder.class.toString());
 
 	private final Map<Uid, Map<Uid, XAResourceHolderState>> xaResourceHolderStates = new HashMap<>();
 	private final ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
@@ -95,10 +95,7 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 			{
 				for (XAResourceHolderState xaResourceHolderState : statesForGtrid.values())
 				{
-					if (!visitor.visit(xaResourceHolderState))
-					{
-						break;
-					}
+					visitor.visit(xaResourceHolderState);
 				}
 			}
 		}

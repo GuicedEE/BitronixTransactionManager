@@ -64,7 +64,6 @@ public class TransactionLogHeader
 	private final FileChannel fc;
 	private final long maxFileLength;
 
-	private volatile int formatId;
 	private volatile long timestamp;
 	private volatile byte state;
 	private volatile long position;
@@ -92,7 +91,7 @@ public class TransactionLogHeader
 			this.fc.read(buf);
 		}
 		buf.flip();
-		formatId = buf.getInt();
+		buf.getInt(); //formatId
 		timestamp = buf.getLong();
 		state = buf.get();
 		position = buf.getLong();

@@ -30,7 +30,7 @@ public abstract class AbstractXAStatefulHolder<T extends XAStatefulHolder<T>>
 		implements XAStatefulHolder<T>
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(AbstractXAStatefulHolder.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(AbstractXAStatefulHolder.class.toString());
 	private final List<StateChangeListener<T>> stateChangeEventListeners = new CopyOnWriteArrayList<>();
 	private final Date creationDate = new Date();
 	private volatile State state = State.IN_POOL;

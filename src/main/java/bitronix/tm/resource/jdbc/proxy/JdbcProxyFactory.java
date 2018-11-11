@@ -32,7 +32,7 @@ public interface JdbcProxyFactory
 {
 
 	/* Classes should use JdbcProxyFactory.INSTANCE to access the factory */
-	final JdbcProxyFactory INSTANCE = Initializer.initialize();
+	JdbcProxyFactory INSTANCE = Initializer.initialize();
 
 	/* Methods used to create the proxies around various JDBC classes */
 

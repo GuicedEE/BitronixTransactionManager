@@ -31,7 +31,7 @@ public class ResourceObjectFactory
 		implements ObjectFactory
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ResourceObjectFactory.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ResourceObjectFactory.class.toString());
 
 	/**
 	 * Method getObjectInstance ...
