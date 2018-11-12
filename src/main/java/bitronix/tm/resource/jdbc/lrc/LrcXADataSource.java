@@ -33,6 +33,7 @@ import java.util.Properties;
  * @author Ludovic Orban
  * @author Brett Wooldridge
  */
+@SuppressWarnings("unused")
 public class LrcXADataSource
 		implements XADataSource
 {
@@ -48,6 +49,7 @@ public class LrcXADataSource
 	 */
 	public LrcXADataSource()
 	{
+		//No config required
 	}
 
 	/**
@@ -160,8 +162,7 @@ public class LrcXADataSource
 				props.setProperty("password", password);
 			}
 			Connection connection = driver.connect(url, props);
-			XAConnection xaConnection = JdbcProxyFactory.INSTANCE.getProxyXaConnection(connection);
-			return xaConnection;
+			return JdbcProxyFactory.INSTANCE.getProxyXaConnection(connection);
 		}
 		catch (Exception ex)
 		{
@@ -194,8 +195,7 @@ public class LrcXADataSource
 			props.setProperty("user", user);
 			props.setProperty("password", password);
 			Connection connection = driver.connect(url, props);
-			XAConnection xaConnection = JdbcProxyFactory.INSTANCE.getProxyXaConnection(connection);
-			return xaConnection;
+			return JdbcProxyFactory.INSTANCE.getProxyXaConnection(connection);
 		}
 		catch (Exception ex)
 		{
@@ -229,6 +229,7 @@ public class LrcXADataSource
 	@Override
 	public void setLogWriter(PrintWriter out) throws SQLException
 	{
+		//Nothing required
 	}
 
 	/**

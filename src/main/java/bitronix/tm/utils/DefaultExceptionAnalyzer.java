@@ -15,7 +15,9 @@
  */
 package bitronix.tm.utils;
 
+
 import javax.transaction.xa.XAException;
+import java.util.logging.Level;
 
 /**
  * Default implementation of {@link ExceptionAnalyzer}.
@@ -25,6 +27,7 @@ import javax.transaction.xa.XAException;
 public class DefaultExceptionAnalyzer
 		implements ExceptionAnalyzer
 {
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(DefaultExceptionAnalyzer.class.toString());
 
 	/**
 	 * Extract information from a vendor's XAException that isn't available through standard APIs.
@@ -37,9 +40,8 @@ public class DefaultExceptionAnalyzer
 	@Override
 	public String extractExtraXAExceptionDetails(XAException ex)
 	{
-		if (ex.getClass()
-		      .getName()
-		      .equals("oracle.jdbc.xa.OracleXAException"))
+		if ("oracle.jdbc.xa.OracleXAException".equals(ex.getClass()
+		                                                .getName()))
 		{
 			try
 			{
@@ -47,6 +49,7 @@ public class DefaultExceptionAnalyzer
 			}
 			catch (PropertyException e)
 			{
+				log.log(Level.FINEST, "Property Exception", e);
 				return null;
 			}
 		}
@@ -59,6 +62,7 @@ public class DefaultExceptionAnalyzer
 	@Override
 	public void shutdown()
 	{
+		//Nothing needed
 	}
 
 }

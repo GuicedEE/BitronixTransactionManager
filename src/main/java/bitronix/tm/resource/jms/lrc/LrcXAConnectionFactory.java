@@ -30,6 +30,7 @@ import java.util.Map;
  *
  * @author Ludovic Orban
  */
+@SuppressWarnings("unused")
 public class LrcXAConnectionFactory
 		implements XAConnectionFactory
 {
@@ -42,6 +43,7 @@ public class LrcXAConnectionFactory
 	 */
 	public LrcXAConnectionFactory()
 	{
+		//No config required
 	}
 
 	/**

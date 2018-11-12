@@ -35,14 +35,16 @@ import java.util.logging.Level;
  * Implementation of a JMS pooled connection wrapping vendor's {@link XAConnection} implementation.
  *
  * @author Ludovic Orban
- * 		TODO: how can the JMS connection be accurately tested?
  */
+@SuppressWarnings("unused")
 public class JmsPooledConnection
 		extends AbstractXAStatefulHolder<JmsPooledConnection>
 		implements JmsPooledConnectionMBean
 {
 
 	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(JmsPooledConnection.class.toString());
+
+
 	private final PoolingConnectionFactory poolingConnectionFactory;
 	private final Set<DualSessionWrapper> sessions = Collections.synchronizedSet(new HashSet<>());
 	/* management */
@@ -329,7 +331,7 @@ public class JmsPooledConnection
 	 * @throws JMSException
 	 * 		when
 	 */
-	protected Session createSession(boolean transacted, int acknowledgeMode) throws JMSException
+	protected Session createSession(boolean transacted, int acknowledgeMode)
 	{
 		synchronized (sessions)
 		{
@@ -512,6 +514,7 @@ public class JmsPooledConnection
 		@Override
 		public void stateChanging(JmsPooledConnection source, State currentState, State futureState)
 		{
+			//Nothing needed
 		}
 	}
 
@@ -561,6 +564,7 @@ public class JmsPooledConnection
 		@Override
 		public void stateChanging(DualSessionWrapper source, State currentState, State futureState)
 		{
+			//Nothing needed
 		}
 	}
 }

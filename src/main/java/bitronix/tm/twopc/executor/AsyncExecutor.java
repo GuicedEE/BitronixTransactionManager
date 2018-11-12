@@ -18,6 +18,7 @@ package bitronix.tm.twopc.executor;
 import bitronix.tm.internal.BitronixRuntimeException;
 
 import java.util.concurrent.*;
+import java.util.logging.Level;
 
 /**
  * This implementation executes submitted jobs using a <code>java.util.concurrent</code> cached thread pool.
@@ -27,7 +28,7 @@ import java.util.concurrent.*;
 public class AsyncExecutor
 		implements Executor
 {
-
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(AsyncExecutor.class.toString());
 	private final ExecutorService executorService;
 
 
@@ -82,6 +83,7 @@ public class AsyncExecutor
 		catch (TimeoutException ex)
 		{
 			// ok, just return
+			log.log(Level.FINEST, "Just Return", ex);
 		}
 	}
 

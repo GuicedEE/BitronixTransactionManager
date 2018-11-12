@@ -91,11 +91,7 @@ public class MessageProducerWrapper
 			{
 				TransactionContextHelper.enlistInCurrentTransaction(session);
 			}
-			catch (SystemException ex)
-			{
-				throw (JMSException) new JMSException("error enlisting " + this).initCause(ex);
-			}
-			catch (RollbackException ex)
+			catch (SystemException | RollbackException ex)
 			{
 				throw (JMSException) new JMSException("error enlisting " + this).initCause(ex);
 			}

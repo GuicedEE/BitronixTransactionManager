@@ -85,7 +85,7 @@ public class LrcConnectionJavaProxy
 	 * @throws SQLException
 	 * 		when
 	 */
-	public boolean isClosed() throws SQLException
+	public boolean isClosed()
 	{
 		return delegate == null;
 	}
@@ -194,7 +194,7 @@ public class LrcConnectionJavaProxy
 	 * @throws SQLException
 	 * 		when
 	 */
-	public boolean isWrapperFor(Class<?> iface) throws SQLException
+	public boolean isWrapperFor(Class<?> iface)
 	{
 		return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
 	}

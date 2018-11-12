@@ -50,7 +50,7 @@ public class JdbcJavassistProxyFactory
 	/**
 	 * Constructor JdbcJavassistProxyFactory creates a new JdbcJavassistProxyFactory instance.
 	 */
-	JdbcJavassistProxyFactory()
+	public JdbcJavassistProxyFactory()
 	{
 		classMap = new ClassMap();
 		ClassPool defaultPool = ClassPool.getDefault();
@@ -79,7 +79,7 @@ public class JdbcJavassistProxyFactory
 		try
 		{
 			Class<Connection> proxyClass = generateProxyClass(Connection.class, ConnectionJavaProxy.class);
-			proxyConnectionConstructor = proxyClass.getConstructor(new Class<?>[]{JdbcPooledConnection.class, Connection.class});
+			proxyConnectionConstructor = proxyClass.getConstructor(JdbcPooledConnection.class, Connection.class);
 		}
 		catch (Exception e)
 		{
@@ -95,7 +95,7 @@ public class JdbcJavassistProxyFactory
 		try
 		{
 			Class<Statement> proxyClass = generateProxyClass(Statement.class, StatementJavaProxy.class);
-			proxyStatementConstructor = proxyClass.getConstructor(new Class<?>[]{JdbcPooledConnection.class, Statement.class});
+			proxyStatementConstructor = proxyClass.getConstructor(JdbcPooledConnection.class, Statement.class);
 		}
 		catch (Exception e)
 		{
@@ -111,7 +111,7 @@ public class JdbcJavassistProxyFactory
 		try
 		{
 			Class<CallableStatement> proxyClass = generateProxyClass(CallableStatement.class, CallableStatementJavaProxy.class);
-			proxyCallableStatementConstructor = proxyClass.getConstructor(new Class<?>[]{JdbcPooledConnection.class, CallableStatement.class});
+			proxyCallableStatementConstructor = proxyClass.getConstructor(JdbcPooledConnection.class, CallableStatement.class);
 		}
 		catch (Exception e)
 		{
@@ -127,7 +127,7 @@ public class JdbcJavassistProxyFactory
 		try
 		{
 			Class<PreparedStatement> proxyClass = generateProxyClass(PreparedStatement.class, PreparedStatementJavaProxy.class);
-			proxyPreparedStatementConstructor = proxyClass.getConstructor(new Class<?>[]{JdbcPooledConnection.class, PreparedStatement.class, CacheKey.class});
+			proxyPreparedStatementConstructor = proxyClass.getConstructor(JdbcPooledConnection.class, PreparedStatement.class, CacheKey.class);
 		}
 		catch (Exception e)
 		{
@@ -143,7 +143,7 @@ public class JdbcJavassistProxyFactory
 		try
 		{
 			Class<ResultSet> proxyClass = generateProxyClass(ResultSet.class, ResultSetJavaProxy.class);
-			proxyResultSetConstructor = proxyClass.getConstructor(new Class<?>[]{Statement.class, ResultSet.class});
+			proxyResultSetConstructor = proxyClass.getConstructor(Statement.class, ResultSet.class);
 		}
 		catch (Exception e)
 		{

@@ -62,7 +62,14 @@ public class LrcXAResource
 	public static final int STARTED = 1;
 	public static final int ENDED = 2;
 	public static final int PREPARED = 3;
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(LrcXAResource.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LrcXAResource.class.toString());
+	private static final String XID_CANT_BE_NULL = "XID cannot be null";
+	private static final String RESOURCE_NOT_STARTED = "resource never started on XID ";
+	private static final String RESOURCE_NEVER_ENDED = "resource never ended on XID ";
+	private static final String XID_NEVER_ENDED = ", XID=";
+	private static final String RESOURCE_ALREADY_STARTED = "resource already started on XID ";
+	private static final String FLAG_EQUALS = ", flag=";
+
 	private final Session session;
 	private volatile Xid xid;
 	private volatile int state = NO_TX;
@@ -105,16 +112,16 @@ public class LrcXAResource
 	{
 		if (xid == null)
 		{
-			throw new BitronixXAException("XID cannot be null", XAException.XAER_INVAL);
+			throw new BitronixXAException(XID_CANT_BE_NULL, XAException.XAER_INVAL);
 		}
 
 		if (state == NO_TX)
 		{
-			throw new BitronixXAException("resource never started on XID " + xid, XAException.XAER_PROTO);
+			throw new BitronixXAException(RESOURCE_NOT_STARTED + xid, XAException.XAER_PROTO);
 		}
 		else if (state == STARTED)
 		{
-			throw new BitronixXAException("resource never ended on XID " + xid, XAException.XAER_PROTO);
+			throw new BitronixXAException(RESOURCE_NEVER_ENDED + xid, XAException.XAER_PROTO);
 		}
 		else if (state == ENDED)
 		{
@@ -122,7 +129,7 @@ public class LrcXAResource
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("OK to commit with 1PC, old state=" + xlatedState() + ", XID=" + xid);
+					log.finer("OK to commit with 1PC, old state=" + xlatedState() + XID_NEVER_ENDED + xid);
 				}
 				try
 				{
@@ -146,12 +153,12 @@ public class LrcXAResource
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.finer("OK to commit, old state=" + xlatedState() + ", XID=" + xid);
+						log.finer("OK to commit, old state=" + xlatedState() + XID_NEVER_ENDED + xid);
 					}
 				}
 				else
 				{
-					throw new BitronixXAException("resource already started on XID " + this.xid + " - cannot commit it on another XID " + xid, XAException.XAER_PROTO);
+					throw new BitronixXAException(RESOURCE_ALREADY_STARTED + this.xid + " - cannot commit it on another XID " + xid, XAException.XAER_PROTO);
 				}
 			}
 			else
@@ -184,12 +191,12 @@ public class LrcXAResource
 		}
 		if (xid == null)
 		{
-			throw new BitronixXAException("XID cannot be null", XAException.XAER_INVAL);
+			throw new BitronixXAException(XID_CANT_BE_NULL, XAException.XAER_INVAL);
 		}
 
 		if (state == NO_TX)
 		{
-			throw new BitronixXAException("resource never started on XID " + xid, XAException.XAER_PROTO);
+			throw new BitronixXAException(RESOURCE_NOT_STARTED + xid, XAException.XAER_PROTO);
 		}
 		else if (state == STARTED)
 		{
@@ -197,12 +204,12 @@ public class LrcXAResource
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("OK to end, old state=" + xlatedState() + ", XID=" + xid + ", flag=" + Decoder.decodeXAResourceFlag(flag));
+					log.finer("OK to end, old state=" + xlatedState() + XID_NEVER_ENDED + xid + FLAG_EQUALS + Decoder.decodeXAResourceFlag(flag));
 				}
 			}
 			else
 			{
-				throw new BitronixXAException("resource already started on XID " + this.xid + " - cannot end it on another XID " + xid, XAException.XAER_PROTO);
+				throw new BitronixXAException(RESOURCE_ALREADY_STARTED + this.xid + " - cannot end it on another XID " + xid, XAException.XAER_PROTO);
 			}
 		}
 		else if (state == ENDED)
@@ -244,6 +251,7 @@ public class LrcXAResource
 	@Override
 	public void forget(Xid xid) throws XAException
 	{
+		//Nothing required
 	}
 
 	/**
@@ -293,16 +301,16 @@ public class LrcXAResource
 	{
 		if (xid == null)
 		{
-			throw new BitronixXAException("XID cannot be null", XAException.XAER_INVAL);
+			throw new BitronixXAException(XID_CANT_BE_NULL, XAException.XAER_INVAL);
 		}
 
 		if (state == NO_TX)
 		{
-			throw new BitronixXAException("resource never started on XID " + xid, XAException.XAER_PROTO);
+			throw new BitronixXAException(RESOURCE_NOT_STARTED + xid, XAException.XAER_PROTO);
 		}
 		else if (state == STARTED)
 		{
-			throw new BitronixXAException("resource never ended on XID " + xid, XAException.XAER_PROTO);
+			throw new BitronixXAException(RESOURCE_NEVER_ENDED + xid, XAException.XAER_PROTO);
 		}
 		else if (state == ENDED)
 		{
@@ -310,12 +318,12 @@ public class LrcXAResource
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("OK to prepare, old state=" + xlatedState() + ", XID=" + xid);
+					log.finer("OK to prepare, old state=" + xlatedState() + XID_NEVER_ENDED + xid);
 				}
 			}
 			else
 			{
-				throw new BitronixXAException("resource already started on XID " + this.xid + " - cannot prepare it on another XID " + xid, XAException.XAER_PROTO);
+				throw new BitronixXAException(RESOURCE_ALREADY_STARTED + this.xid + " - cannot prepare it on another XID " + xid, XAException.XAER_PROTO);
 			}
 		}
 		else if (state == PREPARED)
@@ -366,16 +374,16 @@ public class LrcXAResource
 	{
 		if (xid == null)
 		{
-			throw new BitronixXAException("XID cannot be null", XAException.XAER_INVAL);
+			throw new BitronixXAException(XID_CANT_BE_NULL, XAException.XAER_INVAL);
 		}
 
 		if (state == NO_TX)
 		{
-			throw new BitronixXAException("resource never started on XID " + xid, XAException.XAER_PROTO);
+			throw new BitronixXAException(RESOURCE_NOT_STARTED + xid, XAException.XAER_PROTO);
 		}
 		else if (state == STARTED)
 		{
-			throw new BitronixXAException("resource never ended on XID " + xid, XAException.XAER_PROTO);
+			throw new BitronixXAException(RESOURCE_NEVER_ENDED + xid, XAException.XAER_PROTO);
 		}
 		else if (state == ENDED)
 		{
@@ -383,12 +391,12 @@ public class LrcXAResource
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("OK to rollback, old state=" + xlatedState() + ", XID=" + xid);
+					log.finer("OK to rollback, old state=" + xlatedState() + XID_NEVER_ENDED + xid);
 				}
 			}
 			else
 			{
-				throw new BitronixXAException("resource already started on XID " + this.xid + " - cannot roll it back on another XID " + xid, XAException.XAER_PROTO);
+				throw new BitronixXAException(RESOURCE_ALREADY_STARTED + this.xid + " - cannot roll it back on another XID " + xid, XAException.XAER_PROTO);
 			}
 		}
 		else if (state == PREPARED)
@@ -449,14 +457,14 @@ public class LrcXAResource
 		}
 		if (xid == null)
 		{
-			throw new BitronixXAException("XID cannot be null", XAException.XAER_INVAL);
+			throw new BitronixXAException(XID_CANT_BE_NULL, XAException.XAER_INVAL);
 		}
 
 		if (state == NO_TX)
 		{
 			if (this.xid != null)
 			{
-				throw new BitronixXAException("resource already started on XID " + this.xid, XAException.XAER_PROTO);
+				throw new BitronixXAException(RESOURCE_ALREADY_STARTED + this.xid, XAException.XAER_PROTO);
 			}
 			else
 			{
@@ -468,7 +476,7 @@ public class LrcXAResource
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.finer("OK to start, old state=" + xlatedState() + ", XID=" + xid + ", flag=" + Decoder.decodeXAResourceFlag(flag));
+						log.finer("OK to start, old state=" + xlatedState() + XID_NEVER_ENDED + xid + FLAG_EQUALS + Decoder.decodeXAResourceFlag(flag));
 					}
 					this.xid = xid;
 				}
@@ -476,7 +484,7 @@ public class LrcXAResource
 		}
 		else if (state == STARTED)
 		{
-			throw new BitronixXAException("resource already started on XID " + this.xid, XAException.XAER_PROTO);
+			throw new BitronixXAException(RESOURCE_ALREADY_STARTED + this.xid, XAException.XAER_PROTO);
 		}
 		else if (state == ENDED)
 		{
@@ -490,12 +498,12 @@ public class LrcXAResource
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.finer("OK to join, old state=" + xlatedState() + ", XID=" + xid + ", flag=" + Decoder.decodeXAResourceFlag(flag));
+						log.finer("OK to join, old state=" + xlatedState() + XID_NEVER_ENDED + xid + FLAG_EQUALS + Decoder.decodeXAResourceFlag(flag));
 					}
 				}
 				else
 				{
-					throw new BitronixXAException("resource already started on XID " + this.xid + " - cannot start it on more than one XID at a time", XAException.XAER_RMERR);
+					throw new BitronixXAException(RESOURCE_ALREADY_STARTED + this.xid + " - cannot start it on more than one XID at a time", XAException.XAER_RMERR);
 				}
 			}
 		}

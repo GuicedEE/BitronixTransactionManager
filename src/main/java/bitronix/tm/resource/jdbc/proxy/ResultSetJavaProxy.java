@@ -28,7 +28,7 @@ public class ResultSetJavaProxy
 		extends JavaProxyBase<ResultSet>
 {
 
-	private final static Map<String, Method> selfMethodMap = createMethodMap(ResultSetJavaProxy.class);
+	private static final Map<String, Method> selfMethodMap = createMethodMap(ResultSetJavaProxy.class);
 
 	private Statement statement;
 
@@ -78,7 +78,7 @@ public class ResultSetJavaProxy
 	 * @throws SQLException
 	 * 		when
 	 */
-	public Statement getStatement() throws SQLException
+	public Statement getStatement()
 	{
 		return statement;
 	}

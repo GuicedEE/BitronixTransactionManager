@@ -17,9 +17,10 @@
  */
 package bitronix.tm.utils;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
+import bitronix.tm.internal.BitronixSystemException;
+
 import javax.crypto.NoSuchPaddingException;
+import javax.transaction.SystemException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -33,6 +34,11 @@ import java.security.spec.InvalidKeySpecException;
 public class CryptoEngine
 {
 	private static final String CRYPTO_PASSWORD = "B1tr0n!+";
+
+	private CryptoEngine()
+	{
+		//Nothing needed
+	}
 
 	/**
 	 * Decrypt using the given cipher the given base64-encoded, crypted data.
@@ -55,9 +61,16 @@ public class CryptoEngine
 	 * @throws IOException
 	 * 		if an I/O error occurs.
 	 */
-	public static String decrypt(String data) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, IOException, BadPaddingException, IllegalBlockSizeException
+	public static String decrypt(String data) throws SystemException
 	{
-		return new EncryptService(CRYPTO_PASSWORD, false).decrypt(data);
+		try
+		{
+			return new EncryptService(CRYPTO_PASSWORD, false).decrypt(data);
+		}
+		catch (Exception e)
+		{
+			throw new BitronixSystemException("Unable to decrypt", e);
+		}
 	}
 
 	/**
@@ -82,9 +95,15 @@ public class CryptoEngine
 	 * @throws IOException
 	 * 		if an I/O error occurs.
 	 */
-	public static String crypt(String data) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, IOException, BadPaddingException, IllegalBlockSizeException
+	public static String crypt(String data) throws SystemException
 	{
-		return new EncryptService(CRYPTO_PASSWORD, true).encrypt(data);
-
+		try
+		{
+			return new EncryptService(CRYPTO_PASSWORD, true).encrypt(data);
+		}
+		catch (Exception e)
+		{
+			throw new BitronixSystemException("Unable to decrypt", e);
+		}
 	}
 }

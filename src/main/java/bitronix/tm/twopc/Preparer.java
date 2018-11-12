@@ -43,7 +43,7 @@ public final class Preparer
 		extends AbstractPhaseEngine
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(Preparer.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(Preparer.class.toString());
 
 	// this list has to be thread-safe as the PrepareJobs can be executed in parallel (when async 2PC is configured)
 	private final List<XAResourceHolderState> preparedResources = Collections.synchronizedList(new ArrayList<>());

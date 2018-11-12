@@ -26,35 +26,35 @@ public interface PoolingConnectionFactoryMBean
 	 *
 	 * @return the minPoolSize (type int) of this PoolingConnectionFactoryMBean object.
 	 */
-	int getMinPoolSize();
+	public int getMinPoolSize();
 
 	/**
 	 * Method getMaxPoolSize returns the maxPoolSize of this PoolingConnectionFactoryMBean object.
 	 *
 	 * @return the maxPoolSize (type int) of this PoolingConnectionFactoryMBean object.
 	 */
-	int getMaxPoolSize();
+	public int getMaxPoolSize();
 
 	/**
 	 * Method getInPoolSize returns the inPoolSize of this PoolingConnectionFactoryMBean object.
 	 *
 	 * @return the inPoolSize (type long) of this PoolingConnectionFactoryMBean object.
 	 */
-	long getInPoolSize();
+	public long getInPoolSize();
 
 	/**
 	 * Method getTotalPoolSize returns the totalPoolSize of this PoolingConnectionFactoryMBean object.
 	 *
 	 * @return the totalPoolSize (type long) of this PoolingConnectionFactoryMBean object.
 	 */
-	long getTotalPoolSize();
+	public long getTotalPoolSize();
 
 	/**
 	 * Method isFailed returns the failed of this PoolingConnectionFactoryMBean object.
 	 *
 	 * @return the failed (type boolean) of this PoolingConnectionFactoryMBean object.
 	 */
-	boolean isFailed();
+	public boolean isFailed();
 
 	/**
 	 * Method reset ...
@@ -62,14 +62,14 @@ public interface PoolingConnectionFactoryMBean
 	 * @throws Exception
 	 * 		when
 	 */
-	void reset() throws Exception;
+	public void reset() throws Exception;
 
 	/**
 	 * Method isDisabled returns the disabled of this PoolingConnectionFactoryMBean object.
 	 *
 	 * @return the disabled (type boolean) of this PoolingConnectionFactoryMBean object.
 	 */
-	boolean isDisabled();
+	public boolean isDisabled();
 
 	/**
 	 * Method setDisabled sets the disabled of this PoolingConnectionFactoryMBean object.
@@ -77,6 +77,6 @@ public interface PoolingConnectionFactoryMBean
 	 * @param disabled
 	 * 		the disabled of this PoolingConnectionFactoryMBean object.
 	 */
-	void setDisabled(boolean disabled);
+	public void setDisabled(boolean disabled);
 
 }

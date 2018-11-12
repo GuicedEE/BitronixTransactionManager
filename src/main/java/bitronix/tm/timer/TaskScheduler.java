@@ -20,11 +20,11 @@ import bitronix.tm.TransactionManagerServices;
 import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.recovery.Recoverer;
 import bitronix.tm.resource.common.XAPool;
-import bitronix.tm.utils.ClassLoaderUtils;
 import bitronix.tm.utils.MonotonicClock;
 import bitronix.tm.utils.Service;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -40,7 +40,10 @@ public class TaskScheduler
 		implements Service
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(TaskScheduler.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TaskScheduler.class.toString());
+	private static final String EXPECTED_EXECUTION_DATE = "expected a non-null execution date";
+	private static final String TOTAL_QUEUED = ", total task(s) queued: ";
+	private static final String SCHEDULED_STRING = "scheduled ";
 
 	private final SortedSet<Task> tasks;
 	private final Lock tasksLock;
@@ -56,15 +59,12 @@ public class TaskScheduler
 		setDaemon(true);
 		setName("bitronix-task-scheduler");
 
-		SortedSet<Task> tasks;
-		Lock tasksLock;
+		SortedSet<Task> sortedTasks;
+		Lock innerTasksLock;
 		try
 		{
-			@SuppressWarnings("unchecked")
-			Class<SortedSet<Task>> clazz = ClassLoaderUtils.loadClass("java.util.concurrent.ConcurrentSkipListSet");
-			tasks = clazz.getDeclaredConstructor()
-			             .newInstance();
-			tasksLock = null;
+			sortedTasks = new ConcurrentSkipListSet<>();
+			innerTasksLock = null;
 			if (LogDebugCheck.isDebugEnabled())
 			{
 				log.finer("task scheduler backed by ConcurrentSkipListSet");
@@ -72,15 +72,16 @@ public class TaskScheduler
 		}
 		catch (Exception e)
 		{
-			tasks = new TreeSet<>();
-			tasksLock = new ReentrantLock();
+			sortedTasks = new TreeSet<>();
+			innerTasksLock = new ReentrantLock();
 			if (LogDebugCheck.isDebugEnabled())
 			{
 				log.finer("task scheduler backed by locked TreeSet");
+				log.log(Level.FINEST, "exception is", e);
 			}
 		}
-		this.tasks = tasks;
-		this.tasksLock = tasksLock;
+		this.tasks = sortedTasks;
+		this.tasksLock = innerTasksLock;
 	}
 
 	/**
@@ -145,14 +146,14 @@ public class TaskScheduler
 		}
 		if (executionTime == null)
 		{
-			throw new IllegalArgumentException("expected a non-null execution date");
+			throw new IllegalArgumentException(EXPECTED_EXECUTION_DATE);
 		}
 
 		TransactionTimeoutTask task = new TransactionTimeoutTask(transaction, executionTime, this);
 		addTask(task);
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("scheduled " + task + ", total task(s) queued: " + countTasksQueued());
+			log.finer(SCHEDULED_STRING + task + TOTAL_QUEUED + countTasksQueued());
 		}
 	}
 
@@ -270,13 +271,9 @@ public class TaskScheduler
 		{
 			throw new IllegalArgumentException("expected a non-null transaction");
 		}
-
-		if (!removeTaskByObject(transaction))
+		if (!removeTaskByObject(transaction) && LogDebugCheck.isDebugEnabled())
 		{
-			if (LogDebugCheck.isDebugEnabled())
-			{
-				log.finer("no task found based on object " + transaction);
-			}
+			log.finer("no task found based on object " + transaction);
 		}
 	}
 
@@ -300,14 +297,14 @@ public class TaskScheduler
 		}
 		if (executionTime == null)
 		{
-			throw new IllegalArgumentException("expected a non-null execution date");
+			throw new IllegalArgumentException(EXPECTED_EXECUTION_DATE);
 		}
 
 		RecoveryTask task = new RecoveryTask(recoverer, executionTime, this);
 		addTask(task);
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("scheduled " + task + ", total task(s) queued: " + countTasksQueued());
+			log.finer(SCHEDULED_STRING + task + TOTAL_QUEUED + countTasksQueued());
 		}
 	}
 
@@ -349,14 +346,14 @@ public class TaskScheduler
 		}
 		if (executionTime == null)
 		{
-			throw new IllegalArgumentException("expected a non-null execution date");
+			throw new IllegalArgumentException(EXPECTED_EXECUTION_DATE);
 		}
 
 		PoolShrinkingTask task = new PoolShrinkingTask(xaPool, executionTime, this);
 		addTask(task);
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("scheduled " + task + ", total task(s) queued: " + tasks.size());
+			log.finer(SCHEDULED_STRING + task + TOTAL_QUEUED + tasks.size());
 		}
 	}
 

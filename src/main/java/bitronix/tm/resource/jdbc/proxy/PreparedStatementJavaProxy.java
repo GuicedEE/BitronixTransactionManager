@@ -24,14 +24,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * @author Brett Wooldridge
  */
+@SuppressWarnings("unused")
 public class PreparedStatementJavaProxy
 		extends JavaProxyBase<PreparedStatement>
 {
-
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(PreparedStatementJavaProxy.class.toString());
 	private static final Map<String, Method> selfMethodMap = createMethodMap(PreparedStatementJavaProxy.class);
 
 	private JdbcPooledConnection jdbcPooledConnection;
@@ -126,8 +128,8 @@ public class PreparedStatementJavaProxy
 			catch (SQLFeatureNotSupportedException e)
 			{
 				// Driver doesn't support batch updates.
+				log.log(Level.FINEST, "Not Supported To Do Batch", e);
 			}
-
 			// Return to cache so the usage count can be updated
 			jdbcPooledConnection.putCachedStatement(cacheKey, delegate);
 		}
@@ -137,11 +139,8 @@ public class PreparedStatementJavaProxy
 	 * Method isClosed returns the closed of this PreparedStatementJavaProxy object.
 	 *
 	 * @return the closed (type boolean) of this PreparedStatementJavaProxy object.
-	 *
-	 * @throws SQLException
-	 * 		when
 	 */
-	public boolean isClosed() throws SQLException
+	public boolean isClosed()
 	{
 		return pretendClosed;
 	}
@@ -211,7 +210,7 @@ public class PreparedStatementJavaProxy
 	 * Method unwrap ...
 	 *
 	 * @param iface
-	 * 		of type Class<T>
+	 * 		of type Class T
 	 *
 	 * @return T
 	 *
@@ -236,7 +235,7 @@ public class PreparedStatementJavaProxy
 	 * Method isWrapperFor ...
 	 *
 	 * @param iface
-	 * 		of type Class<?>
+	 * 		of type Class ?
 	 *
 	 * @return boolean
 	 */
@@ -250,7 +249,7 @@ public class PreparedStatementJavaProxy
 	/**
 	 * Method getMethodMap returns the methodMap of this PreparedStatementJavaProxy object.
 	 *
-	 * @return the methodMap (type Map<String, Method>) of this PreparedStatementJavaProxy object.
+	 * @return the methodMap (type Map String, Method ) of this PreparedStatementJavaProxy object.
 	 */
 	@Override
 	protected Map<String, Method> getMethodMap()

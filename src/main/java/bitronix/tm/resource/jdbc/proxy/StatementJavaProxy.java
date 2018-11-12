@@ -26,6 +26,7 @@ import java.util.Map;
 /**
  * @author Brett Wooldridge
  */
+@SuppressWarnings("unused")
 public class StatementJavaProxy
 		extends JavaProxyBase<Statement>
 {
@@ -158,7 +159,7 @@ public class StatementJavaProxy
 	 * @throws SQLException
 	 * 		when
 	 */
-	public boolean isWrapperFor(Class<?> iface) throws SQLException
+	public boolean isWrapperFor(Class<?> iface)
 	{
 		return iface.isAssignableFrom(delegate.getClass()) || isWrapperFor(delegate, iface);
 	}

@@ -15,6 +15,7 @@
  */
 package bitronix.tm.resource.common;
 
+import bitronix.tm.internal.BitronixSystemException;
 import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.utils.ClassLoaderUtils;
 import bitronix.tm.utils.CryptoEngine;
@@ -27,9 +28,9 @@ import java.util.Map;
  */
 final class XAFactoryHelper
 {
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(XAFactoryHelper.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(XAFactoryHelper.class.toString());
 
-	private final static String PASSWORD_PROPERTY_NAME = "password";
+	private static final String PASSWORD_PROPERTY_NAME = "password";
 
 	/**
 	 * Constructor XAFactoryHelper creates a new XAFactoryHelper instance.
@@ -92,23 +93,30 @@ final class XAFactoryHelper
 	 * @throws Exception
 	 * 		when
 	 */
-	private static String decrypt(String resourcePassword) throws Exception
+	private static String decrypt(String resourcePassword) throws BitronixSystemException
 	{
-		int startIdx = resourcePassword.indexOf("{");
-		int endIdx = resourcePassword.indexOf("}");
+		int startIdx = resourcePassword.indexOf('{');
+		int endIdx = resourcePassword.indexOf('}');
 
 		if (startIdx != 0 || endIdx == -1)
 		{
 			return resourcePassword;
 		}
 
-		String cipher = resourcePassword.substring(1, endIdx);
 		if (LogDebugCheck.isDebugEnabled())
 		{
 			log.finer("resource password is encrypted, decrypting " + resourcePassword);
 		}
 		String toScan = resourcePassword.substring(endIdx + 1);
-		String returned = CryptoEngine.decrypt(toScan);
+		String returned;
+		try
+		{
+			returned = CryptoEngine.decrypt(toScan);
+		}
+		catch (Exception e)
+		{
+			throw new BitronixSystemException("Unable to decrypt field", e);
+		}
 		if (returned.charAt(0) == '\u0000')
 		{
 			returned = returned.substring(8);

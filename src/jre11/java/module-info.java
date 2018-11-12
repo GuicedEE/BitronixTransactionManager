@@ -15,4 +15,6 @@ module tm.bitronix.btm {
 	requires static cglib;
 
 	requires java.sql;
+	requires static javassist;
+	requires static beta.jboss.rmi.api_1_0;
 }

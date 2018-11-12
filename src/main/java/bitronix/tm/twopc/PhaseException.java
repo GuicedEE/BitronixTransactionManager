@@ -33,7 +33,7 @@ public class PhaseException
 {
 
 	private final List<Exception> exceptions;
-	private final List<XAResourceHolderState> resourceStates;
+	private final transient List<XAResourceHolderState> resourceStates;
 
 	/**
 	 * Constructor PhaseException creates a new PhaseException instance.

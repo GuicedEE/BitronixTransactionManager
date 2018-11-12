@@ -30,7 +30,7 @@ public class RecoveryTask
 		extends Task
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(RecoveryTask.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(RecoveryTask.class.toString());
 
 	private final Recoverer recoverer;
 

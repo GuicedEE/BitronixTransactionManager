@@ -51,6 +51,7 @@ public class SyncExecutor
 	@Override
 	public void waitFor(Object future, long timeout)
 	{
+		//Nothing needed
 	}
 
 	/**
@@ -73,5 +74,6 @@ public class SyncExecutor
 	@Override
 	public void shutdown()
 	{
+		//Nothing needed
 	}
 }

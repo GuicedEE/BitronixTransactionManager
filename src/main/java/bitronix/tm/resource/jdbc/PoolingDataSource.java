@@ -56,13 +56,13 @@ public class PoolingDataSource
 		implements DataSource, XAResourceProducer<JdbcPooledConnection, JdbcPooledConnection>, PoolingDataSourceMBean
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(PoolingDataSource.class.toString());
-	private final List<ConnectionCustomizer> connectionCustomizers = new CopyOnWriteArrayList<>();
-	private volatile transient XAPool<JdbcPooledConnection, JdbcPooledConnection> pool;
-	private volatile transient XADataSource xaDataSource;
-	private volatile transient RecoveryXAResourceHolder recoveryXAResourceHolder;
-	private volatile transient Connection recoveryConnectionHandle;
-	private volatile transient Map<XAResource, JdbcPooledConnection> xaResourceHolderMap;
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(PoolingDataSource.class.toString());
+	private final transient List<ConnectionCustomizer> connectionCustomizers = new CopyOnWriteArrayList<>();
+	private transient volatile XAPool<JdbcPooledConnection, JdbcPooledConnection> pool;
+	private transient volatile XADataSource xaDataSource;
+	private transient volatile RecoveryXAResourceHolder recoveryXAResourceHolder;
+	private transient volatile Connection recoveryConnectionHandle;
+	private transient volatile Map<XAResource, JdbcPooledConnection> xaResourceHolderMap;
 	private volatile String testQuery;
 	private volatile boolean enableJdbc4ConnectionTest;
 	private volatile int connectionTestTimeout;

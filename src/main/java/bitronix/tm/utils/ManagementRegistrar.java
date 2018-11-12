@@ -44,9 +44,9 @@ import java.util.logging.Level;
 public final class ManagementRegistrar
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ManagementRegistrar.class.toString());
-	private final static MBeanServer mbeanServer;
-	private final static Queue<ManagementCommand> commandQueue;
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ManagementRegistrar.class.toString());
+	private static final MBeanServer mbeanServer;
+	private static final Queue<ManagementCommand> commandQueue;
 
 	static
 	{

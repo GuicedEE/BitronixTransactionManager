@@ -31,6 +31,7 @@ import java.util.Properties;
  *
  * @author Ludovic Orban
  */
+@SuppressWarnings("unused")
 public class JndiXAConnectionFactory
 		implements XAConnectionFactory
 {
@@ -51,6 +52,7 @@ public class JndiXAConnectionFactory
 	 */
 	public JndiXAConnectionFactory()
 	{
+		//Nothing required
 	}
 
 	/**
@@ -322,8 +324,7 @@ public class JndiXAConnectionFactory
 	 */
 	private static boolean isEmpty(String str)
 	{
-		return str == null || str.trim()
-		                         .equals("");
+		return str == null || "".equals(str.trim());
 	}
 
 	/**

@@ -9,10 +9,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
+import static java.nio.charset.StandardCharsets.*;
+
 class EncryptService
 {
 	private static final String cipher = "DES";
-	private static final String utf8 = "UTF8";
 
 	private final SecretKey key;
 	private Cipher ecipher;
@@ -73,9 +74,9 @@ class EncryptService
 	 * @throws IllegalBlockSizeException
 	 * 		when
 	 */
-	public String encrypt(String message) throws UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException
+	public String encrypt(String message) throws BadPaddingException, IllegalBlockSizeException
 	{
-		byte[] utf8 = message.getBytes(EncryptService.utf8);
+		byte[] utf8 = message.getBytes(UTF_8);
 		byte[] enc = ecipher.doFinal(utf8);
 		return Base64.getEncoder()
 		             .encodeToString(enc);
@@ -96,11 +97,11 @@ class EncryptService
 	 * @throws UnsupportedEncodingException
 	 * 		when
 	 */
-	public String decrypt(String message) throws BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException
+	public String decrypt(String message) throws BadPaddingException, IllegalBlockSizeException
 	{
 		byte[] dec = Base64.getDecoder()
 		                   .decode(message.getBytes());
 		byte[] utf8 = dcipher.doFinal(dec);
-		return new String(utf8, EncryptService.utf8);
+		return new String(utf8, UTF_8);
 	}
 }

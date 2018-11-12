@@ -32,13 +32,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * @author Brett Wooldridge
  */
+@SuppressWarnings("unused")
 public class LrcXAConnectionJavaProxy
 		extends JavaProxyBase<Connection>
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(LrcXAConnectionJavaProxy.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LrcXAConnectionJavaProxy.class.toString());
 
-	private final static Map<String, Method> selfMethodMap = createMethodMap(LrcXAConnectionJavaProxy.class);
+	private static final Map<String, Method> selfMethodMap = createMethodMap(LrcXAConnectionJavaProxy.class);
 
 	private final LrcXAResource xaResource;
 	private final List<ConnectionEventListener> connectionEventListeners = new CopyOnWriteArrayList<>();
@@ -63,7 +64,7 @@ public class LrcXAConnectionJavaProxy
 	 * @throws SQLException
 	 * 		when
 	 */
-	public XAResource getXAResource() throws SQLException
+	public XAResource getXAResource()
 	{
 		return xaResource;
 	}
@@ -103,7 +104,7 @@ public class LrcXAConnectionJavaProxy
 	 * @throws SQLException
 	 * 		when
 	 */
-	public Connection getConnection() throws SQLException
+	public Connection getConnection()
 	{
 		return delegate;
 	}

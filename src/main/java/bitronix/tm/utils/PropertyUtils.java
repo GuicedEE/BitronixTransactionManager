@@ -520,7 +520,7 @@ public final class PropertyUtils
 	 * Method containsSetterForGetter ...
 	 *
 	 * @param clazz
-	 * 		of type Class<?>
+	 * 		of type Class ?
 	 * @param method
 	 * 		of type Method
 	 *
@@ -562,11 +562,9 @@ public final class PropertyUtils
 	 * @param prefix
 	 * 		of type String
 	 * @param properties
-	 * 		of type Map<String, Object>
+	 * 		of type Map String, Object
 	 *
-	 * @return Map<String
-                                               *               	       	       ,
-                                               *               	       	       Object>
+	 * @return Map String,Object
 	 */
 	private static Map<String, Object> getNestedProperties(String prefix, Map<String, Object> properties)
 	{

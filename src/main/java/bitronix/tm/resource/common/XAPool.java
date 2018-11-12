@@ -50,7 +50,7 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		implements StateChangeListener<T>
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(XAPool.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(XAPool.class.toString());
 
 	/**
 	 * The stateTransitionLock makes sure that transitions of XAStatefulHolders from one state to another
@@ -1037,6 +1037,7 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 			}
 			catch (Exception e)
 			{
+				log.log(Level.FINEST, "Ignoreing Exception", e);
 				// OK, forget it.  The transaction is either rollback only or already finished.
 				return;
 			}
@@ -1057,28 +1058,7 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 	private static final class StatefulHolderThreadLocal<T extends XAStatefulHolder>
 			extends ThreadLocal<T>
 	{
-		/**
-		 * Method get ...
-		 *
-		 * @return T
-		 */
-		@Override
-		public T get()
-		{
-			return super.get();
-		}
-
-		/**
-		 * Method set ...
-		 *
-		 * @param value
-		 * 		of type T
-		 */
-		@Override
-		public void set(T value)
-		{
-			super.set(value);
-		}
+		//Nothing required
 	}
 
 	private final class SharedStatefulHolderCleanupSynchronization
@@ -1103,6 +1083,7 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 		@Override
 		public void beforeCompletion()
 		{
+			//Nothing required
 		}
 
 		/**

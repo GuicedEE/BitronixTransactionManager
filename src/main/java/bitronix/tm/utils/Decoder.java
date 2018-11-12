@@ -32,6 +32,11 @@ import java.util.Iterator;
 public class Decoder
 {
 
+	private Decoder()
+	{
+		//Nothing
+	}
+
 	/**
 	 * Method decodeXAExceptionErrorCode ...
 	 *

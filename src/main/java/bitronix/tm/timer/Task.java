@@ -16,6 +16,7 @@
 package bitronix.tm.timer;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -49,6 +50,22 @@ public abstract class Task
 	}
 
 	/**
+	 * Method getTaskScheduler returns the taskScheduler of this Task object.
+	 *
+	 * @return the taskScheduler (type TaskScheduler) of this Task object.
+	 */
+	protected TaskScheduler getTaskScheduler()
+	{
+		return taskScheduler;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(getExecutionTime(), getUniqueId());
+	}
+
+	/**
 	 * Method getExecutionTime returns the executionTime of this Task object.
 	 *
 	 * @return the executionTime (type Date) of this Task object.
@@ -58,14 +75,19 @@ public abstract class Task
 		return executionTime;
 	}
 
-	/**
-	 * Method getTaskScheduler returns the taskScheduler of this Task object.
-	 *
-	 * @return the taskScheduler (type TaskScheduler) of this Task object.
-	 */
-	protected TaskScheduler getTaskScheduler()
+	@Override
+	public boolean equals(Object o)
 	{
-		return taskScheduler;
+		if (this == o)
+		{
+			return true;
+		}
+		if (!(o instanceof Task))
+		{
+			return false;
+		}
+		Task task = (Task) o;
+		return compareTo(task) == 0;
 	}
 
 	/**

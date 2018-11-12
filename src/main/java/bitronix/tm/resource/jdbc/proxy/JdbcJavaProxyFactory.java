@@ -50,7 +50,7 @@ public class JdbcJavaProxyFactory
 	/**
 	 * Constructor JdbcJavaProxyFactory creates a new JdbcJavaProxyFactory instance.
 	 */
-	JdbcJavaProxyFactory()
+	public JdbcJavaProxyFactory()
 	{
 		proxyConnectionFactory = createProxyConnectionFactory();
 		proxyXAConnectionFactory = createProxyXAConnectionFactory();
@@ -302,7 +302,7 @@ public class JdbcJavaProxyFactory
 
 			try
 			{
-				return getConstructor().newInstance(new Object[]{handler});
+				return getConstructor().newInstance(handler);
 			}
 			catch (Exception e)
 			{

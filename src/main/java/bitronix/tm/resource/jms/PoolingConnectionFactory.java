@@ -40,24 +40,24 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author Ludovic Orban
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial", "unused"})
 public class PoolingConnectionFactory
 		extends ResourceBean
 		implements ConnectionFactory, XAResourceProducer<DualSessionWrapper, JmsPooledConnection>,
 				           PoolingConnectionFactoryMBean
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(PoolingConnectionFactory.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(PoolingConnectionFactory.class.toString());
 	private final transient List<JmsPooledConnection> xaStatefulHolders;
-	private volatile transient XAPool<DualSessionWrapper, JmsPooledConnection> pool;
-	private volatile transient XAConnectionFactory xaConnectionFactory;
-	private volatile transient JmsPooledConnection recoveryPooledConnection;
-	private volatile transient RecoveryXAResourceHolder recoveryXAResourceHolder;
+	private transient volatile XAPool<DualSessionWrapper, JmsPooledConnection> pool;
+	private transient volatile XAConnectionFactory xaConnectionFactory;
+	private transient volatile JmsPooledConnection recoveryPooledConnection;
+	private transient volatile RecoveryXAResourceHolder recoveryXAResourceHolder;
 	private volatile boolean cacheProducersConsumers = true;
 	private volatile boolean testConnections = false;
 	private volatile String user;
 	private volatile String password;
-	private volatile JmsConnectionHandle recoveryConnectionHandle;
+	private transient volatile JmsConnectionHandle recoveryConnectionHandle;
 	private volatile String jmxName;
 
 	/**
@@ -460,7 +460,7 @@ public class PoolingConnectionFactory
 			throw new IllegalArgumentException("class '" + xaFactory.getClass()
 			                                                        .getName() + "' does not implement " + XAConnectionFactory.class.getName());
 		}
-		XAConnectionFactory xaConnectionFactory = (XAConnectionFactory) xaFactory;
+		XAConnectionFactory innerXaConnectionFactory = (XAConnectionFactory) xaFactory;
 
 		XAConnection xaConnection;
 		if (user == null || password == null)
@@ -469,7 +469,7 @@ public class PoolingConnectionFactory
 			{
 				log.finer("creating new JMS XAConnection with no credentials");
 			}
-			xaConnection = xaConnectionFactory.createXAConnection();
+			xaConnection = innerXaConnectionFactory.createXAConnection();
 		}
 		else
 		{
@@ -477,7 +477,7 @@ public class PoolingConnectionFactory
 			{
 				log.finer("creating new JMS XAConnection with user <" + user + "> and password <" + password + ">");
 			}
-			xaConnection = xaConnectionFactory.createXAConnection(user, password);
+			xaConnection = innerXaConnectionFactory.createXAConnection(user, password);
 		}
 
 		JmsPooledConnection jmsPooledConnection = new JmsPooledConnection(this, xaConnection);

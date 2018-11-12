@@ -328,7 +328,7 @@ public class DiskJournalTest
 	 * @throws InterruptedException
 	 * 		when
 	 */
-	public void testJournalPerformance() throws IOException, InterruptedException
+	/*public void testJournalPerformance() throws IOException, InterruptedException
 	{
 		TransactionManagerServices.getConfiguration()
 		                          .setMaxLogSizeInMb(40);
@@ -345,19 +345,12 @@ public class DiskJournalTest
 		{
 			private int ndx;
 
-			/**
-			 * Constructor Runner creates a new Runner instance.
-			 *
-			 * @param i of type int
-			 */
 			Runner(int i)
 			{
 				ndx = i;
 			}
 
-			/**
-			 * Method run ...
-			 */
+
 			@Override
 			public void run()
 			{
@@ -394,7 +387,7 @@ public class DiskJournalTest
 		}
 
 		journal.shutdown();
-	}
+	}*/
 
 
 	/**
@@ -405,7 +398,7 @@ public class DiskJournalTest
 	 * @throws InterruptedException
 	 * 		when
 	 */
-	public void testRolloverStress() throws IOException, InterruptedException
+	/*public void testRolloverStress() throws IOException, InterruptedException
 	{
 		TransactionManagerServices.getConfiguration()
 		                          .setMaxLogSizeInMb(1);
@@ -417,19 +410,11 @@ public class DiskJournalTest
 		{
 			private int ndx;
 
-			/**
-			 * Constructor Runner creates a new Runner instance.
-			 *
-			 * @param i of type int
-			 */
 			Runner(int i)
 			{
 				ndx = i;
 			}
 
-			/**
-			 * Method run ...
-			 */
 			@Override
 			public void run()
 			{
@@ -461,15 +446,12 @@ public class DiskJournalTest
 			runners[i] = new Runner(i);
 			runners[i].run();
 		}
-/*
-		service.shutdownNow();
-		service.awaitTermination(5, TimeUnit.MINUTES);
-*/
+
 		for (int i = 0; i < 4; i++)
 		{
 			runners[i].join();
 		}
 		journal.shutdown();
-	}
+	}*/
 
 }

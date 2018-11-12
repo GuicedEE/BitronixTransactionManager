@@ -216,8 +216,6 @@ public class BitronixTransactionManager
 		if (currentTx == null)
 		{
 			currentTx = createTransaction();
-			//Joining transaction
-			//throw new NotSupportedException("nested transactions not supported");
 		}
 
 		ThreadContext threadContext = ThreadContext.getContext();

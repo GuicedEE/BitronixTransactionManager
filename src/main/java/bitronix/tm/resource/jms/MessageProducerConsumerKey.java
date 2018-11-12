@@ -114,12 +114,7 @@ public class MessageProducerConsumerKey
 			{
 				return false;
 			}
-			if (!areEquals(noLocal, otherKey.noLocal))
-			{
-				return false;
-			}
-
-			return true;
+			return areEquals(noLocal, otherKey.noLocal);
 		}
 		return false;
 	}

@@ -26,6 +26,7 @@ import java.util.Map;
 /**
  * @author Brett Wooldridge
  */
+@SuppressWarnings("unused")
 public class CallableStatementJavaProxy
 		extends JavaProxyBase<CallableStatement>
 {
@@ -165,9 +166,6 @@ public class CallableStatementJavaProxy
 	 * 		of type Class<?>
 	 *
 	 * @return boolean
-	 *
-	 * @throws SQLException
-	 * 		when
 	 */
 	public boolean isWrapperFor(Class<?> iface)
 	{

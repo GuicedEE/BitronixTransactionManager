@@ -46,6 +46,8 @@ public class DualSessionWrapper
 {
 
 	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(DualSessionWrapper.class.toString());
+	private static final String CREATING_IT = ", creating it";
+	private static final String FOUND_CONSUMER_ON = "found consumer based on ";
 
 	private final JmsPooledConnection pooledConnection;
 	private final boolean transacted;
@@ -651,7 +653,7 @@ public class DualSessionWrapper
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("found no producer based on " + key + ", creating it");
+				log.finer("found no producer based on " + key + CREATING_IT);
 			}
 			messageProducer = new MessageProducerWrapper(getSession().createProducer(destination), this, pooledConnection.getPoolingConnectionFactory());
 
@@ -696,7 +698,7 @@ public class DualSessionWrapper
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("found no consumer based on " + key + ", creating it");
+				log.finer("found no consumer based on " + key + CREATING_IT);
 			}
 			messageConsumer = new MessageConsumerWrapper(getSession().createConsumer(destination), this, pooledConnection.getPoolingConnectionFactory());
 
@@ -712,7 +714,7 @@ public class DualSessionWrapper
 		}
 		else if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("found consumer based on " + key + ", recycling it: " + messageConsumer);
+			log.finer(FOUND_CONSUMER_ON + key + ", recycling it: " + messageConsumer);
 		}
 		return messageConsumer;
 	}
@@ -743,7 +745,7 @@ public class DualSessionWrapper
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("found no consumer based on " + key + ", creating it");
+				log.finer("found no consumer based on " + key + CREATING_IT);
 			}
 			messageConsumer = new MessageConsumerWrapper(getSession().createConsumer(destination, messageSelector), this, pooledConnection.getPoolingConnectionFactory());
 
@@ -759,7 +761,7 @@ public class DualSessionWrapper
 		}
 		else if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("found consumer based on " + key + ", recycling it: " + messageConsumer);
+			log.finer(FOUND_CONSUMER_ON + key + ", recycling it: " + messageConsumer);
 		}
 		return messageConsumer;
 	}
@@ -792,7 +794,7 @@ public class DualSessionWrapper
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("found no consumer based on " + key + ", creating it");
+				log.finer("found no consumer based on " + key + CREATING_IT);
 			}
 			messageConsumer = new MessageConsumerWrapper(getSession().createConsumer(destination, messageSelector, noLocal), this, pooledConnection.getPoolingConnectionFactory());
 
@@ -808,7 +810,7 @@ public class DualSessionWrapper
 		}
 		else if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("found consumer based on " + key + ", recycling it: " + messageConsumer);
+			log.finer(FOUND_CONSUMER_ON + key + ", recycling it: " + messageConsumer);
 		}
 		return messageConsumer;
 	}
@@ -875,7 +877,7 @@ public class DualSessionWrapper
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("found no durable subscriber based on " + key + ", creating it");
+				log.finer("found no durable subscriber based on " + key + CREATING_IT);
 			}
 			topicSubscriber = new TopicSubscriberWrapper(getSession().createDurableSubscriber(topic, name), this, pooledConnection.getPoolingConnectionFactory());
 
@@ -926,7 +928,7 @@ public class DualSessionWrapper
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("found no durable subscriber based on " + key + ", creating it");
+				log.finer("found no durable subscriber based on " + key + CREATING_IT);
 			}
 			topicSubscriber = new TopicSubscriberWrapper(getSession().createDurableSubscriber(topic, name, messageSelector, noLocal), this,
 			                                             pooledConnection.getPoolingConnectionFactory());

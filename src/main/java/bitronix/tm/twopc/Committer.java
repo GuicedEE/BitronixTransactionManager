@@ -181,9 +181,11 @@ public final class Committer
 					case XAException.XA_HEURMIX:
 						heuristicResources.add(resourceHolder);
 						break;
-
 					default:
+					{
 						errorResources.add(resourceHolder);
+						break;
+					}
 				}
 			}
 			else
@@ -201,11 +203,11 @@ public final class Committer
 		else
 		{
 			throw new BitronixHeuristicMixedException(message + ":" +
-			                                          (errorResources.size() > 0
+			                                          (!errorResources.isEmpty()
 			                                           ? " resource(s) " + Decoder.collectResourcesNames(errorResources) + " threw unexpected exception"
 			                                           : "") +
-			                                          (errorResources.size() > 0 && heuristicResources.size() > 0 ? " and" : "") +
-			                                          (heuristicResources.size() > 0 ? " resource(s) " + Decoder.collectResourcesNames(heuristicResources) +
+			                                          (!errorResources.isEmpty() && !heuristicResources.isEmpty() ? " and" : "") +
+			                                          (!heuristicResources.isEmpty() ? " resource(s) " + Decoder.collectResourcesNames(heuristicResources) +
 			                                                                           " improperly unilaterally rolled back" + (hazard ? " (or hazard happened)" : "") : ""),
 			                                          phaseException);
 		}

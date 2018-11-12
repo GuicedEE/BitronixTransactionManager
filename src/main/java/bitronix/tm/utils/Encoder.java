@@ -22,6 +22,10 @@ package bitronix.tm.utils;
  */
 public class Encoder
 {
+	private Encoder()
+	{
+		//Nope
+	}
 
 	/**
 	 * Method longToBytes ...

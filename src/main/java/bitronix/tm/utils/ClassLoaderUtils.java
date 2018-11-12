@@ -20,6 +20,7 @@ import bitronix.tm.internal.LogDebugCheck;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * Static utility methods for loading classes and resources.
@@ -27,7 +28,12 @@ import java.util.Set;
 public class ClassLoaderUtils
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(ClassLoaderUtils.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ClassLoaderUtils.class.toString());
+
+	private ClassLoaderUtils()
+	{
+		//Nothing needed
+	}
 
 	/**
 	 * Method getAllInterfaces ...
@@ -104,7 +110,7 @@ public class ClassLoaderUtils
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("context classloader could not find class '" + className + "', trying Class.forName() instead");
+					log.log(Level.FINER, "context classloader could not find class '" + className + "', trying Class.forName() instead", ex);
 				}
 			}
 		}
@@ -171,6 +177,7 @@ public class ClassLoaderUtils
 			}
 			catch (ClassNotFoundException cnfe)
 			{
+				log.log(Level.FINEST, "Class not found?", cnfe);
 				return CascadingClassLoader.class.getClassLoader()
 				                                 .loadClass(name);
 			}
