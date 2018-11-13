@@ -41,6 +41,7 @@ public class JdbcJavassistProxyFactory
 	private final ClassMap classMap;
 	// For LRC we just use the standard Java Proxies
 	private final JdbcJavaProxyFactory lrcProxyFactory;
+
 	private ClassPool classPool;
 	private Constructor<Connection> proxyConnectionConstructor;
 	private Constructor<Statement> proxyStatementConstructor;
