@@ -36,7 +36,7 @@ import java.util.logging.Level;
 public abstract class AbstractPhaseEngine
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(AbstractPhaseEngine.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(AbstractPhaseEngine.class.toString());
 
 	private final Executor executor;
 
@@ -57,7 +57,7 @@ public abstract class AbstractPhaseEngine
 	 * @param resources
 	 * 		of type List<XAResourceHolderState>
 	 *
-	 * @return Set<String>
+	 * @return Set String
 	 */
 	protected static Set<String> collectResourcesUniqueNames(List<XAResourceHolderState> resources)
 	{
@@ -75,11 +75,11 @@ public abstract class AbstractPhaseEngine
 	 * Method collectNotInterestedResources ...
 	 *
 	 * @param allResources
-	 * 		of type List<XAResourceHolderState>
+	 * 		of type List XAResourceHolderState
 	 * @param interestedResources
-	 * 		of type List<XAResourceHolderState>
+	 * 		of type List XAResourceHolderState
 	 *
-	 * @return List<XAResourceHolderState>
+	 * @return List XAResourceHolderState
 	 */
 	protected static List<XAResourceHolderState> collectNotInterestedResources(List<XAResourceHolderState> allResources, List<XAResourceHolderState> interestedResources)
 	{
@@ -151,8 +151,8 @@ public abstract class AbstractPhaseEngine
 				log.finer("running " + resources.size() + " job(s) for position '" + positionKey + "'");
 			}
 			JobsExecutionReport report = runJobsForPosition(resources);
-			if (report.getExceptions()
-			          .size() > 0)
+			if (!report.getExceptions()
+			           .isEmpty())
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
@@ -168,7 +168,7 @@ public abstract class AbstractPhaseEngine
 			}
 		}
 
-		if (positionErrorReports.size() > 0)
+		if (!positionErrorReports.isEmpty())
 		{
 			// merge all resources and exceptions lists
 			List<Exception> exceptions = new ArrayList<>();
@@ -188,7 +188,7 @@ public abstract class AbstractPhaseEngine
 	 * Method runJobsForPosition ...
 	 *
 	 * @param resources
-	 * 		of type List<XAResourceHolderState>
+	 * 		of type List XAResourceHolderState
 	 *
 	 * @return JobsExecutionReport
 	 */
@@ -298,7 +298,7 @@ public abstract class AbstractPhaseEngine
 		}
 	}
 
-	private final static class JobsExecutionReport
+	private static final class JobsExecutionReport
 	{
 		private final List<Exception> exceptions;
 		private final List<XAResourceHolderState> resources;
@@ -307,9 +307,9 @@ public abstract class AbstractPhaseEngine
 		 * Constructor JobsExecutionReport creates a new JobsExecutionReport instance.
 		 *
 		 * @param exceptions
-		 * 		of type List<Exception>
+		 * 		of type List Exception
 		 * @param resources
-		 * 		of type List<XAResourceHolderState>
+		 * 		of type List XAResourceHolderState
 		 */
 		private JobsExecutionReport(List<Exception> exceptions, List<XAResourceHolderState> resources)
 		{
@@ -320,7 +320,7 @@ public abstract class AbstractPhaseEngine
 		/**
 		 * Method getExceptions returns the exceptions of this JobsExecutionReport object.
 		 *
-		 * @return the exceptions (type List<Exception>) of this JobsExecutionReport object.
+		 * @return the exceptions (type List Exception ) of this JobsExecutionReport object.
 		 */
 		public List<Exception> getExceptions()
 		{
@@ -330,7 +330,7 @@ public abstract class AbstractPhaseEngine
 		/**
 		 * Method getResources returns the resources of this JobsExecutionReport object.
 		 *
-		 * @return the resources (type List<XAResourceHolderState>) of this JobsExecutionReport object.
+		 * @return the resources (type List XAResourceHolderState ) of this JobsExecutionReport object.
 		 */
 		public List<XAResourceHolderState> getResources()
 		{

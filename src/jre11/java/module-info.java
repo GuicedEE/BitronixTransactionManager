@@ -1,6 +1,5 @@
 module tm.bitronix.btm {
 	exports bitronix.tm;
-	exports bitronix.tm.utils;
 	exports bitronix.tm.resource.jdbc;
 	exports bitronix.tm.jndi;
 
@@ -15,6 +14,7 @@ module tm.bitronix.btm {
 	requires static cglib;
 
 	requires java.sql;
+
 	requires static javassist;
 	requires static beta.jboss.rmi.api_1_0;
 }

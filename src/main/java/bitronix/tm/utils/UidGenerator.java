@@ -30,36 +30,49 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author Ludovic Orban
  */
-public class UidGenerator {
+public class UidGenerator
+{
 
-    private final static AtomicInteger sequenceGenerator = new AtomicInteger();
+	private static final AtomicInteger sequenceGenerator = new AtomicInteger();
 
-    /**
-     * Generate a UID, globally unique. This method relies on the configured serverId for network uniqueness.
-     * @return the generated UID.
-     */
-    public static Uid generateUid() {
-        byte[] timestamp = Encoder.longToBytes(MonotonicClock.currentTimeMillis());
-        byte[] sequence = Encoder.intToBytes(sequenceGenerator.incrementAndGet());
-        byte[] serverId = TransactionManagerServices.getConfiguration().buildServerIdArray();
+	private UidGenerator()
+	{
+		//Static class
+	}
 
-        int uidLength = serverId.length + timestamp.length + sequence.length;
-        byte[] uidArray = new byte[uidLength];
+	/**
+	 * Generate a XID with the specified globalTransactionId.
+	 *
+	 * @param gtrid
+	 * 		the GTRID to use to generate the Xid.
+	 *
+	 * @return the generated Xid.
+	 */
+	public static BitronixXid generateXid(Uid gtrid)
+	{
+		return new BitronixXid(gtrid, generateUid());
+	}
 
-        System.arraycopy(serverId, 0, uidArray, 0, serverId.length);
-        System.arraycopy(timestamp, 0, uidArray, serverId.length, timestamp.length);
-        System.arraycopy(sequence, 0, uidArray, serverId.length + timestamp.length, sequence.length);
+	/**
+	 * Generate a UID, globally unique. This method relies on the configured serverId for network uniqueness.
+	 *
+	 * @return the generated UID.
+	 */
+	public static Uid generateUid()
+	{
+		byte[] timestamp = Encoder.longToBytes(MonotonicClock.currentTimeMillis());
+		byte[] sequence = Encoder.intToBytes(sequenceGenerator.incrementAndGet());
+		byte[] serverId = TransactionManagerServices.getConfiguration()
+		                                            .buildServerIdArray();
 
-        return new Uid(uidArray);
-    }
+		int uidLength = serverId.length + timestamp.length + sequence.length;
+		byte[] uidArray = new byte[uidLength];
 
-    /**
-     * Generate a XID with the specified globalTransactionId.
-     * @param gtrid the GTRID to use to generate the Xid.
-     * @return the generated Xid.
-     */
-    public static BitronixXid generateXid(Uid gtrid) {
-        return new BitronixXid(gtrid, generateUid());
-    }
+		System.arraycopy(serverId, 0, uidArray, 0, serverId.length);
+		System.arraycopy(timestamp, 0, uidArray, serverId.length, timestamp.length);
+		System.arraycopy(sequence, 0, uidArray, serverId.length + timestamp.length, sequence.length);
+
+		return new Uid(uidArray);
+	}
 
 }

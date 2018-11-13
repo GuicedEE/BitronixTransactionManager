@@ -52,7 +52,16 @@ public class PreparedStatementJavaProxy
 	 */
 	public PreparedStatementJavaProxy(JdbcPooledConnection jdbcPooledConnection, PreparedStatement statement, CacheKey cacheKey)
 	{
+		this();
 		initialize(jdbcPooledConnection, statement, cacheKey);
+	}
+
+	/**
+	 * Constructor PreparedStatementJavaProxy creates a new PreparedStatementJavaProxy instance.
+	 */
+	public PreparedStatementJavaProxy()
+	{
+		// Default constructor
 	}
 
 	/**
@@ -72,14 +81,6 @@ public class PreparedStatementJavaProxy
 		this.delegate = statement;
 		this.cacheKey = cacheKey;
 		this.pretendClosed = false;
-	}
-
-	/**
-	 * Constructor PreparedStatementJavaProxy creates a new PreparedStatementJavaProxy instance.
-	 */
-	public PreparedStatementJavaProxy()
-	{
-		// Default constructor
 	}
 
 	/**

@@ -44,6 +44,8 @@ public class TaskScheduler
 	private static final String EXPECTED_EXECUTION_DATE = "expected a non-null execution date";
 	private static final String TOTAL_QUEUED = ", total task(s) queued: ";
 	private static final String SCHEDULED_STRING = "scheduled ";
+	private static final String NO_TASK = "no task found based on object ";
+
 
 	private final SortedSet<Task> tasks;
 	private final Lock tasksLock;
@@ -271,9 +273,13 @@ public class TaskScheduler
 		{
 			throw new IllegalArgumentException("expected a non-null transaction");
 		}
-		if (!removeTaskByObject(transaction) && LogDebugCheck.isDebugEnabled())
+
+		if (!removeTaskByObject(transaction))
 		{
-			log.finer("no task found based on object " + transaction);
+			if (LogDebugCheck.isDebugEnabled())
+			{
+				log.finer(NO_TASK + transaction);
+			}
 		}
 	}
 
@@ -325,7 +331,7 @@ public class TaskScheduler
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("no task found based on object " + recoverer);
+				log.finer(NO_TASK + recoverer);
 			}
 		}
 	}
@@ -374,13 +380,11 @@ public class TaskScheduler
 			throw new IllegalArgumentException("expected a non-null XA pool");
 		}
 
-		if (!removeTaskByObject(xaPool))
+		if (!removeTaskByObject(xaPool) && LogDebugCheck.isDebugEnabled())
 		{
-			if (LogDebugCheck.isDebugEnabled())
-			{
-				log.finer("no task found based on object " + xaPool);
-			}
+			log.finer(NO_TASK + xaPool);
 		}
+
 	}
 
 	/**

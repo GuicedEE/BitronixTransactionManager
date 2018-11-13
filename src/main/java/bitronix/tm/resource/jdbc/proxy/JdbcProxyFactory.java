@@ -125,6 +125,11 @@ public interface JdbcProxyFactory
 	 */
 	class Initializer
 	{
+		private Initializer()
+		{
+			//No config
+		}
+
 		/**
 		 * Method initialize ...
 		 *

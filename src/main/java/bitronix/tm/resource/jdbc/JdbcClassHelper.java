@@ -21,16 +21,22 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 public class JdbcClassHelper
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(JdbcClassHelper.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(JdbcClassHelper.class.toString());
 
-	private final static int DETECTION_TIMEOUT = 5; // seconds
+	private static final int DETECTION_TIMEOUT = 5; // seconds
 
 	private static final Map<Class<Connection>, Integer> connectionClassVersions = new ConcurrentHashMap<>();
 	private static final Map<Class<? extends Connection>, Method> isValidMethods = new ConcurrentHashMap<>();
+
+	private JdbcClassHelper()
+	{
+		//No config required
+	}
 
 	/**
 	 * Method getIsValidMethod ...
@@ -74,6 +80,7 @@ public class JdbcClassHelper
 		}
 		catch (Exception | AbstractMethodError ex)
 		{
+			log.log(Level.FINEST, "NOT JDBC 4 : " + connectionClass, ex);
 			jdbcVersionDetected = 3;
 		}
 

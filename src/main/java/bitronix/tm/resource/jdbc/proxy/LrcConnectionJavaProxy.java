@@ -30,7 +30,7 @@ public class LrcConnectionJavaProxy
 		extends JavaProxyBase<Connection>
 {
 
-	private final static Map<String, Method> selfMethodMap = createMethodMap(LrcConnectionJavaProxy.class);
+	private static final Map<String, Method> selfMethodMap = createMethodMap(LrcConnectionJavaProxy.class);
 
 	private final LrcXAResource xaResource;
 

@@ -71,37 +71,7 @@ public final class ManagementRegistrar
 
 		if (commandQueue != null)
 		{
-			new Thread()
-			{
-				{
-					setName("bitronix-async-jmx-worker");
-					setDaemon(true);
-				}
-
-				/**
-				 * Method run ...
-				 */
-				@Override
-				public void run()
-				{
-					while (!isInterrupted())
-					{
-						try
-						{
-							normalizeAndRunQueuedCommands();
-							Thread.sleep(250); // sampling interval
-						}
-						catch (InterruptedException ex)
-						{
-							return;
-						}
-						catch (Exception ex)
-						{
-							log.log(Level.SEVERE, "an unexpected error occurred in JMX asynchronous registration code", ex);
-						}
-					}
-				}
-			}.start();
+			new ManagementRegistrarThread().start();
 		}
 	}
 

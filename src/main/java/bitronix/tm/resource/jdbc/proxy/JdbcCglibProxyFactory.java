@@ -15,6 +15,7 @@
  */
 package bitronix.tm.resource.jdbc.proxy;
 
+import bitronix.tm.internal.BitronixRuntimeException;
 import bitronix.tm.resource.jdbc.JdbcPooledConnection;
 import bitronix.tm.resource.jdbc.LruStatementCache.CacheKey;
 import bitronix.tm.resource.jdbc.PooledConnectionProxy;
@@ -187,7 +188,7 @@ public class JdbcCglibProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -213,7 +214,7 @@ public class JdbcCglibProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 

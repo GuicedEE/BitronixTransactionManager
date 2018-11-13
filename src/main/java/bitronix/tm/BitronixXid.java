@@ -51,6 +51,17 @@ public class BitronixXid
 	private final String toStringValue;
 
 	/**
+	 * Constructor BitronixXid creates a new BitronixXid instance.
+	 *
+	 * @param xid
+	 * 		of type Xid
+	 */
+	public BitronixXid(Xid xid)
+	{
+		this(new Uid(xid.getGlobalTransactionId()), new Uid(xid.getBranchQualifier()));
+	}
+
+	/**
 	 * Create a new XID using the specified GTRID and BQUAL.
 	 *
 	 * @param globalTransactionId
@@ -99,20 +110,6 @@ public class BitronixXid
 			hashCode += branchQualifier.hashCode();
 		}
 		return hashCode;
-	}
-
-	/**
-	 * Constructor BitronixXid creates a new BitronixXid instance.
-	 *
-	 * @param xid
-	 * 		of type Xid
-	 */
-	public BitronixXid(Xid xid)
-	{
-		this.globalTransactionId = new Uid(xid.getGlobalTransactionId());
-		this.branchQualifier = new Uid(xid.getBranchQualifier());
-		this.toStringValue = precalculateToString();
-		this.hashCodeValue = precalculateHashCode();
 	}
 
 	/**

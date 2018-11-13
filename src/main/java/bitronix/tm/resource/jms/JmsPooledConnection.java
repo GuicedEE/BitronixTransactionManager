@@ -42,8 +42,8 @@ public class JmsPooledConnection
 		implements JmsPooledConnectionMBean
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(JmsPooledConnection.class.toString());
-
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(JmsPooledConnection.class.toString());
+	private static final String EMULATE = "emulating XA for resource ";
 
 	private final PoolingConnectionFactory poolingConnectionFactory;
 	private final Set<DualSessionWrapper> sessions = Collections.synchronizedSet(new HashSet<>());
@@ -73,17 +73,17 @@ public class JmsPooledConnection
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("emulating XA for resource " + poolingConnectionFactory.getUniqueName() + " - changing twoPcOrderingPosition to ALWAYS_LAST_POSITION");
+				log.finer(EMULATE + poolingConnectionFactory.getUniqueName() + " - changing twoPcOrderingPosition to ALWAYS_LAST_POSITION");
 			}
 			poolingConnectionFactory.setTwoPcOrderingPosition(Scheduler.ALWAYS_LAST_POSITION);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("emulating XA for resource " + poolingConnectionFactory.getUniqueName() + " - changing deferConnectionRelease to true");
+				log.finer(EMULATE + poolingConnectionFactory.getUniqueName() + " - changing deferConnectionRelease to true");
 			}
 			poolingConnectionFactory.setDeferConnectionRelease(true);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("emulating XA for resource " + poolingConnectionFactory.getUniqueName() + " - changing useTmJoin to true");
+				log.finer(EMULATE + poolingConnectionFactory.getUniqueName() + " - changing useTmJoin to true");
 			}
 			poolingConnectionFactory.setUseTmJoin(true);
 		}

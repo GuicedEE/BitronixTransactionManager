@@ -31,7 +31,7 @@ public class CallableStatementJavaProxy
 		extends JavaProxyBase<CallableStatement>
 {
 
-	private final static Map<String, Method> selfMethodMap = createMethodMap(CallableStatementJavaProxy.class);
+	private static final Map<String, Method> selfMethodMap = createMethodMap(CallableStatementJavaProxy.class);
 
 	private JdbcPooledConnection jdbcPooledConnection;
 

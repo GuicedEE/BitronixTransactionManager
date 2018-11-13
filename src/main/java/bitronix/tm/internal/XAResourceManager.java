@@ -66,7 +66,7 @@ public class XAResourceManager
 	 * @throws BitronixSystemException
 	 * 		if an internal error occured.
 	 */
-	public boolean delist(XAResourceHolderState xaResourceHolderState, int flag) throws XAException, BitronixSystemException
+	public boolean delist(XAResourceHolderState xaResourceHolderState, int flag) throws XAException
 	{
 		if (findXAResourceHolderState(xaResourceHolderState.getXAResource()) != null)
 		{

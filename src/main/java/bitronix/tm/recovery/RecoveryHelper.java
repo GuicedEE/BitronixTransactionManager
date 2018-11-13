@@ -193,7 +193,7 @@ public class RecoveryHelper
 				byte[] jvmUniqueId = TransactionManagerServices.getConfiguration()
 				                                               .buildServerIdArray();
 
-				if (extractedServerId == null)
+				if (extractedServerId.length == 0)
 				{
 					log.severe("skipping XID " + bitronixXid + " as its GTRID's serverId is null. It looks like the disk journal is corrupted!");
 					continue;

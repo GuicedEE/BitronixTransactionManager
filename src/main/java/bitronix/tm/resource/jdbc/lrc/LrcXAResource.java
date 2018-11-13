@@ -54,6 +54,7 @@ import java.sql.SQLException;
  *
  * @author Ludovic Orban
  */
+@SuppressWarnings({"Duplicates"})
 public class LrcXAResource
 		implements XAResource
 {
@@ -65,6 +66,9 @@ public class LrcXAResource
 	private static final String XID_NOT_NULL = "XID cannot be null";
 	private static final String RESOURCE_NEVER_STARTED = "resource never started on XID ";
 	private static final String RESOURCE_NEVER_ENDED = "resource never ended on XID ";
+	private static final String RESOURCE_ALREADY_STARTED = "resource already started on XID ";
+	private static final String FLAG_EQUALS = ", flag=";
+
 	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LrcXAResource.class.toString());
 
 	private final Connection connection;
@@ -156,7 +160,7 @@ public class LrcXAResource
 				}
 				else
 				{
-					throw new BitronixXAException("resource already started on XID " + this.xid + " - cannot commit it on another XID " + xid, XAException.XAER_PROTO);
+					throw new BitronixXAException(RESOURCE_ALREADY_STARTED + this.xid + " - cannot commit it on another XID " + xid, XAException.XAER_PROTO);
 				}
 			}
 			else
@@ -204,12 +208,12 @@ public class LrcXAResource
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("OK to end, old state=" + xlatedState() + XID_EQUALS + xid + ", flag=" + Decoder.decodeXAResourceFlag(flag));
+					log.finer("OK to end, old state=" + xlatedState() + XID_EQUALS + xid + FLAG_EQUALS + Decoder.decodeXAResourceFlag(flag));
 				}
 			}
 			else
 			{
-				throw new BitronixXAException("resource already started on XID " + this.xid + " - cannot end it on another XID " + xid, XAException.XAER_PROTO);
+				throw new BitronixXAException(RESOURCE_ALREADY_STARTED + this.xid + " - cannot end it on another XID " + xid, XAException.XAER_PROTO);
 			}
 		}
 		else if (state == ENDED)
@@ -251,6 +255,7 @@ public class LrcXAResource
 	@Override
 	public void forget(Xid xid) throws XAException
 	{
+		//Nothing needed
 	}
 
 	/**
@@ -322,7 +327,7 @@ public class LrcXAResource
 			}
 			else
 			{
-				throw new BitronixXAException("resource already started on XID " + this.xid + " - cannot prepare it on another XID " + xid, XAException.XAER_PROTO);
+				throw new BitronixXAException(RESOURCE_ALREADY_STARTED + this.xid + " - cannot prepare it on another XID " + xid, XAException.XAER_PROTO);
 			}
 		}
 		else if (state == PREPARED)
@@ -395,7 +400,7 @@ public class LrcXAResource
 			}
 			else
 			{
-				throw new BitronixXAException("resource already started on XID " + this.xid + " - cannot roll it back on another XID " + xid, XAException.XAER_PROTO);
+				throw new BitronixXAException(RESOURCE_ALREADY_STARTED + this.xid + " - cannot roll it back on another XID " + xid, XAException.XAER_PROTO);
 			}
 		}
 		else if (state == PREPARED)
@@ -465,7 +470,7 @@ public class LrcXAResource
 		{
 			if (this.xid != null)
 			{
-				throw new BitronixXAException("resource already started on XID " + this.xid, XAException.XAER_PROTO);
+				throw new BitronixXAException(RESOURCE_ALREADY_STARTED + this.xid, XAException.XAER_PROTO);
 			}
 			else
 			{
@@ -477,7 +482,7 @@ public class LrcXAResource
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.finer("OK to start, old state=" + xlatedState() + XID_EQUALS + xid + ", flag=" + Decoder.decodeXAResourceFlag(flag));
+						log.finer("OK to start, old state=" + xlatedState() + XID_EQUALS + xid + FLAG_EQUALS + Decoder.decodeXAResourceFlag(flag));
 					}
 					this.xid = xid;
 				}
@@ -485,7 +490,7 @@ public class LrcXAResource
 		}
 		else if (state == STARTED)
 		{
-			throw new BitronixXAException("resource already started on XID " + this.xid, XAException.XAER_PROTO);
+			throw new BitronixXAException(RESOURCE_ALREADY_STARTED + this.xid, XAException.XAER_PROTO);
 		}
 		else if (state == ENDED)
 		{
@@ -499,12 +504,12 @@ public class LrcXAResource
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.finer("OK to join, old state=" + xlatedState() + XID_EQUALS + xid + ", flag=" + Decoder.decodeXAResourceFlag(flag));
+						log.finer("OK to join, old state=" + xlatedState() + XID_EQUALS + xid + FLAG_EQUALS + Decoder.decodeXAResourceFlag(flag));
 					}
 				}
 				else
 				{
-					throw new BitronixXAException("resource already started on XID " + this.xid + " - cannot start it on more than one XID at a time", XAException.XAER_RMERR);
+					throw new BitronixXAException(RESOURCE_ALREADY_STARTED + this.xid + " - cannot start it on more than one XID at a time", XAException.XAER_RMERR);
 				}
 			}
 		}
@@ -528,7 +533,7 @@ public class LrcXAResource
 		}
 		catch (SQLException ex)
 		{
-			throw new BitronixXAException("cannot disable autocommit on non-XA connection", XAException.XAER_RMERR);
+			throw new BitronixXAException("cannot disable autocommit on non-XA connection", XAException.XAER_RMERR, ex);
 		}
 	}
 
@@ -569,7 +574,7 @@ public class LrcXAResource
 		}
 		catch (SQLException ex)
 		{
-			throw new BitronixXAException("cannot reset autocommit on non-XA connection", XAException.XAER_RMERR);
+			throw new BitronixXAException("cannot reset autocommit on non-XA connection", XAException.XAER_RMERR, ex);
 		}
 	}
 

@@ -85,9 +85,9 @@ public final class Uid
 		char[] hexChars = new char[uid.length * 2];
 		int c = 0;
 		int v;
-		for (int i = 0; i < uid.length; i++)
+		for (byte anUid : uid)
 		{
-			v = uid[i] & 0xFF;
+			v = anUid & 0xFF;
 			hexChars[c++] = HEX[v >> 4];
 			hexChars[c++] = HEX[v & 0xF];
 		}
@@ -114,7 +114,7 @@ public final class Uid
 		int serverIdLength = array.length - 4 - 8; // - sequence - timestamp
 		if (serverIdLength < 1)
 		{
-			return null;
+			return new byte[]{};
 		}
 
 		byte[] result = new byte[serverIdLength];

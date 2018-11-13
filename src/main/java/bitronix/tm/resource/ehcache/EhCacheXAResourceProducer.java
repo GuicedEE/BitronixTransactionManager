@@ -54,7 +54,7 @@ public final class EhCacheXAResourceProducer
 
 	private final transient ConcurrentMap<Integer, EhCacheXAResourceHolder> xaResourceHolders = new ConcurrentHashMap<>();
 	private final transient AtomicInteger xaResourceHolderCounter = new AtomicInteger();
-	private volatile transient RecoveryXAResourceHolder recoveryXAResourceHolder;
+	private transient volatile RecoveryXAResourceHolder recoveryXAResourceHolder;
 
 
 	/**

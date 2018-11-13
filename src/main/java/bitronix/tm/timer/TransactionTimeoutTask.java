@@ -30,7 +30,7 @@ public class TransactionTimeoutTask
 		extends Task
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionTimeoutTask.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionTimeoutTask.class.toString());
 
 	private final BitronixTransaction transaction;
 

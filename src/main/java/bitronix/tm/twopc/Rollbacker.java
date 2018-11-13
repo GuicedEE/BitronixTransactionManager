@@ -39,7 +39,7 @@ public final class Rollbacker
 		extends AbstractPhaseEngine
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(Rollbacker.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(Rollbacker.class.toString());
 
 	private final List<XAResourceHolderState> interestedResources = Collections.synchronizedList(new ArrayList<>());
 	// this list has to be thread-safe as the RollbackJobs can be executed in parallel (when async 2PC is configured)
@@ -159,7 +159,10 @@ public final class Rollbacker
 						break;
 
 					default:
+					{
 						errorResources.add(resourceHolder);
+						break;
+					}
 				}
 			}
 			else
@@ -177,11 +180,11 @@ public final class Rollbacker
 		else
 		{
 			throw new BitronixHeuristicMixedException(message + ":" +
-			                                          (errorResources.size() > 0
+			                                          (!errorResources.isEmpty()
 			                                           ? " resource(s) " + Decoder.collectResourcesNames(errorResources) + " threw unexpected exception"
 			                                           : "") +
-			                                          (errorResources.size() > 0 && heuristicResources.size() > 0 ? " and" : "") +
-			                                          (heuristicResources.size() > 0 ? " resource(s) " + Decoder.collectResourcesNames(heuristicResources) +
+			                                          (!errorResources.isEmpty() && !heuristicResources.isEmpty() ? " and" : "") +
+			                                          (!heuristicResources.isEmpty() ? " resource(s) " + Decoder.collectResourcesNames(heuristicResources) +
 			                                                                           " improperly unilaterally committed" + (hazard ? " (or hazard happened)" : "") : ""),
 			                                          phaseException);
 		}
@@ -212,7 +215,7 @@ public final class Rollbacker
 	/**
 	 * Create a {@link bitronix.tm.twopc.executor.Job} that is going to execute the phase command on the given resource.
 	 *
-	 * @param xaResourceHolderState
+	 * @param resourceHolder
 	 * 		the resource that is going to receive a command.
 	 *
 	 * @return the {@link bitronix.tm.twopc.executor.Job} that is going to execute the command.

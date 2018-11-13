@@ -42,7 +42,16 @@ public class ResultSetJavaProxy
 	 */
 	public ResultSetJavaProxy(Statement statement, ResultSet resultSet)
 	{
+		this();
 		initialize(statement, resultSet);
+	}
+
+	/**
+	 * Constructor ResultSetJavaProxy creates a new ResultSetJavaProxy instance.
+	 */
+	public ResultSetJavaProxy()
+	{
+		// Default constructor
 	}
 
 	/**
@@ -58,14 +67,6 @@ public class ResultSetJavaProxy
 		this.proxy = this;
 		this.statement = statement;
 		this.delegate = resultSet;
-	}
-
-	/**
-	 * Constructor ResultSetJavaProxy creates a new ResultSetJavaProxy instance.
-	 */
-	public ResultSetJavaProxy()
-	{
-		// Default constructor
 	}
 
 	/* Overridden methods of java.sql.ResultSet */

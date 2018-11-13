@@ -174,7 +174,7 @@ public final class Preparer
 			}
 		}
 
-		if (heuristicResources.size() > 0)
+		if (!heuristicResources.isEmpty())
 		{
 			throw new BitronixRollbackException(message + ":" +
 			                                    " resource(s) " + Decoder.collectResourcesNames(heuristicResources) +

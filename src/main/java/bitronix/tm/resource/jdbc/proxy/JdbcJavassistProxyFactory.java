@@ -15,6 +15,7 @@
  */
 package bitronix.tm.resource.jdbc.proxy;
 
+import bitronix.tm.internal.BitronixRuntimeException;
 import bitronix.tm.resource.jdbc.JdbcPooledConnection;
 import bitronix.tm.resource.jdbc.LruStatementCache.CacheKey;
 import bitronix.tm.resource.jdbc.lrc.LrcXAResource;
@@ -83,7 +84,7 @@ public class JdbcJavassistProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -99,7 +100,7 @@ public class JdbcJavassistProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -115,7 +116,7 @@ public class JdbcJavassistProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -131,7 +132,7 @@ public class JdbcJavassistProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -147,7 +148,7 @@ public class JdbcJavassistProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -172,7 +173,7 @@ public class JdbcJavassistProxyFactory
 	 */
 	@SuppressWarnings("unchecked")
 	private <T> Class<T> generateProxyClass(Class<T> primaryInterface, Class<?> superClass)
-			throws NotFoundException, CannotCompileException, NoSuchMethodException, SecurityException
+			throws NotFoundException, CannotCompileException
 	{
 
 		// Make a new class that extends one of the JavaProxy classes (ie. superClass); use the name to XxxJavassistProxy instead of XxxJavaProxy
@@ -250,7 +251,7 @@ public class JdbcJavassistProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -270,7 +271,7 @@ public class JdbcJavassistProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -286,7 +287,7 @@ public class JdbcJavassistProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -302,7 +303,7 @@ public class JdbcJavassistProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -318,7 +319,7 @@ public class JdbcJavassistProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 

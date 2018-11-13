@@ -45,6 +45,7 @@ public class Scheduler<T>
 	 */
 	public Scheduler()
 	{
+		//Nothing needed
 	}
 
 	/**

@@ -31,7 +31,7 @@ public class StatementJavaProxy
 		extends JavaProxyBase<Statement>
 {
 
-	private final static Map<String, Method> selfMethodMap = createMethodMap(StatementJavaProxy.class);
+	private static final Map<String, Method> selfMethodMap = createMethodMap(StatementJavaProxy.class);
 
 	private JdbcPooledConnection jdbcPooledConnection;
 
@@ -45,7 +45,16 @@ public class StatementJavaProxy
 	 */
 	public StatementJavaProxy(JdbcPooledConnection jdbcPooledConnection, Statement statement)
 	{
+		this();
 		initialize(jdbcPooledConnection, statement);
+	}
+
+	/**
+	 * Constructor StatementJavaProxy creates a new StatementJavaProxy instance.
+	 */
+	public StatementJavaProxy()
+	{
+		// Default constructor
 	}
 
 	/**
@@ -61,14 +70,6 @@ public class StatementJavaProxy
 		this.proxy = this;
 		this.jdbcPooledConnection = jdbcPooledConnection;
 		this.delegate = statement;
-	}
-
-	/**
-	 * Constructor StatementJavaProxy creates a new StatementJavaProxy instance.
-	 */
-	public StatementJavaProxy()
-	{
-		// Default constructor
 	}
 
 	/* Overridden methods of java.sql.Statement */

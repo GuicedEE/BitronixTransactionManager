@@ -2,6 +2,7 @@ package bitronix.tm.journal;
 
 import bitronix.tm.TransactionManagerServices;
 import bitronix.tm.internal.BitronixRuntimeException;
+import bitronix.tm.internal.BitronixSystemException;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -48,24 +49,15 @@ public class TransactionLogIterator
 		{
 			try
 			{
-				try
-				{
-					tlog = tlc.readLog(skipCrcCheck);
-					if (tlog == null)
-					{
-						break;
-					}
-				}
-				catch (CorruptedTransactionLogException ex)
-				{
-					if (TransactionManagerServices.getConfiguration()
-					                              .isSkipCorruptedLogs())
-					{
-						log.log(Level.SEVERE, "skipping corrupted log", ex);
-						continue;
-					}
-					throw ex;
-				}
+				processTlog();
+			}
+			catch (CorruptedTransactionLogException ctle)
+			{
+				log.log(Level.SEVERE, "Skipping Corrupted Log", ctle);
+			}
+			catch (BitronixSystemException bse)
+			{
+				break;
 			}
 			catch (IOException e)
 			{
@@ -74,6 +66,27 @@ public class TransactionLogIterator
 		}
 
 		return tlog != null;
+	}
+
+	private void processTlog() throws IOException, BitronixSystemException
+	{
+		try
+		{
+			tlog = tlc.readLog(skipCrcCheck);
+			if (tlog == null)
+			{
+				throw new BitronixSystemException("Breaker");
+			}
+		}
+		catch (CorruptedTransactionLogException ex)
+		{
+			if (TransactionManagerServices.getConfiguration()
+			                              .isSkipCorruptedLogs())
+			{
+				throw ex;
+			}
+			throw ex;
+		}
 	}
 
 	/**

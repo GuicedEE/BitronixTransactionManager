@@ -30,7 +30,7 @@ public class LrcXASession
 		implements XASession
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(LrcXASession.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LrcXASession.class.toString());
 
 	private final Session nonXaSession;
 	private final XAResource xaResource;

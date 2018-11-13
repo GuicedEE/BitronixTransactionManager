@@ -30,12 +30,18 @@ import java.util.TreeMap;
  */
 public final class PropertyUtils
 {
+	private static final String DASH_QUOTE_SPACE = "' - '";
+	private static final String IS_NOT_ACCESSIBLE = "' is not accessible";
+	private static final String PROPERTY_STRING = "property '";
+	private static final String ACCESS_EXCEPTION = "' access threw an exception";
+	private static final String IN_CLASS_STRING = "' in class '";
 
 	/**
 	 * Constructor PropertyUtils creates a new PropertyUtils instance.
 	 */
 	private PropertyUtils()
 	{
+		//No config required
 	}
 
 	/**
@@ -49,7 +55,7 @@ public final class PropertyUtils
 	 * @throws PropertyException
 	 * 		if an error happened while trying to set a property.
 	 */
-	public static void setProperties(Object target, Map<String, Object> properties) throws PropertyException
+	public static void setProperties(Object target, Map<String, Object> properties)
 	{
 		for (Map.Entry<String, Object> entry : properties.entrySet())
 		{
@@ -74,7 +80,7 @@ public final class PropertyUtils
 	 * @throws PropertyException
 	 * 		if an error happened while trying to set the property.
 	 */
-	public static void setProperty(Object target, String propertyName, Object propertyValue) throws PropertyException
+	public static void setProperty(Object target, String propertyName, Object propertyValue)
 	{
 		String[] propertyNames = propertyName.split("\\.");
 
@@ -98,7 +104,7 @@ public final class PropertyUtils
 				}
 				catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex)
 				{
-					throw new PropertyException("cannot set property '" + propertyName + "' - '" + name + "' is null and cannot be auto-filled", ex);
+					throw new PropertyException("cannot set property '" + propertyName + DASH_QUOTE_SPACE + name + "' is null and cannot be auto-filled", ex);
 				}
 				callSetter(currentTarget, name, result);
 			}
@@ -148,7 +154,7 @@ public final class PropertyUtils
 	 * @throws PropertyException
 	 * 		when
 	 */
-	private static Object callGetter(Object target, String propertyName) throws PropertyException
+	private static Object callGetter(Object target, String propertyName)
 	{
 		Method getter = getGetter(target, propertyName);
 		try
@@ -157,11 +163,11 @@ public final class PropertyUtils
 		}
 		catch (IllegalAccessException ex)
 		{
-			throw new PropertyException("property '" + propertyName + "' is not accessible", ex);
+			throw new PropertyException(PROPERTY_STRING + propertyName + IS_NOT_ACCESSIBLE, ex);
 		}
 		catch (InvocationTargetException ex)
 		{
-			throw new PropertyException("property '" + propertyName + "' access threw an exception", ex);
+			throw new PropertyException(PROPERTY_STRING + propertyName + ACCESS_EXCEPTION, ex);
 		}
 	}
 
@@ -193,8 +199,8 @@ public final class PropertyUtils
 				return method.getReturnType();
 			}
 		}
-		throw new PropertyException("no property '" + propertyName + "' in class '" + target.getClass()
-		                                                                                    .getName() + "'");
+		throw new PropertyException("no property '" + propertyName + IN_CLASS_STRING + target.getClass()
+		                                                                                     .getName() + "'");
 	}
 
 	/**
@@ -210,7 +216,7 @@ public final class PropertyUtils
 	 * @throws PropertyException
 	 * 		when
 	 */
-	private static void callSetter(Object target, String propertyName, Object parameter) throws PropertyException
+	private static void callSetter(Object target, String propertyName, Object parameter)
 	{
 		Method setter = getSetter(target, propertyName);
 		try
@@ -219,11 +225,11 @@ public final class PropertyUtils
 		}
 		catch (IllegalAccessException ex)
 		{
-			throw new PropertyException("property '" + propertyName + "' is not accessible", ex);
+			throw new PropertyException(PROPERTY_STRING + propertyName + IS_NOT_ACCESSIBLE, ex);
 		}
 		catch (InvocationTargetException ex)
 		{
-			throw new PropertyException("property '" + propertyName + "' access threw an exception", ex);
+			throw new PropertyException(PROPERTY_STRING + propertyName + ACCESS_EXCEPTION, ex);
 		}
 	}
 
@@ -241,7 +247,7 @@ public final class PropertyUtils
 	 * @throws PropertyException
 	 * 		if an error happened while trying to set the property.
 	 */
-	private static void setDirectProperty(Object target, String propertyName, Object propertyValue) throws PropertyException
+	private static void setDirectProperty(Object target, String propertyName, Object propertyValue)
 	{
 		Method setter = getSetter(target, propertyName);
 		Class<?> parameterType = setter.getParameterTypes()[0];
@@ -259,11 +265,11 @@ public final class PropertyUtils
 		}
 		catch (IllegalAccessException ex)
 		{
-			throw new PropertyException("property '" + propertyName + "' is not accessible", ex);
+			throw new PropertyException(PROPERTY_STRING + propertyName + IS_NOT_ACCESSIBLE, ex);
 		}
 		catch (InvocationTargetException ex)
 		{
-			throw new PropertyException("property '" + propertyName + "' access threw an exception", ex);
+			throw new PropertyException(PROPERTY_STRING + propertyName + ACCESS_EXCEPTION, ex);
 		}
 	}
 
@@ -295,8 +301,8 @@ public final class PropertyUtils
 				return method;
 			}
 		}
-		throw new PropertyException("no readable property '" + propertyName + "' in class '" + target.getClass()
-		                                                                                             .getName() + "'");
+		throw new PropertyException("no readable property '" + propertyName + IN_CLASS_STRING + target.getClass()
+		                                                                                              .getName() + "'");
 	}
 
 	/**
@@ -328,8 +334,8 @@ public final class PropertyUtils
 				return method;
 			}
 		}
-		throw new PropertyException("no writeable property '" + propertyName + "' in class '" + target.getClass()
-		                                                                                              .getName() + "'");
+		throw new PropertyException("no writeable property '" + propertyName + IN_CLASS_STRING + target.getClass()
+		                                                                                               .getName() + "'");
 	}
 
 	/**
@@ -436,7 +442,7 @@ public final class PropertyUtils
 	 * 		if an error happened while trying to get a property.
 	 */
 	@SuppressWarnings("WeakerAccess")
-	public static Map<String, Object> getProperties(Object target) throws PropertyException
+	public static Map<String, Object> getProperties(Object target)
 	{
 		Map<String, Object> properties = new HashMap<>();
 		Class<?> clazz = target.getClass();
@@ -477,7 +483,7 @@ public final class PropertyUtils
 				}
 				catch (IllegalAccessException | InvocationTargetException ex)
 				{
-					throw new PropertyException("cannot set property '" + propertyName + "' - '" + name + "' is null and cannot be auto-filled", ex);
+					throw new PropertyException("cannot set property '" + propertyName + DASH_QUOTE_SPACE + name + "' is null and cannot be auto-filled", ex);
 				}
 
 			} // if
@@ -498,7 +504,7 @@ public final class PropertyUtils
 	 * @throws PropertyException
 	 * 		if an error happened while trying to get the property.
 	 */
-	public static Object getProperty(Object target, String propertyName) throws PropertyException
+	public static Object getProperty(Object target, String propertyName)
 	{
 		String[] propertyNames = propertyName.split("\\.");
 		Object currentTarget = target;
@@ -508,7 +514,7 @@ public final class PropertyUtils
 			Object result = callGetter(currentTarget, name);
 			if (result == null && i < propertyNames.length - 1)
 			{
-				throw new PropertyException("cannot get property '" + propertyName + "' - '" + name + "' is null");
+				throw new PropertyException("cannot get property '" + propertyName + DASH_QUOTE_SPACE + name + "' is null");
 			}
 			currentTarget = result;
 		}

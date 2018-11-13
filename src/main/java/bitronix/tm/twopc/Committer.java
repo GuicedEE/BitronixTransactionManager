@@ -39,7 +39,7 @@ public final class Committer
 		extends AbstractPhaseEngine
 {
 
-	private final static java.util.logging.Logger log = java.util.logging.Logger.getLogger(Committer.class.toString());
+	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(Committer.class.toString());
 	private final List<XAResourceHolderState> interestedResources = Collections.synchronizedList(new ArrayList<>());
 	// this list has to be thread-safe as the CommitJobs can be executed in parallel (when async 2PC is configured)
 	private final List<XAResourceHolderState> committedResources = Collections.synchronizedList(new ArrayList<>());
@@ -80,7 +80,7 @@ public final class Committer
 		XAResourceManager resourceManager = transaction.getResourceManager();
 		if (resourceManager.size() == 0)
 		{
-			transaction.setStatus(Status.STATUS_COMMITTING); //TODO: there is a disk force here that could be avoided
+			transaction.setStatus(Status.STATUS_COMMITTING);
 			transaction.setStatus(Status.STATUS_COMMITTED);
 			if (LogDebugCheck.isDebugEnabled())
 			{
@@ -238,7 +238,7 @@ public final class Committer
 	/**
 	 * Create a {@link bitronix.tm.twopc.executor.Job} that is going to execute the phase command on the given resource.
 	 *
-	 * @param xaResourceHolderState
+	 * @param resourceHolder
 	 * 		the resource that is going to receive a command.
 	 *
 	 * @return the {@link bitronix.tm.twopc.executor.Job} that is going to execute the command.

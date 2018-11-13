@@ -15,6 +15,7 @@
  */
 package bitronix.tm.resource.jdbc.proxy;
 
+import bitronix.tm.internal.BitronixRuntimeException;
 import bitronix.tm.resource.jdbc.JdbcPooledConnection;
 import bitronix.tm.resource.jdbc.LruStatementCache.CacheKey;
 import bitronix.tm.resource.jdbc.PooledConnectionProxy;
@@ -153,7 +154,7 @@ public class JdbcJavaProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -175,7 +176,7 @@ public class JdbcJavaProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -193,7 +194,7 @@ public class JdbcJavaProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -211,7 +212,7 @@ public class JdbcJavaProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -229,7 +230,7 @@ public class JdbcJavaProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -247,7 +248,7 @@ public class JdbcJavaProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -265,7 +266,7 @@ public class JdbcJavaProxyFactory
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e);
+			throw new BitronixRuntimeException(e);
 		}
 	}
 
@@ -319,7 +320,6 @@ public class JdbcJavaProxyFactory
 		private synchronized Constructor<T> getConstructor()
 		{
 			Constructor<T> ctor = ctorRef == null ? null : ctorRef.get();
-
 			if (ctor == null)
 			{
 				try
@@ -329,7 +329,7 @@ public class JdbcJavaProxyFactory
 				}
 				catch (NoSuchMethodException e)
 				{
-					throw new InternalError(e.toString());
+					throw new InternalError(e.toString(), e);
 				}
 
 				ctorRef = new SoftReference<>(ctor);

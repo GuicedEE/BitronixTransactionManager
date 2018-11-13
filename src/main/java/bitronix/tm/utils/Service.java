@@ -21,6 +21,7 @@ package bitronix.tm.utils;
  * @author Ludovic Orban
  * @see bitronix.tm.TransactionManagerServices
  */
+@FunctionalInterface
 public interface Service
 {
 
