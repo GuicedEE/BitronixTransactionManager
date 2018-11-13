@@ -273,14 +273,11 @@ public class TaskScheduler
 		{
 			throw new IllegalArgumentException("expected a non-null transaction");
 		}
-
-		if (!removeTaskByObject(transaction))
+		if (!removeTaskByObject(transaction) && LogDebugCheck.isDebugEnabled())
 		{
-			if (LogDebugCheck.isDebugEnabled())
-			{
-				log.finer(NO_TASK + transaction);
-			}
+			log.finer(NO_TASK + transaction);
 		}
+
 	}
 
 	/**
@@ -326,14 +323,11 @@ public class TaskScheduler
 		{
 			log.finer("cancelling recovery task");
 		}
-
-		if (!removeTaskByObject(recoverer))
+		if (!removeTaskByObject(recoverer) && LogDebugCheck.isDebugEnabled())
 		{
-			if (LogDebugCheck.isDebugEnabled())
-			{
-				log.finer(NO_TASK + recoverer);
-			}
+			log.finer(NO_TASK + recoverer);
 		}
+
 	}
 
 	/**

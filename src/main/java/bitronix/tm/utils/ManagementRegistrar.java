@@ -187,13 +187,10 @@ public final class ManagementRegistrar
 						mappedCommands.remove(name);
 					}
 				}
-				else if (previousCommand instanceof ManagementUnregisterCommand)
+				else if (previousCommand instanceof ManagementUnregisterCommand && command instanceof ManagementRegisterCommand)
 				{
 					// We already have this MBean, flagging it for replacement.
-					if (command instanceof ManagementRegisterCommand)
-					{
-						((ManagementRegisterCommand) command).setReplace(true);
-					}
+					((ManagementRegisterCommand) command).setReplace(true);
 				}
 			}
 
@@ -323,7 +320,7 @@ public final class ManagementRegistrar
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("Failed to unregister the JMX instance of name '" + name + "' as it doesn't exist.");
+					log.log(Level.FINE, "Failed to unregister the JMX instance of name '" + name + "' as it doesn't exist.", e);
 				}
 			}
 		}
@@ -333,7 +330,7 @@ public final class ManagementRegistrar
 	/**
 	 * Base class for management related commands.
 	 */
-	private static abstract class ManagementCommand
+	private abstract static class ManagementCommand
 			implements Runnable
 	{
 

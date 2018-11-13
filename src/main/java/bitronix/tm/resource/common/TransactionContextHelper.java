@@ -441,7 +441,7 @@ public final class TransactionContextHelper
 	 * @throws BitronixSystemException
 	 * 		when
 	 */
-	private static boolean isEnlistedInSomeTransaction(XAResourceHolder<? extends XAResourceHolder> xaResourceHolder) throws BitronixSystemException
+	private static boolean isEnlistedInSomeTransaction(XAResourceHolder<? extends XAResourceHolder> xaResourceHolder)
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{

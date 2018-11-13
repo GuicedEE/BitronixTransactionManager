@@ -338,14 +338,7 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 					long waitTime = TimeUnit.SECONDS.toMillis(bean.getAcquisitionInterval());
 					if (waitTime > 0)
 					{
-						try
-						{
-							wait(waitTime);
-						}
-						catch (InterruptedException ex2)
-						{
-							// ignore
-						}
+						waitFor(waitTime);
 					}
 				}
 
@@ -358,6 +351,18 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 				}
 			}
 		} // while true
+	}
+
+	private synchronized void waitFor(long waitTime)
+	{
+		try
+		{
+			wait(waitTime);
+		}
+		catch (InterruptedException ex2)
+		{
+			log.log(Level.FINEST, "Waiting exception", ex2);
+		}
 	}
 
 	/* ------------------------------------------------------------------------

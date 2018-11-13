@@ -29,6 +29,7 @@ public class ManagementRegistrarThread
 			}
 			catch (InterruptedException ex)
 			{
+				log.log(Level.FINEST, "an unexpected error occurred in JMX asynchronous registration code", ex);
 				return;
 			}
 			catch (Exception ex)

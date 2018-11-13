@@ -307,7 +307,7 @@ public class JdbcJavaProxyFactory
 			}
 			catch (Exception e)
 			{
-				throw new InternalError(e.toString());
+				throw new InternalError(e.toString(), e);
 			}
 		}
 

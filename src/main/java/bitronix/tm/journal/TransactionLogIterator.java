@@ -57,6 +57,7 @@ public class TransactionLogIterator
 			}
 			catch (BitronixSystemException bse)
 			{
+				log.log(Level.FINEST, "Skipping Corrupted Log", bse);
 				break;
 			}
 			catch (IOException e)
