@@ -328,7 +328,7 @@ public class DiskJournalTest
 	 * @throws InterruptedException
 	 * 		when
 	 */
-	/*public void testJournalPerformance() throws IOException, InterruptedException
+	public void testJournalPerformance() throws IOException, InterruptedException
 	{
 		TransactionManagerServices.getConfiguration()
 		                          .setMaxLogSizeInMb(40);
@@ -387,7 +387,7 @@ public class DiskJournalTest
 		}
 
 		journal.shutdown();
-	}*/
+	}
 
 
 	/**
@@ -398,7 +398,7 @@ public class DiskJournalTest
 	 * @throws InterruptedException
 	 * 		when
 	 */
-	/*public void testRolloverStress() throws IOException, InterruptedException
+	public void testRolloverStress() throws IOException, InterruptedException
 	{
 		TransactionManagerServices.getConfiguration()
 		                          .setMaxLogSizeInMb(1);
@@ -452,6 +452,6 @@ public class DiskJournalTest
 			runners[i].join();
 		}
 		journal.shutdown();
-	}*/
+	}
 
 }
