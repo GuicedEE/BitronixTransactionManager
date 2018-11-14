@@ -82,4 +82,3 @@ public class CryptoEngine
 		}
 	}
 }
-TransactionLogAppender
