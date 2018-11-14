@@ -153,7 +153,7 @@ public class TransactionLogAppender
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("between " + tlog.getWritePosition() + " and " + tlog.getWritePosition() + tlog.calculateTotalRecorResourceObjectFactorydSize() + ", writing " + tlog);
+				log.finer("between " + tlog.getWritePosition() + " and " + tlog.getWritePosition() + tlog.calculateTotalRecordSize() + ", writing " + tlog);
 			}
 
 			long writePosition = tlog.getWritePosition();
