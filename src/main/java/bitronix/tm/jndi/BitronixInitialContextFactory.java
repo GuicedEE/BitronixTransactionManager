@@ -49,7 +49,7 @@ public class BitronixInitialContextFactory
 	 * Method getInitialContext ...
 	 *
 	 * @param hashtable
-	 * 		of type Hashtable<?, ?>
+	 * 		of type Hashtable ?, ?
 	 *
 	 * @return Context
 	 */

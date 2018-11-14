@@ -192,7 +192,7 @@ public class JmsPooledConnection
 	/**
 	 * Close the physical connection that this {@link bitronix.tm.resource.common.XAStatefulHolder} represents.
 	 *
-	 * @throws Exception
+	 * @throws JMSException
 	 * 		a resource-specific exception thrown when there is an error closing the physical connection.
 	 */
 	@Override
@@ -327,9 +327,6 @@ public class JmsPooledConnection
 	 * 		of type int
 	 *
 	 * @return Session
-	 *
-	 * @throws JMSException
-	 * 		when
 	 */
 	protected Session createSession(boolean transacted, int acknowledgeMode)
 	{
@@ -423,7 +420,7 @@ public class JmsPooledConnection
 	/**
 	 * Method getTransactionGtridsCurrentlyHoldingThis returns the transactionGtridsCurrentlyHoldingThis of this JmsPooledConnection object.
 	 *
-	 * @return the transactionGtridsCurrentlyHoldingThis (type Collection<String>) of this JmsPooledConnection object.
+	 * @return the transactionGtridsCurrentlyHoldingThis (type Collection String ) of this JmsPooledConnection object.
 	 */
 	@Override
 	public Collection<String> getTransactionGtridsCurrentlyHoldingThis()

@@ -112,7 +112,7 @@ public class BitronixTransaction
 	/**
 	 * Method getSynchronizationScheduler returns the synchronizationScheduler of this BitronixTransaction object.
 	 *
-	 * @return the synchronizationScheduler (type Scheduler<Synchronization>) of this BitronixTransaction object.
+	 * @return the synchronizationScheduler (type Scheduler Synchronization ) of this BitronixTransaction object.
 	 */
 	public Scheduler<Synchronization> getSynchronizationScheduler()
 	{
@@ -648,7 +648,7 @@ public class BitronixTransaction
 	 * @param status
 	 * 		of type int
 	 * @param uniqueNames
-	 * 		of type Set<String>
+	 * 		of type Set String
 	 *
 	 * @throws SystemException
 	 * 		when
@@ -1069,7 +1069,7 @@ public class BitronixTransaction
 	/**
 	 * Method getEnlistedResourcesUniqueNames returns the enlistedResourcesUniqueNames of this BitronixTransaction object.
 	 *
-	 * @return the enlistedResourcesUniqueNames (type Collection<String>) of this BitronixTransaction object.
+	 * @return the enlistedResourcesUniqueNames (type Collection String ) of this BitronixTransaction object.
 	 */
 	@Override
 	public Collection<String> getEnlistedResourcesUniqueNames()

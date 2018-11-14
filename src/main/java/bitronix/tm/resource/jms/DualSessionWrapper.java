@@ -151,11 +151,8 @@ public class DualSessionWrapper
 				session = null;
 			}
 
-			Iterator<Entry<MessageProducerConsumerKey, MessageProducer>> it = messageProducers.entrySet()
-			                                                                                  .iterator();
-			while (it.hasNext())
+			for (Entry<MessageProducerConsumerKey, MessageProducer> entry : messageProducers.entrySet())
 			{
-				Entry<MessageProducerConsumerKey, MessageProducer> entry = it.next();
 				MessageProducerWrapper messageProducerWrapper = (MessageProducerWrapper) entry.getValue();
 				try
 				{
@@ -167,12 +164,8 @@ public class DualSessionWrapper
 				}
 			}
 			messageProducers.clear();
-
-			Iterator<Entry<MessageProducerConsumerKey, MessageConsumer>> it2 = messageConsumers.entrySet()
-			                                                                                   .iterator();
-			while (it2.hasNext())
+			for (Entry<MessageProducerConsumerKey, MessageConsumer> entry : messageConsumers.entrySet())
 			{
-				Entry<MessageProducerConsumerKey, MessageConsumer> entry = it2.next();
 				MessageConsumerWrapper messageConsumerWrapper = (MessageConsumerWrapper) entry.getValue();
 				try
 				{
@@ -272,7 +265,7 @@ public class DualSessionWrapper
 	/**
 	 * Close the physical connection that this {@link bitronix.tm.resource.common.XAStatefulHolder} represents.
 	 *
-	 * @throws Exception
+	 * @throws JMSException
 	 * 		a resource-specific exception thrown when there is an error closing the physical connection.
 	 */
 	@Override
@@ -316,7 +309,7 @@ public class DualSessionWrapper
 			{
 				// this may hide the exception thrown by delistFromCurrentTransaction() but
 				// an error requeuing must absolutely be reported as an exception.
-				// Too bad if this happens... See JdbcPooledConnection.release() as well.
+				// Too bad if this happens... See JdbcPooledConnection.release(JmsPooledConnection) as well.
 				throw (JMSException) new JMSException("error requeuing " + this).initCause(ex);
 			}
 		}

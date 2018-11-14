@@ -128,7 +128,7 @@ public class StatementJavaProxy
 	 * Method unwrap ...
 	 *
 	 * @param iface
-	 * 		of type Class<T>
+	 * 		of type Class T
 	 *
 	 * @return T
 	 *
@@ -153,12 +153,9 @@ public class StatementJavaProxy
 	 * Method isWrapperFor ...
 	 *
 	 * @param iface
-	 * 		of type Class<?>
+	 * 		of type Class ?
 	 *
 	 * @return boolean
-	 *
-	 * @throws SQLException
-	 * 		when
 	 */
 	public boolean isWrapperFor(Class<?> iface)
 	{
@@ -170,7 +167,7 @@ public class StatementJavaProxy
 	/**
 	 * Method getMethodMap returns the methodMap of this StatementJavaProxy object.
 	 *
-	 * @return the methodMap (type Map<String, Method>) of this StatementJavaProxy object.
+	 * @return the methodMap (type Map String, Method ) of this StatementJavaProxy object.
 	 */
 	@Override
 	protected Map<String, Method> getMethodMap()

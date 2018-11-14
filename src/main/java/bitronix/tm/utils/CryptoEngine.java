@@ -19,12 +19,7 @@ package bitronix.tm.utils;
 
 import bitronix.tm.internal.BitronixSystemException;
 
-import javax.crypto.NoSuchPaddingException;
 import javax.transaction.SystemException;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 /**
  * <p>Simple crypto helper that uses symetric keys to crypt and decrypt resources passwords.</p>
@@ -48,18 +43,8 @@ public class CryptoEngine
 	 *
 	 * @return decrypted data.
 	 *
-	 * @throws InvalidKeyException
+	 * @throws SystemException
 	 * 		if the given key material is shorter than 8 bytes.
-	 * @throws NoSuchAlgorithmException
-	 * 		if a secret-key factory for the specified algorithm is not available in the
-	 * 		default provider package or any of the other provider packages that were searched.
-	 * @throws NoSuchPaddingException
-	 * 		if transformation contains a padding scheme that is not available.
-	 * @throws InvalidKeySpecException
-	 * 		if the given key specification is inappropriate for this secret-key factory to
-	 * 		produce a secret key.
-	 * @throws IOException
-	 * 		if an I/O error occurs.
 	 */
 	public static String decrypt(String data) throws SystemException
 	{
@@ -82,18 +67,8 @@ public class CryptoEngine
 	 *
 	 * @return crypted, base64-encoded data.
 	 *
-	 * @throws InvalidKeyException
+	 * @throws SystemException
 	 * 		if the given key material is shorter than 8 bytes.
-	 * @throws NoSuchAlgorithmException
-	 * 		if a secret-key factory for the specified algorithm is not available in the
-	 * 		default provider package or any of the other provider packages that were searched.
-	 * @throws NoSuchPaddingException
-	 * 		if transformation contains a padding scheme that is not available.
-	 * @throws InvalidKeySpecException
-	 * 		if the given key specification is inappropriate for this secret-key factory to
-	 * 		produce a secret key.
-	 * @throws IOException
-	 * 		if an I/O error occurs.
 	 */
 	public static String crypt(String data) throws SystemException
 	{

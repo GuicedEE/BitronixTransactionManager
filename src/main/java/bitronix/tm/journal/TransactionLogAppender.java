@@ -98,9 +98,6 @@ public class TransactionLogAppender
 	 * 		the TransactionLogRecord
 	 *
 	 * @return true if the log should rollover, false otherwise
-	 *
-	 * @throws IOException
-	 * 		if an I/O error occurs
 	 */
 	protected boolean setPositionAndAdvance(TransactionLogRecord tlog)
 	{
@@ -156,7 +153,7 @@ public class TransactionLogAppender
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("between " + tlog.getWritePosition() + " and " + tlog.getWritePosition() + tlog.calculateTotalRecordSize() + ", writing " + tlog);
+				log.finer("between " + tlog.getWritePosition() + " and " + tlog.getWritePosition() + tlog.calculateTotalRecorResourceObjectFactorydSize() + ", writing " + tlog);
 			}
 
 			long writePosition = tlog.getWritePosition();

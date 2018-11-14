@@ -39,9 +39,9 @@ public class BitronixMultiSystemException
 	 * @param string
 	 * 		of type String
 	 * @param exceptions
-	 * 		of type List<? extends Exception>
+	 * 		of type List ? extends Exception
 	 * @param resourceStates
-	 * 		of type List<XAResourceHolderState>
+	 * 		of type List XAResourceHolderState
 	 */
 	public BitronixMultiSystemException(String string, List<? extends Exception> exceptions, List<XAResourceHolderState> resourceStates)
 	{

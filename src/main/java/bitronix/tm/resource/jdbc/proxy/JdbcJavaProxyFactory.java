@@ -64,7 +64,7 @@ public class JdbcJavaProxyFactory
 	/**
 	 * Method createProxyConnectionFactory ...
 	 *
-	 * @return ProxyFactory<Connection>
+	 * @return ProxyFactory Connection
 	 */
 	private ProxyFactory<Connection> createProxyConnectionFactory()
 	{
@@ -78,7 +78,7 @@ public class JdbcJavaProxyFactory
 	/**
 	 * Method createProxyXAConnectionFactory ...
 	 *
-	 * @return ProxyFactory<XAConnection>
+	 * @return ProxyFactory XAConnection
 	 */
 	private ProxyFactory<XAConnection> createProxyXAConnectionFactory()
 	{
@@ -92,7 +92,7 @@ public class JdbcJavaProxyFactory
 	/**
 	 * Method createProxyStatementFactory ...
 	 *
-	 * @return ProxyFactory<Statement>
+	 * @return ProxyFactory Statement
 	 */
 	private ProxyFactory<Statement> createProxyStatementFactory()
 	{
@@ -105,7 +105,7 @@ public class JdbcJavaProxyFactory
 	/**
 	 * Method createProxyCallableStatementFactory ...
 	 *
-	 * @return ProxyFactory<CallableStatement>
+	 * @return ProxyFactory CallableStatement
 	 */
 	private ProxyFactory<CallableStatement> createProxyCallableStatementFactory()
 	{
@@ -118,7 +118,7 @@ public class JdbcJavaProxyFactory
 	/**
 	 * Method createProxyPreparedStatementFactory ...
 	 *
-	 * @return ProxyFactory<PreparedStatement>
+	 * @return ProxyFactory PreparedStatement
 	 */
 	private ProxyFactory<PreparedStatement> createProxyPreparedStatementFactory()
 	{
@@ -131,7 +131,7 @@ public class JdbcJavaProxyFactory
 	/**
 	 * Method createProxyResultSetFactory ...
 	 *
-	 * @return ProxyFactory<ResultSet>
+	 * @return ProxyFactory ResultSet
 	 */
 	private ProxyFactory<ResultSet> createProxyResultSetFactory()
 	{
@@ -279,7 +279,7 @@ public class JdbcJavaProxyFactory
 		 * Constructor ProxyFactory creates a new ProxyFactory instance.
 		 *
 		 * @param interfaces
-		 * 		of type Class<?>[]
+		 * 		of type Class ? []
 		 */
 		public ProxyFactory(Class<?>[] interfaces)
 		{
@@ -314,7 +314,7 @@ public class JdbcJavaProxyFactory
 		/**
 		 * Method getConstructor returns the constructor of this ProxyFactory object.
 		 *
-		 * @return the constructor (type Constructor<T>) of this ProxyFactory object.
+		 * @return the constructor (type Constructor T ) of this ProxyFactory object.
 		 */
 		@SuppressWarnings("unchecked")
 		private synchronized Constructor<T> getConstructor()

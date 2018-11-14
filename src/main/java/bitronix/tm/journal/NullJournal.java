@@ -75,9 +75,6 @@ public class NullJournal
 
 	/**
 	 * Close this journal and release all underlying resources.
-	 *
-	 * @throws java.io.IOException
-	 * 		if an I/O error occurs.
 	 */
 	@Override
 	public void close()
@@ -87,9 +84,6 @@ public class NullJournal
 
 	/**
 	 * Force journal to synchronize with permanent storage.
-	 *
-	 * @throws java.io.IOException
-	 * 		if an I/O error occurs.
 	 */
 	@Override
 	public void force()
@@ -101,9 +95,6 @@ public class NullJournal
 	 * Collect all dangling records of the journal, ie: COMMITTING records with no corresponding COMMITTED record.
 	 *
 	 * @return a Map using Uid objects GTRID as key and implementations of {@link bitronix.tm.journal.JournalRecord} as value.
-	 *
-	 * @throws java.io.IOException
-	 * 		if an I/O error occurs.
 	 */
 	@Override
 	public Map<Uid, JournalRecord> collectDanglingRecords()

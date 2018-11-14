@@ -270,7 +270,7 @@ public class BitronixContext
 	 * @param name
 	 * 		of type Name
 	 *
-	 * @return NamingEnumeration<NameClassPair>
+	 * @return NamingEnumeration NameClassPair
 	 *
 	 * @throws NamingException
 	 * 		when
@@ -287,7 +287,7 @@ public class BitronixContext
 	 * @param s
 	 * 		of type String
 	 *
-	 * @return NamingEnumeration<NameClassPair>
+	 * @return NamingEnumeration NameClassPair
 	 *
 	 * @throws NamingException
 	 * 		when
@@ -304,7 +304,7 @@ public class BitronixContext
 	 * @param name
 	 * 		of type Name
 	 *
-	 * @return NamingEnumeration<Binding>
+	 * @return NamingEnumeration Binding
 	 *
 	 * @throws NamingException
 	 * 		when
@@ -321,7 +321,7 @@ public class BitronixContext
 	 * @param s
 	 * 		of type String
 	 *
-	 * @return NamingEnumeration<Binding>
+	 * @return NamingEnumeration Binding
 	 *
 	 * @throws NamingException
 	 * 		when
@@ -535,7 +535,7 @@ public class BitronixContext
 	/**
 	 * Method getEnvironment returns the environment of this BitronixContext object.
 	 *
-	 * @return the environment (type Hashtable<?, ?>) of this BitronixContext object.
+	 * @return the environment (type Hashtable ?, ? ) of this BitronixContext object.
 	 *
 	 * @throws NamingException
 	 * 		when

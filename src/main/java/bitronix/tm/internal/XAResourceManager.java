@@ -63,8 +63,6 @@ public class XAResourceManager
 	 *
 	 * @throws XAException
 	 * 		if the resource threw an exception during delistment.
-	 * @throws BitronixSystemException
-	 * 		if an internal error occured.
 	 */
 	public boolean delist(XAResourceHolderState xaResourceHolderState, int flag) throws XAException
 	{
@@ -90,9 +88,6 @@ public class XAResourceManager
 	 *
 	 * @return the {@link XAResourceHolderState} of the enlisted resource or null if the {@link XAResource} has not
 	 * 		been enlisted in this {@link XAResourceManager}.
-	 *
-	 * @throws BitronixSystemException
-	 * 		if an internal error happens.
 	 */
 	public XAResourceHolderState findXAResourceHolderState(XAResource xaResource)
 	{
@@ -371,7 +366,7 @@ public class XAResourceManager
 	/**
 	 * Method getNaturalOrderPositions returns the naturalOrderPositions of this XAResourceManager object.
 	 *
-	 * @return the naturalOrderPositions (type SortedSet<Integer>) of this XAResourceManager object.
+	 * @return the naturalOrderPositions (type SortedSetInteger) of this XAResourceManager object.
 	 */
 	public SortedSet<Integer> getNaturalOrderPositions()
 	{
@@ -381,7 +376,7 @@ public class XAResourceManager
 	/**
 	 * Method getReverseOrderPositions returns the reverseOrderPositions of this XAResourceManager object.
 	 *
-	 * @return the reverseOrderPositions (type SortedSet<Integer>) of this XAResourceManager object.
+	 * @return the reverseOrderPositions (type SortedSetInteger) of this XAResourceManager object.
 	 */
 	public SortedSet<Integer> getReverseOrderPositions()
 	{
@@ -394,7 +389,7 @@ public class XAResourceManager
 	 * @param position
 	 * 		of type Integer
 	 *
-	 * @return List<XAResourceHolderState>
+	 * @return ListXAResourceHolderState
 	 */
 	public List<XAResourceHolderState> getNaturalOrderResourcesForPosition(Integer position)
 	{
@@ -417,7 +412,7 @@ public class XAResourceManager
 	/**
 	 * Method getAllResources returns the allResources of this XAResourceManager object.
 	 *
-	 * @return the allResources (type List<XAResourceHolderState>) of this XAResourceManager object.
+	 * @return the allResources (type ListXAResourceHolderState) of this XAResourceManager object.
 	 */
 	public List<XAResourceHolderState> getAllResources()
 	{

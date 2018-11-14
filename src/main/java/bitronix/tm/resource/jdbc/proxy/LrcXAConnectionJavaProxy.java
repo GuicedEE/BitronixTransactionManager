@@ -60,9 +60,6 @@ public class LrcXAConnectionJavaProxy
 	 * Method getXAResource returns the XAResource of this LrcXAConnectionJavaProxy object.
 	 *
 	 * @return the XAResource (type XAResource) of this LrcXAConnectionJavaProxy object.
-	 *
-	 * @throws SQLException
-	 * 		when
 	 */
 	public XAResource getXAResource()
 	{
@@ -100,9 +97,6 @@ public class LrcXAConnectionJavaProxy
 	 * Method getConnection returns the connection of this LrcXAConnectionJavaProxy object.
 	 *
 	 * @return the connection (type Connection) of this LrcXAConnectionJavaProxy object.
-	 *
-	 * @throws SQLException
-	 * 		when
 	 */
 	public Connection getConnection()
 	{
@@ -178,7 +172,7 @@ public class LrcXAConnectionJavaProxy
 	/**
 	 * Method getMethodMap returns the methodMap of this LrcXAConnectionJavaProxy object.
 	 *
-	 * @return the methodMap (type Map<String, Method>) of this LrcXAConnectionJavaProxy object.
+	 * @return the methodMap (type Map String, Method ) of this LrcXAConnectionJavaProxy object.
 	 */
 	@Override
 	protected Map<String, Method> getMethodMap()

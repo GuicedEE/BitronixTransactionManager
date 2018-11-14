@@ -162,7 +162,7 @@ public class LrcConnectionJavaProxy
 	 * Method unwrap ...
 	 *
 	 * @param iface
-	 * 		of type Class<T>
+	 * 		of type Class T
 	 *
 	 * @return T
 	 *
@@ -187,12 +187,9 @@ public class LrcConnectionJavaProxy
 	 * Method isWrapperFor ...
 	 *
 	 * @param iface
-	 * 		of type Class<?>
+	 * 		of type Class ?
 	 *
 	 * @return boolean
-	 *
-	 * @throws SQLException
-	 * 		when
 	 */
 	public boolean isWrapperFor(Class<?> iface)
 	{
@@ -204,7 +201,7 @@ public class LrcConnectionJavaProxy
 	/**
 	 * Method getMethodMap returns the methodMap of this LrcConnectionJavaProxy object.
 	 *
-	 * @return the methodMap (type Map<String, Method>) of this LrcConnectionJavaProxy object.
+	 * @return the methodMap (type Map String, Method ) of this LrcConnectionJavaProxy object.
 	 */
 	@Override
 	protected Map<String, Method> getMethodMap()

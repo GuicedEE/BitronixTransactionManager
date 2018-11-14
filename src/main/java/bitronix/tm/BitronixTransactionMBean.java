@@ -57,7 +57,7 @@ public interface BitronixTransactionMBean
 	/**
 	 * Method getEnlistedResourcesUniqueNames returns the enlistedResourcesUniqueNames of this BitronixTransactionMBean object.
 	 *
-	 * @return the enlistedResourcesUniqueNames (type Collection<String>) of this BitronixTransactionMBean object.
+	 * @return the enlistedResourcesUniqueNames (type Collection String ) of this BitronixTransactionMBean object.
 	 */
 	Collection<String> getEnlistedResourcesUniqueNames();
 }

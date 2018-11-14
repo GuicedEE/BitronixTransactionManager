@@ -39,9 +39,9 @@ public class PhaseException
 	 * Constructor PhaseException creates a new PhaseException instance.
 	 *
 	 * @param exceptions
-	 * 		of type List<Exception>
+	 * 		of type List Exception
 	 * @param resourceStates
-	 * 		of type List<XAResourceHolderState>
+	 * 		of type List XAResourceHolderState
 	 */
 	public PhaseException(List<Exception> exceptions, List<XAResourceHolderState> resourceStates)
 	{

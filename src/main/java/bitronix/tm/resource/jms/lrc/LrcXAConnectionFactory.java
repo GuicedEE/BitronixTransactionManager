@@ -70,7 +70,7 @@ public class LrcXAConnectionFactory
 	/**
 	 * Method getProperties returns the properties of this LrcXAConnectionFactory object.
 	 *
-	 * @return the properties (type Map<String, Object>) of this LrcXAConnectionFactory object.
+	 * @return the properties (type Map String, Object ) of this LrcXAConnectionFactory object.
 	 */
 	public Map<String, Object> getProperties()
 	{

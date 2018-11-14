@@ -740,7 +740,7 @@ public class ConnectionJavaProxy
 	 * Method unwrap ...
 	 *
 	 * @param iface
-	 * 		of type Class<T>
+	 * 		of type Class T
 	 *
 	 * @return T
 	 *
@@ -765,7 +765,7 @@ public class ConnectionJavaProxy
 	 * Method isWrapperFor ...
 	 *
 	 * @param iface
-	 * 		of type Class<?>
+	 * 		of type Class ?
 	 *
 	 * @return boolean
 	 *
@@ -782,7 +782,7 @@ public class ConnectionJavaProxy
 	/**
 	 * Method getMethodMap returns the methodMap of this ConnectionJavaProxy object.
 	 *
-	 * @return the methodMap (type Map<String, Method>) of this ConnectionJavaProxy object.
+	 * @return the methodMap (type Map String, Method ) of this ConnectionJavaProxy object.
 	 */
 	@Override
 	protected Map<String, Method> getMethodMap()

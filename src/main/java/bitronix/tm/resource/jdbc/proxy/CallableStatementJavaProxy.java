@@ -138,7 +138,7 @@ public class CallableStatementJavaProxy
 	 * Method unwrap ...
 	 *
 	 * @param iface
-	 * 		of type Class<T>
+	 * 		of type Class T
 	 *
 	 * @return T
 	 *
@@ -163,7 +163,7 @@ public class CallableStatementJavaProxy
 	 * Method isWrapperFor ...
 	 *
 	 * @param iface
-	 * 		of type Class<?>
+	 * 		of type Class ?
 	 *
 	 * @return boolean
 	 */
@@ -175,7 +175,7 @@ public class CallableStatementJavaProxy
 	/**
 	 * Method getMethodMap returns the methodMap of this CallableStatementJavaProxy object.
 	 *
-	 * @return the methodMap (type Map<String, Method>) of this CallableStatementJavaProxy object.
+	 * @return the methodMap (type Map String, Method ) of this CallableStatementJavaProxy object.
 	 */
 	@Override
 	protected Map<String, Method> getMethodMap()

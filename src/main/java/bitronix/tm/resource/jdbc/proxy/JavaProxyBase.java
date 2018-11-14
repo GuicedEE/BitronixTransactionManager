@@ -40,11 +40,9 @@ public abstract class JavaProxyBase<T>
 	 * Method createMethodMap ...
 	 *
 	 * @param clazz
-	 * 		of type Class<?>
+	 * 		of type Class ?
 	 *
-	 * @return Map<String
-                       *       	   	   ,
-                       *       	   	   Method>
+	 * @return Map String, Method
 	 */
 	protected static Map<String, Method> createMethodMap(Class<?> clazz)
 	{
@@ -91,7 +89,7 @@ public abstract class JavaProxyBase<T>
 	 * @param obj
 	 * 		of type Object
 	 * @param param
-	 * 		of type Class<?>
+	 * 		of type Class<?
 	 *
 	 * @return boolean
 	 */
@@ -115,7 +113,7 @@ public abstract class JavaProxyBase<T>
 	 * @param obj
 	 * 		of type Object
 	 * @param param
-	 * 		of type Class<T>
+	 * 		of type Class T
 	 *
 	 * @return T
 	 */
@@ -188,7 +186,7 @@ public abstract class JavaProxyBase<T>
 	/**
 	 * Method getMethodMap returns the methodMap of this JavaProxyBase object.
 	 *
-	 * @return the methodMap (type Map<String, Method>) of this JavaProxyBase object.
+	 * @return the methodMap (type Map String, Method ) of this JavaProxyBase object.
 	 */
 	protected abstract Map<String, Method> getMethodMap();
 

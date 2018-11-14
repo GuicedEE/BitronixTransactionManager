@@ -39,11 +39,9 @@ public class ClassLoaderUtils
 	 * Method getAllInterfaces ...
 	 *
 	 * @param clazz
-	 * 		of type Class<?>
+	 * 		of type Class ?
 	 *
-	 * @return Set<Class
-                       *       	   	   <
-                       *       	   	   ?>>
+	 * @return Set Class
 	 */
 	public static Set<Class<?>> getAllInterfaces(Class<?> clazz)
 	{

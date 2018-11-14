@@ -321,9 +321,6 @@ public class JdbcPooledConnection
 
 	/**
 	 * Close the physical connection that this {@link bitronix.tm.resource.common.XAStatefulHolder} represents.
-	 *
-	 * @throws Exception
-	 * 		a resource-specific exception thrown when there is an error closing the physical connection.
 	 */
 	@Override
 	public void close() throws SQLException
@@ -790,7 +787,7 @@ public class JdbcPooledConnection
 	/**
 	 * Method getTransactionGtridsCurrentlyHoldingThis returns the transactionGtridsCurrentlyHoldingThis of this JdbcPooledConnection object.
 	 *
-	 * @return the transactionGtridsCurrentlyHoldingThis (type Collection<String>) of this JdbcPooledConnection object.
+	 * @return the transactionGtridsCurrentlyHoldingThis (type Collection String ) of this JdbcPooledConnection object.
 	 */
 	@Override
 	public Collection<String> getTransactionGtridsCurrentlyHoldingThis()

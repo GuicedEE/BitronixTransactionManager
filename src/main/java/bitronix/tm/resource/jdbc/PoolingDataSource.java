@@ -496,7 +496,7 @@ public class PoolingDataSource
 	 * Method unwrap ...
 	 *
 	 * @param iface
-	 * 		of type Class<T>
+	 * 		of type Class T
 	 *
 	 * @return T
 	 *
@@ -518,7 +518,7 @@ public class PoolingDataSource
 	 * Method isWrapperFor ...
 	 *
 	 * @param iface
-	 * 		of type Class<?>
+	 * 		of type Class ?
 	 *
 	 * @return boolean
 	 *
@@ -805,23 +805,6 @@ public class PoolingDataSource
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	/* DataSource implementation */
 
 
@@ -885,14 +868,5 @@ public class PoolingDataSource
 	{
 		xaDataSource.setLogWriter(out);
 	}
-
-	/* java.sql.Wrapper implementation */
-
-
-
-
-
-	/* management */
-
 
 }

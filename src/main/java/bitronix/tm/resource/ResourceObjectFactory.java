@@ -43,7 +43,7 @@ public class ResourceObjectFactory
 	 * @param nameCtx
 	 * 		of type Context
 	 * @param environment
-	 * 		of type Hashtable<?, ?>
+	 * 		of type Hashtable
 	 *
 	 * @return Object
 	 *

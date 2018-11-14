@@ -48,9 +48,7 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 	 * @param gtrid
 	 * 		of type Uid
 	 *
-	 * @return Map<Uid
-                       *       	   	   ,
-                       *       	   	   XAResourceHolderState>
+	 * @return Map Uid XAResourceHolderState
 	 */
 	// This method is only used by tests.  It is (and always was) potentially thread-unsafe depending on what callers do with the returned map.
 	protected Map<Uid, XAResourceHolderState> getXAResourceHolderStatesForGtrid(Uid gtrid)

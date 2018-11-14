@@ -55,7 +55,7 @@ public abstract class AbstractPhaseEngine
 	 * Method collectResourcesUniqueNames ...
 	 *
 	 * @param resources
-	 * 		of type List<XAResourceHolderState>
+	 * 		of type List XAResourceHolderState
 	 *
 	 * @return Set String
 	 */

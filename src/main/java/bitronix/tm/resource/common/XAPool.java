@@ -83,7 +83,7 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 	 * Constructor XAPool creates a new XAPool instance.
 	 *
 	 * @param xaResourceProducer
-	 * 		of type XAResourceProducer<R, T>
+	 * 		of type XAResourceProducer R, T
 	 * @param bean
 	 * 		of type ResourceBean
 	 * @param xaFactory
@@ -936,7 +936,7 @@ public class XAPool<R extends XAResourceHolder<R>, T extends XAStatefulHolder<T>
 	/**
 	 * Method getXAResourceHolders returns the XAResourceHolders of this XAPool object.
 	 *
-	 * @return the XAResourceHolders (type List<T>) of this XAPool object.
+	 * @return the XAResourceHolders (type List T ) of this XAPool object.
 	 */
 	public List<T> getXAResourceHolders()
 	{

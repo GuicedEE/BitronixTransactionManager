@@ -243,7 +243,7 @@ public class LruStatementCache
 	 * Method addEvictionListener ...
 	 *
 	 * @param listener
-	 * 		of type LruEvictionListener<PreparedStatement>
+	 * 		of type LruEvictionListener PreparedStatement
 	 */
 	public void addEvictionListener(LruEvictionListener<PreparedStatement> listener)
 	{
@@ -254,7 +254,7 @@ public class LruStatementCache
 	 * Method removeEvictionListener ...
 	 *
 	 * @param listener
-	 * 		of type LruEvictionListener<PreparedStatement>
+	 * 		of type LruEvictionListener PreparedStatement
 	 */
 	public void removeEvictionListener(LruEvictionListener<PreparedStatement> listener)
 	{
