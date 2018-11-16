@@ -97,7 +97,7 @@ public class Scheduler<T>
 	/**
 	 * Method iterator ...
 	 *
-	 * @return Iterator<T>
+	 * @return Iterator T
 	 */
 	@Override
 	public Iterator<T> iterator()
