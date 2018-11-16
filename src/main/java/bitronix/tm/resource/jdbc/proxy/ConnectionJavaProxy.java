@@ -762,9 +762,6 @@ public class ConnectionJavaProxy
 	 * 		of type Class ?
 	 *
 	 * @return boolean
-	 *
-	 * @throws SQLException
-	 * 		when
 	 */
 	public boolean isWrapperFor(Class<?> iface)
 	{

@@ -81,9 +81,6 @@ public class LrcConnectionJavaProxy
 	 * Method isClosed returns the closed of this LrcConnectionJavaProxy object.
 	 *
 	 * @return the closed (type boolean) of this LrcConnectionJavaProxy object.
-	 *
-	 * @throws SQLException
-	 * 		when
 	 */
 	public boolean isClosed()
 	{

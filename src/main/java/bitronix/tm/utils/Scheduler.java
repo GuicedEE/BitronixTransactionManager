@@ -108,7 +108,7 @@ public class Scheduler<T>
 	/**
 	 * Method getReverseOrderPositions returns the reverseOrderPositions of this Scheduler object.
 	 *
-	 * @return the reverseOrderPositions (type SortedSet<Integer>) of this Scheduler object.
+	 * @return the reverseOrderPositions (type SortedSet Integer ) of this Scheduler object.
 	 */
 	public synchronized SortedSet<Integer> getReverseOrderPositions()
 	{
@@ -120,7 +120,7 @@ public class Scheduler<T>
 	/**
 	 * Method getNaturalOrderPositions returns the naturalOrderPositions of this Scheduler object.
 	 *
-	 * @return the naturalOrderPositions (type SortedSet<Integer>) of this Scheduler object.
+	 * @return the naturalOrderPositions (type SortedSet Integer ) of this Scheduler object.
 	 */
 	public synchronized SortedSet<Integer> getNaturalOrderPositions()
 	{
@@ -133,7 +133,7 @@ public class Scheduler<T>
 	 * @param position
 	 * 		of type Integer
 	 *
-	 * @return List<T>
+	 * @return List T
 	 */
 	public synchronized List<T> getByReverseOrderForPosition(Integer position)
 	{
@@ -148,7 +148,7 @@ public class Scheduler<T>
 	 * @param position
 	 * 		of type Integer
 	 *
-	 * @return List<T>
+	 * @return List T
 	 */
 	public synchronized List<T> getByNaturalOrderForPosition(Integer position)
 	{
@@ -158,7 +158,7 @@ public class Scheduler<T>
 	/**
 	 * Method reverseIterator ...
 	 *
-	 * @return Iterator<T>
+	 * @return Iterator T
 	 */
 	public Iterator<T> reverseIterator()
 	{
