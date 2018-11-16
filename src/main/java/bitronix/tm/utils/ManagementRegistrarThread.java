@@ -9,6 +9,7 @@ public class ManagementRegistrarThread
 {
 	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ManagementRegistrarThread.class.toString());
 
+	public ManagementRegistrarThread()
 	{
 		setName("bitronix-async-jmx-worker");
 		setDaemon(true);

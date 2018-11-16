@@ -387,11 +387,8 @@ public final class TransactionContextHelper
 	 * 		of type XAStatefulHolder<? extends XAStatefulHolder>
 	 *
 	 * @return boolean
-	 *
-	 * @throws BitronixSystemException
-	 * 		when
 	 */
-	private static boolean isEnlistedInSomeTransaction(XAStatefulHolder<? extends XAStatefulHolder> xaStatefulHolder) throws BitronixSystemException
+	private static boolean isEnlistedInSomeTransaction(XAStatefulHolder<? extends XAStatefulHolder> xaStatefulHolder)
 	{
 		List<? extends XAResourceHolder<? extends XAResourceHolder>> xaResourceHolders = xaStatefulHolder.getXAResourceHolders();
 		if (xaResourceHolders == null || xaResourceHolders.isEmpty())
