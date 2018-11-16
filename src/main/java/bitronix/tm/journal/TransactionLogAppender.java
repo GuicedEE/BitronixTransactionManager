@@ -227,7 +227,7 @@ public class TransactionLogAppender
 	/**
 	 * Method getDanglingLogs returns the danglingLogs of this TransactionLogAppender object.
 	 *
-	 * @return the danglingLogs (type List<TransactionLogRecord>) of this TransactionLogAppender object.
+	 * @return the danglingLogs (type List TransactionLogRecord ) of this TransactionLogAppender object.
 	 */
 	protected List<TransactionLogRecord> getDanglingLogs()
 	{

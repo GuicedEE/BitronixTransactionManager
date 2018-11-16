@@ -402,7 +402,7 @@ public class XAResourceManager
 	 * @param position
 	 * 		of type Integer
 	 *
-	 * @return List<XAResourceHolderState>
+	 * @return List XAResourceHolderState
 	 */
 	public List<XAResourceHolderState> getReverseOrderResourcesForPosition(Integer position)
 	{

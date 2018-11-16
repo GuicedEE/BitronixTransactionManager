@@ -167,9 +167,6 @@ public class ConnectionJavaProxy
 
 	/**
 	 * Method rollback ...
-	 *
-	 * @throws SQLException
-	 * 		when
 	 */
 	public void rollback() throws SQLException
 	{
@@ -190,9 +187,6 @@ public class ConnectionJavaProxy
 	 *
 	 * @param savepoint
 	 * 		of type Savepoint
-	 *
-	 * @throws SQLException
-	 * 		when
 	 */
 	public void rollback(Savepoint savepoint) throws SQLException
 	{

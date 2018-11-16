@@ -36,7 +36,7 @@ public class RecoveryXAResourceHolder
 	 * Constructor RecoveryXAResourceHolder creates a new RecoveryXAResourceHolder instance.
 	 *
 	 * @param xaResourceHolder
-	 * 		of type XAResourceHolder<? extends XAResourceHolder>
+	 * 		of type XAResourceHolder ? extends XAResourceHolder
 	 */
 	public RecoveryXAResourceHolder(XAResourceHolder<? extends XAResourceHolder> xaResourceHolder)
 	{

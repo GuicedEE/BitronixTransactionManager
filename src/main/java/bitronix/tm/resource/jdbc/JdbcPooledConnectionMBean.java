@@ -43,7 +43,7 @@ public interface JdbcPooledConnectionMBean
 	/**
 	 * Method getTransactionGtridsCurrentlyHoldingThis returns the transactionGtridsCurrentlyHoldingThis of this JdbcPooledConnectionMBean object.
 	 *
-	 * @return the transactionGtridsCurrentlyHoldingThis (type Collection<String>) of this JdbcPooledConnectionMBean object.
+	 * @return the transactionGtridsCurrentlyHoldingThis (type Collection String ) of this JdbcPooledConnectionMBean object.
 	 */
 	Collection<String> getTransactionGtridsCurrentlyHoldingThis();
 

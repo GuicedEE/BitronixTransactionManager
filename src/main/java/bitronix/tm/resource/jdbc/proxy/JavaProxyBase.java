@@ -89,7 +89,7 @@ public abstract class JavaProxyBase<T>
 	 * @param obj
 	 * 		of type Object
 	 * @param param
-	 * 		of type Class<?
+	 * 		of type Class ?
 	 *
 	 * @return boolean
 	 */

@@ -81,7 +81,7 @@ public abstract class AbstractXAStatefulHolder<T extends XAStatefulHolder<T>>
 	 * Method addStateChangeEventListener ...
 	 *
 	 * @param listener
-	 * 		of type StateChangeListener<T>
+	 * 		of type StateChangeListener T
 	 */
 	@Override
 	public void addStateChangeEventListener(StateChangeListener<T> listener)
@@ -93,7 +93,7 @@ public abstract class AbstractXAStatefulHolder<T extends XAStatefulHolder<T>>
 	 * Method removeStateChangeEventListener ...
 	 *
 	 * @param listener
-	 * 		of type StateChangeListener<T>
+	 * 		of type StateChangeListener T
 	 */
 	@Override
 	public void removeStateChangeEventListener(StateChangeListener<T> listener)
