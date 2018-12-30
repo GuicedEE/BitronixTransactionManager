@@ -2,6 +2,8 @@ module tm.bitronix.btm {
 	exports bitronix.tm;
 	exports bitronix.tm.resource.jdbc;
 	exports bitronix.tm.jndi;
+	exports bitronix.tm.resource;
+
 
 	requires java.transaction.xa;
 	requires java.naming;
@@ -19,5 +21,5 @@ module tm.bitronix.btm {
 	requires static beta.jboss.rmi.api_1_0;
 
 	opens bitronix.tm.resource.jdbc.proxy;
-	exports bitronix.tm.resource;
+
 }
