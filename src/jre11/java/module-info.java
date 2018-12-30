@@ -19,4 +19,5 @@ module tm.bitronix.btm {
 	requires static beta.jboss.rmi.api_1_0;
 
 	opens bitronix.tm.resource.jdbc.proxy;
+	exports bitronix.tm.resource;
 }
