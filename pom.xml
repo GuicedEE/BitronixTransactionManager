@@ -2,8 +2,8 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.jwebmp</groupId>
-        <artifactId>jwebmp-builder</artifactId>
+        <groupId>com.jwebmp.guicedee.persistence</groupId>
+        <artifactId>persistence-parent</artifactId>
         <version>0.0.0_0-SNAPSHOT</version>
     </parent>
 
@@ -83,8 +83,6 @@
         <dependency>
             <groupId>javax.transaction</groupId>
             <artifactId>javax.transaction-api</artifactId>
-            <type>jar</type>
-            <version>${javax.transaction.transactionapi}</version>
         </dependency>
     </dependencies>
 
