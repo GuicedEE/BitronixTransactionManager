@@ -73,16 +73,20 @@
         <dependency>
             <groupId>javax.jms</groupId>
             <artifactId>jms</artifactId>
+            <optional>true</optional>
+            <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>org.jboss.spec.javax.rmi</groupId>
             <artifactId>jboss-rmi-api_1.0_spec</artifactId>
+            <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>javax.transaction</groupId>
             <artifactId>javax.transaction-api</artifactId>
+            <type>jar</type>
         </dependency>
     </dependencies>
 
