@@ -77,15 +77,15 @@
             <type>jar</type>
         </dependency>
 
-        <dependency>
+   <!--     <dependency>
             <groupId>org.jboss.spec.javax.rmi</groupId>
             <artifactId>jboss-rmi-api_1.0_spec</artifactId>
             <type>jar</type>
         </dependency>
-
+-->
         <dependency>
-            <groupId>javax.transaction</groupId>
-            <artifactId>javax.transaction-api</artifactId>
+            <groupId>com.jwebmp.thirdparty</groupId>
+            <artifactId>javax.transaction</artifactId>
             <type>jar</type>
         </dependency>
     </dependencies>

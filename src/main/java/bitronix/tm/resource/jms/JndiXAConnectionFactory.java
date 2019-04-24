@@ -21,7 +21,6 @@ import javax.jms.XAConnectionFactory;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.rmi.PortableRemoteObject;
 import java.util.Hashtable;
 import java.util.Properties;
 
@@ -43,7 +42,7 @@ public class JndiXAConnectionFactory
 	private volatile String securityPrincipal;
 	private volatile String securityCredentials;
 	private volatile Properties extraJndiProperties = new Properties();
-	private volatile boolean narrowJndiObject = false;
+	//private volatile boolean narrowJndiObject = false;
 	private volatile XAConnectionFactory wrappedFactory;
 
 
@@ -212,10 +211,10 @@ public class JndiXAConnectionFactory
 	 *
 	 * @return true if the object should be narrowed, false otherwise.
 	 */
-	public boolean isNarrowJndiObject()
+/*	public boolean isNarrowJndiObject()
 	{
 		return narrowJndiObject;
-	}
+	}*/
 
 	/**
 	 * Set if {@link PortableRemoteObject#narrow(Object, Class)} should be applied on the object looked up from
@@ -224,10 +223,12 @@ public class JndiXAConnectionFactory
 	 * @param narrowJndiObject
 	 * 		true if the object should be narrowed, false otherwise.
 	 */
+/*
 	public void setNarrowJndiObject(boolean narrowJndiObject)
 	{
 		this.narrowJndiObject = narrowJndiObject;
 	}
+*/
 
 	/**
 	 * Method createXAConnection ...
@@ -299,14 +300,7 @@ public class JndiXAConnectionFactory
 		try
 		{
 			Object lookedUpObject = ctx.lookup(name);
-			if (narrowJndiObject)
-			{
-				wrappedFactory = (XAConnectionFactory) PortableRemoteObject.narrow(lookedUpObject, XAConnectionFactory.class);
-			}
-			else
-			{
-				wrappedFactory = (XAConnectionFactory) lookedUpObject;
-			}
+			wrappedFactory = (XAConnectionFactory) lookedUpObject;
 		}
 		finally
 		{
