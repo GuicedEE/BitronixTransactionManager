@@ -77,12 +77,6 @@
             <type>jar</type>
         </dependency>
 
-   <!--     <dependency>
-            <groupId>org.jboss.spec.javax.rmi</groupId>
-            <artifactId>jboss-rmi-api_1.0_spec</artifactId>
-            <type>jar</type>
-        </dependency>
--->
         <dependency>
             <groupId>com.jwebmp.thirdparty</groupId>
             <artifactId>javax.transaction</artifactId>
