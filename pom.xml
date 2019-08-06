@@ -60,12 +60,11 @@
             <optional>true</optional>
         </dependency>
 
-
         <dependency>
             <groupId>com.jwebmp.thirdparty.jms</groupId>
             <artifactId>javax.jms-api</artifactId>
-            <version>0.0.0_0-SNAPSHOT</version>
             <optional>true</optional>
+            <scope>provided</scope>
             <type>jar</type>
         </dependency>
 
