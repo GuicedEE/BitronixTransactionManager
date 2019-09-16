@@ -16,7 +16,7 @@ module tm.bitronix.btm {
 
 	requires java.sql;
 
-	requires static javassist;
+	requires javassist;
 
 	opens bitronix.tm.resource.jdbc.proxy;
 
