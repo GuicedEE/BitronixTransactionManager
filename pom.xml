@@ -50,27 +50,27 @@
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <optional>true</optional>
-            <scope>provided</scope>
-        </dependency>
+            <scope>provided</scope><type>jar</type>
+            </dependency>
 
         <dependency>
-            <groupId>com.jwebmp.thirdparty</groupId>
-            <artifactId>javassist</artifactId>
-        </dependency>
+            <groupId>com.jwebmp.jpms.thirdparty</groupId>
+            <artifactId>javassist</artifactId><type>jar</type>
+            </dependency>
 
         <dependency>
-            <groupId>com.jwebmp.thirdparty.jms</groupId>
+            <groupId>com.jwebmp.jpms.thirdparty</groupId>
             <artifactId>javax.jms-api</artifactId>
             <optional>true</optional>
             <scope>provided</scope>
             <type>jar</type>
-        </dependency>
+            </dependency>
 
         <dependency>
-            <groupId>com.jwebmp.thirdparty</groupId>
+            <groupId>com.jwebmp.jpms.thirdparty</groupId>
             <artifactId>javax.transaction</artifactId>
             <type>jar</type>
-        </dependency>
+            </dependency>
     </dependencies>
 
 
