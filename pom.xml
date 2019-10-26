@@ -2,8 +2,8 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.guicedee.persistence</groupId>
-        <artifactId>persistence-parent</artifactId>
+        <groupId>com.guicedee.services</groupId>
+        <artifactId>services-parent</artifactId>
         <version>0.0.0_0-SNAPSHOT</version>
     </parent>
 
@@ -54,12 +54,12 @@
             </dependency>
 
         <dependency>
-            <groupId>com.jwebmp.jpms.thirdparty</groupId>
+             <groupId>com.guicedee.services</groupId>
             <artifactId>javassist</artifactId><type>jar</type>
             </dependency>
 
         <dependency>
-            <groupId>com.jwebmp.jpms.thirdparty</groupId>
+             <groupId>com.guicedee.services</groupId>
             <artifactId>javax.jms-api</artifactId>
             <optional>true</optional>
             <scope>provided</scope>
@@ -67,7 +67,7 @@
             </dependency>
 
         <dependency>
-            <groupId>com.jwebmp.jpms.thirdparty</groupId>
+             <groupId>com.guicedee.services</groupId>
             <artifactId>javax.transaction</artifactId>
             <type>jar</type>
             </dependency>
