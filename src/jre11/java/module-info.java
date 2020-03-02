@@ -8,8 +8,8 @@ module tm.bitronix.btm {
 	requires java.naming;
 	requires java.transaction;
 
-	requires java.management;
-	requires java.management.rmi;
+	requires static java.management;
+	requires static java.management.rmi;
 
 	requires static javax.jms;
 	requires static cglib;
