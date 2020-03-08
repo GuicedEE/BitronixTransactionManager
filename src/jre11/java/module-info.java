@@ -4,9 +4,9 @@ module tm.bitronix.btm {
 	exports bitronix.tm.jndi;
 	exports bitronix.tm.resource;
 
-	requires java.transaction.xa;
+	requires transitive java.transaction.xa;
 	requires java.naming;
-	requires java.transaction;
+	requires transitive java.transaction;
 
 	requires static java.management;
 	requires static java.management.rmi;
@@ -14,7 +14,7 @@ module tm.bitronix.btm {
 	requires static javax.jms;
 	requires static cglib;
 
-	requires java.sql;
+	requires transitive java.sql;
 
 	requires javassist;
 
