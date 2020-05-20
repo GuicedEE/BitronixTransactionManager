@@ -5,7 +5,7 @@ module tm.bitronix.btm {
 	exports bitronix.tm.resource;
 
 	requires transitive java.transaction.xa;
-	requires java.naming;
+	requires static java.naming;
 	requires transitive java.transaction;
 
 	requires static java.management;
