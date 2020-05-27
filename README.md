@@ -21,10 +21,10 @@ module tm.bitronix.btm {
 	exports bitronix.tm.jndi;
 
 	requires java.transaction.xa;
-	requires static java.naming;
+	requires java.naming;
 	requires java.transaction;
 
-	requires static java.management;
+	requires java.management;
 	requires java.management.rmi;
 
 	requires static jms;
