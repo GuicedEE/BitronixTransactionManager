@@ -51,13 +51,11 @@
             <artifactId>cglib</artifactId>
             <optional>true</optional>
             <scope>provided</scope>
-            <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>com.guicedee.services</groupId>
             <artifactId>javassist</artifactId>
-            <type>jar</type>
         </dependency>
 
         <dependency>
@@ -65,13 +63,11 @@
             <artifactId>javax.jms-api</artifactId>
             <optional>true</optional>
             <scope>provided</scope>
-            <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>com.guicedee.services</groupId>
             <artifactId>javax.transaction</artifactId>
-            <type>jar</type>
         </dependency>
     </dependencies>
 
