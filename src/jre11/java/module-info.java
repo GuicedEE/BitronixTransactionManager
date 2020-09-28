@@ -13,10 +13,9 @@ module tm.bitronix.btm {
 
 	requires static javax.jms;
 	requires static cglib;
+	requires static javassist;
 
 	requires transitive java.sql;
-
-	requires javassist;
 
 	opens bitronix.tm.resource.jdbc.proxy;
 

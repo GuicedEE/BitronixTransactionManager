@@ -141,6 +141,8 @@ public interface JdbcProxyFactory
 			{
 				String jdbcProxyFactoryClass = TransactionManagerServices.getConfiguration()
 				                                                         .getJdbcProxyFactoryClass();
+				jdbcProxyFactoryClass = "bitronix.tm.resource.jdbc.proxy.JdbcJavaProxyFactory";
+				
 				if ("auto".equals(jdbcProxyFactoryClass))
 				{
 					try

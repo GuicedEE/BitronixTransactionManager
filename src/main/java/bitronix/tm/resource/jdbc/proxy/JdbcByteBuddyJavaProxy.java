@@ -33,6 +33,7 @@ public class JdbcByteBuddyJavaProxy
 	@Override
 	public Connection getProxyConnection(JdbcPooledConnection jdbcPooledConnection, Connection connection)
 	{
+		ConnectionJavaProxy proxy = new ConnectionJavaProxy(jdbcPooledConnection, connection);
 		return null;
 	}
 
