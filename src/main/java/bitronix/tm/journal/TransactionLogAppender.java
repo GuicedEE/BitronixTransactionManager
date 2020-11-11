@@ -18,7 +18,7 @@ package bitronix.tm.journal;
 import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.utils.Uid;
 
-import javax.transaction.Status;
+import jakarta.transaction.Status;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;

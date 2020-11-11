@@ -28,7 +28,7 @@ import bitronix.tm.twopc.Rollbacker;
 import bitronix.tm.twopc.executor.Executor;
 import bitronix.tm.utils.*;
 
-import javax.transaction.*;
+import jakarta.transaction.*;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import java.io.IOException;
@@ -630,7 +630,7 @@ public class BitronixTransaction
 			if (BitronixXAException.isUnilateralRollback(ex))
 			{
 				// The resource unilaterally rolled back here. We have to throw an exception to indicate this but
-				// The signature of this method is inherited from javax.transaction.Transaction. Thereof, we have choice
+				// The signature of this method is inherited from jakarta.transaction.Transaction. Thereof, we have choice
 				// between creating a sub-exception of SystemException or using a RuntimeException. Is that the best way
 				// forward as this 'hidden' exception can be left throw out at unexpected locations where SystemException
 				// should be rethrown but the exception thrown here should be catched & handled... ?

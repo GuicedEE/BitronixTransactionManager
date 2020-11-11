@@ -27,7 +27,7 @@ import bitronix.tm.resource.common.XAPool;
 import bitronix.tm.resource.common.XAResourceProducer;
 import bitronix.tm.utils.ManagementRegistrar;
 
-import javax.jms.*;
+import jakarta.jms.*;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;

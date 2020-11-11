@@ -15,7 +15,7 @@
  */
 package bitronix.tm.resource.jms.lrc;
 
-import javax.jms.*;
+import jakarta.jms.*;
 
 /**
  * XAConnection implementation for a non-XA JMS resource emulating XA with Last Resource Commit.

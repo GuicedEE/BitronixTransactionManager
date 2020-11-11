@@ -29,7 +29,7 @@ import bitronix.tm.utils.ManagementRegistrar;
 import bitronix.tm.utils.Service;
 import bitronix.tm.utils.Uid;
 
-import javax.transaction.Status;
+import jakarta.transaction.Status;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;

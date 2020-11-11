@@ -26,7 +26,7 @@ import bitronix.tm.utils.ManagementRegistrar;
 import bitronix.tm.utils.MonotonicClock;
 import bitronix.tm.utils.Scheduler;
 
-import javax.jms.*;
+import jakarta.jms.*;
 import javax.transaction.xa.XAResource;
 import java.util.*;
 import java.util.logging.Level;

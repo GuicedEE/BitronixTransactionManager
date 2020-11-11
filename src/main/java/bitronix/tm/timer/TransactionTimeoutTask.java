@@ -18,7 +18,7 @@ package bitronix.tm.timer;
 import bitronix.tm.BitronixTransaction;
 import bitronix.tm.internal.LogDebugCheck;
 
-import javax.transaction.SystemException;
+import jakarta.transaction.SystemException;
 import java.util.Date;
 
 /**

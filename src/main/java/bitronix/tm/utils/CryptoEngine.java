@@ -19,7 +19,7 @@ package bitronix.tm.utils;
 
 import bitronix.tm.internal.BitronixSystemException;
 
-import javax.transaction.SystemException;
+import jakarta.transaction.SystemException;
 
 /**
  * <p>Simple crypto helper that uses symetric keys to crypt and decrypt resources passwords.</p>

@@ -47,20 +47,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-            <optional>true</optional>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.guicedee.services</groupId>
-            <artifactId>javassist</artifactId>
-            <optional>true</optional>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.guicedee.services</groupId>
             <artifactId>javax.jms-api</artifactId>
             <optional>true</optional>
@@ -71,6 +57,7 @@
             <groupId>com.guicedee.services</groupId>
             <artifactId>javax.transaction</artifactId>
         </dependency>
+
     </dependencies>
 
 

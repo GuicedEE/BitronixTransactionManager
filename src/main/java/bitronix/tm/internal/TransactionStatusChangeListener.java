@@ -31,7 +31,7 @@ public interface TransactionStatusChangeListener
 	 * @param newStatus
 	 * 		the new status of the {@link bitronix.tm.BitronixTransaction}.
 	 *
-	 * @see javax.transaction.Status Status constant values.
+	 * @see jakarta.transaction.Status Status constant values.
 	 */
 	void statusChanged(int oldStatus, int newStatus);
 }

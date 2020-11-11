@@ -23,7 +23,7 @@ import bitronix.tm.utils.InitializationException;
 import bitronix.tm.utils.PropertyUtils;
 import bitronix.tm.utils.Service;
 
-import javax.jms.XAConnectionFactory;
+import jakarta.jms.XAConnectionFactory;
 import javax.sql.XADataSource;
 import java.io.File;
 import java.io.FileInputStream;
@@ -299,7 +299,7 @@ public class ResourceLoader
 				{
 					throw new ResourceConfigurationException("property [className] " +
 					                                         "of resource [" + configuredName + "] in resources configuration file " +
-					                                         "must be the name of a class implementing either javax.sql.XADataSource or javax.jms.XAConnectionFactory");
+					                                         "must be the name of a class implementing either javax.sql.XADataSource or jakarta.jms.XAConnectionFactory");
 				}
 				return producer;
 			}

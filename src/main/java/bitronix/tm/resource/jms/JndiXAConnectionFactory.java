@@ -15,9 +15,9 @@
  */
 package bitronix.tm.resource.jms;
 
-import javax.jms.JMSException;
-import javax.jms.XAConnection;
-import javax.jms.XAConnectionFactory;
+import jakarta.jms.JMSException;
+import jakarta.jms.XAConnection;
+import jakarta.jms.XAConnectionFactory;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

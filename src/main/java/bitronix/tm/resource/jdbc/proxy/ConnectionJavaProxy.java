@@ -21,8 +21,8 @@ import bitronix.tm.resource.jdbc.JdbcPooledConnection;
 import bitronix.tm.resource.jdbc.LruStatementCache.CacheKey;
 import bitronix.tm.resource.jdbc.PooledConnectionProxy;
 
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
 import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.Map;

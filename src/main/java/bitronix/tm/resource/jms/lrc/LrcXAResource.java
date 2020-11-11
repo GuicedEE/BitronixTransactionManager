@@ -19,8 +19,8 @@ import bitronix.tm.internal.BitronixXAException;
 import bitronix.tm.internal.LogDebugCheck;
 import bitronix.tm.utils.Decoder;
 
-import javax.jms.JMSException;
-import javax.jms.Session;
+import jakarta.jms.JMSException;
+import jakarta.jms.Session;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;

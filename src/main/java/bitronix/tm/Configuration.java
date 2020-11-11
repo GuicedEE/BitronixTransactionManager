@@ -767,10 +767,10 @@ public class Configuration
 	}
 
 	/**
-	 * Get the name the {@link javax.transaction.UserTransaction} should be bound under in the
+	 * Get the name the {@link jakarta.transaction.UserTransaction} should be bound under in the
 	 * {@link bitronix.tm.jndi.BitronixContext}.
 	 *
-	 * @return the name the {@link javax.transaction.UserTransaction} should
+	 * @return the name the {@link jakarta.transaction.UserTransaction} should
 	 * 		be bound under in the {@link bitronix.tm.jndi.BitronixContext}.
 	 */
 	public String getJndiUserTransactionName()
@@ -779,11 +779,11 @@ public class Configuration
 	}
 
 	/**
-	 * Set the name the {@link javax.transaction.UserTransaction} should be bound under in the
+	 * Set the name the {@link jakarta.transaction.UserTransaction} should be bound under in the
 	 * {@link bitronix.tm.jndi.BitronixContext}.
 	 *
 	 * @param jndiUserTransactionName
-	 * 		the name the {@link javax.transaction.UserTransaction} should
+	 * 		the name the {@link jakarta.transaction.UserTransaction} should
 	 * 		be bound under in the {@link bitronix.tm.jndi.BitronixContext}.
 	 *
 	 * @return this.
@@ -798,10 +798,10 @@ public class Configuration
 	}
 
 	/**
-	 * Get the name the {@link javax.transaction.TransactionSynchronizationRegistry} should be bound under in the
+	 * Get the name the {@link jakarta.transaction.TransactionSynchronizationRegistry} should be bound under in the
 	 * {@link bitronix.tm.jndi.BitronixContext}.
 	 *
-	 * @return the name the {@link javax.transaction.TransactionSynchronizationRegistry} should
+	 * @return the name the {@link jakarta.transaction.TransactionSynchronizationRegistry} should
 	 * 		be bound under in the {@link bitronix.tm.jndi.BitronixContext}.
 	 */
 	public String getJndiTransactionSynchronizationRegistryName()
@@ -810,11 +810,11 @@ public class Configuration
 	}
 
 	/**
-	 * Set the name the {@link javax.transaction.TransactionSynchronizationRegistry} should be bound under in the
+	 * Set the name the {@link jakarta.transaction.TransactionSynchronizationRegistry} should be bound under in the
 	 * {@link bitronix.tm.jndi.BitronixContext}.
 	 *
 	 * @param jndiTransactionSynchronizationRegistryName
-	 * 		the name the {@link javax.transaction.TransactionSynchronizationRegistry} should
+	 * 		the name the {@link jakarta.transaction.TransactionSynchronizationRegistry} should
 	 * 		be bound under in the {@link bitronix.tm.jndi.BitronixContext}.
 	 *
 	 * @return this.

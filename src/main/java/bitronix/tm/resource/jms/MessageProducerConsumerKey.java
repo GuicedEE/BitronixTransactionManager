@@ -17,14 +17,14 @@ package bitronix.tm.resource.jms;
 
 import bitronix.tm.internal.BitronixRuntimeException;
 
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Queue;
-import javax.jms.Topic;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.Queue;
+import jakarta.jms.Topic;
 
 /**
  * JMS destination wrapper optimized for use with hashed collections where it is the key and a
- * {@link javax.jms.MessageProducer} or a {@link javax.jms.MessageConsumer} is the value.
+ * {@link jakarta.jms.MessageProducer} or a {@link jakarta.jms.MessageConsumer} is the value.
  *
  * @author Ludovic Orban
  */

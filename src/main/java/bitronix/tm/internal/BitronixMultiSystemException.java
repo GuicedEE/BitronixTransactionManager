@@ -22,7 +22,7 @@ import javax.transaction.xa.XAException;
 import java.util.List;
 
 /**
- * Subclass of {@link javax.transaction.SystemException} supporting nested {@link Throwable}s.
+ * Subclass of {@link jakarta.transaction.SystemException} supporting nested {@link Throwable}s.
  *
  * @author Ludovic Orban
  */

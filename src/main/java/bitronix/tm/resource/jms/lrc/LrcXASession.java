@@ -17,7 +17,7 @@ package bitronix.tm.resource.jms.lrc;
 
 import bitronix.tm.internal.LogDebugCheck;
 
-import javax.jms.*;
+import jakarta.jms.*;
 import javax.transaction.xa.XAResource;
 import java.io.Serializable;
 

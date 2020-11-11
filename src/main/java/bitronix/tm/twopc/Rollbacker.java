@@ -22,10 +22,10 @@ import bitronix.tm.twopc.executor.Executor;
 import bitronix.tm.twopc.executor.Job;
 import bitronix.tm.utils.Decoder;
 
-import javax.transaction.HeuristicCommitException;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.Status;
-import javax.transaction.SystemException;
+import jakarta.transaction.HeuristicCommitException;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.Status;
+import jakarta.transaction.SystemException;
 import javax.transaction.xa.XAException;
 import java.util.*;
 import java.util.logging.Level;

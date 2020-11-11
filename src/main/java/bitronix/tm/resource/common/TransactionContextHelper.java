@@ -25,9 +25,9 @@ import bitronix.tm.resource.common.XAStatefulHolder.State;
 import bitronix.tm.utils.Scheduler;
 import bitronix.tm.utils.Uid;
 
-import javax.transaction.RollbackException;
-import javax.transaction.Synchronization;
-import javax.transaction.SystemException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
 import javax.transaction.xa.XAResource;
 import java.util.List;
 

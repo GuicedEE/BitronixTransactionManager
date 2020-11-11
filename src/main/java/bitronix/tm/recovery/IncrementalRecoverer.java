@@ -24,7 +24,7 @@ import bitronix.tm.resource.common.XAResourceProducer;
 import bitronix.tm.utils.Decoder;
 import bitronix.tm.utils.Uid;
 
-import javax.transaction.Status;
+import jakarta.transaction.Status;
 import javax.transaction.xa.XAException;
 import java.io.IOException;
 import java.util.HashSet;

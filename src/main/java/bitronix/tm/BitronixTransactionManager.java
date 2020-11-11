@@ -25,7 +25,7 @@ import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
-import javax.transaction.*;
+import jakarta.transaction.*;
 import javax.transaction.xa.XAException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -595,7 +595,7 @@ public class BitronixTransactionManager
 	 * <p>The Transaction Manager will wait during a configurable graceful period before forcibly killing active
 	 * transactions.</p>
 	 * After this method is called, attempts to create new transactions (via calls to
-	 * {@link javax.transaction.TransactionManager#begin()}) will be rejected with a {@link SystemException}.
+	 * {@link jakarta.transaction.TransactionManager#begin()}) will be rejected with a {@link SystemException}.
 	 *
 	 * @see Configuration#getGracefulShutdownInterval()
 	 */

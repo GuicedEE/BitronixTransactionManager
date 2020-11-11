@@ -23,7 +23,7 @@ import bitronix.tm.utils.Decoder;
 import bitronix.tm.utils.MonotonicClock;
 import bitronix.tm.utils.Uid;
 
-import javax.transaction.Status;
+import jakarta.transaction.Status;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -89,7 +89,7 @@ public class DiskJournal
 	 * If you call this method with erroneous data, it will be added to the journal anyway.
 	 *
 	 * @param status
-	 * 		transaction status to log. See {@link javax.transaction.Status} constants.
+	 * 		transaction status to log. See {@link jakarta.transaction.Status} constants.
 	 * @param gtrid
 	 * 		raw GTRID of the transaction.
 	 * @param uniqueNames

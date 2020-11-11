@@ -24,10 +24,10 @@ import bitronix.tm.resource.common.ResourceBean;
 import bitronix.tm.resource.common.StateChangeListener;
 import bitronix.tm.resource.common.TransactionContextHelper;
 
-import javax.jms.*;
-import javax.jms.IllegalStateException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
+import jakarta.jms.*;
+import jakarta.jms.IllegalStateException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
 import javax.transaction.xa.XAResource;
 import java.io.Serializable;
 import java.util.*;
@@ -822,7 +822,7 @@ public class DualSessionWrapper
 	 * 		when
 	 */
 	@Override
-	public javax.jms.Queue createQueue(String queueName) throws JMSException
+	public jakarta.jms.Queue createQueue(String queueName) throws JMSException
 	{
 		return getSession().createQueue(queueName);
 	}
@@ -955,7 +955,7 @@ public class DualSessionWrapper
 	 * 		when
 	 */
 	@Override
-	public QueueBrowser createBrowser(javax.jms.Queue queue) throws JMSException
+	public QueueBrowser createBrowser(jakarta.jms.Queue queue) throws JMSException
 	{
 		enlistResource();
 		return getSession().createBrowser(queue);
@@ -975,7 +975,7 @@ public class DualSessionWrapper
 	 * 		when
 	 */
 	@Override
-	public QueueBrowser createBrowser(javax.jms.Queue queue, String messageSelector) throws JMSException
+	public QueueBrowser createBrowser(jakarta.jms.Queue queue, String messageSelector) throws JMSException
 	{
 		enlistResource();
 		return getSession().createBrowser(queue, messageSelector);

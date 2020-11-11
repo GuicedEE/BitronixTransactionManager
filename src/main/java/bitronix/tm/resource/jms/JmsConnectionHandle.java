@@ -15,7 +15,7 @@
  */
 package bitronix.tm.resource.jms;
 
-import javax.jms.*;
+import jakarta.jms.*;
 
 /**
  * Disposable Connection handle.

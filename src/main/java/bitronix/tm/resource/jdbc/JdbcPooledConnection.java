@@ -27,7 +27,7 @@ import bitronix.tm.utils.MonotonicClock;
 import bitronix.tm.utils.Scheduler;
 
 import javax.sql.XAConnection;
-import javax.transaction.SystemException;
+import jakarta.transaction.SystemException;
 import javax.transaction.xa.XAResource;
 import java.lang.reflect.Method;
 import java.sql.*;

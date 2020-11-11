@@ -25,9 +25,9 @@ import bitronix.tm.twopc.executor.Executor;
 import bitronix.tm.twopc.executor.Job;
 import bitronix.tm.utils.Decoder;
 
-import javax.transaction.RollbackException;
-import javax.transaction.Status;
-import javax.transaction.SystemException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Status;
+import jakarta.transaction.SystemException;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import java.util.ArrayList;

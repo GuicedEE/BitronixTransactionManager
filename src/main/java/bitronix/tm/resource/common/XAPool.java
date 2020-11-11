@@ -27,7 +27,7 @@ import bitronix.tm.resource.common.XAStatefulHolder.State;
 import bitronix.tm.utils.MonotonicClock;
 import bitronix.tm.utils.Uid;
 
-import javax.transaction.Synchronization;
+import jakarta.transaction.Synchronization;
 import java.util.*;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentHashMap;
