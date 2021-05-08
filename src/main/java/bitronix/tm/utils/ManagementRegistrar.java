@@ -19,9 +19,7 @@ import bitronix.tm.Configuration;
 import bitronix.tm.TransactionManagerServices;
 import bitronix.tm.internal.LogDebugCheck;
 
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
+import javax.management.*;
 import java.lang.management.ManagementFactory;
 import java.lang.ref.WeakReference;
 import java.util.LinkedHashMap;
@@ -280,7 +278,7 @@ public final class ManagementRegistrar
 				{
 					mbeanServer.unregisterMBean(objectName);
 				}
-				mbeanServer.registerMBean(object, objectName);
+					mbeanServer.registerMBean(object, objectName);
 			}
 		}
 	}
