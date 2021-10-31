@@ -1,7 +1,6 @@
 package bitronix.tm.internal;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
  * Checks if debug log is enabled..;/
@@ -15,8 +14,20 @@ public interface LogDebugCheck
 	 */
 	static boolean isDebugEnabled()
 	{
-		return Logger.getLogger("")
-		             .getLevel()
-		             .intValue() >= Level.FINER.intValue();
+		Logger log = LogManager.getLogManager()
+		                       .getLogger("");
+		if (log == null)
+		{
+			return false;
+		}
+		if (log.getLevel() == null)
+		{
+			return false;
+		}
+		
+		return LogManager.getLogManager()
+		                 .getLogger("")
+		                 .getLevel()
+		                 .intValue() >= Level.FINER.intValue();
 	}
 }
