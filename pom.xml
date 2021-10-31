@@ -10,6 +10,7 @@
     <artifactId>btm</artifactId>
     <name>btm</name>
     <packaging>jar</packaging>
+    <version>0.0.0_0-SNAPSHOT</version>
 
     <licenses>
         <license>
