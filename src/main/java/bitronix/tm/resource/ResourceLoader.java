@@ -23,7 +23,6 @@ import bitronix.tm.utils.InitializationException;
 import bitronix.tm.utils.PropertyUtils;
 import bitronix.tm.utils.Service;
 
-import jakarta.jms.XAConnectionFactory;
 import javax.sql.XADataSource;
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,7 +48,7 @@ public class ResourceLoader
 	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ResourceLoader.class.toString());
 
 	private static final String JDBC_RESOURCE_CLASSNAME = "bitronix.tm.resource.jdbc.PoolingDataSource";
-	private static final String JMS_RESOURCE_CLASSNAME = "bitronix.tm.resource.jms.PoolingConnectionFactory";
+	//private static final String JMS_RESOURCE_CLASSNAME = "bitronix.tm.resource.jms.PoolingConnectionFactory";
 
 	private final Map<String, XAResourceProducer> resourcesByUniqueName = new HashMap<>();
 
@@ -337,12 +336,12 @@ public class ResourceLoader
 			                                            .getDeclaredConstructor()
 			                                            .newInstance();
 		}
-		else if (XAConnectionFactory.class.isAssignableFrom(clazz))
+		/*else if (XAConnectionFactory.class.isAssignableFrom(clazz))
 		{
 			return (XAResourceProducer) ClassLoaderUtils.loadClass(JMS_RESOURCE_CLASSNAME)
 			                                            .getDeclaredConstructor()
 			                                            .newInstance();
-		}
+		}*/
 		else
 		{
 			return null;
