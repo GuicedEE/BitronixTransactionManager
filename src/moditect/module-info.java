@@ -11,7 +11,7 @@ module tm.bitronix.btm {
 	requires java.management;
 	requires java.management.rmi;
 
-	requires static jakarta.jms;
+	//requires static jakarta.jms;
 	requires static cglib;
 
 	requires transitive java.sql;
