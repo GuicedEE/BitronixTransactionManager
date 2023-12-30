@@ -6,7 +6,7 @@ module tm.bitronix.btm {
 
 	requires transitive java.transaction.xa;
 	requires java.naming;
-	requires transitive java.transaction;
+	requires transitive jakarta.transaction;
 
 	requires java.management;
 	requires java.management.rmi;
