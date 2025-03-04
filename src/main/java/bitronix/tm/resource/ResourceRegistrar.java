@@ -48,7 +48,7 @@ public final class ResourceRegistrar
 	/**
 	 * Specifies the charset that unique names of resources must be encodable with to be storeable in a TX journal.
 	 */
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ResourceRegistrar.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ResourceRegistrar.class);
 	private static final Set<ProducerHolder> resources = new CopyOnWriteArraySet<>();
 
 	/**
@@ -158,7 +158,7 @@ public final class ResourceRegistrar
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("Transaction manager is running, recovering resource '" + holder.getUniqueName() + "'.");
+                log.trace("Transaction manager is running, recovering resource '{}'.", holder.getUniqueName());
 			}
 			IncrementalRecoverer.recover(producer);
 			holder.initialize();
@@ -185,7 +185,7 @@ public final class ResourceRegistrar
 		ProducerHolder holder = new ProducerHolder(producer);
 		if (!resources.remove(holder) && LogDebugCheck.isDebugEnabled())
 		{
-			log.log(Level.FINER, "resource with uniqueName '" + holder.getUniqueName() + "' has not been registered");
+            log.trace("resource with uniqueName '{}' has not been registered", holder.getUniqueName());
 		}
 	}
 
@@ -214,13 +214,13 @@ public final class ResourceRegistrar
 			{
 				if (debug)
 				{
-					log.finer("XAResource " + xaResource + " belongs to " + resourceHolder + " that itself belongs to " + producer);
+                    log.trace("XAResource {} belongs to {} that itself belongs to {}", xaResource, resourceHolder, producer);
 				}
 				return resourceHolder;
 			}
 			if (debug)
 			{
-				log.finer("XAResource " + xaResource + " does not belong to any resource of " + producer);
+                log.trace("XAResource {} does not belong to any resource of {}", xaResource, producer);
 			}
 		}
 

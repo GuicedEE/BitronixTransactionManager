@@ -39,7 +39,7 @@ public final class Rollbacker
 		extends AbstractPhaseEngine
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(Rollbacker.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(Rollbacker.class);
 
 	private final List<XAResourceHolderState> interestedResources = Collections.synchronizedList(new ArrayList<>());
 	// this list has to be thread-safe as the RollbackJobs can be executed in parallel (when async 2PC is configured)
@@ -92,7 +92,7 @@ public final class Rollbacker
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("rollback executed on resources " + Decoder.collectResourcesNames(rolledbackResources));
+            log.trace("rollback executed on resources {}", Decoder.collectResourcesNames(rolledbackResources));
 		}
 
 		// Some resources might have failed the 2nd phase of 2PC.
@@ -111,7 +111,7 @@ public final class Rollbacker
 			rolledbackAndNotInterestedResources.addAll(rolledbackResources);
 			rolledbackAndNotInterestedResources.addAll(notInterestedResources);
 
-			log.finer("rollback succeeded on resources " + Decoder.collectResourcesNames(rolledbackAndNotInterestedResources));
+            log.trace("rollback succeeded on resources {}", Decoder.collectResourcesNames(rolledbackAndNotInterestedResources));
 		}
 
 		transaction.setStatus(Status.STATUS_ROLLEDBACK, rolledbackAndNotInterestedUniqueNames);
@@ -276,14 +276,14 @@ public final class Rollbacker
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("trying to rollback resource " + resourceHolder);
+                    log.trace("trying to rollback resource {}", resourceHolder);
 				}
 				resourceHolder.getXAResource()
 				              .rollback(resourceHolder.getXid());
 				rolledbackResources.add(resourceHolder);
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("rolled back resource " + resourceHolder);
+                    log.trace("rolled back resource {}", resourceHolder);
 				}
 			}
 			catch (XAException ex)
@@ -314,15 +314,13 @@ public final class Rollbacker
 				case XAException.XA_HEURCOM:
 				case XAException.XA_HEURHAZ:
 				case XAException.XA_HEURMIX:
-					log.severe("heuristic rollback is incompatible with the global state of this transaction - guilty: " + failedResourceHolder);
+                    log.error("heuristic rollback is incompatible with the global state of this transaction - guilty: {}", failedResourceHolder);
 					throw xaException;
 
 				default:
 					String extraErrorDetails = TransactionManagerServices.getExceptionAnalyzer()
 					                                                     .extractExtraXAExceptionDetails(xaException);
-					log.log(Level.WARNING, "resource '" + failedResourceHolder.getUniqueName() + "' reported " + Decoder.decodeXAExceptionErrorCode(xaException) +
-					                       " when asked to rollback transaction branch. Transaction is prepared and will rollback via recovery service when resource availability allows."
-					                       + (extraErrorDetails == null ? "" : " Extra error=" + extraErrorDetails), xaException);
+                    log.warn("resource '{}' reported {} when asked to rollback transaction branch. Transaction is prepared and will rollback via recovery service when resource availability allows.{}", failedResourceHolder.getUniqueName(), Decoder.decodeXAExceptionErrorCode(xaException), extraErrorDetails == null ? "" : " Extra error=" + extraErrorDetails, xaException);
 			}
 		}
 
@@ -338,21 +336,20 @@ public final class Rollbacker
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("handling heuristic rollback on resource " + resourceHolder.getXAResource());
+                    log.trace("handling heuristic rollback on resource {}", resourceHolder.getXAResource());
 				}
 				resourceHolder.getXAResource()
 				              .forget(resourceHolder.getXid());
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("forgotten heuristically rolled back resource " + resourceHolder.getXAResource());
+                    log.trace("forgotten heuristically rolled back resource {}", resourceHolder.getXAResource());
 				}
 			}
 			catch (XAException ex)
 			{
 				String extraErrorDetails = TransactionManagerServices.getExceptionAnalyzer()
 				                                                     .extractExtraXAExceptionDetails(ex);
-				log.log(Level.SEVERE, "cannot forget " + resourceHolder.getXid() + " assigned to " + resourceHolder.getXAResource() +
-				                      ", error=" + Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails), ex);
+                log.error("cannot forget {} assigned to {}, error={}{}", resourceHolder.getXid(), resourceHolder.getXAResource(), Decoder.decodeXAExceptionErrorCode(ex), extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails, ex);
 			}
 		}
 

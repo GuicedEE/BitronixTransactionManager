@@ -31,7 +31,7 @@ public class BitronixTransactionManagerObjectFactory
 		implements ObjectFactory
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixTransactionManagerObjectFactory.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(BitronixTransactionManagerObjectFactory.class);
 
 	/**
 	 * Since there can be only one transaction manager per VM instance, this method always returns a reference
@@ -48,7 +48,7 @@ public class BitronixTransactionManagerObjectFactory
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("returning the unique transaction manager instance");
+			log.trace("returning the unique transaction manager instance");
 		}
 		return TransactionManagerServices.getTransactionManager();
 	}

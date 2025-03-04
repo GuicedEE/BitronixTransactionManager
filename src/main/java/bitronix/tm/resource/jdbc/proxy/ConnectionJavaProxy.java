@@ -36,7 +36,7 @@ public class ConnectionJavaProxy
 		implements PooledConnectionProxy
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ConnectionJavaProxy.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ConnectionJavaProxy.class);
 	private static final Map<String, Method> selfMethodMap = createMethodMap(ConnectionJavaProxy.class);
 	private static final String CONNECTION_ALREADY_CLOSED = "connection handle already closed";
 
@@ -132,7 +132,7 @@ public class ConnectionJavaProxy
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("closing " + this);
+            log.trace("closing {}", this);
 		}
 
 		// in case the connection has already been closed

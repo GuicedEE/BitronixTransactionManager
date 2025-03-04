@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class LruStatementCache
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LruStatementCache.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(LruStatementCache.class);
 	/**
 	 * We use a LinkedHashMap with _access order_ specified in the
 	 * constructor.  According to the LinkedHashMap documentation:
@@ -121,7 +121,7 @@ public class LruStatementCache
 				cached.usageCount++;
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("delivered from cache with usage count " + cached.usageCount + " statement <" + key + ">");
+                    log.trace("delivered from cache with usage count {} statement <{}>", cached.usageCount, key);
 				}
 				return cached.statement;
 			}
@@ -164,7 +164,7 @@ public class LruStatementCache
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("adding to cache statement <" + key + ">");
+                    log.trace("adding to cache statement <{}>", key);
 				}
 				cache.put(key, new StatementTracker(statement));
 				size++;
@@ -175,7 +175,7 @@ public class LruStatementCache
 				statement = cached.statement;
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("returning to cache statement <" + key + "> with usage count " + cached.usageCount);
+                    log.trace("returning to cache statement <{}> with usage count {}", key, cached.usageCount);
 				}
 			}
 
@@ -213,7 +213,7 @@ public class LruStatementCache
 				CacheKey key = entry.getKey();
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("evicting from cache statement <" + key + "> " + entry.getValue().statement);
+                    log.trace("evicting from cache statement <{}> {}", key, entry.getValue().statement);
 				}
 				fireEvictionEvent(tracker.statement);
 				// We can stop evicting if we're at maxSize...

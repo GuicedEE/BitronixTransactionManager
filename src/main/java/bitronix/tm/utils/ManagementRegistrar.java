@@ -42,7 +42,7 @@ import java.util.logging.Level;
 public final class ManagementRegistrar
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ManagementRegistrar.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ManagementRegistrar.class);
 	private static final MBeanServer mbeanServer;
 	private static final Queue<ManagementCommand> commandQueue;
 
@@ -79,14 +79,14 @@ public final class ManagementRegistrar
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("Enabled JMX with MBeanServer " + mbeanServer + "; MBean registration is '" + (commandQueue == null ? "synchronous" : "asynchronous") + "'.");
+                log.trace("Enabled JMX with MBeanServer {}; MBean registration is '{}'.", mbeanServer, commandQueue == null ? "synchronous" : "asynchronous");
 			}
 		}
 		else
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("JMX support is disabled.");
+				log.trace("JMX support is disabled.");
 			}
 		}
 	}
@@ -318,7 +318,7 @@ public final class ManagementRegistrar
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.log(Level.FINE, "Failed to unregister the JMX instance of name '" + name + "' as it doesn't exist.", e);
+                    log.trace("Failed to unregister the JMX instance of name '{}' as it doesn't exist.", name, e);
 				}
 			}
 		}
@@ -365,13 +365,13 @@ public final class ManagementRegistrar
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("Calling " + getClass().getSimpleName() + " on object with name " + name);
+                    log.trace("Calling {} on object with name {}", getClass().getSimpleName(), name);
 				}
 				runCommand();
 			}
 			catch (Exception ex)
 			{
-				log.log(Level.WARNING, "Cannot execute " + getClass().getSimpleName() + " on object with name " + name, ex);
+                log.warn("Cannot execute {} on object with name {}", getClass().getSimpleName(), name, ex);
 			}
 		}
 

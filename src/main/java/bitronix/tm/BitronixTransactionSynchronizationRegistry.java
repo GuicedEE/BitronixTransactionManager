@@ -39,7 +39,7 @@ public class BitronixTransactionSynchronizationRegistry
 		implements TransactionSynchronizationRegistry, Referenceable
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixTransactionSynchronizationRegistry.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(BitronixTransactionSynchronizationRegistry.class);
 	private static final ThreadLocal<Map<Object, Object>> resourcesTl = ThreadLocal.withInitial(HashMap::new);
 
 	private static final String CANT_GET_TRANSACTION = "cannot get current transaction status";
@@ -107,7 +107,7 @@ public class BitronixTransactionSynchronizationRegistry
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("first resource put in synchronization registry, registering a ClearRegistryResourcesSynchronization");
+					log.trace("first resource put in synchronization registry, registering a ClearRegistryResourcesSynchronization");
 				}
 				Synchronization synchronization = new ClearRegistryResourcesSynchronization();
 				currentTransaction().getSynchronizationScheduler()
@@ -314,7 +314,7 @@ public class BitronixTransactionSynchronizationRegistry
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("clearing resources");
+				log.trace("clearing resources");
 			}
 			getResources().clear();
 		}

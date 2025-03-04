@@ -30,7 +30,7 @@ public class TransactionTimeoutTask
 		extends Task
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionTimeoutTask.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(TransactionTimeoutTask.class);
 
 	private final BitronixTransaction transaction;
 
@@ -74,7 +74,7 @@ public class TransactionTimeoutTask
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("marking " + transaction + " as timed out");
+                log.trace("marking {} as timed out", transaction);
 			}
 			transaction.timeout();
 		}

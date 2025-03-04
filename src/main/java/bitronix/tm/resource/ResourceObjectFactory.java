@@ -31,7 +31,7 @@ public class ResourceObjectFactory
 		implements ObjectFactory
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ResourceObjectFactory.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ResourceObjectFactory.class);
 
 	/**
 	 * Method getObjectInstance ...
@@ -56,7 +56,7 @@ public class ResourceObjectFactory
 		Reference ref = (Reference) obj;
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("referencing resource with reference of type " + ref.getClass());
+            log.trace("referencing resource with reference of type {}", ref.getClass());
 		}
 
 		RefAddr refAddr = ref.get("uniqueName");
@@ -73,7 +73,7 @@ public class ResourceObjectFactory
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("getting registered resource with uniqueName '" + uniqueName + "'");
+            log.trace("getting registered resource with uniqueName '{}'", uniqueName);
 		}
 		Referenceable resource = ResourceRegistrar.get(uniqueName);
 		if (resource == null)

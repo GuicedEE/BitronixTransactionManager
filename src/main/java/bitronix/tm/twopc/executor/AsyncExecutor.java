@@ -28,7 +28,7 @@ import java.util.logging.Level;
 public class AsyncExecutor
 		implements Executor
 {
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(AsyncExecutor.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(AsyncExecutor.class);
 	private final ExecutorService executorService;
 
 
@@ -83,7 +83,7 @@ public class AsyncExecutor
 		catch (TimeoutException ex)
 		{
 			// ok, just return
-			log.log(Level.FINEST, "Just Return", ex);
+			log.trace( "Just Return", ex);
 		}
 	}
 

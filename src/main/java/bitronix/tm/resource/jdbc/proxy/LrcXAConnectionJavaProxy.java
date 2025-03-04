@@ -37,7 +37,7 @@ public class LrcXAConnectionJavaProxy
 		extends JavaProxyBase<Connection>
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LrcXAConnectionJavaProxy.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(LrcXAConnectionJavaProxy.class);
 
 	private static final Map<String, Method> selfMethodMap = createMethodMap(LrcXAConnectionJavaProxy.class);
 
@@ -85,7 +85,7 @@ public class LrcXAConnectionJavaProxy
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("notifying " + connectionEventListeners.size() + " connectionEventListeners(s) about closing of " + this);
+            log.trace("notifying {} connectionEventListeners(s) about closing of {}", connectionEventListeners.size(), this);
 		}
 		for (ConnectionEventListener connectionEventListener : connectionEventListeners)
 		{

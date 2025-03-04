@@ -28,7 +28,7 @@ import java.util.logging.Level;
 public class ClassLoaderUtils
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ClassLoaderUtils.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ClassLoaderUtils.class);
 
 	private ClassLoaderUtils()
 	{
@@ -108,7 +108,7 @@ public class ClassLoaderUtils
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.log(Level.FINER, "context classloader could not find class '" + className + "', trying Class.forName() instead", ex);
+                    log.trace("context classloader could not find class '{}', trying Class.forName() instead", className, ex);
 				}
 			}
 		}
@@ -175,7 +175,7 @@ public class ClassLoaderUtils
 			}
 			catch (ClassNotFoundException cnfe)
 			{
-				log.log(Level.FINEST, "Class not found?", cnfe);
+				log.trace( "Class not found?", cnfe);
 				return CascadingClassLoader.class.getClassLoader()
 				                                 .loadClass(name);
 			}

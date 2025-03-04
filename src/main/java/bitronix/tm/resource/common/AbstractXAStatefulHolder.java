@@ -30,7 +30,7 @@ public abstract class AbstractXAStatefulHolder<T extends XAStatefulHolder<T>>
 		implements XAStatefulHolder<T>
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(AbstractXAStatefulHolder.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(AbstractXAStatefulHolder.class);
 	private final List<StateChangeListener<T>> stateChangeEventListeners = new CopyOnWriteArrayList<>();
 	private final Date creationDate = new Date();
 	private volatile State state = State.IN_POOL;
@@ -68,8 +68,7 @@ public abstract class AbstractXAStatefulHolder<T extends XAStatefulHolder<T>>
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("state changing from " + oldState +
-			          " to " + state + " in " + this);
+            log.trace("state changing from {} to {} in {}", oldState, state, this);
 		}
 
 		this.state = state;
@@ -125,9 +124,7 @@ public abstract class AbstractXAStatefulHolder<T extends XAStatefulHolder<T>>
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("notifying " + stateChangeEventListeners.size() +
-			          " stateChangeEventListener(s) about state changing from " + currentState +
-			          " to " + futureState + " in " + this);
+            log.trace("notifying {} stateChangeEventListener(s) about state changing from {} to {} in {}", stateChangeEventListeners.size(), currentState, futureState, this);
 		}
 
 		for (StateChangeListener<T> stateChangeListener : stateChangeEventListeners)
@@ -149,9 +146,7 @@ public abstract class AbstractXAStatefulHolder<T extends XAStatefulHolder<T>>
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("notifying " + stateChangeEventListeners.size() +
-			          " stateChangeEventListener(s) about state changed from " + oldState +
-			          " to " + newState + " in " + this);
+            log.trace("notifying {} stateChangeEventListener(s) about state changed from {} to {} in {}", stateChangeEventListeners.size(), oldState, newState, this);
 		}
 
 		for (StateChangeListener<T> stateChangeListener : stateChangeEventListeners)

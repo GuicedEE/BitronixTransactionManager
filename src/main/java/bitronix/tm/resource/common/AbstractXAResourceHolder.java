@@ -37,7 +37,7 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 		implements XAResourceHolder<T>
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(AbstractXAResourceHolder.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(AbstractXAResourceHolder.class);
 
 	private final Map<Uid, Map<Uid, XAResourceHolderState>> xaResourceHolderStates = new HashMap<>();
 	private final ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
@@ -178,13 +178,13 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("putting XAResourceHolderState [" + xaResourceHolderState + "] on " + this);
+                log.trace("putting XAResourceHolderState [{}] on {}", xaResourceHolderState, this);
 			}
 			if (!xaResourceHolderStates.containsKey(gtrid))
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("GTRID [" + gtrid + "] previously unknown to " + this + ", adding it to the resource's transactions list");
+                    log.trace("GTRID [{}] previously unknown to {}, adding it to the resource's transactions list", gtrid, this);
 				}
 
 				// use a LinkedHashMap as iteration order must be guaranteed
@@ -196,7 +196,7 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("GTRID [" + gtrid + "] previously known to " + this + ", adding it to the resource's transactions list");
+                    log.trace("GTRID [{}] previously known to {}, adding it to the resource's transactions list", gtrid, this);
 				}
 
 				Map<Uid, XAResourceHolderState> statesForGtrid = xaResourceHolderStates.get(gtrid);
@@ -228,20 +228,20 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("removing XAResourceHolderState of xid " + xid + " from " + this);
+                log.trace("removing XAResourceHolderState of xid {} from {}", xid, this);
 			}
 
 			Map<Uid, XAResourceHolderState> statesForGtrid = xaResourceHolderStates.get(gtrid);
 			if (statesForGtrid == null)
 			{
-				log.warning("tried to remove unknown GTRID [" + gtrid + "] from " + this + " - Bug?");
+                log.warn("tried to remove unknown GTRID [{}] from {} - Bug?", gtrid, this);
 				return;
 			}
 
 			XAResourceHolderState removed = statesForGtrid.remove(bqual);
 			if (removed == null)
 			{
-				log.warning("tried to remove unknown BQUAL [" + bqual + "] from " + this + " - Bug?");
+                log.warn("tried to remove unknown BQUAL [{}] from {} - Bug?", bqual, this);
 				return;
 			}
 
@@ -281,8 +281,8 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 					{
 						if (LogDebugCheck.isDebugEnabled())
 						{
-							log.finer("resource " + xaResourceHolder + " is enlisted in another transaction with " + otherXaResourceHolderState.getXid()
-							                                                                                                                   .toString());
+                            log.trace("resource {} is enlisted in another transaction with {}", xaResourceHolder, otherXaResourceHolderState.getXid()
+                                    .toString());
 						}
 						return true;
 					}
@@ -291,7 +291,7 @@ public abstract class AbstractXAResourceHolder<T extends XAResourceHolder<T>>
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("resource not enlisted in any transaction: " + xaResourceHolder);
+                log.trace("resource not enlisted in any transaction: {}", xaResourceHolder);
 			}
 			return false;
 		}

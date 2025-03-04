@@ -40,7 +40,7 @@ public class TaskScheduler
 		implements Service
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TaskScheduler.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(TaskScheduler.class);
 	private static final String EXPECTED_EXECUTION_DATE = "expected a non-null execution date";
 	private static final String TOTAL_QUEUED = ", total task(s) queued: ";
 	private static final String SCHEDULED_STRING = "scheduled ";
@@ -69,7 +69,7 @@ public class TaskScheduler
 			innerTasksLock = null;
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("task scheduler backed by ConcurrentSkipListSet");
+				log.trace("task scheduler backed by ConcurrentSkipListSet");
 			}
 		}
 		catch (Exception e)
@@ -78,8 +78,8 @@ public class TaskScheduler
 			innerTasksLock = new ReentrantLock();
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("task scheduler backed by locked TreeSet");
-				log.log(Level.FINEST, "exception is", e);
+				log.trace("task scheduler backed by locked TreeSet");
+				log.trace( "exception is", e);
 			}
 		}
 		this.tasks = sortedTasks;
@@ -102,14 +102,14 @@ public class TaskScheduler
 				                                                      .getGracefulShutdownInterval() * 1000L;
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("graceful scheduler shutdown interval: " + gracefulShutdownTime + "ms");
+                    log.trace("graceful scheduler shutdown interval: {}ms", gracefulShutdownTime);
 				}
 				join(gracefulShutdownTime);
 			}
 			catch (InterruptedException ex)
 			{
-				log.log(Level.SEVERE, "could not stop the task scheduler within " + TransactionManagerServices.getConfiguration()
-				                                                                                              .getGracefulShutdownInterval() + "s", ex);
+                log.error("could not stop the task scheduler within {}s", TransactionManagerServices.getConfiguration()
+                        .getGracefulShutdownInterval(), ex);
 			}
 		}
 	}
@@ -140,7 +140,7 @@ public class TaskScheduler
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("scheduling transaction timeout task on " + transaction + " for " + executionTime);
+            log.trace("scheduling transaction timeout task on {} for {}", transaction, executionTime);
 		}
 		if (transaction == null)
 		{
@@ -155,7 +155,7 @@ public class TaskScheduler
 		addTask(task);
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer(SCHEDULED_STRING + task + TOTAL_QUEUED + countTasksQueued());
+            log.trace(SCHEDULED_STRING + "{}" + TOTAL_QUEUED + "{}", task, countTasksQueued());
 		}
 	}
 
@@ -223,7 +223,7 @@ public class TaskScheduler
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("removing task by " + obj);
+                log.trace("removing task by {}", obj);
 			}
 
 			for (Task task : tasks)
@@ -233,7 +233,7 @@ public class TaskScheduler
 					tasks.remove(task);
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.finer("cancelled " + task + ", total task(s) still queued: " + tasks.size());
+                        log.trace("cancelled {}, total task(s) still queued: {}", task, tasks.size());
 					}
 					return true;
 				}
@@ -267,7 +267,7 @@ public class TaskScheduler
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("cancelling transaction timeout task on " + transaction);
+            log.trace("cancelling transaction timeout task on {}", transaction);
 		}
 		if (transaction == null)
 		{
@@ -275,7 +275,7 @@ public class TaskScheduler
 		}
 		if (!removeTaskByObject(transaction) && LogDebugCheck.isDebugEnabled())
 		{
-			log.finer(NO_TASK + transaction);
+            log.trace(NO_TASK + "{}", transaction);
 		}
 
 	}
@@ -292,7 +292,7 @@ public class TaskScheduler
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("scheduling recovery task for " + executionTime);
+            log.trace("scheduling recovery task for {}", executionTime);
 		}
 		if (recoverer == null)
 		{
@@ -307,7 +307,7 @@ public class TaskScheduler
 		addTask(task);
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer(SCHEDULED_STRING + task + TOTAL_QUEUED + countTasksQueued());
+            log.trace(SCHEDULED_STRING + "{}" + TOTAL_QUEUED + "{}", task, countTasksQueued());
 		}
 	}
 
@@ -321,11 +321,11 @@ public class TaskScheduler
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("cancelling recovery task");
+			log.trace("cancelling recovery task");
 		}
 		if (!removeTaskByObject(recoverer) && LogDebugCheck.isDebugEnabled())
 		{
-			log.finer(NO_TASK + recoverer);
+            log.trace(NO_TASK + "{}", recoverer);
 		}
 
 	}
@@ -342,7 +342,7 @@ public class TaskScheduler
 		Date executionTime = xaPool.getNextShrinkDate();
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("scheduling pool shrinking task on " + xaPool + " for " + executionTime);
+            log.trace("scheduling pool shrinking task on {} for {}", xaPool, executionTime);
 		}
 		if (executionTime == null)
 		{
@@ -353,7 +353,7 @@ public class TaskScheduler
 		addTask(task);
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer(SCHEDULED_STRING + task + TOTAL_QUEUED + tasks.size());
+            log.trace(SCHEDULED_STRING + "{}" + TOTAL_QUEUED + "{}", task, tasks.size());
 		}
 	}
 
@@ -367,7 +367,7 @@ public class TaskScheduler
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("cancelling pool shrinking task on " + xaPool);
+            log.trace("cancelling pool shrinking task on {}", xaPool);
 		}
 		if (xaPool == null)
 		{
@@ -376,7 +376,7 @@ public class TaskScheduler
 
 		if (!removeTaskByObject(xaPool) && LogDebugCheck.isDebugEnabled())
 		{
-			log.finer(NO_TASK + xaPool);
+            log.trace(NO_TASK + "{}", xaPool);
 		}
 
 	}
@@ -433,26 +433,26 @@ public class TaskScheduler
 					// if the execution time is now or in the past
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.finer("running " + task);
+                        log.trace("running {}", task);
 					}
 					try
 					{
 						task.execute();
 						if (LogDebugCheck.isDebugEnabled())
 						{
-							log.finer("successfully ran " + task);
+                            log.trace("successfully ran {}", task);
 						}
 					}
 					catch (Exception ex)
 					{
-						log.log(Level.WARNING, "error running " + task, ex);
+                        log.warn("error running {}", task, ex);
 					}
 					finally
 					{
 						toRemove.add(task);
 						if (LogDebugCheck.isDebugEnabled())
 						{
-							log.finer("total task(s) still queued: " + tasks.size());
+                            log.trace("total task(s) still queued: {}", tasks.size());
 						}
 					}
 				} // if

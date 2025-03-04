@@ -45,7 +45,7 @@ public class ResourceLoader
 		implements Service
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ResourceLoader.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ResourceLoader.class);
 
 	private static final String JDBC_RESOURCE_CLASSNAME = "bitronix.tm.resource.jdbc.PoolingDataSource";
 	//private static final String JMS_RESOURCE_CLASSNAME = "bitronix.tm.resource.jms.PoolingConnectionFactory";
@@ -87,14 +87,14 @@ public class ResourceLoader
 				throw new ResourceConfigurationException(
 						"cannot find resources configuration file '" + filename + "', missing or invalid value of property 'bitronix.tm.resource.configuration'");
 			}
-			log.info("reading resources configuration from " + filename);
+            log.info("reading resources configuration from {}", filename);
 			return init(filename);
 		}
 		else
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("no resource configuration file specified");
+				log.trace("no resource configuration file specified");
 			}
 			return 0;
 		}
@@ -150,14 +150,14 @@ public class ResourceLoader
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("resource already registered, skipping it:" + producer.getUniqueName());
+                    log.trace("resource already registered, skipping it:{}", producer.getUniqueName());
 				}
 				continue;
 			}
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("creating resource " + producer);
+                log.trace("creating resource {}", producer);
 			}
 			try
 			{
@@ -165,7 +165,7 @@ public class ResourceLoader
 			}
 			catch (ResourceConfigurationException ex)
 			{
-				log.log(Level.WARNING, "unable to create resource with unique name " + producer.getUniqueName(), ex);
+                log.warn("unable to create resource with unique name {}", producer.getUniqueName(), ex);
 				producer.close();
 				errorCount++;
 			}
@@ -250,7 +250,7 @@ public class ResourceLoader
 		String[] keyParts = key.split("\\.");
 		if (keyParts.length < 3)
 		{
-			log.warning("ignoring invalid entry in configuration file: " + key);
+            log.warn("ignoring invalid entry in configuration file: {}", key);
 		}
 		else
 		{
@@ -356,15 +356,15 @@ public class ResourceLoader
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("resource loader has registered " + resourcesByUniqueName.entrySet()
-			                                                                   .size() + " resource(s), unregistering them now");
+            log.trace("resource loader has registered {} resource(s), unregistering them now", resourcesByUniqueName.entrySet()
+                    .size());
 		}
 		for (Map.Entry<String, XAResourceProducer> entry : resourcesByUniqueName.entrySet())
 		{
 			XAResourceProducer producer = entry.getValue();
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("closing " + producer);
+                log.trace("closing {}", producer);
 			}
 			try
 			{
@@ -372,7 +372,7 @@ public class ResourceLoader
 			}
 			catch (Exception ex)
 			{
-				log.log(Level.WARNING, "error closing resource " + producer, ex);
+                log.warn("error closing resource {}", producer, ex);
 			}
 		}
 		resourcesByUniqueName.clear();

@@ -42,7 +42,7 @@ import java.util.Date;
 public class XAResourceHolderState
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(XAResourceHolderState.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(XAResourceHolderState.class);
 	private static final String WITH_STRING = " with ";
 
 	private final ResourceBean bean;
@@ -119,7 +119,7 @@ public class XAResourceHolderState
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("assigning <" + xid + "> to <" + this + ">");
+            log.trace("assigning <{}> to <{}>", xid, this);
 		}
 		if (this.xid != null && !xid.equals(this.xid))
 		{
@@ -258,7 +258,7 @@ public class XAResourceHolderState
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("resource already ended, changing state to suspended: " + this);
+                log.trace("resource already ended, changing state to suspended: {}", this);
 			}
 			this.suspended = true;
 			return;
@@ -282,7 +282,7 @@ public class XAResourceHolderState
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("suspending " + this + WITH_STRING + Decoder.decodeXAResourceFlag(flags));
+                log.trace("suspending {}" + WITH_STRING + "{}", this, Decoder.decodeXAResourceFlag(flags));
 			}
 			isSuspended = true;
 		}
@@ -290,7 +290,7 @@ public class XAResourceHolderState
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("ending " + this + WITH_STRING + Decoder.decodeXAResourceFlag(flags));
+                log.trace("ending {}" + WITH_STRING + "{}", this, Decoder.decodeXAResourceFlag(flags));
 			}
 			hasEnded = true;
 		}
@@ -300,7 +300,7 @@ public class XAResourceHolderState
 			getXAResource().end(xid, flags);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("ended " + this + WITH_STRING + Decoder.decodeXAResourceFlag(flags));
+                log.trace("ended {}" + WITH_STRING + "{}", this, Decoder.decodeXAResourceFlag(flags));
 			}
 		}
 		catch (XAException ex)
@@ -345,7 +345,7 @@ public class XAResourceHolderState
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("resource already ended, changing state to resumed: " + this);
+                log.trace("resource already ended, changing state to resumed: {}", this);
 			}
 			this.suspended = false;
 			return;
@@ -364,7 +364,7 @@ public class XAResourceHolderState
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("resuming " + this + WITH_STRING + Decoder.decodeXAResourceFlag(flags));
+                log.trace("resuming {}" + WITH_STRING + "{}", this, Decoder.decodeXAResourceFlag(flags));
 			}
 			isSuspended = false;
 		}
@@ -377,7 +377,7 @@ public class XAResourceHolderState
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("starting " + this + WITH_STRING + Decoder.decodeXAResourceFlag(flags));
+                log.trace("starting {}" + WITH_STRING + "{}", this, Decoder.decodeXAResourceFlag(flags));
 			}
 			hasStarted = true;
 		}
@@ -388,7 +388,7 @@ public class XAResourceHolderState
 			timeoutInSeconds = Math.max(1, timeoutInSeconds); // setting a timeout of 0 means resetting -> set it to at least 1
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("applying resource timeout of " + timeoutInSeconds + "s on " + this);
+                log.trace("applying resource timeout of {}s on {}", timeoutInSeconds, this);
 			}
 			getXAResource().setTransactionTimeout(timeoutInSeconds);
 			isTimeoutAlreadySet = true;
@@ -400,7 +400,7 @@ public class XAResourceHolderState
 		this.ended = false;
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("started " + this + WITH_STRING + Decoder.decodeXAResourceFlag(flags));
+            log.trace("started {}" + WITH_STRING + "{}", this, Decoder.decodeXAResourceFlag(flags));
 		}
 	}
 

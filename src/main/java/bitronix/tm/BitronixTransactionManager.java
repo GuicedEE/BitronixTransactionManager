@@ -42,7 +42,7 @@ public class BitronixTransactionManager
 		implements TransactionManager, UserTransaction, Referenceable, Service
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixTransactionManager.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(BitronixTransactionManager.class);
 	private static final String NO_TRANSACTION_TEXT = "no transaction started on this thread";
 	private final SortedMap<BitronixTransaction, ClearContextSynchronization> inFlightTransactions;
 	private volatile boolean shuttingDown;
@@ -62,7 +62,7 @@ public class BitronixTransactionManager
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("starting BitronixTransactionManager using " + configuration);
+                log.trace("starting BitronixTransactionManager using {}", configuration);
 			}
 			TransactionManagerServices.getJournal()
 			                          .open();
@@ -83,7 +83,7 @@ public class BitronixTransactionManager
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("recovery will run in the background every " + backgroundRecoveryInterval + " second(s)");
+                log.trace("recovery will run in the background every {} second(s)", backgroundRecoveryInterval);
 			}
 			Date nextExecutionDate = new Date(MonotonicClock.currentTimeMillis() + (backgroundRecoveryInterval * 1000L));
 			TransactionManagerServices.getTaskScheduler()
@@ -108,10 +108,10 @@ public class BitronixTransactionManager
 	 */
 	private void logVersion()
 	{
-		log.info("Bitronix Transaction Manager version " + Version.getVersion());
+        log.info("Bitronix Transaction Manager version {}", Version.getVersion());
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("JVM version " + System.getProperty("java.version"));
+            log.trace("JVM version {}", System.getProperty("java.version"));
 		}
 	}
 
@@ -137,7 +137,7 @@ public class BitronixTransactionManager
 		boolean debug = LogDebugCheck.isDebugEnabled();
 		if (debug)
 		{
-			log.finer("Creating sorted memory storage for inflight transactions.");
+			log.trace("Creating sorted memory storage for inflight transactions.");
 		}
 
 		Comparator<BitronixTransaction> timestampSortComparator = (t1, t2) ->
@@ -164,7 +164,7 @@ public class BitronixTransactionManager
 
 		if (debug)
 		{
-			log.finer("Attempting to use a concurrent sorted map of type 'ConcurrentSkipListMap' (from jre6 or custom supplied backport)");
+			log.trace("Attempting to use a concurrent sorted map of type 'ConcurrentSkipListMap' (from jre6 or custom supplied backport)");
 		}
 		try
 		{
@@ -180,7 +180,7 @@ public class BitronixTransactionManager
 		{
 			if (debug)
 			{
-				log.log(Level.FINER, "Concurrent sorted map 'ConcurrentSkipListMap' is not available. Falling back to a synchronized TreeMap.", e);
+				log.trace( "Concurrent sorted map 'ConcurrentSkipListMap' is not available. Falling back to a synchronized TreeMap.", e);
 			}
 			return Collections.synchronizedSortedMap(
 					new TreeMap<>(timestampSortComparator));
@@ -200,7 +200,7 @@ public class BitronixTransactionManager
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("beginning a new transaction");
+			log.trace("beginning a new transaction");
 		}
 		if (isShuttingDown())
 		{
@@ -228,9 +228,9 @@ public class BitronixTransactionManager
 			inFlightTransactions.put(currentTx, clearContextSynchronization);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("begun new transaction at " + new Date(currentTx.getResourceManager()
-				                                                          .getGtrid()
-				                                                          .extractTimestamp()));
+                log.trace("begun new transaction at {}", new Date(currentTx.getResourceManager()
+                        .getGtrid()
+                        .extractTimestamp()));
 			}
 		}
 		catch (RuntimeException | SystemException ex)
@@ -258,7 +258,7 @@ public class BitronixTransactionManager
 		BitronixTransaction currentTx = getCurrentTransaction();
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("committing transaction " + currentTx);
+            log.trace("committing transaction {}", currentTx);
 		}
 		if (currentTx == null)
 		{
@@ -318,7 +318,7 @@ public class BitronixTransactionManager
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("resuming " + transaction);
+            log.trace("resuming {}", transaction);
 		}
 		if (transaction == null)
 		{
@@ -365,7 +365,7 @@ public class BitronixTransactionManager
 		BitronixTransaction currentTx = getCurrentTransaction();
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("rolling back transaction " + currentTx);
+            log.trace("rolling back transaction {}", currentTx);
 		}
 		if (currentTx == null)
 		{
@@ -387,7 +387,7 @@ public class BitronixTransactionManager
 		BitronixTransaction currentTx = getCurrentTransaction();
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("marking transaction as rollback only: " + currentTx);
+            log.trace("marking transaction as rollback only: {}", currentTx);
 		}
 		if (currentTx == null)
 		{
@@ -431,7 +431,7 @@ public class BitronixTransactionManager
 		BitronixTransaction currentTx = getCurrentTransaction();
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("suspending transaction " + currentTx);
+            log.trace("suspending transaction {}", currentTx);
 		}
 		if (currentTx == null)
 		{
@@ -463,7 +463,7 @@ public class BitronixTransactionManager
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("clearing current thread context: " + ThreadContext.getContext());
+            log.trace("clearing current thread context: {}", ThreadContext.getContext());
 		}
 		ThreadContext.getContext()
 		             .clearTransaction();
@@ -492,10 +492,10 @@ public class BitronixTransactionManager
 		// We're using an iterator, so we must synchronize on the collection
 		synchronized (inFlightTransactions)
 		{
-			log.finer("dumping " + inFlightTransactions.size() + " transaction context(s)");
+            log.trace("dumping {} transaction context(s)", inFlightTransactions.size());
 			for (BitronixTransaction tx : inFlightTransactions.keySet())
 			{
-				log.finer(tx.toString());
+				log.trace(tx.toString());
 			}
 		}
 	}
@@ -569,7 +569,7 @@ public class BitronixTransactionManager
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("oldest in-flight transaction's timestamp: " + oldestTimestamp);
+                log.trace("oldest in-flight transaction's timestamp: {}", oldestTimestamp);
 			}
 			return oldestTimestamp;
 
@@ -578,7 +578,7 @@ public class BitronixTransactionManager
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.log(Level.FINER, "oldest in-flight transaction's timestamp: " + Long.MIN_VALUE, e);
+				log.trace( "oldest in-flight transaction's timestamp: " + Long.MIN_VALUE, e);
 			}
 			return Long.MIN_VALUE;
 		}
@@ -606,7 +606,7 @@ public class BitronixTransactionManager
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("Transaction Manager has already shut down");
+				log.trace("Transaction Manager has already shut down");
 			}
 			return;
 		}
@@ -616,42 +616,42 @@ public class BitronixTransactionManager
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("shutting down resource loader");
+			log.trace("shutting down resource loader");
 		}
 		TransactionManagerServices.getResourceLoader()
 		                          .shutdown();
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("shutting down executor");
+			log.trace("shutting down executor");
 		}
 		TransactionManagerServices.getExecutor()
 		                          .shutdown();
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("shutting down task scheduler");
+			log.trace("shutting down task scheduler");
 		}
 		TransactionManagerServices.getTaskScheduler()
 		                          .shutdown();
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("shutting down journal");
+			log.trace("shutting down journal");
 		}
 		TransactionManagerServices.getJournal()
 		                          .shutdown();
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("shutting down recoverer");
+			log.trace("shutting down recoverer");
 		}
 		TransactionManagerServices.getRecoverer()
 		                          .shutdown();
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("shutting down configuration");
+			log.trace("shutting down configuration");
 		}
 		TransactionManagerServices.getConfiguration()
 		                          .shutdown();
@@ -661,7 +661,7 @@ public class BitronixTransactionManager
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("shutdown ran successfully");
+			log.trace("shutdown ran successfully");
 		}
 	}
 
@@ -683,7 +683,7 @@ public class BitronixTransactionManager
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("still " + txCount + " in-flight transactions, waiting... (" + seconds + " second(s) left)");
+                    log.trace("still {} in-flight transactions, waiting... ({} second(s) left)", txCount, seconds);
 				}
 				try
 				{
@@ -699,14 +699,14 @@ public class BitronixTransactionManager
 		}
 		catch (Exception ex)
 		{
-			log.log(Level.SEVERE, "cannot get a list of in-flight transactions", ex);
+			log.error( "cannot get a list of in-flight transactions", ex);
 		}
 
 		if (txCount > 0)
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("still " + txCount + " in-flight transactions, shutting down anyway");
+                log.trace("still {} in-flight transactions, shutting down anyway", txCount);
 				dumpTransactionContexts();
 			}
 		}
@@ -714,7 +714,7 @@ public class BitronixTransactionManager
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("all transactions finished, resuming shutdown");
+				log.trace("all transactions finished, resuming shutdown");
 			}
 		}
 	}
@@ -774,7 +774,7 @@ public class BitronixTransactionManager
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("clearing transaction from thread context: " + context);
+                    log.trace("clearing transaction from thread context: {}", context);
 				}
 				context.clearTransaction();
 			}
@@ -782,12 +782,12 @@ public class BitronixTransactionManager
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("thread context was null when clear context synchronization executed");
+					log.trace("thread context was null when clear context synchronization executed");
 				}
 			}
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("removing transaction from in-flight transactions: " + currentTx);
+                log.trace("removing transaction from in-flight transactions: {}", currentTx);
 			}
 			inFlightTransactions.remove(currentTx);
 		}

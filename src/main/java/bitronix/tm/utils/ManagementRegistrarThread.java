@@ -7,7 +7,7 @@ import static bitronix.tm.utils.ManagementRegistrar.*;
 public class ManagementRegistrarThread
 		extends Thread
 {
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ManagementRegistrarThread.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ManagementRegistrarThread.class);
 
 	public ManagementRegistrarThread()
 	{
@@ -30,12 +30,12 @@ public class ManagementRegistrarThread
 			}
 			catch (InterruptedException ex)
 			{
-				log.log(Level.FINEST, "an unexpected error occurred in JMX asynchronous registration code", ex);
+				log.trace( "an unexpected error occurred in JMX asynchronous registration code", ex);
 				return;
 			}
 			catch (Exception ex)
 			{
-				log.log(Level.SEVERE, "an unexpected error occurred in JMX asynchronous registration code", ex);
+				log.error( "an unexpected error occurred in JMX asynchronous registration code", ex);
 			}
 		}
 	}

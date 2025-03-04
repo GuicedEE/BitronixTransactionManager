@@ -69,7 +69,7 @@ public class LrcXAResource
 	private static final String RESOURCE_ALREADY_STARTED = "resource already started on XID ";
 	private static final String FLAG_EQUALS = ", flag=";
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LrcXAResource.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(LrcXAResource.class);
 
 	private final Connection connection;
 	private volatile Xid xid;
@@ -131,7 +131,7 @@ public class LrcXAResource
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("OK to commit with 1PC, old state=" + xlatedState() + XID_EQUALS + xid);
+                    log.trace("OK to commit with 1PC, old state={}" + XID_EQUALS + "{}", xlatedState(), xid);
 				}
 				try
 				{
@@ -155,7 +155,7 @@ public class LrcXAResource
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.finer("OK to commit, old state=" + xlatedState() + XID_EQUALS + xid);
+                        log.trace("OK to commit, old state={}" + XID_EQUALS + "{}", xlatedState(), xid);
 					}
 				}
 				else
@@ -208,7 +208,7 @@ public class LrcXAResource
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("OK to end, old state=" + xlatedState() + XID_EQUALS + xid + FLAG_EQUALS + Decoder.decodeXAResourceFlag(flag));
+                    log.trace("OK to end, old state={}" + XID_EQUALS + "{}" + FLAG_EQUALS + "{}", xlatedState(), xid, Decoder.decodeXAResourceFlag(flag));
 				}
 			}
 			else
@@ -322,7 +322,7 @@ public class LrcXAResource
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("OK to prepare, old state=" + xlatedState() + XID_EQUALS + xid);
+                    log.trace("OK to prepare, old state={}" + XID_EQUALS + "{}", xlatedState(), xid);
 				}
 			}
 			else
@@ -395,7 +395,7 @@ public class LrcXAResource
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("OK to rollback, old state=" + xlatedState() + XID_EQUALS + xid);
+                    log.trace("OK to rollback, old state={}" + XID_EQUALS + "{}", xlatedState(), xid);
 				}
 			}
 			else
@@ -482,7 +482,7 @@ public class LrcXAResource
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.finer("OK to start, old state=" + xlatedState() + XID_EQUALS + xid + FLAG_EQUALS + Decoder.decodeXAResourceFlag(flag));
+                        log.trace("OK to start, old state={}" + XID_EQUALS + "{}" + FLAG_EQUALS + "{}", xlatedState(), xid, Decoder.decodeXAResourceFlag(flag));
 					}
 					this.xid = xid;
 				}
@@ -504,7 +504,7 @@ public class LrcXAResource
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.finer("OK to join, old state=" + xlatedState() + XID_EQUALS + xid + FLAG_EQUALS + Decoder.decodeXAResourceFlag(flag));
+                        log.trace("OK to join, old state={}" + XID_EQUALS + "{}" + FLAG_EQUALS + "{}", xlatedState(), xid, Decoder.decodeXAResourceFlag(flag));
 					}
 				}
 				else
@@ -525,7 +525,7 @@ public class LrcXAResource
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("disabling autocommit mode on non-XA connection");
+					log.trace("disabling autocommit mode on non-XA connection");
 				}
 				connection.setAutoCommit(false);
 			}
@@ -567,7 +567,7 @@ public class LrcXAResource
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("enabling back autocommit mode on non-XA connection");
+					log.trace("enabling back autocommit mode on non-XA connection");
 				}
 				connection.setAutoCommit(true);
 			}

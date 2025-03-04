@@ -36,7 +36,7 @@ import java.util.logging.Level;
 public abstract class AbstractPhaseEngine
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(AbstractPhaseEngine.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(AbstractPhaseEngine.class);
 
 	private final Executor executor;
 
@@ -120,7 +120,7 @@ public abstract class AbstractPhaseEngine
 			positions = resourceManager.getReverseOrderPositions();
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("executing phase on " + resourceManager.size() + " resource(s) enlisted in " + positions.size() + " position(s) in reverse position order");
+                log.trace("executing phase on {} resource(s) enlisted in {} position(s) in reverse position order", resourceManager.size(), positions.size());
 			}
 		}
 		else
@@ -128,7 +128,7 @@ public abstract class AbstractPhaseEngine
 			positions = resourceManager.getNaturalOrderPositions();
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("executing phase on " + resourceManager.size() + " resource(s) enlisted in " + positions.size() + " position(s) in natural position order");
+                log.trace("executing phase on {} resource(s) enlisted in {} position(s) in natural position order", resourceManager.size(), positions.size());
 			}
 		}
 
@@ -148,7 +148,7 @@ public abstract class AbstractPhaseEngine
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("running " + resources.size() + " job(s) for position '" + positionKey + "'");
+                log.trace("running {} job(s) for position '{}'", resources.size(), positionKey);
 			}
 			JobsExecutionReport report = runJobsForPosition(resources);
 			if (!report.getExceptions()
@@ -156,15 +156,15 @@ public abstract class AbstractPhaseEngine
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer(report.getExceptions()
-					                .size() + " error(s) happened during execution of position '" + positionKey + "'");
+                    log.trace("{} error(s) happened during execution of position '{}'", report.getExceptions()
+                            .size(), positionKey);
 				}
 				positionErrorReports.add(report);
 				break;
 			}
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("ran " + resources.size() + " job(s) for position '" + positionKey + "'");
+                log.trace("ran {} job(s) for position '{}'", resources.size(), positionKey);
 			}
 		}
 
@@ -205,7 +205,7 @@ public abstract class AbstractPhaseEngine
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("skipping not participating resource " + resource);
+                    log.trace("skipping not participating resource {}", resource);
 				}
 				continue;
 			}
@@ -234,8 +234,7 @@ public abstract class AbstractPhaseEngine
 				                                                     .extractExtraXAExceptionDetails(xaException);
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("error executing " + job + ", errorCode=" + Decoder.decodeXAExceptionErrorCode(xaException) +
-					          (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails));
+                    log.trace("error executing {}, errorCode={}{}", job, Decoder.decodeXAExceptionErrorCode(xaException), extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails);
 				}
 				exceptions.add(xaException);
 				errorResources.add(job.getResource());
@@ -244,7 +243,7 @@ public abstract class AbstractPhaseEngine
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("error executing " + job);
+                    log.trace("error executing {}", job);
 				}
 				exceptions.add(runtimeException);
 				errorResources.add(job.getResource());
@@ -253,7 +252,7 @@ public abstract class AbstractPhaseEngine
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("phase executed with " + exceptions.size() + " exception(s)");
+            log.trace("phase executed with {} exception(s)", exceptions.size());
 		}
 		return new JobsExecutionReport(exceptions, errorResources);
 	}
@@ -294,7 +293,7 @@ public abstract class AbstractPhaseEngine
 		{
 			Exception e = exceptions.get(i);
 			XAResourceHolderState holderState = resources.get(i);
-			log.log(Level.SEVERE, "resource " + holderState.getUniqueName() + " failed on " + holderState.getXid(), e);
+            log.error("resource {} failed on {}", holderState.getUniqueName(), holderState.getXid(), e);
 		}
 	}
 

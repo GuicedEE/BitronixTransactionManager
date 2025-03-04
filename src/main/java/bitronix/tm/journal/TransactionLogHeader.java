@@ -60,7 +60,7 @@ public class TransactionLogHeader
 	 * Total length of the header.
 	 */
 	static final long HEADER_LENGTH = CURRENT_POSITION_HEADER + 8;
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogHeader.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(TransactionLogHeader.class);
 	private final FileChannel fc;
 	private final long maxFileLength;
 
@@ -99,7 +99,7 @@ public class TransactionLogHeader
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("read header " + this);
+            log.trace("read header {}", this);
 		}
 	}
 

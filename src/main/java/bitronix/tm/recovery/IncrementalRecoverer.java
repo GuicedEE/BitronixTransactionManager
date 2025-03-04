@@ -39,7 +39,7 @@ import java.util.Set;
 public class IncrementalRecoverer
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(IncrementalRecoverer.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(IncrementalRecoverer.class);
 	private static final String FAILED_RESOURCE_STRING = "failed recovering resource ";
 
 	private IncrementalRecoverer()
@@ -61,7 +61,7 @@ public class IncrementalRecoverer
 		String uniqueName = xaResourceProducer.getUniqueName();
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("start of incremental recovery on resource " + uniqueName);
+            log.trace("start of incremental recovery on resource {}", uniqueName);
 		}
 
 		try
@@ -71,13 +71,13 @@ public class IncrementalRecoverer
 			Set<BitronixXid> xids = RecoveryHelper.recover(xaResourceHolderState);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer(xids.size() + " dangling transaction(s) found on resource");
+                log.trace("{} dangling transaction(s) found on resource", xids.size());
 			}
 			Map<?, ?> danglingRecords = TransactionManagerServices.getJournal()
 			                                                      .collectDanglingRecords();
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer(danglingRecords.size() + " dangling transaction(s) found in journal");
+                log.trace("{} dangling transaction(s) found in journal", danglingRecords.size());
 			}
 
 			int commitCount = 0;
@@ -91,7 +91,7 @@ public class IncrementalRecoverer
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.finer("committing " + xid);
+                        log.trace("committing {}", xid);
 					}
 					success &= RecoveryHelper.commit(xaResourceHolderState, xid);
 					updateJournal(xid.getGlobalTransactionIdUid(), uniqueName, Status.STATUS_COMMITTED);
@@ -101,7 +101,7 @@ public class IncrementalRecoverer
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.finer("rolling back " + xid);
+                        log.trace("rolling back {}", xid);
 					}
 					success &= RecoveryHelper.rollback(xaResourceHolderState, xid);
 					updateJournal(xid.getGlobalTransactionIdUid(), uniqueName, Status.STATUS_ROLLEDBACK);
@@ -118,11 +118,9 @@ public class IncrementalRecoverer
 
 			xaResourceProducer.setFailed(false);
 
-			log.info("incremental recovery committed " + commitCount + " dangling transaction(s) and rolled back " + rollbackCount +
-			         " aborted transaction(s) on resource [" + uniqueName + "]" +
-			         ((TransactionManagerServices.getConfiguration()
-			                                     .isCurrentNodeOnlyRecovery()) ? " (restricted to serverId '" + TransactionManagerServices.getConfiguration()
-			                                                                                                                              .getServerId() + "')" : ""));
+            log.info("incremental recovery committed {} dangling transaction(s) and rolled back {} aborted transaction(s) on resource [{}]{}", commitCount, rollbackCount, uniqueName, (TransactionManagerServices.getConfiguration()
+                    .isCurrentNodeOnlyRecovery()) ? " (restricted to serverId '" + TransactionManagerServices.getConfiguration()
+                    .getServerId() + "')" : "");
 
 		}
 		catch (XAException | IOException | RuntimeException ex)
@@ -140,7 +138,7 @@ public class IncrementalRecoverer
 			xaResourceProducer.endRecovery();
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("end of incremental recovery on resource " + uniqueName);
+                log.trace("end of incremental recovery on resource {}", uniqueName);
 			}
 		}
 	}
@@ -162,7 +160,7 @@ public class IncrementalRecoverer
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("updating journal, adding " + Decoder.decodeStatus(status) + " entry for [" + uniqueName + "] on GTRID [" + gtrid + "]");
+            log.trace("updating journal, adding {} entry for [{}] on GTRID [{}]", Decoder.decodeStatus(status), uniqueName, gtrid);
 		}
 		Set<String> participatingUniqueNames = new HashSet<>();
 		participatingUniqueNames.add(uniqueName);

@@ -27,7 +27,7 @@ import bitronix.tm.TransactionManagerServices;
 public class ThreadContext
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(ThreadContext.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ThreadContext.class);
 	private static final ThreadLocal<ThreadContext> context = ThreadLocal.withInitial(ThreadContext::new);
 	private volatile BitronixTransaction transaction;
 	private volatile int timeout = TransactionManagerServices.getConfiguration()
@@ -78,7 +78,7 @@ public class ThreadContext
 		}
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("assigning <" + transaction + "> to <" + this + ">");
+            log.trace("assigning <{}> to <{}>", transaction, this);
 		}
 		this.transaction = transaction;
 	}
@@ -117,7 +117,7 @@ public class ThreadContext
 			                                             .getDefaultTransactionTimeout();
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("resetting default timeout of thread context to default value of " + defaultValue + "s");
+                log.trace("resetting default timeout of thread context to default value of {}s", defaultValue);
 			}
 			this.timeout = defaultValue;
 		}
@@ -125,7 +125,7 @@ public class ThreadContext
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("changing default timeout of thread context to " + timeout + "s");
+                log.trace("changing default timeout of thread context to {}s", timeout);
 			}
 			this.timeout = timeout;
 		}

@@ -56,7 +56,7 @@ public class PoolingDataSource
 		implements DataSource, XAResourceProducer<JdbcPooledConnection, JdbcPooledConnection>, PoolingDataSourceMBean
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(PoolingDataSource.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(PoolingDataSource.class);
 	private final transient List<ConnectionCustomizer> connectionCustomizers = new CopyOnWriteArrayList<>();
 	private transient volatile XAPool<JdbcPooledConnection, JdbcPooledConnection> pool;
 	private transient volatile XADataSource xaDataSource;
@@ -306,7 +306,7 @@ public class PoolingDataSource
 			}
 			catch (Exception ex)
 			{
-				log.log(Level.WARNING, "ConnectionCustomizer.onAcquire() failed for " + connectionCustomizer, ex);
+                log.warn("ConnectionCustomizer.onAcquire() failed for {}", connectionCustomizer, ex);
 			}
 		}
 	}
@@ -327,7 +327,7 @@ public class PoolingDataSource
 			}
 			catch (Exception ex)
 			{
-				log.log(Level.WARNING, "ConnectionCustomizer.onLease() failed for " + connectionCustomizer, ex);
+                log.warn("ConnectionCustomizer.onLease() failed for {}", connectionCustomizer, ex);
 			}
 		}
 	}
@@ -348,7 +348,7 @@ public class PoolingDataSource
 			}
 			catch (Exception ex)
 			{
-				log.log(Level.WARNING, "ConnectionCustomizer.onRelease() failed for " + connectionCustomizer, ex);
+                log.warn("ConnectionCustomizer.onRelease() failed for {}", connectionCustomizer, ex);
 			}
 		}
 	}
@@ -369,7 +369,7 @@ public class PoolingDataSource
 			}
 			catch (Exception ex)
 			{
-				log.log(Level.WARNING, "ConnectionCustomizer.onDestroy() failed for " + connectionCustomizer, ex);
+                log.warn("ConnectionCustomizer.onDestroy() failed for {}", connectionCustomizer, ex);
 			}
 		}
 	}
@@ -435,7 +435,7 @@ public class PoolingDataSource
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("recovery xa resource is being closed: " + recoveryXAResourceHolder);
+                log.trace("recovery xa resource is being closed: {}", recoveryXAResourceHolder);
 			}
 			recoveryConnectionHandle.close();
 		}
@@ -468,7 +468,7 @@ public class PoolingDataSource
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("building XA pool for " + getUniqueName() + " with " + getMinPoolSize() + " connection(s)");
+            log.trace("building XA pool for {} with {} connection(s)", getUniqueName(), getMinPoolSize());
 		}
 		pool = new XAPool<>(this, this, xaDataSource);
 		boolean builtXaFactory = false;
@@ -628,14 +628,14 @@ public class PoolingDataSource
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("trying to close already closed PoolingDataSource " + getUniqueName());
+                log.trace("trying to close already closed PoolingDataSource {}", getUniqueName());
 			}
 			return;
 		}
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("closing " + this);
+            log.trace("closing {}", this);
 		}
 		pool.close();
 		pool = null;
@@ -700,7 +700,7 @@ public class PoolingDataSource
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("creating new JNDI reference of " + this);
+            log.trace("creating new JNDI reference of {}", this);
 		}
 		return new Reference(
 				PoolingDataSource.class.getName(),
@@ -754,13 +754,13 @@ public class PoolingDataSource
 		init();
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("acquiring connection from " + this);
+            log.trace("acquiring connection from {}", this);
 		}
 		if (pool == null)
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("pool is closed, returning null connection");
+				log.trace("pool is closed, returning null connection");
 			}
 			return null;
 		}
@@ -770,7 +770,7 @@ public class PoolingDataSource
 			Connection conn = (Connection) pool.getConnectionHandle();
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("acquired connection from " + this);
+                log.trace("acquired connection from {}", this);
 			}
 			return conn;
 		}
@@ -799,7 +799,7 @@ public class PoolingDataSource
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("JDBC connections are pooled, username and password ignored");
+			log.trace("JDBC connections are pooled, username and password ignored");
 		}
 		return getConnection();
 	}

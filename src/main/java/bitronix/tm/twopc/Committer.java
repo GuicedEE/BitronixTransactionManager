@@ -39,7 +39,7 @@ public final class Committer
 		extends AbstractPhaseEngine
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(Committer.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(Committer.class);
 	private final List<XAResourceHolderState> interestedResources = Collections.synchronizedList(new ArrayList<>());
 	// this list has to be thread-safe as the CommitJobs can be executed in parallel (when async 2PC is configured)
 	private final List<XAResourceHolderState> committedResources = Collections.synchronizedList(new ArrayList<>());
@@ -84,7 +84,7 @@ public final class Committer
 			transaction.setStatus(Status.STATUS_COMMITTED);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("phase 2 commit succeeded with no interested resource");
+				log.trace("phase 2 commit succeeded with no interested resource");
 			}
 			return;
 		}
@@ -116,7 +116,7 @@ public final class Committer
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("phase 2 commit executed on resources " + Decoder.collectResourcesNames(committedResources));
+            log.trace("phase 2 commit executed on resources {}", Decoder.collectResourcesNames(committedResources));
 		}
 
 		// Some resources might have failed the 2nd phase of 2PC.
@@ -135,7 +135,7 @@ public final class Committer
 			committedAndNotInterestedResources.addAll(committedResources);
 			committedAndNotInterestedResources.addAll(notInterestedResources);
 
-			log.finer("phase 2 commit succeeded on resources " + Decoder.collectResourcesNames(committedAndNotInterestedResources));
+            log.trace("phase 2 commit succeeded on resources {}", Decoder.collectResourcesNames(committedAndNotInterestedResources));
 		}
 
 		transaction.setStatus(Status.STATUS_COMMITTED, committedAndNotInterestedUniqueNames);
@@ -323,14 +323,14 @@ public final class Committer
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("committing resource " + resourceHolder + (onePhase ? " (with one-phase optimization)" : ""));
+                    log.trace("committing resource {}{}", resourceHolder, onePhase ? " (with one-phase optimization)" : "");
 				}
 				resourceHolder.getXAResource()
 				              .commit(resourceHolder.getXid(), onePhase);
 				committedResources.add(resourceHolder);
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("committed resource " + resourceHolder);
+                    log.trace("committed resource {}", resourceHolder);
 				}
 			}
 			catch (XAException ex)
@@ -375,7 +375,7 @@ public final class Committer
 				case XAException.XA_RBROLLBACK:
 				case XAException.XA_RBTIMEOUT:
 				case XAException.XA_RBTRANSIENT:
-					log.severe("heuristic rollback is incompatible with the global state of this transaction - guilty: " + failedResourceHolder);
+                    log.error("heuristic rollback is incompatible with the global state of this transaction - guilty: {}", failedResourceHolder);
 					throw xaException;
 
 				default:
@@ -383,15 +383,13 @@ public final class Committer
 					{
 						if (LogDebugCheck.isDebugEnabled())
 						{
-							log.finer("XAException thrown in commit phase of 1PC optimization, rethrowing it");
+							log.trace("XAException thrown in commit phase of 1PC optimization, rethrowing it");
 						}
 						throw xaException;
 					}
 					String extraErrorDetails = TransactionManagerServices.getExceptionAnalyzer()
 					                                                     .extractExtraXAExceptionDetails(xaException);
-					log.log(Level.WARNING, "resource '" + failedResourceHolder.getUniqueName() + "' reported " + Decoder.decodeXAExceptionErrorCode(xaException) +
-					                       (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails) + " when asked to commit transaction branch." +
-					                       " Transaction is prepared and will commit via recovery service when resource availability allows.", xaException);
+                    log.warn("resource '{}' reported {}{} when asked to commit transaction branch. Transaction is prepared and will commit via recovery service when resource availability allows.", failedResourceHolder.getUniqueName(), Decoder.decodeXAExceptionErrorCode(xaException), extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails, xaException);
 			}
 		}
 
@@ -407,21 +405,20 @@ public final class Committer
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("handling heuristic commit on resource " + resourceHolder.getXAResource());
+                    log.trace("handling heuristic commit on resource {}", resourceHolder.getXAResource());
 				}
 				resourceHolder.getXAResource()
 				              .forget(resourceHolder.getXid());
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("forgotten heuristically committed resource " + resourceHolder.getXAResource());
+                    log.trace("forgotten heuristically committed resource {}", resourceHolder.getXAResource());
 				}
 			}
 			catch (XAException ex)
 			{
 				String extraErrorDetails = TransactionManagerServices.getExceptionAnalyzer()
 				                                                     .extractExtraXAExceptionDetails(ex);
-				log.log(Level.SEVERE, "cannot forget " + resourceHolder.getXid() + " assigned to " + resourceHolder.getXAResource() +
-				                      ", error=" + Decoder.decodeXAExceptionErrorCode(ex) + (extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails), ex);
+                log.error("cannot forget {} assigned to {}, error={}{}", resourceHolder.getXid(), resourceHolder.getXAResource(), Decoder.decodeXAExceptionErrorCode(ex), extraErrorDetails == null ? "" : ", extra error=" + extraErrorDetails, ex);
 			}
 		}
 

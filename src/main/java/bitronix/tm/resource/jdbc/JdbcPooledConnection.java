@@ -46,7 +46,7 @@ public class JdbcPooledConnection
 		implements StateChangeListener<JdbcPooledConnection>, JdbcPooledConnectionMBean
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(JdbcPooledConnection.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(JdbcPooledConnection.class);
 	private static final String EMULATING_STRING = "emulating XA for resource ";
 
 	private final XAConnection xaConnection;
@@ -90,7 +90,7 @@ public class JdbcPooledConnection
 			                                    }
 			                                    catch (SQLException ex)
 			                                    {
-				                                    log.log(Level.WARNING, "error closing evicted statement", ex);
+				                                    log.warn( "error closing evicted statement", ex);
 			                                    }
 		                                    });
 
@@ -103,17 +103,17 @@ public class JdbcPooledConnection
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer(EMULATING_STRING + poolingDataSource.getUniqueName() + " - changing twoPcOrderingPosition to ALWAYS_LAST_POSITION");
+                log.trace(EMULATING_STRING + "{} - changing twoPcOrderingPosition to ALWAYS_LAST_POSITION", poolingDataSource.getUniqueName());
 			}
 			poolingDataSource.setTwoPcOrderingPosition(Scheduler.ALWAYS_LAST_POSITION);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer(EMULATING_STRING + poolingDataSource.getUniqueName() + " - changing deferConnectionRelease to true");
+                log.trace(EMULATING_STRING + "{} - changing deferConnectionRelease to true", poolingDataSource.getUniqueName());
 			}
 			poolingDataSource.setDeferConnectionRelease(true);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer(EMULATING_STRING + poolingDataSource.getUniqueName() + " - changing useTmJoin to true");
+                log.trace(EMULATING_STRING + "{} - changing useTmJoin to true", poolingDataSource.getUniqueName());
 			}
 			poolingDataSource.setUseTmJoin(true);
 		}
@@ -147,7 +147,7 @@ public class JdbcPooledConnection
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("releasing to pool " + this);
+            log.trace("releasing to pool {}", this);
 		}
 		--usageCount;
 
@@ -191,14 +191,14 @@ public class JdbcPooledConnection
 
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("released to pool " + this);
+                    log.trace("released to pool {}", this);
 				}
 			}
 			else
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("not releasing " + this + " to pool yet, connection is still shared");
+                    log.trace("not releasing {} to pool yet, connection is still shared", this);
 				}
 			}
 		} // finally
@@ -267,7 +267,7 @@ public class JdbcPooledConnection
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("getting connection handle from " + this);
+            log.trace("getting connection handle from {}", this);
 		}
 		State oldState = getState();
 
@@ -291,7 +291,7 @@ public class JdbcPooledConnection
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("connection " + xaConnection + " was in state IN_POOL, testing it");
+                log.trace("connection {} was in state IN_POOL, testing it", xaConnection);
 			}
 			testConnection(connection);
 			applyIsolationLevel();
@@ -306,13 +306,13 @@ public class JdbcPooledConnection
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("connection " + xaConnection + " was in state " + oldState + ", no need to test it");
+                log.trace("connection {} was in state {}, no need to test it", xaConnection, oldState);
 			}
 		}
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("got connection handle from " + this);
+            log.trace("got connection handle from {}", this);
 		}
 		poolingDataSource.fireOnLease(connection);
 
@@ -328,7 +328,7 @@ public class JdbcPooledConnection
 		// this should never happen, should we throw an exception or log at warn/error?
 		if (usageCount > 0)
 		{
-			log.warning("close connection with usage count > 0, " + this);
+            log.warn("close connection with usage count > 0, {}", this);
 		}
 
 		setState(State.CLOSED);
@@ -389,15 +389,14 @@ public class JdbcPooledConnection
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("testing with JDBC4 isValid() method, connection of " + this);
+                    log.trace("testing with JDBC4 isValid() method, connection of {}", this);
 				}
 				Method isValidMethod = JdbcClassHelper.getIsValidMethod(connection);
 				isValid = (Boolean) isValidMethod.invoke(connection, new Object[]{connectionTestTimeout});
 			}
 			catch (Exception e)
 			{
-				log.log(Level.WARNING, "dysfunctional JDBC4 Connection.isValid() method, or negative acquisition timeout, in call to test connection of " + this +
-				                       ".  Falling back to test query.", e);
+                log.warn("dysfunctional JDBC4 Connection.isValid() method, or negative acquisition timeout, in call to test connection of {}.  Falling back to test query.", this, e);
 				jdbcVersionDetected = 3;
 			}
 			// if isValid is null, an exception was caught above and we fall through to the query test
@@ -405,7 +404,7 @@ public class JdbcPooledConnection
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("isValid successfully tested connection of " + this);
+                    log.trace("isValid successfully tested connection of {}", this);
 				}
 				return;
 			}
@@ -418,7 +417,7 @@ public class JdbcPooledConnection
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("no query to test connection of " + this + ", skipping test");
+                log.trace("no query to test connection of {}, skipping test", this);
 			}
 			return;
 		}
@@ -426,7 +425,7 @@ public class JdbcPooledConnection
 		// Throws a SQLException if the connection is dead
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("testing with query '" + query + "' connection of " + this);
+            log.trace("testing with query '{}' connection of {}", query, this);
 		}
 		try (PreparedStatement stmt = connection.prepareStatement(query))
 		{
@@ -436,7 +435,7 @@ public class JdbcPooledConnection
 		}
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("testQuery successfully tested connection of " + this);
+            log.trace("testQuery successfully tested connection of {}", this);
 		}
 	}
 
@@ -454,13 +453,13 @@ public class JdbcPooledConnection
 			int level = translateIsolationLevel(isolationLevel);
 			if (level < 0)
 			{
-				log.warning("invalid transaction isolation level '" + isolationLevel + "' configured, keeping the default isolation level.");
+                log.warn("invalid transaction isolation level '{}' configured, keeping the default isolation level.", isolationLevel);
 			}
 			else
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("setting connection's isolation level to " + isolationLevel);
+                    log.trace("setting connection's isolation level to {}", isolationLevel);
 				}
 				connection.setTransactionIsolation(level);
 			}
@@ -481,13 +480,13 @@ public class JdbcPooledConnection
 			int holdability = translateCursorHoldability(cursorHoldability);
 			if (holdability < 0)
 			{
-				log.warning("invalid cursor holdability '" + cursorHoldability + "' configured, keeping the default cursor holdability.");
+                log.warn("invalid cursor holdability '{}' configured, keeping the default cursor holdability.", cursorHoldability);
 			}
 			else
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("setting connection's cursor holdability to " + cursorHoldability);
+                    log.trace("setting connection's cursor holdability to {}", cursorHoldability);
 				}
 				connection.setHoldability(holdability);
 			}
@@ -509,7 +508,7 @@ public class JdbcPooledConnection
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("setting connection's auto commit to true");
+					log.trace("setting connection's auto commit to true");
 				}
 				connection.setAutoCommit(true);
 			}
@@ -517,13 +516,13 @@ public class JdbcPooledConnection
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("setting connection's auto commit to false");
+					log.trace("setting connection's auto commit to false");
 				}
 				connection.setAutoCommit(false);
 			}
 			else
 			{
-				log.warning("invalid auto commit '" + localAutoCommit + "' configured, keeping default auto commit");
+                log.warn("invalid auto commit '{}' configured, keeping default auto commit", localAutoCommit);
 			}
 		}
 	}
@@ -654,7 +653,7 @@ public class JdbcPooledConnection
 	{
 		if (futureState == State.IN_POOL && usageCount > 0)
 		{
-			log.warning("usage count too high (" + usageCount + ") on connection returned to pool " + source);
+            log.warn("usage count too high ({}) on connection returned to pool {}", usageCount, source);
 		}
 
 		if (futureState == State.IN_POOL || futureState == State.NOT_ACCESSIBLE)
@@ -662,7 +661,7 @@ public class JdbcPooledConnection
 			// close all uncached statements
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("closing " + uncachedStatements.size() + " dangling uncached statement(s)");
+                log.trace("closing {} dangling uncached statement(s)", uncachedStatements.size());
 			}
 			for (Statement statement : uncachedStatements)
 			{
@@ -674,7 +673,7 @@ public class JdbcPooledConnection
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.log(Level.FINER, "error trying to close uncached statement " + statement, ex);
+                        log.trace("error trying to close uncached statement {}", statement, ex);
 					}
 				}
 			}
@@ -689,7 +688,7 @@ public class JdbcPooledConnection
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.log(Level.FINER, "error cleaning warnings of " + connection, ex);
+                    log.trace("error cleaning warnings of {}", connection, ex);
 				}
 			}
 		}

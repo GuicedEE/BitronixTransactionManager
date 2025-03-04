@@ -28,7 +28,7 @@ import java.util.Map;
  */
 final class XAFactoryHelper
 {
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(XAFactoryHelper.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(XAFactoryHelper.class);
 
 	private static final String PASSWORD_PROPERTY_NAME = "password";
 
@@ -75,7 +75,7 @@ final class XAFactoryHelper
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("setting vendor property '" + name + "' to '" + value + "'");
+                log.trace("setting vendor property '{}' to '{}'", name, value);
 			}
 			PropertyUtils.setProperty(xaFactory, name, value);
 		}
@@ -105,7 +105,7 @@ final class XAFactoryHelper
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("resource password is encrypted, decrypting " + resourcePassword);
+            log.trace("resource password is encrypted, decrypting {}", resourcePassword);
 		}
 		String toScan = resourcePassword.substring(endIdx + 1);
 		String returned;

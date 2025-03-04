@@ -53,7 +53,7 @@ public class DiskJournal
 		implements Journal, MigratableJournal, ReadableJournal
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(DiskJournal.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(DiskJournal.class);
 
 	/**
 	 * The active log appender. This is exactly the same reference as tla1 or tla2 depending on which one is
@@ -111,7 +111,7 @@ public class DiskJournal
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("filtered out write to log for status " + Decoder.decodeStatus(status));
+                log.trace("filtered out write to log for status {}", Decoder.decodeStatus(status));
 			}
 			return;
 		}
@@ -193,7 +193,7 @@ public class DiskJournal
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("swapping journal log file to " + getPassiveTransactionLogAppender());
+            log.trace("swapping journal log file to {}", getPassiveTransactionLogAppender());
 		}
 
 		//step 1
@@ -218,7 +218,7 @@ public class DiskJournal
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer(danglingLogs.size() + " dangling record(s) copied to passive log file");
+            log.trace("{} dangling record(s) copied to passive log file", danglingLogs.size());
 		}
 
 		activeTla.get()
@@ -235,7 +235,7 @@ public class DiskJournal
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("journal log files swapped");
+			log.trace("journal log files swapped");
 		}
 	}
 
@@ -259,7 +259,7 @@ public class DiskJournal
 	{
 		if (activeTla.get() != null)
 		{
-			log.warning("disk journal already open");
+			log.warn("disk journal already open");
 			return;
 		}
 
@@ -268,7 +268,7 @@ public class DiskJournal
 
 		if (!file1.exists() && !file2.exists())
 		{
-			log.finer("creation of log files");
+			log.trace("creation of log files");
 			createLogfile(file2, configuration.getMaxLogSizeInMb());
 
 			// make the clock run a little before creating the 2nd log file to ensure the timestamp headers are not the same
@@ -292,13 +292,13 @@ public class DiskJournal
 			{
 				throw new IOException("transaction log files are not of the same length, assuming they're corrupt");
 			}
-			log.severe("transaction log files are not of the same length: corrupted files?");
+			log.error("transaction log files are not of the same length: corrupted files?");
 		}
 
 		long maxFileLength = Math.max(file1.length(), file2.length());
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("disk journal files max length: " + maxFileLength);
+            log.trace("disk journal files max length: {}", maxFileLength);
 		}
 
 		tla1 = new TransactionLogAppender(file1, maxFileLength);
@@ -307,12 +307,12 @@ public class DiskJournal
 		byte cleanStatus = pickActiveJournalFile(tla1, tla2);
 		if (cleanStatus != TransactionLogHeader.CLEAN_LOG_STATE)
 		{
-			log.warning("active log file is unclean, did you call BitronixTransactionManager.shutdown() at the end of the last run?");
+			log.warn("active log file is unclean, did you call BitronixTransactionManager.shutdown() at the end of the last run?");
 		}
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("disk journal opened");
+			log.trace("disk journal opened");
 		}
 	}
 
@@ -386,7 +386,7 @@ public class DiskJournal
 			activeTla.set(tla1);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("logging to file 1: " + activeTla);
+                log.trace("logging to file 1: {}", activeTla);
 			}
 		}
 		else
@@ -394,7 +394,7 @@ public class DiskJournal
 			activeTla.set(tla2);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("logging to file 2: " + activeTla);
+                log.trace("logging to file 2: {}", activeTla);
 			}
 		}
 
@@ -404,7 +404,7 @@ public class DiskJournal
 		         .setState(TransactionLogHeader.UNCLEAN_LOG_STATE);
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("log file activated, forcing file state to disk");
+			log.trace("log file activated, forcing file state to disk");
 		}
 		activeTla.get()
 		         .force();
@@ -431,7 +431,7 @@ public class DiskJournal
 		}
 		catch (IOException ex)
 		{
-			log.log(Level.SEVERE, "cannot close " + tla1, ex);
+            log.error("cannot close {}", tla1, ex);
 		}
 		tla1 = null;
 		try
@@ -440,14 +440,14 @@ public class DiskJournal
 		}
 		catch (IOException ex)
 		{
-			log.log(Level.SEVERE, "cannot close " + tla2, ex);
+            log.error("cannot close {}", tla2, ex);
 		}
 		tla2 = null;
 		activeTla.set(null);
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("disk journal closed");
+			log.trace("disk journal closed");
 		}
 	}
 
@@ -561,7 +561,7 @@ public class DiskJournal
 					if (TransactionManagerServices.getConfiguration()
 					                              .isSkipCorruptedLogs())
 					{
-						log.log(Level.SEVERE, "skipping corrupted log", ex);
+						log.error( "skipping corrupted log", ex);
 						continue;
 					}
 					throw ex;
@@ -590,7 +590,7 @@ public class DiskJournal
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("collected dangling records of " + tla + ", committing: " + committing + ", committed: " + committed + ", delta: " + danglingRecords.size());
+                log.trace("collected dangling records of {}, committing: {}, committed: {}, delta: {}", tla, committing, committed, danglingRecords.size());
 			}
 		}
 		finally
@@ -699,7 +699,7 @@ public class DiskJournal
 		}
 		catch (IOException ex)
 		{
-			log.log(Level.SEVERE, "error shutting down disk journal. Transaction log integrity could be compromised!", ex);
+			log.error( "error shutting down disk journal. Transaction log integrity could be compromised!", ex);
 		}
 	}
 }

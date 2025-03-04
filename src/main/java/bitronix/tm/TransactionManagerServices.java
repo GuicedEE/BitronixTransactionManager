@@ -46,7 +46,7 @@ import java.util.logging.Level;
 public class TransactionManagerServices
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionManagerServices.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(TransactionManagerServices.class);
 
 	private static final Lock transactionManagerLock = new ReentrantLock();
 	private static final AtomicReference<BitronixTransactionSynchronizationRegistry> transactionSynchronizationRegistryRef = new AtomicReference<>();
@@ -142,7 +142,7 @@ public class TransactionManagerServices
 			}
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("using journal " + configuredJournal);
+                log.trace("using journal {}", configuredJournal);
 			}
 
 			if (!journalRef.compareAndSet(null, journal))
@@ -247,7 +247,7 @@ public class TransactionManagerServices
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("using AsyncExecutor");
+					log.trace("using AsyncExecutor");
 				}
 				executor = new AsyncExecutor();
 			}
@@ -255,7 +255,7 @@ public class TransactionManagerServices
 			{
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("using SyncExecutor");
+					log.trace("using SyncExecutor");
 				}
 				executor = new SyncExecutor();
 			}
@@ -291,7 +291,7 @@ public class TransactionManagerServices
 				}
 				catch (Exception ex)
 				{
-					log.log(Level.WARNING, "failed to initialize custom exception analyzer, using default one instead", ex);
+					log.warn( "failed to initialize custom exception analyzer, using default one instead", ex);
 				}
 			}
 			if (!exceptionAnalyzerRef.compareAndSet(null, analyzer))

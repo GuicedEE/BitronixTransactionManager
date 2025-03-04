@@ -26,7 +26,7 @@ import java.util.logging.Level;
 public class JdbcClassHelper
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(JdbcClassHelper.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(JdbcClassHelper.class);
 
 	private static final int DETECTION_TIMEOUT = 5; // seconds
 
@@ -80,14 +80,14 @@ public class JdbcClassHelper
 		}
 		catch (Exception | AbstractMethodError ex)
 		{
-			log.log(Level.FINEST, "NOT JDBC 4 : " + connectionClass, ex);
+            log.trace("NOT JDBC 4 : {}", connectionClass, ex);
 			jdbcVersionDetected = 3;
 		}
 
 		connectionClassVersions.put(connectionClass, jdbcVersionDetected);
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("detected JDBC connection class '" + connectionClass + "' is version " + jdbcVersionDetected + " type");
+            log.trace("detected JDBC connection class '{}' is version {} type", connectionClass, jdbcVersionDetected);
 		}
 
 		return jdbcVersionDetected;

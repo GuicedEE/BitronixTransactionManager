@@ -35,7 +35,7 @@ public class BitronixContext
 		implements Context
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(BitronixContext.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(BitronixContext.class);
 	private final String userTransactionName;
 	private final String synchronizationRegistryName;
 	private boolean closed = false;
@@ -49,14 +49,14 @@ public class BitronixContext
 		                                                .getJndiUserTransactionName();
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("binding transaction manager at name '" + userTransactionName + "'");
+            log.trace("binding transaction manager at name '{}'", userTransactionName);
 		}
 
 		synchronizationRegistryName = TransactionManagerServices.getConfiguration()
 		                                                        .getJndiTransactionSynchronizationRegistryName();
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("binding synchronization registry at name '" + synchronizationRegistryName + "'");
+            log.trace("binding synchronization registry at name '{}'", synchronizationRegistryName);
 		}
 	}
 
@@ -108,7 +108,7 @@ public class BitronixContext
 		checkClosed();
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("looking up '" + s + "'");
+            log.trace("looking up '{}'", s);
 		}
 
 		Object o;

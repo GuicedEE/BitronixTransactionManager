@@ -44,7 +44,7 @@ public class Configuration
 		implements Service
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(Configuration.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(Configuration.class);
 
 	private static final int MAX_SERVER_ID_LENGTH = 51;
 	private static final Charset SERVER_ID_CHARSET = Charset.forName("US-ASCII");
@@ -91,7 +91,7 @@ public class Configuration
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.finer("loading configuration file " + configurationFilename);
+                        log.trace("loading configuration file {}", configurationFilename);
 					}
 					in = new FileInputStream(configurationFilename);
 				}
@@ -99,7 +99,7 @@ public class Configuration
 				{
 					if (LogDebugCheck.isDebugEnabled())
 					{
-						log.finer("loading default configuration");
+						log.trace("loading default configuration");
 					}
 					in = ClassLoaderUtils.getResourceAsStream("bitronix-default-config.properties");
 				}
@@ -110,7 +110,7 @@ public class Configuration
 				}
 				else if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("no configuration file found, using default settings");
+					log.trace("no configuration file found, using default settings");
 				}
 			}
 			finally
@@ -402,7 +402,7 @@ public class Configuration
 	public Configuration setForceBatchingEnabled(boolean forceBatchingEnabled)
 	{
 		checkNotStarted();
-		log.warning("forceBatchingEnabled is not longer used");
+		log.warn("forceBatchingEnabled is not longer used");
 		this.forceBatchingEnabled = forceBatchingEnabled;
 		return this;
 	}
@@ -676,7 +676,7 @@ public class Configuration
 	@Deprecated
 	public Configuration setBackgroundRecoveryInterval(int backgroundRecoveryInterval)
 	{
-		log.warning("setBackgroundRecoveryInterval() is deprecated, consider using setBackgroundRecoveryIntervalSeconds() instead.");
+		log.warn("setBackgroundRecoveryInterval() is deprecated, consider using setBackgroundRecoveryIntervalSeconds() instead.");
 		setBackgroundRecoveryIntervalSeconds(backgroundRecoveryInterval * 60);
 		return this;
 	}
@@ -1041,18 +1041,13 @@ public class Configuration
 						String transcodedId = new String(id, SERVER_ID_CHARSET);
 						if (!transcodedId.equals(serverId))
 						{
-							log.warning(
-									"The given server ID '" + serverId + "' is not compatible with the ID charset '" + SERVER_ID_CHARSET.displayName() + "' as it transcodes to '" +
-									transcodedId + "'. " +
-									"It is highly recommended that you specify a compatible server ID using only characters that are allowed in the ID charset.");
+                            log.warn("The given server ID '{}' is not compatible with the ID charset '{}' as it transcodes to '{}'. It is highly recommended that you specify a compatible server ID using only characters that are allowed in the ID charset.", serverId, SERVER_ID_CHARSET.displayName(), transcodedId);
 						}
 					}
 					catch (Exception ex)
 					{
-						log.warning("Cannot get the unique server ID for this JVM ('bitronix.tm.serverId'). Make sure it is configured and you use only " +
-						            SERVER_ID_CHARSET.displayName() + " characters. " +
-						            "Will use IP address instead (unsafe for production usage!).");
-						log.log(Level.FINEST, "Using alternative id", ex);
+                        log.warn("Cannot get the unique server ID for this JVM ('bitronix.tm.serverId'). Make sure it is configured and you use only {} characters. Will use IP address instead (unsafe for production usage!).", SERVER_ID_CHARSET.displayName());
+						log.trace( "Using alternative id", ex);
 						try
 						{
 							id = InetAddress.getLocalHost()
@@ -1062,8 +1057,7 @@ public class Configuration
 						catch (Exception ex2)
 						{
 							String unknownServerId = "unknown-server-id";
-							log.log(Level.WARNING, "Cannot get the local IP address. Please verify your network configuration. Will use the constant '" + unknownServerId +
-							                       "' as server ID (highly unsafe!).", ex2);
+                            log.warn("Cannot get the local IP address. Please verify your network configuration. Will use the constant '{}' as server ID (highly unsafe!).", unknownServerId, ex2);
 							id = unknownServerId.getBytes();
 						}
 					}
@@ -1072,8 +1066,7 @@ public class Configuration
 					{
 						byte[] truncatedServerId = new byte[MAX_SERVER_ID_LENGTH];
 						System.arraycopy(id, 0, truncatedServerId, 0, MAX_SERVER_ID_LENGTH);
-						log.warning("The applied server ID '" + new String(id) + "' has to be truncated to " + MAX_SERVER_ID_LENGTH +
-						            " chars (builtin hard limit) resulting in " + new String(truncatedServerId) + ". This may be highly unsafe if IDs differ with suffixes only!");
+                        log.warn("The applied server ID '{}' has to be truncated to " + MAX_SERVER_ID_LENGTH + " chars (builtin hard limit) resulting in {}. This may be highly unsafe if IDs differ with suffixes only!", new String(id), new String(truncatedServerId));
 						id = truncatedServerId;
 					}
 
@@ -1085,7 +1078,7 @@ public class Configuration
 							serverId = idAsString;
 						}
 
-						log.info("JVM unique ID: <" + idAsString + "> - Using this server ID to ensure uniqueness of transaction IDs across the network.");
+                        log.info("JVM unique ID: <{}> - Using this server ID to ensure uniqueness of transaction IDs across the network.", idAsString);
 					}
 				}
 			}
@@ -1122,7 +1115,7 @@ public class Configuration
 			sb.append("???");
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.log(Level.FINER, "error accessing properties of Configuration object", ex);
+				log.trace( "error accessing properties of Configuration object", ex);
 			}
 		}
 

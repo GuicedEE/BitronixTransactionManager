@@ -43,7 +43,7 @@ public class TransactionLogAppender
 	 * same size. Very useful when debugging and eventually restoring broken log files.
 	 */
 	public static final int END_RECORD = 0x786e7442;
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogAppender.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(TransactionLogAppender.class);
 
 	private final File file;
 	private final RandomAccessFile randomeAccessFile;
@@ -153,7 +153,7 @@ public class TransactionLogAppender
 
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("between " + tlog.getWritePosition() + " and " + tlog.getWritePosition() + tlog.calculateTotalRecordSize() + ", writing " + tlog);
+                log.trace("between {} and {}{}, writing {}", tlog.getWritePosition(), tlog.getWritePosition(), tlog.calculateTotalRecordSize(), tlog);
 			}
 
 			long writePosition = tlog.getWritePosition();
@@ -219,7 +219,7 @@ public class TransactionLogAppender
 			}
 			default:
 			{
-				log.finest("Status Type not actioned : " + status);
+                log.trace("Status Type not actioned : {}", status);
 			}
 		}
 	}
@@ -373,12 +373,12 @@ public class TransactionLogAppender
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("forcing log writing");
+			log.trace("forcing log writing");
 		}
 		fc.force(false);
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("done forcing log");
+			log.trace("done forcing log");
 		}
 	}
 

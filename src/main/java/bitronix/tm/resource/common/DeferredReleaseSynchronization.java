@@ -29,7 +29,7 @@ public class DeferredReleaseSynchronization
 		implements Synchronization
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(DeferredReleaseSynchronization.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(DeferredReleaseSynchronization.class);
 
 	private final XAStatefulHolder xaStatefulHolder;
 
@@ -74,7 +74,7 @@ public class DeferredReleaseSynchronization
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("DeferredReleaseSynchronization requeuing " + xaStatefulHolder);
+            log.trace("DeferredReleaseSynchronization requeuing {}", xaStatefulHolder);
 		}
 
 		// set this connection's state back to IN_POOL
@@ -82,7 +82,7 @@ public class DeferredReleaseSynchronization
 
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("DeferredReleaseSynchronization requeued " + xaStatefulHolder);
+            log.trace("DeferredReleaseSynchronization requeued {}", xaStatefulHolder);
 		}
 	}
 

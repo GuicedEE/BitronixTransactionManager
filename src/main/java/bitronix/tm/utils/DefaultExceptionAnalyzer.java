@@ -27,7 +27,7 @@ import java.util.logging.Level;
 public class DefaultExceptionAnalyzer
 		implements ExceptionAnalyzer
 {
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(DefaultExceptionAnalyzer.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(DefaultExceptionAnalyzer.class);
 
 	/**
 	 * Extract information from a vendor's XAException that isn't available through standard APIs.
@@ -49,7 +49,7 @@ public class DefaultExceptionAnalyzer
 			}
 			catch (PropertyException e)
 			{
-				log.log(Level.FINEST, "Property Exception", e);
+				log.trace( "Property Exception", e);
 				return null;
 			}
 		}

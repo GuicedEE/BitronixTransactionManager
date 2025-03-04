@@ -36,7 +36,7 @@ public class TransactionLogCursor
 		implements AutoCloseable
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogCursor.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(TransactionLogCursor.class);
 	private static final String CORRUPTED_LOGS = "corrupted log found at position ";
 
 	private final FileInputStream fis;
@@ -100,7 +100,7 @@ public class TransactionLogCursor
 		{
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("end of transaction log file reached at " + currentPosition);
+                log.trace("end of transaction log file reached at {}", currentPosition);
 			}
 			return null;
 		}

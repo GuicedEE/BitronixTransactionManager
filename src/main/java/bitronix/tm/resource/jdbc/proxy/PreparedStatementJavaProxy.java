@@ -33,7 +33,7 @@ import java.util.logging.Level;
 public class PreparedStatementJavaProxy
 		extends JavaProxyBase<PreparedStatement>
 {
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(PreparedStatementJavaProxy.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(PreparedStatementJavaProxy.class);
 	private static final Map<String, Method> selfMethodMap = createMethodMap(PreparedStatementJavaProxy.class);
 
 	private JdbcPooledConnection jdbcPooledConnection;
@@ -129,7 +129,7 @@ public class PreparedStatementJavaProxy
 			catch (SQLFeatureNotSupportedException e)
 			{
 				// Driver doesn't support batch updates.
-				log.log(Level.FINEST, "Not Supported To Do Batch", e);
+				log.trace( "Not Supported To Do Batch", e);
 			}
 			// Return to cache so the usage count can be updated
 			jdbcPooledConnection.putCachedStatement(cacheKey, delegate);

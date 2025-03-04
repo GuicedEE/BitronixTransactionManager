@@ -43,7 +43,7 @@ public final class Preparer
 		extends AbstractPhaseEngine
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(Preparer.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(Preparer.class);
 
 	// this list has to be thread-safe as the PrepareJobs can be executed in parallel (when async 2PC is configured)
 	private final List<XAResourceHolderState> preparedResources = Collections.synchronizedList(new ArrayList<>());
@@ -84,11 +84,11 @@ public final class Preparer
 			if (TransactionManagerServices.getConfiguration()
 			                              .isWarnAboutZeroResourceTransaction())
 			{
-				log.warning("executing transaction with 0 enlisted resource");
+				log.warn("executing transaction with 0 enlisted resource");
 			}
 			else if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("0 resource enlisted, no prepare needed");
+				log.trace("0 resource enlisted, no prepare needed");
 			}
 
 			transaction.setStatus(Status.STATUS_PREPARED);
@@ -104,7 +104,7 @@ public final class Preparer
 			preparedResources.add(resourceHolder);
 			if (LogDebugCheck.isDebugEnabled())
 			{
-				log.finer("1 resource enlisted, no prepare needed (1PC)");
+				log.trace("1 resource enlisted, no prepare needed (1PC)");
 			}
 			transaction.setStatus(Status.STATUS_PREPARED);
 			return preparedResources;
@@ -123,7 +123,7 @@ public final class Preparer
 		transaction.setStatus(Status.STATUS_PREPARED);
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("successfully prepared " + preparedResources.size() + " resource(s)");
+            log.trace("successfully prepared {} resource(s)", preparedResources.size());
 		}
 		return Collections.unmodifiableList(preparedResources);
 	}
@@ -242,7 +242,7 @@ public final class Preparer
 				XAResourceHolderState resourceHolder = getResource();
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("preparing resource " + resourceHolder);
+                    log.trace("preparing resource {}", resourceHolder);
 				}
 
 				int vote = resourceHolder.getXAResource()
@@ -254,7 +254,7 @@ public final class Preparer
 
 				if (LogDebugCheck.isDebugEnabled())
 				{
-					log.finer("prepared resource " + resourceHolder + " voted " + Decoder.decodePrepareVote(vote));
+                    log.trace("prepared resource {} voted {}", resourceHolder, Decoder.decodePrepareVote(vote));
 				}
 			}
 			catch (RuntimeException ex)

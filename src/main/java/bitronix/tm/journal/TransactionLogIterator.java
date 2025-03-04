@@ -15,7 +15,7 @@ import java.util.logging.Level;
 public class TransactionLogIterator
 		implements Iterator<TransactionLogRecord>
 {
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(TransactionLogIterator.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(TransactionLogIterator.class);
 
 	private final TransactionLogCursor tlc;
 	private final boolean skipCrcCheck;
@@ -53,11 +53,11 @@ public class TransactionLogIterator
 			}
 			catch (CorruptedTransactionLogException ctle)
 			{
-				log.log(Level.SEVERE, "Skipping Corrupted Log", ctle);
+				log.error( "Skipping Corrupted Log", ctle);
 			}
 			catch (BitronixSystemException bse)
 			{
-				log.log(Level.FINEST, "Skipping Corrupted Log", bse);
+				log.trace( "Skipping Corrupted Log", bse);
 				break;
 			}
 			catch (IOException e)

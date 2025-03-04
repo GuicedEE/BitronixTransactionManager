@@ -30,7 +30,7 @@ public class RecoveryTask
 		extends Task
 {
 
-	private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(RecoveryTask.class.toString());
+	private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(RecoveryTask.class);
 
 	private final Recoverer recoverer;
 
@@ -69,7 +69,7 @@ public class RecoveryTask
 	{
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("running recovery");
+			log.trace("running recovery");
 		}
 		Thread recovery = new Thread(recoverer);
 		recovery.setName("bitronix-recovery-thread");
@@ -81,7 +81,7 @@ public class RecoveryTask
 		                                                                                            .getBackgroundRecoveryIntervalSeconds() * 1000L));
 		if (LogDebugCheck.isDebugEnabled())
 		{
-			log.finer("rescheduling recovery for " + nextExecutionDate);
+            log.trace("rescheduling recovery for {}", nextExecutionDate);
 		}
 		getTaskScheduler().scheduleRecovery(recoverer, nextExecutionDate);
 	}
